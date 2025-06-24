@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>العدد النسبي - درس تفاعلي</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #2c7744 0%, #5aaf70 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .page {
+            padding: 30px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+        
+        .page-title {
+            color: #2c7744;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .explore-box {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+        
+        .amazon-img {
+            width: 100%;
+            height: 200px;
+            background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .explore-note {
+            background-color: #dcedc8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-style: italic;
+            text-align: center;
+        }
+        
+        .lesson-idea {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .terms-box {
+            background-color: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .term {
+            font-weight: bold;
+            color: #ff9800;
+        }
+        
+        .example-box {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .example-title {
+            color: #2196f3;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .example-title::before {
+            content: "✎";
+            margin-left: 10px;
+            font-size: 1.2em;
+        }
+        
+        .exercise-box {
+            background-color: #edf7ff;
+            border: 1px solid #bbdefb;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .exercise-title {
+            color: #1976d2;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .exercise-title::before {
+            content: "✓";
+            margin-left: 10px;
+            font-size: 1.2em;
+        }
+        
+        .number-line-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            overflow-x: auto;
+        }
+        
+        .number-line {
+            position: relative;
+            height: 80px;
+            margin: 20px 0;
+            border-bottom: 3px solid #333;
+            min-width: 600px;
+        }
+        
+        .tick {
+            position: absolute;
+            bottom: 0;
+            width: 2px;
+            height: 10px;
+            background-color: #666;
+        }
+        
+        .tick-label {
+            position: absolute;
+            bottom: -25px;
+            left: -10px;
+            font-size: 14px;
+        }
+        
+        .point {
+            position: absolute;
+            bottom: -15px;
+            width: 30px;
+            height: 30px;
+            background-color: #e91e63;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transform: translateX(-50%);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .point:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .table th {
+            background-color: #2c7744;
+            color: white;
+        }
+        
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .interactive-section {
+            background: linear-gradient(to bottom, #ffffff, #f0f9ff);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .input-group {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-group label {
+            width: 150px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #bbdefb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #2196f3;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #4caf50, #2c7744);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(to right, #43a047, #1b5e20);
+        }
+        
+        .btn-check {
+            background: linear-gradient(to right, #2196f3, #0d47a1);
+        }
+        
+        .btn-reset {
+            background: linear-gradient(to right, #f44336, #b71c1c);
+        }
+        
+        .feedback {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .feedback.correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .feedback.incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            .page {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .input-group label {
+                margin-bottom: 8px;
+                width: 100%;
+            }
+            
+            .number-line {
+                min-width: 400px;
+            }
+        }
+
+        /* تحسين حجم الرموز الرياضية */
+        .math-text {
+            font-size: 1.1em;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>العدد النسبي</h1>
+            <p>درس تفاعلي في الرياضيات</p>
+        </header>
+        
+        <div class="page">
+            <h2 class="page-title">العدد النسبي</h2>
+            
+            <div class="explore-box">
+                <h3>أستكشف</h3>
+                <p>غابة الأمازون هي أكبر غابة مطيرة في العالم، وتقع في قارة أمريكا الجنوبية، وتغطي مساحة \( \frac{11}{2} \) مليون كيلومتر مربع. ما اسم مجموعة الأعداد التي ينتمي إليها العدد \( \frac{11}{2} \)?</p>
+                
+                <div class="amazon-img"></div>
+                
+                <div class="explore-note">
+                    سنتعرف على إجابة هذا السؤال بعد دراسة هذا الدرس
+                </div>
+            </div>
+            
+            <div class="lesson-idea">
+                <h3>فكرة الدرس</h3>
+                <p>أعرف العدد النسبي وأمثلة على خط الأعداد.</p>
+            </div>
+            
+            <div class="terms-box">
+                <h3>المصطلحات</h3>
+                <p><span class="term">العدد النسبي (rational number)</span> هو عدد يمكن التعبير عنه بوصفه نسبة بين عددين صحيحين \( b \) و \( a \) مكتوبة على صورة كسر \( \frac{a}{b} \) حيث \( b \neq 0 \). لذلك يمكن أن يكون العدد النسبي كسراً فعلياً، أو غير فعلي، أو كسراً عشرياً، أو عدداً كسرياً، أو عشرياً، لأنَّ كلاً منها يمكن كتابته على صورة كسر \( \frac{a}{b} \).</p>
+            </div>
+            
+            <div class="example-box">
+                <h3 class="example-title">مثال 1</h3>
+                <p>أكتب كل عدد نسبي مما يلي على صورة كسر \( \frac{a}{b} \):</p>
+                
+                <div class="interactive-section">
+                    <h4>1. \( -10.6 \)</h4>
+                    <p>الحل: \( -10.6 = -10 \frac{6}{10} = -\frac{106}{10} = -\frac{53}{5} \)</p>
+                    
+                    <h4>2. \( 65\% \)</h4>
+                    <p>الحل: \( 65\% = 0.65 = \frac{65}{100} = \frac{13}{20} \)</p>
+                    
+                    <h4>3. <span class="math-text">\( 1\frac{2}{5} \)</span> <span style="font-size: 1.1em">(واحد واثنان على خمسة)</span>:</h4>
+                    <div class="input-group">
+                        <label for="ex1-3">أدخل الكسر (a/b):</label>
+                        <input type="text" id="ex1-3" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    <button class="btn btn-check" onclick="checkEx1(3)">تحقق</button>
+                    <div id="feedback-ex1-3" class="feedback"></div>
+                    
+                    <h4>4. \(-3.2\):</h4>
+                    <div class="input-group">
+                        <label for="ex1-4">أدخل الكسر (a/b):</label>
+                        <input type="text" id="ex1-4" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    <button class="btn btn-check" onclick="checkEx1(4)">تحقق</button>
+                    <div id="feedback-ex1-4" class="feedback"></div>
+                    
+                    <h4>5. \(-6\):</h4>
+                    <div class="input-group">
+                        <label for="ex1-5">أدخل الكسر (a/b):</label>
+                        <input type="text" id="ex1-5" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    <button class="btn btn-check" onclick="checkEx1(5)">تحقق</button>
+                    <div id="feedback-ex1-5" class="feedback"></div>
+                    
+                    <h4>6. 85%:</h4>
+                    <div class="input-group">
+                        <label for="ex1-6">أدخل الكسر (a/b):</label>
+                        <input type="text" id="ex1-6" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    <button class="btn btn-check" onclick="checkEx1(6)">تحقق</button>
+                    <div id="feedback-ex1-6" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="page">
+            <h2 class="page-title">تمثيل الأعداد النسبية على خط الأعداد</h2>
+            <p>عند تمثيل الأعداد النسبية على خط الأعداد فإنني أختار تدريجًا مناسبًا بين الأعداد الصحيحة.</p>
+            
+            <div class="example-box">
+                <h3 class="example-title">مثال 2: من الحياة</h3>
+                
+                <table class="table">
+                    <tr>
+                        <th>مقدار التغير</th>
+                        <th>الشركة</th>
+                    </tr>
+                    <tr>
+                        <td>1.8</td>
+                        <td>أ</td>
+                    </tr>
+                    <tr>
+                        <td>-1.6</td>
+                        <td>ب</td>
+                    </tr>
+                    <tr>
+                        <td>1.2</td>
+                        <td>ج</td>
+                    </tr>
+                    <tr>
+                        <td>-0.4</td>
+                        <td>د</td>
+                    </tr>
+                </table>
+                
+                <p>تمثل الأعداد النسبية في الجدول المجاور مقدار ارتفاع أو انخفاض أسهم 4 شركات في سوق عمان المالي. أمثل هذه الأعداد على خط الأعداد.</p>
+                
+                <div class="number-line-container">
+                    <h4>الطريقة 1:</h4>
+                    <p>أرسم خط أعداد، وأضع عليه تدريجًا مناسبًا، ثم أحدد مواقع الأعداد.</p>
+                    
+                    <div class="number-line" id="number-line-example">
+                        <!-- سيتم إنشاء خط الأعداد باستخدام JavaScript -->
+                    </div>
+                    
+                    <h4>الطريقة 2:</h4>
+                    <p>يمكنني أيضًا أن أكتب الأعداد النسبية على صورة كسورٍ فعليّة، أو أعدادٍ كسرية، ثم أمثلها على خط الأعداد.</p>
+                    <p>1.8 = \( \frac{9}{5} \), -1.6 = \( -\frac{8}{5} \), 1.2 = \( \frac{6}{5} \), -0.4 = \( -\frac{2}{5} \)</p>
+                </div>
+            </div>
+            
+            <div class="exercise-box">
+                <h3 class="exercise-title">أتحقق من فهمي</h3>
+                <p>أمثل كلّ عددٍ نسبي ممّا يأتي على خط الأعداد:</p>
+                <ol>
+                    <li>2</li>
+                    <li>-0.8</li>
+                    <li>4.6</li>
+                    <li>-3.2</li>
+                </ol>
+                
+                <div class="interactive-section">
+                    <div class="number-line-container">
+                        <div class="number-line" id="number-line-exercise">
+                            <!-- سيتم إنشاء خط الأعداد باستخدام JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <p>استخدم الأسهم لتمثيل الأعداد:</p>
+                    <div>
+                        <button class="btn" onclick="addPoint(2)">تمثيل 2</button>
+                        <button class="btn" onclick="addPoint(-0.8)">تمثيل -0.8</button>
+                        <button class="btn" onclick="addPoint(4.6)">تمثيل 4.6</button>
+                        <button class="btn" onclick="addPoint(-3.2)">تمثيل -3.2</button>
+                        <button class="btn btn-reset" onclick="resetExercise()">إعادة تعيين</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-box">
+                <h3 class="exercise-title">أتدرب وأحل مسائل</h3>
+                <p>أكتب كلّ عددٍ نسبي ممّا يأتي على صورة كسر \( \frac{a}{b} \).</p>
+                
+                <div class="interactive-section">
+                    <div class="input-group">
+                        <label for="ex2-1">1. 25:</label>
+                        <input type="text" id="ex2-1" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="ex2-2">2. \( 2\frac{1}{4} \):</label>
+                        <input type="text" id="ex2-2" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="ex2-3">3. 0.07:</label>
+                        <input type="text" id="ex2-3" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="ex2-4">4. -127:</label>
+                        <input type="text" id="ex2-4" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="ex2-5">5. \( -1\frac{2}{3} \):</label>
+                        <input type="text" id="ex2-5" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="ex2-6">6. 35%:</label>
+                        <input type="text" id="ex2-6" placeholder="أدخل بصيغة a/b">
+                    </div>
+                    
+                    <button class="btn btn-check" onclick="checkAllEx2()">تحقق من جميع الإجابات</button>
+                    <div id="feedback-ex2" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>الدرس التفاعلي: العدد النسبي | تم التصميم باستخدام HTML, CSS, JavaScript</p>
+        </footer>
+    </div>
+
+    <script>
+        // إنشاء خط الأعداد في مثال 2
+        function createNumberLineExample() {
+            const numberLine = document.getElementById('number-line-example');
+            numberLine.innerHTML = '';
+            
+            // نحدد المدى من -2 إلى 2
+            const min = -2;
+            const max = 2;
+            const width = numberLine.offsetWidth;
+            
+            // نضيف التدريج (علامات صغيرة)
+            for (let i = min; i <= max; i += 0.4) {
+                const tick = document.createElement('div');
+                tick.className = 'tick';
+                tick.style.left = `${((i - min) / (max - min)) * 100}%`;
+                numberLine.appendChild(tick);
+                
+                if (i % 1 === 0) { // فقط للأعداد الصحيحة
+                    const label = document.createElement('div');
+                    label.className = 'tick-label';
+                    label.textContent = i;
+                    label.style.left = `${((i - min) / (max - min)) * 100}%`;
+                    numberLine.appendChild(label);
+                }
+            }
+            
+            // إضافة النقاط
+            const points = [
+                {value: 1.8, label: 'أ'},
+                {value: -1.6, label: 'ب'},
+                {value: 1.2, label: 'ج'},
+                {value: -0.4, label: 'د'}
+            ];
+            
+            points.forEach(point => {
+                const pointEl = document.createElement('div');
+                pointEl.className = 'point';
+                pointEl.style.left = `${((point.value - min) / (max - min)) * 100}%`;
+                pointEl.textContent = point.label;
+                numberLine.appendChild(pointEl);
+            });
+        }
+        
+        // إنشاء خط الأعداد للتمرين
+        function createNumberLineExercise() {
+            const numberLine = document.getElementById('number-line-exercise');
+            numberLine.innerHTML = '';
+            
+            // نحدد المدى من -5 إلى 5
+            const min = -5;
+            const max = 5;
+            const width = numberLine.offsetWidth;
+            
+            // نضيف التدريج (علامات صغيرة)
+            for (let i = min; i <= max; i += 0.5) {
+                const tick = document.createElement('div');
+                tick.className = 'tick';
+                tick.style.left = `${((i - min) / (max - min)) * 100}%`;
+                numberLine.appendChild(tick);
+                
+                if (i % 1 === 0) { // فقط للأعداد الصحيحة
+                    const label = document.createElement('div');
+                    label.className = 'tick-label';
+                    label.textContent = i;
+                    label.style.left = `${((i - min) / (max - min)) * 100}%`;
+                    numberLine.appendChild(label);
+                }
+            }
+        }
+        
+        // إضافة نقطة على خط الأعداد
+        function addPoint(value) {
+            const numberLine = document.getElementById('number-line-exercise');
+            const min = -5;
+            const max = 5;
+            
+            const pointEl = document.createElement('div');
+            pointEl.className = 'point';
+            pointEl.style.left = `${((value - min) / (max - min)) * 100}%`;
+            pointEl.textContent = value;
+            
+            // لون عشوائي للنقطة
+            const colors = ['#e91e63', '#2196f3', '#4caf50', '#ff9800'];
+            pointEl.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            numberLine.appendChild(pointEl);
+        }
+        
+        // إعادة تعيين التمرين
+        function resetExercise() {
+            createNumberLineExercise();
+        }
+        
+        // التحقق من إجابة سؤال الاستكشاف
+        function checkExploreAnswer() {
+            const answer = document.getElementById('explore-answer').value.trim().toLowerCase();
+            const feedback = document.getElementById('explore-feedback');
+            
+            if (answer === 'العدد النسبي' || answer === 'نسبي' || answer === 'نسبية') {
+                feedback.textContent = 'إجابة صحيحة! العدد ينتمي إلى مجموعة الأعداد النسبية.';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = 'إجابة غير صحيحة. حاول مرة أخرى. تذكر أن العدد النسبي هو الذي يمكن كتابته على صورة كسر.';
+                feedback.className = 'feedback incorrect';
+            }
+        }
+        
+        // التحقق من إجابات مثال 1
+        function checkEx1(part) {
+            const input = document.getElementById(`ex1-${part}`);
+            const feedback = document.getElementById(`feedback-ex1-${part}`);
+            const answer = input.value.trim();
+            
+            let correctAnswer = '';
+            switch(part) {
+                case 3: // 1 + 2/5 = 7/5
+                    correctAnswer = '7/5';
+                    break;
+                case 4: // -3.2 = -16/5
+                    correctAnswer = '-16/5';
+                    break;
+                case 5: // -6 = -6/1
+                    correctAnswer = '-6/1';
+                    break;
+                case 6: // 85% = 17/20
+                    correctAnswer = '17/20';
+                    break;
+            }
+            
+            if (answer === correctAnswer) {
+                feedback.textContent = 'إجابة صحيحة! أحسنت.';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = `الإجابة الصحيحة هي ${correctAnswer}`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+        
+        // التحقق من إجابات التمرين الحديثة
+        function checkAllEx2() {
+            const answers = [
+                {id: 'ex2-1', correct: '25/1'},
+                {id: 'ex2-2', correct: '9/4'}, // 2 + 1/4 = 9/4
+                {id: 'ex2-3', correct: '7/100'},
+                {id: 'ex2-4', correct: '-127/1'},
+                {id: 'ex2-5', correct: '-5/3'}, // -1 -2/3 = -5/3
+                {id: 'ex2-6', correct: '7/20'} // 35% = 35/100 = 7/20
+            ];
+            
+            const feedback = document.getElementById('feedback-ex2');
+            let allCorrect = true;
+            let resultHtml = '<h4>نتائج التحقق:</h4><ul>';
+            
+            answers.forEach((item, index) => {
+                const input = document.getElementById(item.id);
+                const answer = input.value.trim();
+                
+                if (answer === item.correct) {
+                    resultHtml += `<li>السؤال ${index+1}: <span style="color:green">✓ صحيح</span></li>`;
+                } else {
+                    resultHtml += `<li>السؤال ${index+1}: <span style="color:red">✗ غير صحيح (الجواب: ${item.correct})</span></li>`;
+                    allCorrect = false;
+                }
+            });
+            
+            resultHtml += '</ul>';
+            
+            if (allCorrect) {
+                feedback.innerHTML = '<div style="color:green; font-weight:bold">جميع الإجابات صحيحة! أحسنت!</div>' + resultHtml;
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.innerHTML = '<div style="color:red; font-weight:bold">بعض الإجابات غير صحيحة. راجع الإجابات وحاول مرة أخرى.</div>' + resultHtml;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+        
+        // تهيئة الصفحة عند التحميل
+        window.onload = function() {
+            createNumberLineExample();
+            createNumberLineExercise();
+        };
+    </script>
+</body>
+</html>
