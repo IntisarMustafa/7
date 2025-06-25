@@ -17,7 +17,6 @@
         
         body {
 background: linear-gradient(135deg, #ffffff, #f0f0f0, #e0e0e0);
-
             color: #333;
             min-height: 100vh;
             padding: 20px;
@@ -36,9 +35,9 @@ background: linear-gradient(135deg, #ffffff, #f0f0f0, #e0e0e0);
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 10% 20%, rgba(106, 27, 154, 0.2) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(74, 20, 140, 0.3) 0%, transparent 30%),
-                radial-gradient(circle at 30% 60%, rgba(26, 26, 108, 0.25) 0%, transparent 25%);
+                radial-gradient(circle at 10% 20%, rgba(135, 206, 235, 0.3) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 191, 255, 0.4) 0%, transparent 30%),
+                radial-gradient(circle at 30% 60%, rgba(30, 144, 255, 0.3) 0%, transparent 25%);
             z-index: -1;
             animation: waterEffect 15s infinite alternate;
         }
@@ -67,7 +66,7 @@ background: linear-gradient(135deg, #ffffff, #f0f0f0, #e0e0e0);
         }
         
         header {
-            background: linear-gradient(to right, #5e35b1, #4527a0);
+            background: linear-gradient(to right, #1E90FF, #00BFFF);
             color: white;
             text-align: center;
             padding: 35px 20px;
@@ -103,8 +102,7 @@ background: linear-gradient(135deg, #ffffff, #f0f0f0, #e0e0e0);
             font-weight: 700;
             position: relative;
             z-index: 2;
-
-color: #0000ff;
+            color: #fff;
         }
         
         .subtitle {
@@ -122,17 +120,16 @@ color: #0000ff;
         }
         
         .instructions {
-            background: #f8f5ff;
+            background: #f0f9ff;
             padding: 25px;
-            border-bottom: 1px solid #e8e1ff;
+            border-bottom: 1px solid #d1e8ff;
             font-size: 1.15rem;
             line-height: 1.7;
-
-color: #87ceeb;
+            color: #2c5f8a;
         }
         
         .instructions h3 {
-            color: #5e35b1;
+            color: #1E90FF;
             margin-bottom: 20px;
             font-size: 1.5rem;
             display: flex;
@@ -154,7 +151,7 @@ color: #87ceeb;
         
         .instructions li i {
             margin-left: 12px;
-            color: #7e57c2;
+            color: #1E90FF;
             margin-top: 6px;
             font-size: 1.2rem;
         }
@@ -168,8 +165,8 @@ color: #87ceeb;
             border-radius: 14px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(123, 102, 204, 0.1);
-            border-left: 5px solid #7e57c2;
+            box-shadow: 0 5px 20px rgba(0, 123, 255, 0.1);
+            border-left: 5px solid #1E90FF;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -177,7 +174,7 @@ color: #87ceeb;
         
         .question:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(123, 102, 204, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.2);
         }
         
         .question-header {
@@ -187,7 +184,7 @@ color: #87ceeb;
         }
         
         .question-number {
-            background: linear-gradient(to bottom, #7e57c2, #5e35b1);
+            background: linear-gradient(to bottom, #1E90FF, #0077CC);
             color: white;
             width: 40px;
             height: 40px;
@@ -199,12 +196,12 @@ color: #87ceeb;
             font-size: 1.2rem;
             margin-left: 15px;
             flex-shrink: 0;
-            box-shadow: 0 4px 8px rgba(94, 53, 177, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
         }
         
         .question-title {
             font-size: 1.35rem;
-            color: #5e35b1;
+            color: #1E90FF;
             font-weight: 700;
         }
         
@@ -213,7 +210,7 @@ color: #87ceeb;
             line-height: 1.7;
             margin-bottom: 22px;
             padding: 0 12px;
-            color: #4a3f6e;
+            color: #2c5f8a;
         }
         
         .math {
@@ -221,24 +218,24 @@ color: #87ceeb;
             text-align: center;
             margin: 20px 0;
             padding: 15px;
-            background: #f3f0ff;
+            background: #e6f2ff;
             border-radius: 10px;
             font-weight: bold;
-            border: 1px solid #d9d1ff;
-            color: #5e35b1;
-            box-shadow: inset 0 0 10px rgba(126, 87, 194, 0.1);
+            border: 1px solid #b3d7ff;
+            color: #1E90FF;
+            box-shadow: inset 0 0 10px rgba(0, 123, 255, 0.1);
         }
         
         .number-line {
             width: 100%;
             height: 70px;
-            background: #f5f2ff;
+            background: #e6f2ff;
             border-radius: 10px;
             position: relative;
             margin: 25px 0;
-            border: 1px solid #d9d1ff;
+            border: 1px solid #b3d7ff;
             overflow: hidden;
-            box-shadow: inset 0 0 10px rgba(126, 87, 194, 0.1);
+            box-shadow: inset 0 0 10px rgba(0, 123, 255, 0.1);
         }
         
         .line {
@@ -247,7 +244,7 @@ color: #87ceeb;
             left: 5%;
             width: 90%;
             height: 3px;
-            background: #7e57c2;
+            background: #1E90FF;
             transform: translateY(-50%);
         }
         
@@ -256,7 +253,7 @@ color: #87ceeb;
             top: 30%;
             width: 3px;
             height: 18px;
-            background: #7e57c2;
+            background: #1E90FF;
         }
         
         .tick-label {
@@ -264,7 +261,7 @@ color: #87ceeb;
             top: 65%;
             font-size: 1.1rem;
             transform: translateX(-50%);
-            color: #5e35b1;
+            color: #1E90FF;
             font-weight: 600;
         }
         
@@ -273,7 +270,7 @@ color: #87ceeb;
             top: 50%;
             width: 26px;
             height: 26px;
-            background: linear-gradient(to bottom, #9c27b0, #7b1fa2);
+            background: linear-gradient(to bottom, #00BFFF, #0080FF);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             display: flex;
@@ -282,7 +279,7 @@ color: #87ceeb;
             color: white;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(123, 31, 162, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
             font-size: 1rem;
             transition: all 0.3s ease;
             z-index: 2;
@@ -301,18 +298,18 @@ color: #87ceeb;
             align-items: center;
             padding: 16px 20px;
             margin-bottom: 15px;
-            background: #f8f5ff;
+            background: #f0f9ff;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid #e8e1ff;
+            border: 2px solid #d1e8ff;
             position: relative;
             overflow: hidden;
         }
         
         .option:hover {
-            background: #f0ebff;
-            border-color: #d0c4ff;
+            background: #e6f2ff;
+            border-color: #b3d7ff;
             transform: translateX(5px);
         }
         
@@ -323,7 +320,7 @@ color: #87ceeb;
             right: 0;
             width: 5px;
             height: 100%;
-            background: #7e57c2;
+            background: #1E90FF;
             opacity: 0;
             transition: all 0.3s ease;
         }
@@ -336,14 +333,14 @@ color: #87ceeb;
             margin-left: 12px;
             transform: scale(1.4);
             cursor: pointer;
-            accent-color: #7e57c2;
+            accent-color: #1E90FF;
         }
         
         .option label {
             flex: 1;
             font-size: 1.15rem;
             cursor: pointer;
-            color: #5e35b1;
+            color: #1E90FF;
             font-weight: 500;
         }
         
@@ -390,27 +387,27 @@ color: #87ceeb;
         }
         
         #submit-btn {
-            background: linear-gradient(to right, #26a69a, #009688);
+            background: linear-gradient(to right, #1E90FF, #0077CC);
             color: white;
         }
         
         #submit-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(38, 166, 154, 0.4);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
         }
         
         #reset-btn {
-            background: linear-gradient(to right, #7e57c2, #5e35b1);
+            background: linear-gradient(to right, #00BFFF, #0080FF);
             color: white;
         }
         
         #reset-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(94, 53, 177, 0.4);
+            box-shadow: 0 8px 20px rgba(0, 191, 255, 0.4);
         }
         
         .start-btn {
-            background: linear-gradient(to right, #9c27b0, #7b1fa2);
+            background: linear-gradient(to right, #1E90FF, #00BFFF);
             color: white;
             margin: 25px auto;
             display: none;
@@ -419,23 +416,23 @@ color: #87ceeb;
         
         .start-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(156, 39, 176, 0.4);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
         }
         
         .result {
             text-align: center;
             padding: 35px;
-            background: #f8f5ff;
+            background: #f0f9ff;
             border-radius: 16px;
             margin: 25px;
             display: none;
-            border: 1px solid #e8e1ff;
-            box-shadow: 0 5px 15px rgba(123, 102, 204, 0.1);
+            border: 1px solid #d1e8ff;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
         }
         
         .result h2 {
             font-size: 2.2rem;
-            color: #5e35b1;
+            color: #1E90FF;
             margin-bottom: 25px;
             font-weight: 700;
         }
@@ -443,7 +440,7 @@ color: #87ceeb;
         .score {
             font-size: 4rem;
             font-weight: 800;
-            background: linear-gradient(to right, #7e57c2, #9c27b0);
+            background: linear-gradient(to right, #1E90FF, #00BFFF);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -455,7 +452,7 @@ color: #87ceeb;
             font-size: 1.4rem;
             margin: 25px 0;
             line-height: 1.7;
-            color: #5e35b1;
+            color: #1E90FF;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
@@ -468,15 +465,15 @@ color: #87ceeb;
             padding: 25px;
             background: white;
             border-radius: 14px;
-            border: 1px solid #e8e1ff;
+            border: 1px solid #d1e8ff;
         }
         
         .correct-answers h3 {
-            color: #7e57c2;
+            color: #1E90FF;
             margin-bottom: 25px;
             font-size: 1.6rem;
             padding-bottom: 15px;
-            border-bottom: 3px solid #7e57c2;
+            border-bottom: 3px solid #1E90FF;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -485,7 +482,7 @@ color: #87ceeb;
         .answer-item {
             margin-bottom: 22px;
             padding-bottom: 22px;
-            border-bottom: 2px dashed #d0c4ff;
+            border-bottom: 2px dashed #b3d7ff;
         }
         
         .answer-item:last-child {
@@ -497,22 +494,22 @@ color: #87ceeb;
         .answer-item p {
             margin-bottom: 10px;
             line-height: 1.7;
-            color: #4a3f6e;
+            color: #2c5f8a;
             font-size: 1.1rem;
         }
         
         .answer-item strong {
-            color: #5e35b1;
+            color: #1E90FF;
             font-weight: 600;
         }
         
         .correct {
-            color: #26a69a;
+            color: #28a745;
             font-weight: bold;
         }
         
         .incorrect {
-            color: #f44336;
+            color: #dc3545;
             font-weight: bold;
         }
         
@@ -531,8 +528,8 @@ color: #87ceeb;
         
         .skill-tag {
             display: inline-block;
-            background: linear-gradient(to right, #d1c4e9, #b39ddb);
-            color: #4527a0;
+            background: linear-gradient(to right, #d1e8ff, #b3d7ff);
+            color: #1E90FF;
             padding: 6px 15px;
             border-radius: 20px;
             font-size: 0.9rem;
@@ -861,7 +858,7 @@ color: #87ceeb;
     </div>
     
     <footer>
-        
+        اختبار تقييمي - مادة الرياضيات © 2023
     </footer>
     
     <script>
@@ -957,8 +954,8 @@ color: #87ceeb;
                 
                 // إزالة تأثيرات التحديد
                 document.querySelectorAll('.option').forEach(option => {
-                    option.style.background = '#f8f5ff';
-                    option.style.borderColor = '#e8e1ff';
+                    option.style.background = '#f0f9ff';
+                    option.style.borderColor = '#d1e8ff';
                 });
                 
                 // التمرير إلى الأعلى
@@ -973,13 +970,13 @@ color: #87ceeb;
                     
                     // إزالة التحديد من جميع الخيارات
                     this.parentElement.querySelectorAll('.option').forEach(opt => {
-                        opt.style.background = '#f8f5ff';
-                        opt.style.borderColor = '#e8e1ff';
+                        opt.style.background = '#f0f9ff';
+                        opt.style.borderColor = '#d1e8ff';
                     });
                     
                     // تمييز الخيار المحدد
-                    this.style.background = '#f0ebff';
-                    this.style.borderColor = '#d0c4ff';
+                    this.style.background = '#e6f2ff';
+                    this.style.borderColor = '#b3d7ff';
                 });
             });
             
