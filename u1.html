@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فهرس الوحدة الأولى: الأعداد النسبية</title>
+    <title>الوحدة الأولى: الأعداد النسبية</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -188,11 +188,13 @@
             align-items: center;
             gap: 10px;
             white-space: nowrap;
+            text-decoration: none;
         }
         
         .index-page:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(255, 154, 158, 0.5);
+            background: linear-gradient(135deg, #ff7d82, #f8b9aa);
         }
         
         .index-page i {
@@ -326,19 +328,13 @@
             }
             
             .index-content {
-                flex-direction: row;
-                align-items: center;
-                padding-right: 0;
-                gap: 15px;
                 width: 100%;
             }
             
             .index-page {
                 margin-top: 20px;
-                align-self: flex-end;
                 padding: 12px 20px;
                 width: 100%;
-                justify-content: center;
             }
             
             .index-title {
@@ -367,7 +363,6 @@
             .index-page {
                 padding: 10px 18px;
                 font-size: 1.1rem;
-                min-width: auto;
             }
             
             .lesson-icon {
@@ -403,9 +398,9 @@
                         </div>
                         <h3 class="index-title">العدد النسبي</h3>
                     </div>
-                    <div class="index-page" onclick="openLesson('u1l1.html')">
+                    <a href="u1l1.html" class="index-page">
                         <i class="fas fa-play-circle"></i> عرض الدرس
-                    </div>
+                    </a>
                 </li>
                 
                 <!-- Lesson 2 -->
@@ -416,9 +411,9 @@
                         </div>
                         <h3 class="index-title">كتابة العدد النسبي بالصورة العشرية وترتيبها</h3>
                     </div>
-                    <div class="index-page" onclick="openLesson('u1l2.html')">
+                    <a href="u1l2.html" class="index-page">
                         <i class="fas fa-play-circle"></i> عرض الدرس
-                    </div>
+                    </a>
                 </li>
                 
                 <!-- Lesson 3 -->
@@ -429,9 +424,9 @@
                         </div>
                         <h3 class="index-title">مقارنة الأعداد النسبية وطرحها</h3>
                     </div>
-                    <div class="index-page" onclick="openLesson('u1l3.html')">
+                    <a href="u1l3.html" class="index-page">
                         <i class="fas fa-play-circle"></i> عرض الدرس
-                    </div>
+                    </a>
                 </li>
                 
                 <!-- Lesson 4 -->
@@ -442,9 +437,9 @@
                         </div>
                         <h3 class="index-title">جمع الأعداد النسبية وخصائصه</h3>
                     </div>
-                    <div class="index-page" onclick="openLesson('u1l4.html')">
+                    <a href="u1l4.html" class="index-page">
                         <i class="fas fa-play-circle"></i> عرض الدرس
-                    </div>
+                    </a>
                 </li>
                 
                 <!-- Lesson 5 -->
@@ -455,9 +450,9 @@
                         </div>
                         <h3 class="index-title">ضرب الأعداد النسبية وخصائصه</h3>
                     </div>
-                    <div class="index-page" onclick="openLesson('u1l5.html')">
+                    <a href="u1l5.html" class="index-page">
                         <i class="fas fa-play-circle"></i> عرض الدرس
-                    </div>
+                    </a>
                 </li>
                 
                 <!-- Lesson 6 -->
@@ -468,16 +463,16 @@
                         </div>
                         <h3 class="index-title">خطة حل المسألة: الحل العكسي</h3>
                     </div>
-                    <div class="index-page" onclick="openLesson('u1l6.html')">
+                    <a href="u1l6.html" class="index-page">
                         <i class="fas fa-play-circle"></i> عرض الدرس
-                    </div>
+                    </a>
                 </li>
             </ul>
         </div>
         
         <div class="footer">
             <p>الوحدة الأولى: الأعداد النسبية | 6 دروس رئيسية</p>
-            <p>يمكنك النقر على أي درس لفتحه</p>
+            <p>انقر على أي درس لفتحه مباشرة</p>
         </div>
     </div>
 
@@ -487,7 +482,7 @@
         const elementTypes = ['circle', 'triangle', 'square', 'hexagon'];
         const colors = ['#ff9a9e', '#a18cd1', '#fad0c4', '#8fd3f4'];
         
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 20; i++) {
             const element = document.createElement('div');
             const type = elementTypes[Math.floor(Math.random() * elementTypes.length)];
             const color = colors[Math.floor(Math.random() * colors.length)];
@@ -526,16 +521,6 @@
                 item.style.transform = 'translateY(0)';
             });
         });
-        
-        // Function to open lesson pages
-        function openLesson(pageUrl) {
-            // In a real implementation, this would redirect to the lesson page
-            // For demonstration, we'll show a message
-            alert(`سيتم الآن فتح صفحة الدرس: ${pageUrl}\n\nفي التطبيق الحقيقي، سيتم تحويلك إلى صفحة الدرس.`);
-            
-            // To actually redirect, uncomment the next line:
-            // window.location.href = pageUrl;
-        }
     </script>
 </body>
 </html>
