@@ -23,6 +23,40 @@
             align-items: center;
             color: #333;
             padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* رموز رياضية متحركة في الخلفية */
+        .math-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .math-symbol {
+            position: absolute;
+            font-size: 3rem;
+            color: rgba(118, 75, 162, 0.1);
+            font-weight: bold;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, 20px) rotate(10deg); }
+            50% { transform: translate(-25px, -15px) rotate(-10deg); }
+            75% { transform: translate(20px, -25px) rotate(15deg); }
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
         }
         
         .cover-container {
@@ -33,6 +67,7 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             position: relative;
+            z-index: 10;
         }
         
         .header {
@@ -74,9 +109,9 @@
             text-align: center;
         }
         
-        .units-container {
+        .units-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 25px;
             margin: 40px 0;
         }
@@ -91,6 +126,10 @@
             border: 1px solid #eaeaea;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
         }
         
         .unit-card:hover {
@@ -114,10 +153,6 @@
             font-weight: 700;
             color: #333;
             margin-bottom: 15px;
-            min-height: 65px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .unit-btn {
@@ -187,12 +222,15 @@
             h1 { font-size: 2.2rem; }
             .subtitle { font-size: 1.2rem; }
             .content { padding: 50px 20px 30px; }
-            .units-container { grid-template-columns: 1fr; }
+            .units-grid { grid-template-columns: 1fr; }
             .decoration { font-size: 6rem; }
         }
     </style>
 </head>
 <body>
+    <!-- خلفية برموز رياضية متحركة -->
+    <div class="math-bg" id="mathBg"></div>
+    
     <div class="cover-container">
         <div class="header">
             <div class="decoration dec-1">∛</div>
@@ -207,28 +245,32 @@
         <div class="content">
             <div class="grade-badge">الصف السابع الأساسي</div>
             
-            <div class="units-container">
+            <div class="units-grid">
                 <div class="unit-card">
                     <i class="fas fa-sort-amount-up-alt unit-icon"></i>
                     <h3 class="unit-title">الأعداد النسبية</h3>
+                    <p>تمثيل الأعداد النسبية، العمليات الأساسية، التطبيقات العملية</p>
                     <button class="unit-btn" onclick="location.href='u1.html'">ابدأ الوحدة</button>
                 </div>
                 
                 <div class="unit-card">
                     <i class="fas fa-superscript unit-icon"></i>
                     <h3 class="unit-title">الأسس والمقادير الجبرية</h3>
+                    <p>قوانين الأسس، تبسيط المقادير، العمليات الجبرية</p>
                     <button class="unit-btn" onclick="location.href='u2.html'">ابدأ الوحدة</button>
                 </div>
                 
                 <div class="unit-card">
                     <i class="fas fa-chart-line unit-icon"></i>
                     <h3 class="unit-title">المعادلات الخطية</h3>
+                    <p>حل المعادلات، التمثيل البياني، التطبيقات الحياتية</p>
                     <button class="unit-btn" onclick="location.href='u3.html'">ابدأ الوحدة</button>
                 </div>
                 
                 <div class="unit-card">
                     <i class="fas fa-shapes unit-icon"></i>
                     <h3 class="unit-title">الهندسة والتحويلات</h3>
+                    <p>الزوايا والمضلعات، المساحة والمحيط، التحويلات الهندسية</p>
                     <button class="unit-btn" onclick="location.href='u4.html'">ابدأ الوحدة</button>
                 </div>
             </div>
@@ -241,8 +283,38 @@
     </div>
 
     <script>
+        // إنشاء رموز رياضية متحركة في الخلفية
+        function createMathSymbols() {
+            const mathBg = document.getElementById('mathBg');
+            const symbols = ['+', '−', '×', '÷', '=', 'π', '√', '°', '∑', '∫', '∞', '≈', '≠', '≤', '≥', 'θ', 'α', 'β', 'γ'];
+            
+            for (let i = 0; i < 20; i++) {
+                const symbol = document.createElement('div');
+                symbol.className = 'math-symbol';
+                symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                
+                // وضع عشوائي
+                symbol.style.left = `${Math.random() * 100}%`;
+                symbol.style.top = `${Math.random() * 100}%`;
+                
+                // تأخير عشوائي للحركة
+                symbol.style.animationDelay = `${Math.random() * 5}s`;
+                
+                // حجم عشوائي
+                const size = 1.5 + Math.random() * 3;
+                symbol.style.fontSize = `${size}rem`;
+                
+                // شفافية متغيرة
+                symbol.style.animation = `float ${10 + Math.random() * 20}s infinite ease-in-out, fadeInOut ${3 + Math.random() * 7}s infinite ease-in-out`;
+                
+                mathBg.appendChild(symbol);
+            }
+        }
+        
         // تأثيرات تفاعلية للبطاقات عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
+            createMathSymbols();
+            
             const cards = document.querySelectorAll('.unit-card');
             
             cards.forEach((card, index) => {
