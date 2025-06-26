@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تمثيل الأعداد النسبية - الصفحة الرابعة</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        chtml: {
+            scale: 1.1,
+            mtextInheritFont: true
+        },
+        options: {
+            enableMenu: false,
+            processHtmlClass: 'math-text'
+        }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ee 100%);
+            padding: 20px;
+            min-height: 100vh;
+            font-size: 1.15rem;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #1a5d38 0%, #2e8b57 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .page {
+            padding: 25px;
+            border-bottom: 2px dashed #d0e8d0;
+        }
+        
+        .page-title {
+            color: #1a5d38;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #e0f0e0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-title i {
+            margin-left: 15px;
+            font-size: 1.6rem;
+        }
+        
+        .instructions {
+            background-color: #edf7ed;
+            border-left: 7px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 12px 12px 0;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .instructions h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #1a5d38;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #c8e6c9;
+        }
+        
+        .question-container {
+            background: linear-gradient(to bottom, #ffffff, #f9f9f9);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            border: 2px solid #e0f0e0;
+        }
+        
+        .question-title {
+            color: #1976d2;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            padding: 8px;
+            background: linear-gradient(to right, #e3f2fd, #bbdefb);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .number-line-scroll {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 10px 0;
+            margin: 20px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .number-line-container {
+            position: relative;
+            height: 120px;
+            min-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .number-line {
+            position: absolute;
+            top: 60px;
+            left: 25px;
+            right: 25px;
+            height: 4px;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            z-index: 1;
+            border-radius: 2px;
+        }
+        
+        .tick {
+            position: absolute;
+            top: 55px;
+            width: 2px;
+            height: 10px;
+            background-color: #666;
+            z-index: 2;
+        }
+        
+        .major-tick {
+            height: 15px;
+            background-color: #333;
+            width: 3px;
+        }
+        
+        .tick-label {
+            position: absolute;
+            top: 80px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            z-index: 2;
+        }
+        
+        .draggable-point {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: radial-gradient(circle at center, #ff416c, #ff4b2b);
+            border-radius: 50%;
+            top: 47px;
+            cursor: grab;
+            transform: translateX(-50%);
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid #fff;
+        }
+        
+        .draggable-point:active {
+            cursor: grabbing;
+            transform: translateX(-50%) scale(1.2);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #4caf50, #2c7744);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px;
+        }
+        
+        .btn i {
+            margin-left: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(to right, #43a047, #1b5e20);
+        }
+        
+        .btn-check {
+            background: linear-gradient(to right, #2196f3, #0d47a1);
+        }
+        
+        .btn-reset {
+            background: linear-gradient(to right, #f44336, #b71c1c);
+        }
+        
+        .feedback {
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feedback.correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #a5d6a7;
+        }
+        
+        .feedback.incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 2px solid #ef9a9a;
+        }
+        
+        .result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(30, 30, 60, 0.1);
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .counter {
+            margin-top: 8px;
+            font-size: 1.3rem;
+            color: #1a5d38;
+        }
+        
+        .math-text {
+            font-size: 1.6rem;
+            vertical-align: middle;
+            margin: 0 6px;
+        }
+        
+        .large-fraction {
+            font-size: 1.8rem;
+            margin: 0 8px;
+            color: #1a5d38;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f8e9;
+            color: #2e7d32;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f1f8e9;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            background: linear-gradient(to right, #2e7d32, #1b5e20);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 5px;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-game {
+            background: linear-gradient(to right, #ff6b6b, #c0392b);
+        }
+        
+        .btn-menu {
+            background: linear-gradient(to right, #3498db, #1a5276);
+        }
+        
+        .nav-buttons-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .page {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .instructions {
+                padding: 15px;
+                font-size: 1rem;
+            }
+            
+            .instructions h3 {
+                font-size: 1.3rem;
+            }
+            
+            .question-title {
+                font-size: 1.3rem;
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+                padding: 12px;
+                font-size: 15px;
+                min-width: auto;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                margin-bottom: 10px;
+                justify-content: center;
+                padding: 10px;
+            }
+            
+            .number-line-container {
+                height: 110px;
+                min-width: 700px;
+            }
+            
+            .number-line {
+                top: 55px;
+                left: 20px;
+                right: 20px;
+            }
+            
+            .tick {
+                top: 50px;
+            }
+            
+            .tick-label {
+                top: 70px;
+            }
+            
+            .draggable-point {
+                top: 42px;
+            }
+            
+            .large-fraction {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .number-line-container {
+                min-width: 600px;
+            }
+            
+            .number-line {
+                left: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>تمثيل الأعداد النسبية على خط الأعداد</h1>
+            <p style="font-size: 1.2rem;">تمرين تفاعلي في الرياضيات - الصفحة الرابعة</p>
+        </header>
+        
+        <div class="page">
+            <h2 class="page-title">
+                <i class="fas fa-ruler-combined"></i>تمثيل الأعداد على خط الأعداد
+            </h2>
+            
+            <div class="instructions">
+                <h3>كيفية حل التمرين</h3>
+                <p>1. اسحب النقطة الحمراء <span style="display:inline-block; width:15px; height:15px; background:#ff416c; border-radius:50%; border:2px solid #fff; vertical-align:middle;"></span> إلى الموقع الصحيح على خط الأعداد</p>
+                <p>2. اضغط على زر "تحقق من الإجابة" للتأكد من صحة تمثيلك</p>
+                <p>3. إذا أردت إعادة المحاولة، اضغط على زر "إعادة المحاولة"</p>
+                <p>4. حاول حل جميع الأسئلة للحصول على تقييم كامل</p>
+            </div>
+            
+            <!-- السؤال 1: 0.2 -->
+            <div class="question-container">
+                <div class="question-title">7) مثل العدد <span class="large-fraction">\( 0.2 \)</span> على خط الأعداد</div>
+                <div class="number-line-scroll">
+                    <div class="number-line-container" id="line1">
+                        <div class="number-line"></div>
+                        <!-- سيتم إضافة العلامات بالجافاسكريبت -->
+                        <div class="draggable-point" id="point1"></div>
+                    </div>
+                </div>
+                <div class="feedback" id="feedback1"></div>
+                <div class="controls">
+                    <button class="btn btn-check" onclick="checkAnswer(1, 0.2)">
+                        <i class="fas fa-check-circle"></i>تحقق من الإجابة
+                    </button>
+                    <button class="btn btn-reset" onclick="resetQuestion(1)">
+                        <i class="fas fa-redo"></i>إعادة المحاولة
+                    </button>
+                </div>
+            </div>
+            
+            <!-- السؤال 2: 1⅓ -->
+            <div class="question-container">
+                <div class="question-title">8) مثل العدد <span class="large-fraction">\( 1\frac{1}{3} \)</span> على خط الأعداد</div>
+                <div class="number-line-scroll">
+                    <div class="number-line-container" id="line2">
+                        <div class="number-line"></div>
+                        <!-- سيتم إضافة العلامات بالجافاسكريبت -->
+                        <div class="draggable-point" id="point2"></div>
+                    </div>
+                </div>
+                <div class="feedback" id="feedback2"></div>
+                <div class="controls">
+                    <button class="btn btn-check" onclick="checkAnswer(2, 4/3)">
+                        <i class="fas fa-check-circle"></i>تحقق من الإجابة
+                    </button>
+                    <button class="btn btn-reset" onclick="resetQuestion(2)">
+                        <i class="fas fa-redo"></i>إعادة المحاولة
+                    </button>
+                </div>
+            </div>
+            
+            <!-- السؤال 3: -⅕ -->
+            <div class="question-container">
+                <div class="question-title">9) مثل العدد <span class="large-fraction">\( -\frac{1}{5} \)</span> على خط الأعداد</div>
+                <div class="number-line-scroll">
+                    <div class="number-line-container" id="line3">
+                        <div class="number-line"></div>
+                        <!-- سيتم إضافة العلامات بالجافاسكريبت -->
+                        <div class="draggable-point" id="point3"></div>
+                    </div>
+                </div>
+                <div class="feedback" id="feedback3"></div>
+                <div class="controls">
+                    <button class="btn btn-check" onclick="checkAnswer(3, -0.2)">
+                        <i class="fas fa-check-circle"></i>تحقق من الإجابة
+                    </button>
+                    <button class="btn btn-reset" onclick="resetQuestion(3)">
+                        <i class="fas fa-redo"></i>إعادة المحاولة
+                    </button>
+                </div>
+            </div>
+            
+            <!-- السؤال 4: 1.6 -->
+            <div class="question-container">
+                <div class="question-title">10) مثل العدد <span class="large-fraction">\( 1.6 \)</span> على خط الأعداد</div>
+                <div class="number-line-scroll">
+                    <div class="number-line-container" id="line4">
+                        <div class="number-line"></div>
+                        <!-- سيتم إضافة العلامات بالجافاسكريبت -->
+                        <div class="draggable-point" id="point4"></div>
+                    </div>
+                </div>
+                <div class="feedback" id="feedback4"></div>
+                <div class="controls">
+                    <button class="btn btn-check" onclick="checkAnswer(4, 1.6)">
+                        <i class="fas fa-check-circle"></i>تحقق من الإجابة
+                    </button>
+                    <button class="btn btn-reset" onclick="resetQuestion(4)">
+                        <i class="fas fa-redo"></i>إعادة المحاولة
+                    </button>
+                </div>
+            </div>
+            
+            <div class="result">
+                <div id="final-feedback">قم بحل جميع الأسئلة للتحقق من إجاباتك</div>
+                <div class="counter">عدد الإجابات الصحيحة: <span id="correct-count">0</span> من 4</div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <div class="nav-buttons-container">
+                <a href="u1l1p3.html" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i> السابق
+                </a>
+                <a href="u1.html" class="nav-btn btn-menu">
+                    <i class="fas fa-home"></i> عودة للقائمة
+                </a>
+                <a href="u1l1p5.html" class="nav-btn btn-game">
+                    <i class="fas fa-gamepad"></i> العب لعبة
+                </a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>الدرس التفاعلي: العدد النسبي | الصفحة 4 من 4</p>
+        </footer>
+    </div>
+
+    <script>
+        // تعريف خطوط الأعداد مع تعديلات للسؤالين 8 و10
+        const numberLines = {
+            1: { min: -2, max: 2, length: 750, start: 25 },  // السؤال 7
+            2: { min: -1, max: 3, length: 750, start: 25 },  // السؤال 8: حذف المنطقة من -1 إلى -2
+            3: { min: -2, max: 2, length: 750, start: 25 },  // السؤال 9
+            4: { min: -1, max: 3, length: 750, start: 25 }   // السؤال 10: حذف المنطقة من -1 إلى -2
+        };
+
+        // دالة لرسم خط الأعداد مع التقسيمات
+        function drawNumberLines() {
+            for (let q = 1; q <= 4; q++) {
+                const container = document.getElementById(`line${q}`);
+                const min = numberLines[q].min;
+                const max = numberLines[q].max;
+                const length = numberLines[q].length;
+                const start = numberLines[q].start;
+                
+                // مسح أي علامات موجودة مسبقًا
+                const existingTicks = container.querySelectorAll('.tick, .tick-label');
+                existingTicks.forEach(el => {
+                    if (!el.classList.contains('number-line') && !el.classList.contains('draggable-point')) {
+                        el.remove();
+                    }
+                });
+                
+                // إضافة علامات لكل 0.1
+                for (let i = min; i <= max; i += 0.1) {
+                    const position = start + ((i - min) / (max - min)) * length;
+                    
+                    // علامة صغيرة لكل 0.1
+                    const tick = document.createElement('div');
+                    tick.className = 'tick';
+                    tick.style.left = `${position}px`;
+                    
+                    // علامات رئيسية لكل 0.5
+                    if (Math.abs(i - Math.round(i)) < 0.01) {
+                        tick.className += ' major-tick';
+                    }
+                    
+                    container.appendChild(tick);
+                    
+                    // تسميات للأعداد الصحيحة
+                    if (Math.abs(i - Math.round(i)) < 0.01) {
+                        const label = document.createElement('div');
+                        label.className = 'tick-label';
+                        
+                        // عرض الأعداد الصحيحة فقط بدون مشاكل التقريب
+                        const value = Math.round(i * 10) / 10;
+                        const isInteger = Math.abs(value - Math.round(value)) < 0.01;
+                        
+                        label.textContent = isInteger ? value.toFixed(0) : value.toFixed(1);
+                        label.style.left = `${position}px`;
+                        container.appendChild(label);
+                    }
+                }
+                
+                // وضع النقطة في البداية عند الصفر
+                const point = document.getElementById(`point${q}`);
+                const zeroPosition = start + ((0 - min) / (max - min)) * length;
+                point.style.left = `${zeroPosition}px`;
+            }
+        }
+        
+        // جعل النقاط قابلة للسحب
+        function initDraggablePoints() {
+            const points = document.querySelectorAll('.draggable-point');
+            let activePoint = null;
+            let offsetX = 0;
+            
+            points.forEach(point => {
+                point.addEventListener('mousedown', startDrag);
+                point.addEventListener('touchstart', startDragTouch);
+            });
+            
+            function startDrag(e) {
+                e.preventDefault();
+                activePoint = this;
+                const rect = this.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('mouseup', stopDrag);
+            }
+            
+            function startDragTouch(e) {
+                e.preventDefault();
+                activePoint = e.target;
+                const rect = activePoint.getBoundingClientRect();
+                offsetX = e.touches[0].clientX - rect.left;
+                
+                document.addEventListener('touchmove', dragTouch);
+                document.addEventListener('touchend', stopDrag);
+            }
+            
+            function drag(e) {
+                if (!activePoint) return;
+                
+                const container = activePoint.parentElement;
+                const containerRect = container.getBoundingClientRect();
+                const line = container.querySelector('.number-line');
+                const lineRect = line.getBoundingClientRect();
+                
+                // حساب الموضع الجديد
+                let newX = e.clientX - containerRect.left - offsetX;
+                
+                // تقييد النقطة داخل خط الأعداد
+                newX = Math.max(lineRect.left - containerRect.left, 
+                               Math.min(lineRect.right - containerRect.left - activePoint.offsetWidth, newX));
+                
+                activePoint.style.left = newX + 'px';
+            }
+            
+            function dragTouch(e) {
+                if (!activePoint) return;
+                
+                const container = activePoint.parentElement;
+                const containerRect = container.getBoundingClientRect();
+                const line = container.querySelector('.number-line');
+                const lineRect = line.getBoundingClientRect();
+                
+                // حساب الموضع الجديد
+                let newX = e.touches[0].clientX - containerRect.left - offsetX;
+                
+                // تقييد النقطة داخل خط الأعداد
+                newX = Math.max(lineRect.left - containerRect.left, 
+                               Math.min(lineRect.right - containerRect.left - activePoint.offsetWidth, newX));
+                
+                activePoint.style.left = newX + 'px';
+            }
+            
+            function stopDrag() {
+                activePoint = null;
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('mouseup', stopDrag);
+                document.removeEventListener('touchmove', dragTouch);
+                document.removeEventListener('touchend', stopDrag);
+            }
+        }
+        
+        // دالة للتحقق من الإجابة بدقة
+        function checkAnswer(questionNum, correctValue) {
+            const point = document.getElementById(`point${questionNum}`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const container = point.parentElement;
+            const line = container.querySelector('.number-line');
+            const lineRect = line.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            
+            // حساب موقع النقطة
+            const pointRect = point.getBoundingClientRect();
+            const pointCenter = pointRect.left + pointRect.width / 2;
+            
+            // الحصول على بيانات خط الأعداد
+            const lineData = numberLines[questionNum];
+            
+            // حساب القيمة المحددة بدقة
+            const positionRatio = (pointCenter - containerRect.left - lineData.start) / lineData.length;
+            const selectedValue = lineData.min + positionRatio * (lineData.max - lineData.min);
+            
+            // حساب الهامش المسموح (0.05)
+            const tolerance = 0.05;
+            
+            // التحقق من الإجابة
+            if (Math.abs(selectedValue - correctValue) < tolerance) {
+                feedback.innerHTML = `<i class="fas fa-check-circle"></i> إجابة صحيحة! أحسنت! (${selectedValue.toFixed(2)} ≈ ${correctValue})`;
+                feedback.className = "feedback correct";
+                point.style.background = "radial-gradient(circle at center, #4CAF50, #2E7D32)";
+                
+                // زيادة عدد الإجابات الصحيحة
+                const correctCount = document.getElementById('correct-count');
+                if (!feedback.dataset.answered) {
+                    correctCount.textContent = parseInt(correctCount.textContent) + 1;
+                    feedback.dataset.answered = true;
+                }
+                
+                // تحديث النتيجة النهائية
+                updateFinalFeedback();
+            } else {
+                feedback.innerHTML = `<i class="fas fa-exclamation-triangle"></i> إجابة غير صحيحة. حاول مرة أخرى. (الموقع الحالي: ${selectedValue.toFixed(2)}، المطلوب: ${correctValue})`;
+                feedback.className = "feedback incorrect";
+                point.style.background = "radial-gradient(circle at center, #ff416c, #ff4b2b)";
+            }
+        }
+        
+        // دالة لإعادة تعيين السؤال
+        function resetQuestion(questionNum) {
+            const point = document.getElementById(`point${questionNum}`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const lineData = numberLines[questionNum];
+            
+            // وضع النقطة عند الصفر
+            const zeroPosition = lineData.start + ((0 - lineData.min) / (lineData.max - lineData.min)) * lineData.length;
+            point.style.left = `${zeroPosition}px`;
+            
+            feedback.innerHTML = "";
+            feedback.className = "feedback";
+            point.style.background = "radial-gradient(circle at center, #ff416c, #ff4b2b)";
+            
+            // إزالة علامة الإجابة الصحيحة إذا كانت موجودة
+            if (feedback.dataset.answered) {
+                const correctCount = document.getElementById('correct-count');
+                correctCount.textContent = parseInt(correctCount.textContent) - 1;
+                delete feedback.dataset.answered;
+                updateFinalFeedback();
+            }
+        }
+        
+        // تحديث النتيجة النهائية
+        function updateFinalFeedback() {
+            const correctCount = parseInt(document.getElementById('correct-count').textContent);
+            const finalFeedback = document.getElementById('final-feedback');
+            
+            if (correctCount === 4) {
+                finalFeedback.innerHTML = '<i class="fas fa-trophy"></i> مبروك! لقد أجبت على جميع الأسئلة بشكل صحيح!';
+                finalFeedback.style.color = "#1a5d38";
+            } else if (correctCount >= 2) {
+                finalFeedback.innerHTML = '<i class="fas fa-thumbs-up"></i> جيد جدًا! استمر في المحاولة لحل جميع الأسئلة.';
+                finalFeedback.style.color = "#1976d2";
+            } else {
+                finalFeedback.innerHTML = '<i class="fas fa-lightbulb"></i> استمر في المحاولة! يمكنك إعادة الأسئلة التي لم تحلها بشكل صحيح.';
+                finalFeedback.style.color = "#333";
+            }
+        }
+        
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            drawNumberLines();
+            initDraggablePoints();
+        });
+    </script>
+</body>
+</html>
