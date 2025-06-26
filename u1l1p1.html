@@ -30,6 +30,7 @@
     };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -81,6 +82,14 @@
             padding-bottom: 15px;
             border-bottom: 3px solid #e0f0e0;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-title i {
+            margin-left: 15px;
+            font-size: 1.8rem;
         }
         
         .explore-box {
@@ -176,7 +185,7 @@
         }
         
         .input-group {
-            margin: 20px 0;
+            margin: 25px 0;
             display: flex;
             align-items: center;
         }
@@ -188,48 +197,123 @@
             font-size: 1.25rem;
         }
         
-        .input-group input {
-            flex: 1;
-            padding: 14px 20px;
-            border: 3px solid #90caf9;
-            border-radius: 12px;
-            font-size: 1.2rem;
-            transition: all 0.3s;
+        /* تصميم مربعات إدخال الكسر */
+        .fraction-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 120px;
+            margin: 0 10px;
         }
         
-        .input-group input:focus {
+        .fraction-inputs {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            position: relative;
+        }
+        
+        .numerator-input, .denominator-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bbdefb;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .numerator-input {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: none;
+            background-color: #e3f2fd;
+            padding-bottom: 15px;
+        }
+        
+        .denominator-input {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            background-color: #e3f2fd;
+            padding-top: 15px;
+        }
+        
+        .fraction-line {
+            width: 100%;
+            height: 2px;
+            background-color: #1976d2;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .fraction-symbols {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1976d2;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30px;
+        }
+        
+        .fraction-symbols span:first-child {
+            margin-bottom: 25px;
+        }
+        
+        .numerator-input:focus, .denominator-input:focus {
             border-color: #2196f3;
             outline: none;
-            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.25);
-            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+            background-color: #ffffff;
+        }
+        
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
         }
         
         .btn {
-            background: linear-gradient(to right, #43a047, #2e7d32);
+            background: linear-gradient(to right, #4caf50, #2c7744);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
+            padding: 14px 30px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 18px;
             font-weight: bold;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            display: inline-block;
-            margin: 15px 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+        }
+        
+        .btn i {
+            margin-left: 8px;
         }
         
         .btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(to right, #43a047, #1b5e20);
         }
         
         .btn-check {
-            background: linear-gradient(to right, #2196f3, #1565c0);
+            background: linear-gradient(to right, #2196f3, #0d47a1);
         }
         
         .btn-reset {
-            background: linear-gradient(to right, #f44336, #c62828);
+            background: linear-gradient(to right, #f44336, #b71c1c);
         }
         
         .feedback {
@@ -237,22 +321,22 @@
             margin: 20px 0;
             border-radius: 12px;
             font-weight: bold;
-            font-size: 1.25rem;
+            font-size: 18px;
             text-align: center;
         }
         
         .feedback.correct {
             background-color: #e8f5e9;
-            color: #1b5e20;
-            border: 3px solid #81c784;
-            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+            border: 2px solid #a5d6a7;
+            box-shadow: 0 4px 8px rgba(46, 125, 50, 0.1);
         }
         
         .feedback.incorrect {
             background-color: #ffebee;
-            color: #b71c1c;
-            border: 3px solid #ef9a9a;
-            box-shadow: 0 4px 10px rgba(244, 67, 54, 0.2);
+            color: #c62828;
+            border: 2px solid #ef9a9a;
+            box-shadow: 0 4px 8px rgba(198, 40, 40, 0.1);
         }
         
         footer {
@@ -281,6 +365,9 @@
             font-size: 1.2rem;
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .nav-btn:hover {
@@ -364,8 +451,27 @@
             }
             
             .input-group label {
-                margin-bottom: 12px;
+                margin-bottom: 15px;
                 width: 100%;
+            }
+            
+            .fraction-container {
+                width: 100%;
+                margin: 10px 0;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                margin-bottom: 10px;
             }
             
             .math-text, .large-fraction {
@@ -386,7 +492,9 @@
         </header>
         
         <div class="page">
-            <h2 class="page-title">العدد النسبي</h2>
+            <h2 class="page-title">
+                <i class="fas fa-book-open"></i>العدد النسبي
+            </h2>
             
             <div class="explore-box">
                 <h3>أستكشف</h3>
@@ -426,49 +534,88 @@
                     
                     <h4>3. <span class="math-text large-fraction">\( 1\frac{2}{5} \)</span> <span style="font-size: 1.4rem">(واحد واثنان على خمسة)</span>:</h4>
                     <div class="input-group">
-                        <label for="ex1-3">أدخل الكسر (a/b):</label>
-                        <input type="text" id="ex1-3" placeholder="أدخل بصيغة a/b">
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="btn btn-check" onclick="checkEx1(3)">تحقق من الإجابة</button>
+                        <label for="ex1-3">أدخل الكسر:</label>
+                        <div class="fraction-container">
+                            <div class="fraction-inputs">
+                                <input type="text" id="ex1-3-numerator" class="numerator-input" placeholder="a">
+                                <div class="fraction-line"></div>
+                                <input type="text" id="ex1-3-denominator" class="denominator-input" placeholder="b">
+                                <div class="fraction-symbols">
+                                    <span>a</span>
+                                    <span>b</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div id="feedback-ex1-3" class="feedback"></div>
                     
                     <h4>4. \(-3.2\):</h4>
                     <div class="input-group">
-                        <label for="ex1-4">أدخل الكسر (a/b):</label>
-                        <input type="text" id="ex1-4" placeholder="أدخل بصيغة a/b">
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="btn btn-check" onclick="checkEx1(4)">تحقق من الإجابة</button>
+                        <label for="ex1-4">أدخل الكسر:</label>
+                        <div class="fraction-container">
+                            <div class="fraction-inputs">
+                                <input type="text" id="ex1-4-numerator" class="numerator-input" placeholder="a">
+                                <div class="fraction-line"></div>
+                                <input type="text" id="ex1-4-denominator" class="denominator-input" placeholder="b">
+                                <div class="fraction-symbols">
+                                    <span>a</span>
+                                    <span>b</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div id="feedback-ex1-4" class="feedback"></div>
                     
                     <h4>5. \(-6\):</h4>
                     <div class="input-group">
-                        <label for="ex1-5">أدخل الكسر (a/b):</label>
-                        <input type="text" id="ex1-5" placeholder="أدخل بصيغة a/b">
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="btn btn-check" onclick="checkEx1(5)">تحقق من الإجابة</button>
+                        <label for="ex1-5">أدخل الكسر:</label>
+                        <div class="fraction-container">
+                            <div class="fraction-inputs">
+                                <input type="text" id="ex1-5-numerator" class="numerator-input" placeholder="a">
+                                <div class="fraction-line"></div>
+                                <input type="text" id="ex1-5-denominator" class="denominator-input" placeholder="b">
+                                <div class="fraction-symbols">
+                                    <span>a</span>
+                                    <span>b</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div id="feedback-ex1-5" class="feedback"></div>
                     
                     <h4>6. 85%:</h4>
                     <div class="input-group">
-                        <label for="ex1-6">أدخل الكسر (a/b):</label>
-                        <input type="text" id="ex1-6" placeholder="أدخل بصيغة a/b">
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="btn btn-check" onclick="checkEx1(6)">تحقق من الإجابة</button>
+                        <label for="ex1-6">أدخل الكسر:</label>
+                        <div class="fraction-container">
+                            <div class="fraction-inputs">
+                                <input type="text" id="ex1-6-numerator" class="numerator-input" placeholder="a">
+                                <div class="fraction-line"></div>
+                                <input type="text" id="ex1-6-denominator" class="denominator-input" placeholder="b">
+                                <div class="fraction-symbols">
+                                    <span>a</span>
+                                    <span>b</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div id="feedback-ex1-6" class="feedback"></div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-check" onclick="checkAllEx1()">
+                            <i class="fas fa-check-circle"></i>تحقق من جميع الإجابات
+                        </button>
+                        <button class="btn btn-reset" onclick="resetAllInputs()">
+                            <i class="fas fa-redo"></i>إعادة تعيين
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
         
         <div class="navigation">
-            <a href="page2.html" class="nav-btn">التالي → تمثيل الأعداد النسبية</a>
+            <a href="page2.html" class="nav-btn">
+                <i class="fas fa-arrow-right"></i>التالي → تمثيل الأعداد النسبية
+            </a>
         </div>
         
         <footer>
@@ -479,34 +626,90 @@
     <script>
         // التحقق من إجابات مثال 1
         function checkEx1(part) {
-            const input = document.getElementById(`ex1-${part}`);
+            const numInput = document.getElementById(`ex1-${part}-numerator`);
+            const denInput = document.getElementById(`ex1-${part}-denominator`);
             const feedback = document.getElementById(`feedback-ex1-${part}`);
-            const answer = input.value.trim();
+            const numValue = numInput.value.trim();
+            const denValue = denInput.value.trim();
             
-            let correctAnswer = '';
+            let correctNum = '';
+            let correctDen = '';
+            
             switch(part) {
                 case 3: // 1 + 2/5 = 7/5
-                    correctAnswer = '7/5';
+                    correctNum = '7';
+                    correctDen = '5';
                     break;
                 case 4: // -3.2 = -16/5
-                    correctAnswer = '-16/5';
+                    correctNum = '-16';
+                    correctDen = '5';
                     break;
                 case 5: // -6 = -6/1
-                    correctAnswer = '-6/1';
+                    correctNum = '-6';
+                    correctDen = '1';
                     break;
                 case 6: // 85% = 17/20
-                    correctAnswer = '17/20';
+                    correctNum = '17';
+                    correctDen = '20';
                     break;
             }
             
-            if (answer === correctAnswer) {
-                feedback.textContent = 'إجابة صحيحة! أحسنت.';
+            if (numValue === correctNum && denValue === correctDen) {
+                feedback.innerHTML = '<div style="color:green; font-weight:bold">' +
+                    '<i class="fas fa-check-circle"></i> إجابة صحيحة! أحسنت.' +
+                    '</div>';
                 feedback.className = 'feedback correct';
+                numInput.style.backgroundColor = '#e8f5e9';
+                denInput.style.backgroundColor = '#e8f5e9';
             } else {
-                feedback.textContent = `الإجابة الصحيحة هي ${correctAnswer}`;
+                feedback.innerHTML = '<div style="color:red; font-weight:bold">' +
+                    '<i class="fas fa-exclamation-triangle"></i> الإجابة الصحيحة: ' + 
+                    '<span style="font-family: monospace; font-size: 1.3rem">' + 
+                    correctNum + '/' + correctDen + 
+                    '</span></div>';
                 feedback.className = 'feedback incorrect';
+                numInput.style.backgroundColor = '#ffebee';
+                denInput.style.backgroundColor = '#ffebee';
             }
         }
+        
+        // دالة للتحقق من جميع الإجابات
+        function checkAllEx1() {
+            checkEx1(3);
+            checkEx1(4);
+            checkEx1(5);
+            checkEx1(6);
+        }
+        
+        // دالة لإعادة تعيين جميع الحقول
+        function resetAllInputs() {
+            document.querySelectorAll('.numerator-input, .denominator-input').forEach(input => {
+                input.value = '';
+                input.style.backgroundColor = '';
+            });
+            
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.innerHTML = '';
+                fb.className = 'feedback';
+            });
+        }
+        
+        // السماح بإدخال الأرقام والرموز الرياضية
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+            input.addEventListener('keydown', function(e) {
+                // السماح بكتابة الأرقام وعلامة السالب والنقطة
+                if ((e.key >= '0' && e.key <= '9') || 
+                    e.key === '-' || 
+                    e.key === '.' || 
+                    e.key === 'Backspace' || 
+                    e.key === 'Delete' || 
+                    e.key === 'ArrowLeft' || 
+                    e.key === 'ArrowRight') {
+                    return true;
+                }
+                e.preventDefault();
+            });
+        });
     </script>
 </body>
 </html>
