@@ -234,9 +234,10 @@
             font-weight: bold;
         }
         
-        .dec-1 { top: 20px; left: 20px; transform: rotate(15deg); }
+        /* التعديلات المطلوبة */
+        .dec-1 { top: 5%; left: 5%; transform: rotate(15deg); }  /* رفع الجذر التكعيبي للأعلى */
         .dec-2 { top: 20px; right: 20px; transform: rotate(-15deg); }
-        .dec-3 { bottom: 20px; left: 20px; transform: rotate(-10deg); }
+        .dec-3 { bottom: 5%; left: 20px; transform: rotate(-10deg); }  /* إنزال اللانهاية للأسفل */
         .dec-4 { bottom: 20px; right: 20px; transform: rotate(10deg); }
         
         .grade-badge {
@@ -269,6 +270,12 @@
             .content { padding: 50px 20px 30px; }
             .decoration { font-size: 6rem; }
             
+            /* تعديلات إضافية للهواتف لمنع التداخل */
+            .dec-1 { top: 3%; left: 3%; } 
+            .dec-2 { top: 3%; right: 3%; }
+            .dec-3 { bottom: 3%; left: 3%; }
+            .dec-4 { bottom: 3%; right: 3%; }
+            
             .index-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -296,6 +303,13 @@
             .header { padding: 30px 20px; }
             .subtitle { font-size: 1rem; }
             .content { padding: 40px 15px 20px; }
+            .decoration { font-size: 4rem; }
+            
+            /* مزيد من التعديلات للشاشات الصغيرة جداً */
+            .dec-1 { top: 2%; left: 2%; } 
+            .dec-2 { top: 2%; right: 2%; }
+            .dec-3 { bottom: 2%; left: 2%; }
+            .dec-4 { bottom: 2%; right: 2%; }
             
             .index-title {
                 font-size: 1.3rem;
