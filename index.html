@@ -27,7 +27,7 @@
             position: relative;
         }
         
-        /* رموز رياضية متحركة في الخلفية */
+        /* رموز رياضية متحركة في الخلفية - أحجام أكبر */
         .math-bg {
             position: fixed;
             top: 0;
@@ -40,11 +40,12 @@
         
         .math-symbol {
             position: absolute;
-            font-size: 3rem;
-            color: rgba(118, 75, 162, 0.1);
+            font-size: 4.5rem; /* زيادة حجم الرموز المتحركة */
+            color: rgba(118, 75, 162, 0.25);
             font-weight: bold;
-            opacity: 0.3;
+            opacity: 0.4;
             animation: float 15s infinite ease-in-out;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
         
         @keyframes float {
@@ -55,8 +56,8 @@
         }
         
         @keyframes fadeInOut {
-            0%, 100% { opacity: 0.1; }
-            50% { opacity: 0.3; }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
         }
         
         .cover-container {
@@ -76,6 +77,11 @@
             padding: 40px 30px;
             text-align: center;
             position: relative;
+            min-height: 320px; /* زيادة الارتفاع لاستيعاب رمز باي الكبير */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
         .header::after {
@@ -94,6 +100,7 @@
             font-weight: 800;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             margin-bottom: 15px;
+            padding-top: 30px;
         }
         
         .subtitle {
@@ -195,17 +202,34 @@
         
         .decoration {
             position: absolute;
-            opacity: 0.1;
-            font-size: 8rem;
+            opacity: 0.2;
             z-index: 0;
             color: #764ba2;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
         
-        .dec-1 { top: 20px; left: 20px; transform: rotate(15deg); }
-        .dec-2 { top: 20px; right: 20px; transform: rotate(-15deg); }
-        .dec-3 { bottom: 20px; left: 20px; transform: rotate(-10deg); }
-        .dec-4 { bottom: 20px; right: 20px; transform: rotate(10deg); }
+        /* تعديلات الرموز حسب الطلب */
+        .dec-1 { 
+            top: 15px; 
+            left: 30px;
+            font-size: 7.5rem;
+            transform: rotate(15deg); 
+        }
+        
+        .dec-2 { 
+            top: 50%; /* وضع في منتصف الهيدر */
+            transform: translateY(-50%) rotate(-15deg); /* تعديل للتمركز العمودي مع الدوران */
+            right: 20px; 
+            font-size: 7.5rem; /* نفس حجم رمز سيغما */
+        }
+        
+        .dec-3 { 
+            bottom: 5px; 
+            left: 30px; 
+            font-size: 8rem;
+            transform: rotate(-10deg); 
+        }
         
         .grade-badge {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -218,25 +242,71 @@
             box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
         }
         
+        /* زيادة المسافة العمودية بين الرموز في الجانب الأيسر فقط لعرض الكمبيوتر */
+        @media (min-width: 769px) {
+            .dec-1 { 
+                top: 15px;
+            }
+            
+            .dec-3 { 
+                bottom: 5px; 
+            }
+            
+            .dec-2 { 
+                top: 50%; /* بقاء في المنتصف */
+                transform: translateY(-50%) rotate(-15deg); /* التمركز مع الدوران */
+                font-size: 7.5rem; /* نفس حجم سيغما */
+            }
+            
+            .header {
+                min-height: 340px; /* زيادة الارتفاع لاستيعاب رمز باي الكبير */
+            }
+        }
+        
+        /* تعديلات للهواتف */
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
             .subtitle { font-size: 1.2rem; }
             .content { padding: 50px 20px 30px; }
             .units-grid { grid-template-columns: 1fr; }
-            .decoration { font-size: 6rem; }
+            
+            .header {
+                min-height: 260px;
+                padding: 30px 20px;
+            }
+            
+            .dec-1 { 
+                top: 20px; 
+                left: 20px;
+                font-size: 5rem;
+            }
+            
+            .dec-2 { 
+                top: 50%; /* وضع في منتصف الهيدر للهواتف */
+                transform: translateY(-50%) rotate(-15deg); 
+                right: 15px;
+                font-size: 5rem; /* نفس حجم رمز سيغما في الهواتف */
+            }
+            
+            .dec-3 { 
+                bottom: 15px;
+                left: 20px;
+                font-size: 5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- خلفية برموز رياضية متحركة -->
+    <!-- خلفية برموز رياضية متحركة - أحجام أكبر -->
     <div class="math-bg" id="mathBg"></div>
     
     <div class="cover-container">
         <div class="header">
-            <div class="decoration dec-1">∛</div>
-            <div class="decoration dec-2">π</div>
-            <div class="decoration dec-3">∞</div>
-            <div class="decoration dec-4">∑</div>
+            <!-- الرموز المعدلة -->
+            <div class="decoration dec-1">∑</div> <!-- سيغما -->
+            <div class="decoration dec-2">π</div> <!-- باي بحجم معدل -->
+            <div class="decoration dec-3">∞</div> <!-- اللانهاية -->
+            <!-- تم حذف التكامل -->
             
             <h1>منهج الرياضيات التفاعلي</h1>
             <div class="subtitle">للصف السابع الأساسي - الفصل الأول - المنهاج الأردني</div>
@@ -283,12 +353,13 @@
     </div>
 
     <script>
-        // إنشاء رموز رياضية متحركة في الخلفية
+        // إنشاء رموز رياضية متحركة في الخلفية - أحجام أكبر
         function createMathSymbols() {
             const mathBg = document.getElementById('mathBg');
-            const symbols = ['+', '−', '×', '÷', '=', 'π', '√', '°', '∑', '∫', '∞', '≈', '≠', '≤', '≥', 'θ', 'α', 'β', 'γ'];
+            // حذف الرموز غير المرغوبة
+            const symbols = ['+', '−', '×', '÷', '=', 'π', '√', '°', '∑', '∫', '∞', '≈', '≠', 'θ', 'α', 'β', 'γ'];
             
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 25; i++) { // زيادة عدد الرموز
                 const symbol = document.createElement('div');
                 symbol.className = 'math-symbol';
                 symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
@@ -300,8 +371,8 @@
                 // تأخير عشوائي للحركة
                 symbol.style.animationDelay = `${Math.random() * 5}s`;
                 
-                // حجم عشوائي
-                const size = 1.5 + Math.random() * 3;
+                // حجم أكبر بشكل ملحوظ
+                const size = 3.5 + Math.random() * 6; // بين 3.5 و 9.5 رم
                 symbol.style.fontSize = `${size}rem`;
                 
                 // شفافية متغيرة
