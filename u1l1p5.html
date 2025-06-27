@@ -366,6 +366,18 @@
             margin: 10px 0;
             border: 1px dashed #00c6ff;
         }
+        
+        .computer-difficulty {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(255, 100, 100, 0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -378,6 +390,7 @@
         <div id="center-line"></div>
         <div id="score">0 - 0</div>
         <div class="question-points">الأسئلة عند: 3, 6, 9 نقاط</div>
+        <div class="computer-difficulty">مستوى الكمبيوتر: سهل</div>
         
         <div class="player-instruction" id="top-player">مضرب الكمبيوتر (الأعلى)</div>
         <div class="player-instruction" id="bottom-player">مضربك (الأسفل)</div>
@@ -405,7 +418,6 @@
             <p>الأسئلة تظهر عند إحراز 3, 6, 9 نقاط</p>
             <div class="fraction-example">
                 <p>سيُطلب منك تحويل الأعداد النسبية إلى صيغة a/b </p>
-         
             </div>
         </div>
         
@@ -450,6 +462,8 @@
         let lastScorer = '';
         let questionTriggerPoints = [3, 6, 9];
         let questionTriggered = false;
+        let computerErrorRate = 0.4; // نسبة خطأ الكمبيوتر 40%
+        let computerReactionTime = 0; // وقت تأخر الكمبيوتر
         
         // سرعة المضارب والكرة (ثابتة)
         const paddleSpeed = 25;
@@ -667,17 +681,37 @@
             }
         }
         
-        // تحريك الكمبيوتر للمضرب العلوي
+        // تحريك الكمبيوتر للمضرب العلوي (محسّنة)
         function moveComputerPaddle() {
             const containerWidth = gameContainer.offsetWidth;
             const paddleWidth = paddleTop.offsetWidth;
             
             // حساب موضع الكرة بالنسبة للمضرب
-            const targetX = (ballX / containerWidth) * 100;
+            let targetX = (ballX / containerWidth) * 100;
             
-            // تحريك المضرب بسلاسة نحو الكرة
-            const diff = targetX - topPaddleX;
-            const movement = diff * 0.1;
+            // إضافة خطأ متدرج في تحديد الهدف
+            if (Math.random() < computerErrorRate) {
+                // خطأ في تقدير موقع الكرة (بين 5% إلى 20%)
+                const errorAmount = 5 + Math.random() * 15;
+                const errorDirection = Math.random() > 0.5 ? 1 : -1;
+                targetX += errorAmount * errorDirection;
+                
+                // تغيير وقت رد الفعل بشكل عشوائي
+                computerReactionTime = Math.random() * 0.2;
+            }
+            
+            // حساب الفرق بين موقع المضرب والهدف
+            let diff = targetX - topPaddleX;
+            
+            // تطبيق وقت رد الفعل (تأخير)
+            diff *= (1 - computerReactionTime);
+            
+            // حساب الحركة مع إضافة تباين في السرعة
+            const speedVariation = 0.05 + Math.random() * 0.1;
+            let movement = diff * speedVariation;
+            
+            // الحد من الحركة القصوى لتجنب الحركات المفاجئة
+            movement = Math.max(-5, Math.min(5, movement));
             
             topPaddleX += movement;
             
