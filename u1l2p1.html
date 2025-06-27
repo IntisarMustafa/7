@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كتابة العدد النسبي بالصورة العشرية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 30px;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        h2 {
+            color: #2980b9;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h3 {
+            color: #3498db;
+            margin: 20px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        
+        .explore-box {
+            background-color: #e8f4fc;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 5px solid #3498db;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .explore-image {
+            width: 100%;
+            height: 250px;
+            /* تعديل لون السماء إلى الأزرق */
+            background: linear-gradient(135deg, #87CEEB, #1E90FF);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* الأرضية الخضراء */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%; /* ارتفاع الأرضية */
+            background: linear-gradient(to top, #4CAF50, #8BC34A);
+            z-index: 1;
+        }
+        
+        /* طبقة الثلج فوق الأرضية */
+        .snow-layer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 15%; /* ارتفاع طبقة الثلج */
+            background: linear-gradient(to top, #E0F7FA, #FFFFFF);
+            border-top: 2px solid #B3E5FC;
+            z-index: 2;
+        }
+        
+        .tree {
+            position: absolute;
+            bottom: 40px; /* تعديل الموقع ليكون فوق الأرضية */
+            width: 80px;
+            height: 120px;
+            z-index: 3; /* فوق طبقات الأرض والثلج */
+        }
+        
+        .tree-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 35px;
+            width: 10px;
+            height: 40px;
+            background: #8B4513;
+            z-index: 2;
+        }
+        
+        .tree-top {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 80px;
+            height: 90px;
+            background: #4CAF50;
+            border-radius: 50% 50% 40% 40%;
+            clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+        }
+        
+        .orange {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #FF9800;
+            border-radius: 50%;
+            z-index: 4;
+        }
+        
+        .frozen-tree {
+            filter: grayscale(80%) brightness(120%);
+        }
+        
+        .snowflakes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .snowflake {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+        
+        /* إضافة غيوم متحركة */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .cloud-1 {
+            top: 40px;
+            left: 20%;
+            width: 80px;
+            height: 40px;
+            animation: float 25s linear infinite;
+        }
+        
+        .cloud-2 {
+            top: 80px;
+            left: 60%;
+            width: 100px;
+            height: 50px;
+            animation: float 30s linear infinite reverse;
+        }
+        
+        .cloud-3 {
+            top: 30px;
+            left: 80%;
+            width: 70px;
+            height: 35px;
+            animation: float 35s linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(250px);
+            }
+        }
+        
+        .key-terms {
+            background-color: #f2f4f8;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 5px solid #9b59b6;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .term {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .term-title {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .lesson-content {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 5px solid #2ecc71;
+        }
+        
+        .example {
+            background-color: #e8f7f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .example-horizontal-scroll {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            background: #f0f7ff;
+        }
+        
+        .example-content {
+            display: inline-block;
+            white-space: normal;
+            min-width: 100%;
+            margin-right: 30px;
+        }
+        
+        .example-number {
+            background-color: #2ecc71;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            flex-shrink: 0;
+            margin: 0 10px 0 0;
+        }
+        
+        .math {
+            font-family: 'Cambria Math', serif;
+            font-size: 22px;
+            margin: 10px 0;
+        }
+        
+        .interactive-section {
+            background-color: #fff9e6;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 5px solid #f39c12;
+        }
+        
+        .exercise {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .exercise:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        input {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            width: 200px;
+            transition: border-color 0.3s;
+            direction: ltr;
+            text-align: center;
+        }
+        
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .hint {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 5px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .next-btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .next-btn {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(135deg, #2980b9, #8e44ad);
+        }
+        
+        .next-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .next-btn i {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #3498db;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .scroll-hint {
+            text-align: center;
+            color: #3498db;
+            margin-top: 5px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        /* تكبير حجم خط التمارين 1 و 2 فقط */
+        .interactive-section .exercise:nth-of-type(1) h3,
+        .interactive-section .exercise:nth-of-type(2) h3 {
+            font-size: 26px; /* نفس حجم التمارين 3 و 4 */
+        }
+        
+        .interactive-section .exercise:nth-of-type(1) .math,
+        .interactive-section .exercise:nth-of-type(2) .math {
+            font-size: 26px; /* نفس حجم التمارين 3 و 4 */
+        }
+        
+        /* تكبير حجم الكسور في التمارين 3 و 4 (بقيت كما هي) */
+        .interactive-section .exercise:nth-of-type(3) h3,
+        .interactive-section .exercise:nth-of-type(4) h3 {
+            font-size: 26px;
+        }
+        
+        .interactive-section .exercise:nth-of-type(3) .math,
+        .interactive-section .exercise:nth-of-type(4) .math {
+            font-size: 26px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            input {
+                width: 100%;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .term {
+                min-width: 100%;
+            }
+            
+            /* حجم أكبر للكسور في الجوال (بقيت كما هي) */
+            .interactive-section .exercise:nth-of-type(3) h3,
+            .interactive-section .exercise:nth-of-type(4) h3 {
+                font-size: 24px;
+            }
+            
+            /* التعديل الجديد: تكبير حجم خط التمارين 1 و 2 في الجوال */
+            .interactive-section .exercise:nth-of-type(1) h3,
+            .interactive-section .exercise:nth-of-type(2) h3 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> كتابة العدد النسبي بالصورة العشرية</h1>
+        </header>
+        
+        <section class="explore-box">
+            <h2><i class="fas fa-binoculars"></i> استكشف</h2>
+            
+            <div class="explore-image">
+                <!-- الأرضية الخضراء -->
+                <div class="ground"></div>
+                
+                <!-- طبقة الثلج فوق الأرضية -->
+                <div class="snow-layer"></div>
+                
+                <!-- الغيوم المضافة -->
+                <div class="cloud cloud-1"></div>
+                <div class="cloud cloud-2"></div>
+                <div class="cloud cloud-3"></div>
+                
+                <div class="tree">
+                    <div class="tree-trunk"></div>
+                    <div class="tree-top"></div>
+                    <div class="orange" style="top: 30px; left: 20px;"></div>
+                    <div class="orange" style="top: 50px; left: 40px;"></div>
+                    <div class="orange" style="top: 70px; left: 10px;"></div>
+                </div>
+                
+                <div class="tree" style="left: 20%;">
+                    <div class="tree-trunk"></div>
+                    <div class="tree-top"></div>
+                    <div class="orange" style="top: 40px; left: 30px;"></div>
+                    <div class="orange" style="top: 60px; left: 50px;"></div>
+                </div>
+                
+                <div class="tree frozen-tree" style="left: 40%;">
+                    <div class="tree-trunk"></div>
+                    <div class="tree-top"></div>
+                </div>
+                
+                <div class="tree" style="left: 60%;">
+                    <div class="tree-trunk"></div>
+                    <div class="tree-top"></div>
+                    <div class="orange" style="top: 30px; left: 30px;"></div>
+                    <div class="orange" style="top: 60px; left: 10px;"></div>
+                    <div class="orange" style="top: 80px; left: 50px;"></div>
+                </div>
+                
+                <div class="tree frozen-tree" style="left: 80%;">
+                    <div class="tree-trunk"></div>
+                    <div class="tree-top"></div>
+                </div>
+                
+                <div class="snowflakes" id="snowflakes"></div>
+            </div>
+            
+            <p>لدى مزارع 33 شجرة برتقال، لكنه خسر إنتاج 13 شجرة منها بسبب موجة صقيع. ما الكسر العشري الذي يمثل الأشجار التي خسر المزارع إنتاجها؟</p>
+            
+            <p class="hint"><i class="fas fa-lightbulb"></i> بعد دراسة هذا الدرس سنتمكن من الإجابة على هذا السؤال.</p>
+        </section>
+        
+        <section class="key-terms">
+            <h2><i class="fas fa-bookmark"></i> المصطلحات</h2>
+            <div class="term">
+                <div class="term-title"><i class="fas fa-stop-circle"></i> كسر عشري منتهي</div>
+            </div>
+            <div class="term">
+                <div class="term-title"><i class="fas fa-sync-alt"></i> كسر عشري دوري</div>
+            </div>
+        </section>
+        
+        <section class="lesson-content">
+            <h2><i class="fas fa-book-open"></i> الدرس</h2>
+            <p>يمكن كتابة أي عدد نسبي بالصورة العشرية بعدة طرق، منها إيجاد كسر مكافئ مقامه 10، 100، 1000، إلخ.</p>
+            
+            <div class="example">
+                <h3><i class="fas fa-clipboard-list"></i> أمثلة</h3>
+                
+                <!-- المثال الأول مع تمرير أفقي -->
+                <div class="example-horizontal-scroll">
+                    <div class="example-content">
+                        <div class="example-number">1</div>
+                        <div>
+                            <p>اكتب العدد \( \frac{2}{5} \) بالصورة العشرية</p>
+                            <p class="math">الحل: مقام الكسر 5 أحد عوامل العدد 10، لذلك نوجد كسرًا مكافئًا مقامه 10</p>
+                            <p class="math">\( \frac{2}{5} = \frac{2 \times 2}{5 \times 2} = \frac{4}{10} = 0.4 \)</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="scroll-hint"><i class="fas fa-arrows-left-right"></i> يمكنك التمرير أفقيًا لمشاهدة المثال كاملاً</p>
+                
+                <!-- المثال الثاني مع تمرير أفقي -->
+                <div class="example-horizontal-scroll">
+                    <div class="example-content">
+                        <div class="example-number">2</div>
+                        <div>
+                            <p>اكتب العدد \( \frac{3}{25} \) بالصورة العشرية</p>
+                            <p class="math">الحل: مقام الكسر 25 أحد عوامل العدد 100، لذلك نوجد كسرًا مكافئًا مقامه 100</p>
+                            <p class="math">\( \frac{3}{25} = \frac{3 \times 4}{25 \times 4} = \frac{12}{100} = 0.12 \)</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="scroll-hint"><i class="fas fa-arrows-left-right"></i> يمكنك التمرير أفقيًا لمشاهدة المثال كاملاً</p>
+                
+                <div class="hint">
+                    <i class="fas fa-info-circle"></i> ملاحظة: عندما يكون مقام الكسر أحد عوامل 10 أو 100 أو 1000، فإن الكسر العشري يكون منتهياً.
+                </div>
+            </div>
+        </section>
+        
+        <section class="interactive-section">
+            <h2><i class="fas fa-tasks"></i> تحقق من فهمك</h2>
+            <p>حول الأعداد النسبية التالية إلى صورة عشرية:</p>
+            
+            <div class="exercise">
+                <h3>التمرين 1: \( \frac{1}{2} \)</h3>
+                <div class="input-group">
+                    <input type="text" id="ex1-answer" placeholder="الصورة العشرية">
+                    <button onclick="checkExercise(1)">
+                        <i class="fas fa-check"></i> تحقق
+                    </button>
+                </div>
+                <div class="feedback" id="ex1-feedback"></div>
+            </div>
+            
+            <div class="exercise">
+                <h3>التمرين 2: \( \frac{3}{5} \)</h3>
+                <div class="input-group">
+                    <input type="text" id="ex2-answer" placeholder="الصورة العشرية">
+                    <button onclick="checkExercise(2)">
+                        <i class="fas fa-check"></i> تحقق
+                    </button>
+                </div>
+                <div class="feedback" id="ex2-feedback"></div>
+            </div>
+            
+            <div class="exercise">
+                <h3>التمرين 3: \( -\frac{7}{20} \)</h3>
+                <div class="input-group">
+                    <input type="text" id="ex3-answer" placeholder="الصورة العشرية">
+                    <button onclick="checkExercise(3)">
+                        <i class="fas fa-check"></i> تحقق
+                    </button>
+                </div>
+                <div class="feedback" id="ex3-feedback"></div>
+            </div>
+            
+            <div class="exercise">
+                <h3>التمرين 4: \( \frac{4}{25} \)</h3>
+                <div class="input-group">
+                    <input type="text" id="ex4-answer" placeholder="الصورة العشرية">
+                    <button onclick="checkExercise(4)">
+                        <i class="fas fa-check"></i> تحقق
+                    </button>
+                </div>
+                <div class="feedback" id="ex4-feedback"></div>
+            </div>
+        </section>
+        
+        <div class="next-btn-container">
+            <button class="next-btn" id="next-btn" onclick="nextPage()">
+                الصفحة التالية <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+        
+        <footer>
+            <p>الصفحة 1</p>
+        </footer>
+    </div>
+
+    <script>
+        // إنشاء رقاقات الثلج
+        function createSnowflakes() {
+            const container = document.getElementById('snowflakes');
+            const flakeCount = 30;
+            
+            for (let i = 0; i < flakeCount; i++) {
+                const flake = document.createElement('div');
+                flake.classList.add('snowflake');
+                
+                // حجم عشوائي
+                const size = Math.random() * 5 + 2;
+                flake.style.width = `${size}px`;
+                flake.style.height = `${size}px`;
+                
+                // موقع بداية عشوائي
+                flake.style.left = `${Math.random() * 100}%`;
+                flake.style.top = `-${size}px`;
+                
+                // سرعة سقوط عشوائية
+                const duration = Math.random() * 5 + 5;
+                flake.style.animationDuration = `${duration}s`;
+                flake.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(flake);
+            }
+        }
+        
+        // تتبع التمارين المكتملة
+        const completedExercises = [false, false, false, false];
+        
+        // التحقق من التمارين
+        function checkExercise(exNumber) {
+            const answerInput = document.getElementById(`ex${exNumber}-answer`);
+            const feedback = document.getElementById(`ex${exNumber}-feedback`);
+            const userAnswer = answerInput.value.trim();
+            
+            let isCorrect = false;
+            let correctAnswer = '';
+            
+            switch(exNumber) {
+                case 1: // التمرين 1: 1/2
+                    isCorrect = userAnswer === '0.5' || userAnswer === '.5' || userAnswer === '0,5' || userAnswer === ',5';
+                    correctAnswer = '0.5';
+                    break;
+                case 2: // التمرين 2: 3/5
+                    isCorrect = userAnswer === '0.6' || userAnswer === '.6' || userAnswer === '0,6' || userAnswer === ',6';
+                    correctAnswer = '0.6';
+                    break;
+                case 3: // التمرين 3: -7/20
+                    isCorrect = userAnswer === '-0.35' || userAnswer === '-.35' || userAnswer === '-0,35' || userAnswer === '-,35';
+                    correctAnswer = '-0.35';
+                    break;
+                case 4: // التمرين 4: 4/25
+                    isCorrect = userAnswer === '0.16' || userAnswer === '.16' || userAnswer === '0,16' || userAnswer === ',16';
+                    correctAnswer = '0.16';
+                    break;
+            }
+            
+            if (isCorrect) {
+                feedback.innerHTML = `<i class="fas fa-check-circle"></i> إجابة صحيحة! ممتاز! الإجابة الصحيحة هي ${correctAnswer}`;
+                feedback.className = 'feedback correct';
+                answerInput.disabled = true;
+                completedExercises[exNumber-1] = true;
+                checkAllCompleted();
+            } else {
+                feedback.innerHTML = '<i class="fas fa-times-circle"></i> إجابة غير صحيحة. حاول مرة أخرى.';
+                feedback.className = 'feedback incorrect';
+            }
+            feedback.style.display = 'block';
+        }
+        
+        // التحقق من اكتمال جميع التمارين
+        function checkAllCompleted() {
+            const allCompleted = completedExercises.every(ex => ex === true);
+            if (allCompleted) {
+                document.getElementById('next-btn').style.background = "linear-gradient(135deg, #2ecc71, #3498db)";
+                document.getElementById('next-btn').innerHTML = 'الصفحة التالية <i class="fas fa-arrow-left"></i>';
+            }
+        }
+        
+        // الانتقال للصفحة التالية
+        function nextPage() {
+            if (completedExercises.every(ex => ex === true)) {
+                alert("تم الانتقال للصفحة التالية بنجاح!");
+                // window.location.href = "u1l2p2.html"; // في التطبيق الفعلي
+            } else {
+                alert("الرجاء إكمال جميع التمارين قبل الانتقال للصفحة التالية");
+            }
+        }
+        
+        // تمكين الإدخال عند الضغط على Enter
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const exNum = input.id.split('-')[0].replace('ex', '');
+                    checkExercise(parseInt(exNum));
+                }
+            });
+        });
+        
+        // تهيئة الرقاقات الثلجية عند تحميل الصفحة
+        window.onload = function() {
+            createSnowflakes();
+        };
+    </script>
+</body>
+</html>
