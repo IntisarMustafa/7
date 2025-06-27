@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>العدد النسبي - تمثيل الأعداد على خط الأعداد</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #2c7744 0%, #5aaf70 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .page {
+            padding: 30px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+        
+        .page-title {
+            color: #2c7744;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            text-align: center;
+        }
+        
+        .example-box {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .example-title {
+            color: #2196f3;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            padding: 10px;
+            background: linear-gradient(to right, #e3f2fd, #bbdefb);
+            border-radius: 8px;
+        }
+        
+        .exercise-box {
+            background-color: #edf7ff;
+            border: 1px solid #bbdefb;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .exercise-title {
+            color: #1976d2;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            padding: 10px;
+            background: linear-gradient(to right, #e8f5e9, #c8e6c9);
+            border-radius: 8px;
+        }
+        
+        /* خط الأعداد الثابت للمثال - تصميم محسن */
+        .static-number-line-container {
+            position: relative;
+            height: 140px;
+            margin: 30px 0;
+            border-radius: 10px;
+            padding: 20px;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .static-number-line {
+            position: absolute;
+            top: 70px;
+            left: 30px;
+            right: 30px;
+            height: 4px;
+            background: linear-gradient(to right, #1a237e, #283593, #3949ab, #5c6bc0);
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        
+        .static-tick {
+            position: absolute;
+            top: 65px;
+            width: 1px;
+            height: 8px;
+            background-color: #546e7a;
+            z-index: 2;
+        }
+        
+        .static-major-tick {
+            height: 20px;
+            background-color: #263238;
+            width: 3px;
+        }
+        
+        .static-tick-label {
+            position: absolute;
+            top: 90px;
+            left: 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: #263238;
+            z-index: 2;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.8);
+            padding: 2px 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .static-point {
+            position: absolute;
+            top: 60px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            border: 2px solid white;
+            transition: transform 0.3s ease;
+        }
+        
+        .static-point:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .point-value-label {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 11;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+            min-width: 50px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .fraction-value-label {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 11;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+            min-width: 50px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            color: #c2185b;
+        }
+        
+        .direction-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            z-index: 3;
+        }
+        
+        .arrow-right {
+            right: 15px;
+            top: 68px;
+            border-width: 10px 0 10px 15px;
+            border-color: transparent transparent transparent #1a237e;
+        }
+        
+        .arrow-left {
+            left: 15px;
+            top: 68px;
+            border-width: 10px 15px 10px 0;
+            border-color: transparent #1a237e transparent transparent;
+        }
+        
+        .arrow-label {
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            color: #1a237e;
+        }
+        
+        .positive-direction {
+            right: 10px;
+            top: 50px;
+        }
+        
+        .negative-direction {
+            left: 10px;
+            top: 50px;
+        }
+        
+        /* خط الأعداد التفاعلي للتمرين - أزرق */
+        .number-line-scroll {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 10px 0;
+            margin: 20px 0;
+            -webkit-overflow-scrolling: touch;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .number-line-container {
+            position: relative;
+            height: 120px;
+            min-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .number-line {
+            position: absolute;
+            top: 60px;
+            left: 25px;
+            right: 25px;
+            height: 4px;
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            z-index: 1;
+            border-radius: 2px;
+        }
+        
+        .tick {
+            position: absolute;
+            top: 55px;
+            width: 2px;
+            height: 10px;
+            background-color: #3498db;
+            z-index: 2;
+        }
+        
+        .major-tick {
+            height: 15px;
+            background-color: #2c3e50;
+            width: 3px;
+        }
+        
+        .tick-label {
+            position: absolute;
+            top: 80px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            z-index: 2;
+        }
+        
+        .draggable-point {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            top: 47px;
+            cursor: grab;
+            transform: translateX(-50%);
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid #fff;
+        }
+        
+        .point-label {
+            position: absolute;
+            top: 25px;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 11;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        
+        .draggable-point:active {
+            cursor: grabbing;
+            transform: translateX(-50%) scale(1.2);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .table th {
+            background-color: #2c7744;
+            color: white;
+        }
+        
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .interactive-section {
+            background: linear-gradient(to bottom, #ffffff, #f0f9ff);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #4caf50, #2c7744);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px;
+        }
+        
+        .btn i {
+            margin-left: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(to right, #43a047, #1b5e20);
+        }
+        
+        .btn-check {
+            background: linear-gradient(to right, #2196f3, #0d47a1);
+        }
+        
+        .btn-reset {
+            background: linear-gradient(to right, #f44336, #b71c1c);
+        }
+        
+        .feedback {
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feedback.correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #a5d6a7;
+        }
+        
+        .feedback.incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 2px solid #ef9a9a;
+        }
+        
+        .result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(30, 30, 60, 0.1);
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .counter {
+            margin-top: 8px;
+            font-size: 1.3rem;
+            color: #1a5d38;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f1f1f1;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #2c7744;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background-color: #1e5631;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            .page {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .number-line-container {
+                min-width: 600px;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+                padding: 12px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>العدد النسبي</h1>
+            <p>درس تفاعلي في الرياضيات - تمثيل الأعداد على خط الأعداد</p>
+        </header>
+        
+        <div class="page">
+            <h2 class="page-title">تمثيل الأعداد النسبية على خط الأعداد</h2>
+            <p>عند تمثيل الأعداد النسبية على خط الأعداد فإنني أختار تدريجًا مناسبًا بين الأعداد الصحيحة.</p>
+            
+            <div class="example-box">
+                <h3 class="example-title">مثال توضيحي: تمثيل تغير أسهم الشركات</h3>
+                
+                <table class="table">
+                    <tr>
+                        <th>مقدار التغير</th>
+                        <th>الشركة</th>
+                    </tr>
+                    <tr>
+                        <td>1.8</td>
+                        <td>أ</td>
+                    </tr>
+                    <tr>
+                        <td>-1.6</td>
+                        <td>ب</td>
+                    </tr>
+                    <tr>
+                        <td>1.2</td>
+                        <td>ج</td>
+                    </tr>
+                    <tr>
+                        <td>-0.4</td>
+                        <td>د</td>
+                    </tr>
+                </table>
+                
+                <p>تمثل الأعداد النسبية في الجدول المجاور مقدار ارتفاع أو انخفاض أسهم 4 شركات في سوق عمان المالي. أمثل هذه الأعداد على خط الأعداد.</p>
+                
+                <div class="interactive-section">
+                    <h4>الطريقة 1:</h4>
+                    <p>أرسم خط أعداد، وأضع عليه تدريجًا مناسبًا، ثم أحدد مواقع الأعداد.</p>
+                    
+                    <!-- خط الأعداد الثابت للمثال - تصميم محسن -->
+                    <div class="static-number-line-container" id="static-number-line">
+                        <div class="static-number-line"></div>
+                        <div class="direction-arrow arrow-right"></div>
+                        <div class="direction-arrow arrow-left"></div>
+                        <span class="arrow-label positive-direction">الاتجاه الموجب</span>
+                        <span class="arrow-label negative-direction">الاتجاه السالب</span>
+                        <!-- سيتم إنشاء العلامات والنقاط بالجافاسكريبت -->
+                    </div>
+                    
+                    <h4>الطريقة 2:</h4>
+                    <p>يمكنني أيضًا أن أكتب الأعداد النسبية على صورة أعداد كسرية مختلطة، ثم أمثلها على خط الأعداد.</p>
+                    <p>1.8 = \( 1\frac{4}{5} \), -1.6 = \( -1\frac{3}{5} \), 1.2 = \( 1\frac{1}{5} \), -0.4 = \( -\frac{2}{5} \)</p>
+                    
+                    <!-- خط الأعداد الكسري المضاف للطريقة الثانية -->
+                    <div class="static-number-line-container" id="static-fraction-number-line">
+                        <div class="static-number-line"></div>
+                        <div class="direction-arrow arrow-right"></div>
+                        <div class="direction-arrow arrow-left"></div>
+                        <span class="arrow-label positive-direction">الاتجاه الموجب</span>
+                        <span class="arrow-label negative-direction">الاتجاه السالب</span>
+                        <!-- سيتم إنشاء العلامات والنقاط بالجافاسكريبت -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-box">
+                <h3 class="exercise-title">تمارين تفاعلية</h3>
+                <p>أمثل كلّ عددٍ نسبي ممّا يأتي على خط الأعداد:</p>
+                
+                <div class="number-labels" style="display: flex; justify-content: center; gap: 20px; margin: 20px 0;">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at center, #3498db, #1a2530);"></div>
+                        <span style="color: #3498db; font-weight: bold;">2</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at center, #e74c3c, #1a2530);"></div>
+                        <span style="color: #e74c3c; font-weight: bold;">-0.8</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at center, #2ecc71, #1a2530);"></div>
+                        <span style="color: #2ecc71; font-weight: bold;">4.6</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at center, #9b59b6, #1a2530);"></div>
+                        <span style="color: #9b59b6; font-weight: bold;">-3.2</span>
+                    </div>
+                </div>
+                
+                <div class="interactive-section">
+                    <div class="number-line-scroll">
+                        <div class="number-line-container" id="line-exercise">
+                            <div class="number-line"></div>
+                            <!-- نقاط التمرين مع التسميات -->
+                            <div class="draggable-point" id="point1" style="background: radial-gradient(circle at center, #3498db, #1a2530);"></div>
+                            <div class="point-label" id="label1" style="color: #3498db;">2</div>
+                            
+                            <div class="draggable-point" id="point2" style="background: radial-gradient(circle at center, #e74c3c, #1a2530);"></div>
+                            <div class="point-label" id="label2" style="color: #e74c3c;">-0.8</div>
+                            
+                            <div class="draggable-point" id="point3" style="background: radial-gradient(circle at center, #2ecc71, #1a2530);"></div>
+                            <div class="point-label" id="label3" style="color: #2ecc71;">4.6</div>
+                            
+                            <div class="draggable-point" id="point4" style="background: radial-gradient(circle at center, #9b59b6, #1a2530);"></div>
+                            <div class="point-label" id="label4" style="color: #9b59b6;">-3.2</div>
+                        </div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="btn btn-check" onclick="checkExercise()">
+                            <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                        </button>
+                        <button class="btn btn-reset" onclick="resetExercise()">
+                            <i class="fas fa-redo"></i> إعادة المحاولة
+                        </button>
+                    </div>
+                    
+                    <div class="feedback" id="feedback-exercise"></div>
+                    <div class="result">
+                        <div id="final-feedback">قم بحل جميع الأسئلة للتحقق من إجاباتك</div>
+                        <div class="counter">عدد الإجابات الصحيحة: <span id="correct-count">0</span> من 4</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="page1.html" class="nav-btn">← السابق</a>
+            <a href="page3.html" class="nav-btn">التالي →</a>
+        </div>
+        
+        <footer>
+            <p>الدرس التفاعلي: العدد النسبي | الصفحة 2 من 3</p>
+        </footer>
+    </div>
+
+    <script>
+        // تعريف خطوط الأعداد
+        const numberLines = {
+            example: { min: -2, max: 2, length: 750, start: 30 },
+            exercise: { min: -5, max: 5, length: 750, start: 25 }
+        };
+        
+        // نقاط المثال
+        const examplePoints = [
+            { value: 1.8, label: 'أ', color: '#e74c3c' },
+            { value: -1.6, label: 'ب', color: '#3498db' },
+            { value: 1.2, label: 'ج', color: '#2ecc71' },
+            { value: -0.4, label: 'د', color: '#9b59b6' }
+        ];
+        
+        // نقاط المثال الكسرية للطريقة الثانية - تم تغييرها إلى أعداد كسرية مختلطة
+        const fractionPoints = [
+            { value: 1.8, fraction: '1 4/5', label: 'أ', color: '#e74c3c' },
+            { value: -1.6, fraction: '-1 3/5', label: 'ب', color: '#3498db' },
+            { value: 1.2, fraction: '1 1/5', label: 'ج', color: '#2ecc71' },
+            { value: -0.4, fraction: '-2/5', label: 'د', color: '#9b59b6' }
+        ];
+        
+        // نقاط التمرين
+        const exercisePoints = [
+            { id: 'point1', label: 'label1', value: 2, color: '#3498db' },
+            { id: 'point2', label: 'label2', value: -0.8, color: '#e74c3c' },
+            { id: 'point3', label: 'label3', value: 4.6, color: '#2ecc71' },
+            { id: 'point4', label: 'label4', value: -3.2, color: '#9b59b6' }
+        ];
+
+        // دالة لرسم خط الأعداد الثابت للمثال - تصميم محسن
+        function drawStaticNumberLine() {
+            const container = document.getElementById('static-number-line');
+            const min = -2;
+            const max = 2;
+            const width = container.offsetWidth - 60; // 30px padding on each side
+            
+            // مسح أي محتوى سابق (باستثناء خط الأعداد والأسهم التي أضفناها في HTML)
+            const existingElements = container.querySelectorAll('.static-tick, .static-tick-label, .static-point, .point-value-label');
+            existingElements.forEach(el => el.remove());
+            
+            // إضافة العلامات والأرقام - مع تقسيمات فرعية بين الأعداد الصحيحة
+            for (let i = min; i <= max; i += 0.1) {
+                const position = 30 + ((i - min) / (max - min)) * width;
+                
+                // إنشاء علامة صغيرة لكل 0.1
+                const tick = document.createElement('div');
+                tick.className = 'static-tick';
+                tick.style.left = `${position}px`;
+                
+                // علامات رئيسية عند الأعداد الصحيحة فقط
+                if (Math.abs(i - Math.round(i)) < 0.01) {
+                    tick.className += ' static-major-tick';
+                    
+                    // إضافة تسمية للأعداد الصحيحة فقط
+                    const label = document.createElement('div');
+                    label.className = 'static-tick-label';
+                    label.textContent = Math.round(i);
+                    label.style.left = `${position}px`;
+                    container.appendChild(label);
+                }
+                
+                container.appendChild(tick);
+            }
+            
+            // إضافة النقاط
+            examplePoints.forEach(point => {
+                const position = 30 + ((point.value - min) / (max - min)) * width;
+                
+                // إنشاء النقطة
+                const pointEl = document.createElement('div');
+                pointEl.className = 'static-point';
+                pointEl.style.left = `${position}px`;
+                pointEl.textContent = point.label;
+                pointEl.style.background = `radial-gradient(circle at center, ${point.color}, #1a2530)`;
+                container.appendChild(pointEl);
+                
+                // إضافة تسمية القيمة فوق النقطة
+                const valueLabel = document.createElement('div');
+                valueLabel.className = 'point-value-label';
+                valueLabel.textContent = point.value;
+                valueLabel.style.color = point.color;
+                valueLabel.style.left = `${position}px`;
+                container.appendChild(valueLabel);
+            });
+        }
+        
+        // دالة لرسم خط الأعداد الكسري للطريقة الثانية
+        function drawFractionNumberLine() {
+            const container = document.getElementById('static-fraction-number-line');
+            const min = -2;
+            const max = 2;
+            const width = container.offsetWidth - 60; // 30px padding on each side
+            
+            // مسح أي محتوى سابق
+            const existingElements = container.querySelectorAll('.static-tick, .static-tick-label, .static-point, .fraction-value-label');
+            existingElements.forEach(el => el.remove());
+            
+            // إضافة العلامات والأرقام - مع تقسيمات كل 0.2 (خمس أقسام بين الأعداد الصحيحة)
+            for (let i = min; i <= max; i += 0.2) {
+                const position = 30 + ((i - min) / (max - min)) * width;
+                
+                // إنشاء علامة
+                const tick = document.createElement('div');
+                tick.className = 'static-tick';
+                tick.style.left = `${position}px`;
+                
+                // علامات رئيسية عند الأعداد الصحيحة
+                if (Math.abs(i - Math.round(i)) < 0.01) {
+                    tick.className += ' static-major-tick';
+                    
+                    // إضافة تسمية للأعداد الصحيحة
+                    const label = document.createElement('div');
+                    label.className = 'static-tick-label';
+                    label.textContent = Math.round(i);
+                    label.style.left = `${position}px`;
+                    container.appendChild(label);
+                }
+                
+                container.appendChild(tick);
+            }
+            
+            // إضافة النقاط ككسور
+            fractionPoints.forEach(point => {
+                const position = 30 + ((point.value - min) / (max - min)) * width;
+                
+                // إنشاء النقطة
+                const pointEl = document.createElement('div');
+                pointEl.className = 'static-point';
+                pointEl.style.left = `${position}px`;
+                pointEl.textContent = point.label;
+                pointEl.style.background = `radial-gradient(circle at center, ${point.color}, #1a2530)`;
+                container.appendChild(pointEl);
+                
+                // إضافة تسمية الكسر فوق النقطة
+                const fractionLabel = document.createElement('div');
+                fractionLabel.className = 'fraction-value-label';
+                fractionLabel.textContent = point.fraction;
+                fractionLabel.style.left = `${position}px`;
+                container.appendChild(fractionLabel);
+            });
+        }
+        
+        // دالة لرسم خط الأعداد التفاعلي للتمرين
+        function drawInteractiveNumberLine() {
+            const container = document.getElementById('line-exercise');
+            const min = numberLines.exercise.min;
+            const max = numberLines.exercise.max;
+            const length = numberLines.exercise.length;
+            const start = numberLines.exercise.start;
+            
+            // مسح أي علامات موجودة مسبقًا
+            const existingTicks = container.querySelectorAll('.tick, .tick-label');
+            existingTicks.forEach(el => {
+                if (!el.classList.contains('number-line') && 
+                    !el.classList.contains('draggable-point') && 
+                    !el.classList.contains('point-label')) {
+                    el.remove();
+                }
+            });
+            
+            // إضافة علامات لكل 0.5
+            for (let i = min; i <= max; i += 0.5) {
+                const position = start + ((i - min) / (max - min)) * length;
+                
+                // علامة صغيرة لكل 0.5
+                const tick = document.createElement('div');
+                tick.className = 'tick';
+                tick.style.left = `${position}px`;
+                
+                // علامات رئيسية لكل عدد صحيح
+                if (Math.abs(i - Math.round(i)) < 0.01) {
+                    tick.className += ' major-tick';
+                }
+                
+                container.appendChild(tick);
+                
+                // تسميات للأعداد الصحيحة
+                if (Math.abs(i - Math.round(i)) < 0.01) {
+                    const label = document.createElement('div');
+                    label.className = 'tick-label';
+                    
+                    // عرض الأعداد الصحيحة فقط بدون مشاكل التقريب
+                    const value = Math.round(i * 10) / 10;
+                    const isInteger = Math.abs(value - Math.round(value)) < 0.01;
+                    
+                    label.textContent = isInteger ? value.toFixed(0) : value.toFixed(1);
+                    label.style.left = `${position}px`;
+                    container.appendChild(label);
+                }
+            }
+            
+            // وضع نقاط التمرين عند الصفر
+            placePointsAtZero();
+        }
+        
+        // وضع نقاط التمرين عند الصفر
+        function placePointsAtZero() {
+            const min = numberLines.exercise.min;
+            const max = numberLines.exercise.max;
+            const length = numberLines.exercise.length;
+            const start = numberLines.exercise.start;
+            
+            const zeroPosition = start + ((0 - min) / (max - min)) * length;
+            
+            exercisePoints.forEach(point => {
+                const pointEl = document.getElementById(point.id);
+                const labelEl = document.getElementById(point.label);
+                
+                pointEl.style.left = `${zeroPosition}px`;
+                pointEl.style.background = `radial-gradient(circle at center, ${point.color}, #1a2530)`;
+                
+                labelEl.style.left = `${zeroPosition}px`;
+            });
+        }
+        
+        // جعل النقاط قابلة للسحب
+        function initDraggablePoints() {
+            const points = document.querySelectorAll('.draggable-point');
+            let activePoint = null;
+            let offsetX = 0;
+            
+            points.forEach(point => {
+                point.addEventListener('mousedown', startDrag);
+                point.addEventListener('touchstart', startDragTouch);
+            });
+            
+            function startDrag(e) {
+                e.preventDefault();
+                activePoint = this;
+                const rect = this.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('mouseup', stopDrag);
+            }
+            
+            function startDragTouch(e) {
+                e.preventDefault();
+                activePoint = e.target;
+                const rect = activePoint.getBoundingClientRect();
+                offsetX = e.touches[0].clientX - rect.left;
+                
+                document.addEventListener('touchmove', dragTouch);
+                document.addEventListener('touchend', stopDrag);
+            }
+            
+            function drag(e) {
+                if (!activePoint) return;
+                
+                const container = activePoint.parentElement;
+                const containerRect = container.getBoundingClientRect();
+                const line = container.querySelector('.number-line');
+                const lineRect = line.getBoundingClientRect();
+                
+                // حساب الموضع الجديد
+                let newX = e.clientX - containerRect.left - offsetX;
+                
+                // تقييد النقطة داخل خط الأعداد
+                newX = Math.max(lineRect.left - containerRect.left, 
+                               Math.min(lineRect.right - containerRect.left - activePoint.offsetWidth, newX));
+                
+                activePoint.style.left = newX + 'px';
+                
+                // تحديث موقع التسمية
+                const pointId = activePoint.id;
+                const pointData = exercisePoints.find(p => p.id === pointId);
+                if (pointData) {
+                    const labelEl = document.getElementById(pointData.label);
+                    labelEl.style.left = newX + 'px';
+                }
+            }
+            
+            function dragTouch(e) {
+                if (!activePoint) return;
+                
+                const container = activePoint.parentElement;
+                const containerRect = container.getBoundingClientRect();
+                const line = container.querySelector('.number-line');
+                const lineRect = line.getBoundingClientRect();
+                
+                // حساب الموضع الجديد
+                let newX = e.touches[0].clientX - containerRect.left - offsetX;
+                
+                // تقييد النقطة داخل خط الأعداد
+                newX = Math.max(lineRect.left - containerRect.left, 
+                               Math.min(lineRect.right - containerRect.left - activePoint.offsetWidth, newX));
+                
+                activePoint.style.left = newX + 'px';
+                
+                // تحديث موقع التسمية
+                const pointId = activePoint.id;
+                const pointData = exercisePoints.find(p => p.id === pointId);
+                if (pointData) {
+                    const labelEl = document.getElementById(pointData.label);
+                    labelEl.style.left = newX + 'px';
+                }
+            }
+            
+            function stopDrag() {
+                activePoint = null;
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('mouseup', stopDrag);
+                document.removeEventListener('touchmove', dragTouch);
+                document.removeEventListener('touchend', stopDrag);
+            }
+        }
+        
+        // التحقق من إجابة التمرين
+        function checkExercise() {
+            const feedback = document.getElementById('feedback-exercise');
+            const correctCountEl = document.getElementById('correct-count');
+            let correctCount = 0;
+            let feedbackText = '';
+            
+            exercisePoints.forEach(point => {
+                const pointEl = document.getElementById(point.id);
+                const container = pointEl.parentElement;
+                const containerRect = container.getBoundingClientRect();
+                const line = container.querySelector('.number-line');
+                const lineRect = line.getBoundingClientRect();
+                
+                // حساب موقع النقطة
+                const pointRect = pointEl.getBoundingClientRect();
+                const pointCenter = pointRect.left + pointRect.width / 2;
+                
+                // الحصول على بيانات خط الأعداد
+                const lineData = numberLines.exercise;
+                
+                // حساب القيمة المحددة بدقة
+                const positionRatio = (pointCenter - containerRect.left - lineData.start) / lineData.length;
+                const selectedValue = lineData.min + positionRatio * (lineData.max - lineData.min);
+                
+                // حساب الهامش المسموح (0.1)
+                const tolerance = 0.1;
+                
+                // التحقق من الإجابة
+                if (Math.abs(selectedValue - point.value) < tolerance) {
+                    pointEl.style.background = `radial-gradient(circle at center, ${point.color}, #186A3B)`;
+                    correctCount++;
+                } else {
+                    pointEl.style.background = `radial-gradient(circle at center, ${point.color}, #1a2530)`;
+                }
+            });
+            
+            correctCountEl.textContent = correctCount;
+            
+            if (correctCount === 4) {
+                feedbackText = '<i class="fas fa-trophy"></i> مبروك! لقد أجبت على جميع الأسئلة بشكل صحيح!';
+                feedback.className = "feedback correct";
+            } else if (correctCount >= 2) {
+                feedbackText = `<i class="fas fa-thumbs-up"></i> جيد جدًا! لقد أجبت بشكل صحيح على ${correctCount} من 4 أسئلة. استمر في المحاولة لحل جميع الأسئلة.`;
+                feedback.className = "feedback";
+            } else {
+                feedbackText = `<i class="fas fa-lightbulb"></i> استمر في المحاولة! لقد أجبت بشكل صحيح على ${correctCount} من 4 أسئلة. يمكنك إعادة المحاولة.`;
+                feedback.className = "feedback";
+            }
+            
+            feedback.innerHTML = feedbackText;
+        }
+        
+        // إعادة تعيين التمرين
+        function resetExercise() {
+            placePointsAtZero();
+            const feedback = document.getElementById('feedback-exercise');
+            const correctCountEl = document.getElementById('correct-count');
+            
+            feedback.innerHTML = "";
+            feedback.className = "feedback";
+            correctCountEl.textContent = "0";
+        }
+        
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            drawStaticNumberLine();
+            drawFractionNumberLine(); // رسم خط الأعداد الكسري الجديد
+            drawInteractiveNumberLine();
+            initDraggablePoints();
+            
+            // إعادة رسم خطوط الأعداد عند تغيير حجم النافذة
+            window.addEventListener('resize', function() {
+                drawStaticNumberLine();
+                drawFractionNumberLine();
+            });
+        });
+    </script>
+</body>
+</html>
