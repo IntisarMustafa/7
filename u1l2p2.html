@@ -25,7 +25,7 @@
         .container {
             max-width: 900px;
             margin: 20px auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             padding: 30px;
@@ -43,10 +43,16 @@
         }
         
         .header h1 {
-            color: #2d6187;
+            background: linear-gradient(135deg, #4e89ae, #2d6187);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             font-size: 36px;
             margin-bottom: 15px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            padding: 10px 20px;
+            display: inline-block;
+            border-radius: 12px;
+            border: 2px solid #c5e3f6;
         }
         
         .header p {
@@ -61,7 +67,7 @@
             margin-bottom: 40px;
             padding: 25px;
             border-radius: 15px;
-            background: #f8f9fa;
+            background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
             border-left: 5px solid #4e89ae;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
@@ -83,14 +89,43 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
         
+        /* ألوان متنوعة للعناوين الرئيسية */
         .section-title {
-            color: #2d6187;
             font-size: 28px;
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 2px dashed #a8d0e6;
             display: flex;
             align-items: center;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        
+        /* تخصيص ألوان مختلفة لكل عنوان رئيسي */
+        .section:nth-child(2) .section-title {
+            color: #d32f2f; /* أحمر */
+            background: linear-gradient(to right, #ffebee, #ffffff);
+            border-left: 5px solid #d32f2f;
+        }
+        
+        .section:nth-child(3) .section-title {
+            color: #7b1fa2; /* بنفسجي */
+            background: linear-gradient(to right, #f3e5f5, #ffffff);
+            border-left: 5px solid #7b1fa2;
+        }
+        
+        .section:nth-child(4) .section-title {
+            color: #2e7d32; /* أخضر */
+            background: linear-gradient(to right, #e8f5e9, #ffffff);
+            border-left: 5px solid #2e7d32;
+        }
+        
+        .section:nth-child(5) .section-title {
+            color: #ef6c00; /* برتقالي */
+            background: linear-gradient(to right, #fff3e0, #ffffff);
+            border-left: 5px solid #ef6c00;
         }
         
         .content {
@@ -101,7 +136,7 @@
         }
         
         .example {
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
             border-radius: 12px;
             padding: 25px;
             margin: 25px 0;
@@ -114,11 +149,14 @@
             font-weight: bold;
             margin-bottom: 20px;
             font-size: 24px;
+            background: linear-gradient(to right, #e1f5fe, #ffffff);
+            padding: 8px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #0288d1;
         }
         
-        /* التعديلات الجديدة حسب الطلب */
         .division-container-new {
-            background: #e8f4fc;
+            background: linear-gradient(145deg, #e8f4fc, #d1e8f9);
             padding: 30px;
             border-radius: 12px;
             margin: 30px 0;
@@ -132,19 +170,19 @@
         .division-box {
             font-family: 'Courier New', monospace;
             font-size: 24px;
-            background: white;
-            padding: 20px;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            padding: 25px 30px;
             border-radius: 8px;
             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
             min-width: 300px;
             text-align: center;
+            direction: ltr;
         }
         
-        .division-row {
+        .division-result-container {
             display: flex;
             justify-content: center;
-            padding: 5px 0;
-            white-space: nowrap;
+            margin-bottom: 15px;
         }
         
         .division-result {
@@ -153,21 +191,27 @@
             color: #2d6187;
             padding: 5px 10px;
             border-radius: 5px;
-            background: #f0f8ff;
+            background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
             display: inline-block;
-            margin-bottom: 10px;
+            direction: ltr;
+            text-align: center;
         }
         
-        .division-symbol {
-            display: none;
+        .division-steps-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
         
-        /* التعديلات الرئيسية هنا: */
         .division-operand-row {
             direction: ltr;
             display: flex;
             align-items: flex-end;
             margin-bottom: 5px;
+            flex-direction: row;
+            justify-content: center;
+            width: 100%;
         }
         
         .division-divisor {
@@ -177,6 +221,7 @@
             min-width: 20px;
             text-align: center;
             align-self: flex-start;
+            direction: ltr;
         }
         
         .division-dividend-container {
@@ -186,6 +231,7 @@
             border-top-left-radius: 8px;
             padding-top: 15px;
             margin-left: 10px;
+            direction: ltr;
         }
         
         .division-dividend {
@@ -193,40 +239,51 @@
             min-width: 100px;
             text-align: right;
             padding: 0 15px 5px 5px;
+            direction: ltr;
         }
         
-        .division-step-box {
+        .division-step {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
             margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .step-row {
+            display: flex;
+            padding: 0 5px;
             position: relative;
-            min-height: 30px;
+            justify-content: center;
+        }
+        
+        .step-indent {
+            width: 30px;
+            display: inline-block;
             text-align: center;
         }
         
-        .division-step-box:last-child {
-            margin-bottom: 0;
-        }
-        
-        .division-line-box {
-            border-top: 2px solid #4e89ae;
-            margin: 5px auto;
-            width: 80%;
-        }
-        
-        .division-indent-box {
-            display: inline-block;
-            width: 30px;
-        }
-        
-        .division-number-box {
-            display: inline-block;
+        .step-number {
             min-width: 30px;
-            text-align: right;
+            text-align: center;
             padding: 0 3px;
+            direction: ltr;
         }
         
-        .division-subtraction-box {
+        .step-sign {
+            min-width: 20px;
+            text-align: center;
+            padding: 0 3px;
             color: #d32f2f;
             font-weight: bold;
+            direction: ltr;
+        }
+        
+        .step-line {
+            border-top: 3px solid #000;
+            height: 0;
+            width: 80%;
+            margin: 3px auto;
         }
         
         .math-formula {
@@ -234,13 +291,28 @@
             padding: 15px;
             text-align: center;
             margin: 20px 0;
-            background: #f0f8ff;
+            background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
             border-radius: 10px;
             border: 1px solid #c5e3f6;
         }
         
+        /* صندوق الاستنتاج الجديد - لون أصفر بارد */
+        .conclusion-box {
+            background: linear-gradient(135deg, #fffde7, #fff9c4);
+            color: #5d4037;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border: 3px solid #ffecb3;
+            line-height: 1.6;
+        }
+        
         .practice {
-            background: linear-gradient(135deg, #e8f4fc, #d1e8f9);
+            background: linear-gradient(145deg, #e8f4fc, #d1e8f9);
             border-radius: 15px;
             padding: 25px;
             margin: 30px 0;
@@ -249,11 +321,11 @@
         }
         
         .practice:before {
-            content: "✍️";
+            content: "✍";
             position: absolute;
             top: -15px;
             left: -15px;
-            background: #4e89ae;
+            background: linear-gradient(145deg, #4e89ae, #2d6187);
             color: white;
             width: 40px;
             height: 40px;
@@ -261,24 +333,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
             box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
         
         .practice-title {
-            color: #2d6187;
+            color: #c2185b;
             margin-bottom: 20px;
             font-size: 26px;
             text-align: center;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #a8d0e6;
+            padding: 10px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #f8bbd0, #ffffff);
+            border-bottom: 3px solid #c2185b;
         }
         
         .problem {
             margin: 20px 0;
             font-size: 22px;
             padding: 20px;
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
             border-radius: 10px;
             box-shadow: 0 3px 6px rgba(0,0,0,0.05);
             border-left: 4px solid #4e89ae;
@@ -294,6 +368,8 @@
         .input-group label {
             font-size: 20px;
             min-width: 120px;
+            color: #5d4037;
+            font-weight: 600;
         }
         
         .input-group input {
@@ -304,6 +380,7 @@
             flex: 1;
             max-width: 300px;
             transition: border-color 0.3s;
+            background: #ffffff;
         }
         
         .input-group input:focus {
@@ -313,7 +390,7 @@
         }
         
         .btn {
-            background: linear-gradient(135deg, #4e89ae, #2d6187);
+            background: linear-gradient(145deg, #4e89ae, #2d6187);
             color: white;
             border: none;
             padding: 14px 30px;
@@ -330,7 +407,7 @@
         }
         
         .btn:hover {
-            background: linear-gradient(135deg, #2d6187, #1a3f5f);
+            background: linear-gradient(145deg, #2d6187, #1a3f5f);
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
@@ -354,13 +431,13 @@
         }
         
         .correct {
-            background: #d4edda;
+            background: linear-gradient(145deg, #d4edda, #c3e6cb);
             color: #155724;
             border: 1px solid #c3e6cb;
         }
         
         .incorrect {
-            background: #f8d7da;
+            background: linear-gradient(145deg, #f8d7da, #f5c6cb);
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
@@ -374,7 +451,7 @@
         }
         
         .decimal-type {
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
             border-radius: 15px;
             padding: 30px;
             flex: 1;
@@ -391,11 +468,14 @@
         }
         
         .decimal-type h3 {
-            color: #2d6187;
             margin-bottom: 20px;
             font-size: 26px;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed #a8d0e6;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: -40px;
+            background: linear-gradient(135deg, #4e89ae, #2d6187);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .decimal-example {
@@ -404,13 +484,13 @@
             color: #28abb9;
             margin: 25px 0;
             padding: 15px;
-            background: #f0f8ff;
+            background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
             border-radius: 10px;
             font-family: 'Courier New', monospace;
         }
         
         .real-life {
-            background: linear-gradient(135deg, #e8f4fc, #d1e8f9);
+            background: linear-gradient(145deg, #e8f4fc, #d1e8f9);
             border-radius: 20px;
             padding: 30px;
             margin: 40px 0;
@@ -429,10 +509,14 @@
         }
         
         .real-life-title {
-            color: #2d6187;
+            color: #5d4037;
             text-align: center;
             margin-bottom: 25px;
             font-size: 30px;
+            padding: 15px;
+            background: linear-gradient(to right, #ffecb3, #ffffff);
+            border-radius: 12px;
+            border-left: 5px solid #5d4037;
         }
         
         .navigation-buttons {
@@ -443,7 +527,7 @@
         }
         
         .nav-btn {
-            background: linear-gradient(135deg, #4e89ae, #2d6187);
+            background: linear-gradient(145deg, #4e89ae, #2d6187);
             color: white;
             border: none;
             padding: 14px 30px;
@@ -460,7 +544,7 @@
         }
         
         .nav-btn:hover {
-            background: linear-gradient(135deg, #2d6187, #1a3f5f);
+            background: linear-gradient(145deg, #2d6187, #1a3f5f);
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
@@ -470,11 +554,11 @@
         }
         
         .nav-btn.prev {
-            background: linear-gradient(135deg, #28abb9, #2d6187);
+            background: linear-gradient(145deg, #28abb9, #2d6187);
         }
         
         .nav-btn.next {
-            background: linear-gradient(135deg, #2d6187, #28abb9);
+            background: linear-gradient(145deg, #2d6187, #28abb9);
         }
         
         .footer {
@@ -498,6 +582,10 @@
         .steps {
             margin: 20px 0;
             padding-right: 20px;
+            background: linear-gradient(145deg, #e8f4fc, #d1e8f9);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #4e89ae;
         }
         
         .steps li {
@@ -505,6 +593,7 @@
             padding-right: 10px;
             border-right: 3px solid #a8d0e6;
             position: relative;
+            font-size: 20px;
         }
         
         .steps li:before {
@@ -517,7 +606,7 @@
         }
         
         .note {
-            background: #e3f2fd;
+            background: linear-gradient(145deg, #e3f2fd, #d1e8f9);
             padding: 20px;
             border-radius: 10px;
             border-right: 5px solid #4e89ae;
@@ -533,6 +622,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            padding: 8px 12px;
+            background: linear-gradient(to right, #bbdefb, #ffffff);
+            border-radius: 6px;
+            border-left: 4px solid #1976d2;
         }
         
         @media (max-width: 768px) {
@@ -584,6 +677,19 @@
                 padding: 12px 20px;
                 font-size: 18px;
             }
+            
+            .step-number {
+                min-width: 20px;
+            }
+            
+            .step-indent {
+                width: 20px;
+            }
+            
+            .conclusion-box {
+                font-size: 22px;
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -609,84 +715,73 @@
                 
                 <div class="division-container-new">
                     <div class="division-box">
-                        <div class="division-row">
+                        <div class="division-result-container">
                             <div class="division-result">0.625</div>
                         </div>
                         
-                        <!-- التصميم المعدل حسب التعليمات -->
-                        <div class="division-operand-row">
-                            <div class="division-divisor">8</div>
-                            <div class="division-dividend-container">
-                                <div class="division-dividend">5.000</div>
+                        <div class="division-steps-container">
+                            <!-- التصميم المعدل حسب التعليمات -->
+                            <div class="division-operand-row">
+                                <div class="division-divisor">8</div>
+                                <div class="division-dividend-container">
+                                    <div class="division-dividend">5.000</div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <!-- خطوات القسمة -->
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">4</div>
-                                <div class="division-number-box">8</div>
+                            
+                            <!-- خطوات القسمة مع الخط تحت الأعداد -->
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">4</div>
+                                    <div class="step-number">8</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">2</div>
+                                    <div class="step-number">0</div>
+                                </div>
                             </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">2</div>
-                                <div class="division-number-box">0</div>
+                            
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">1</div>
+                                    <div class="step-number">6</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">4</div>
+                                    <div class="step-number">0</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">1</div>
-                                <div class="division-number-box">6</div>
-                            </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">4</div>
-                                <div class="division-number-box">0</div>
-                            </div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">4</div>
-                                <div class="division-number-box">0</div>
-                            </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">0</div>
+                            
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">4</div>
+                                    <div class="step-number">0</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">0</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
+                <!-- تم نقل الصيغة الرياضية هنا بعد المثال مباشرة وقبل الخطوات -->
                 <div class="math-formula">
                     \[ \frac{5}{8} = 0.625 \]
                 </div>
                 
-                <p class="highlight">يسمى الكسر العشري الناتج كسرًا عشريًا منتهيًا لأنه يحتوي على عدد منتهٍ من الأرقام.</p>
-                
+                <!-- تم نقل الخطوات هنا بعد الصيغة الرياضية -->
                 <h3>الخطوات:</h3>
                 <ol class="steps">
                     <li>أقسم 5 على 8 (5 أصغر من 8، لذا نضع 0 ونضيف فاصلة عشرية)</li>
@@ -700,6 +795,11 @@
                     <li>40 ÷ 8 = 5 والباقي 0 (لأن 8 × 5 = 40)</li>
                     <li>عندما يصبح الباقي صفرًا تنتهي عملية القسمة</li>
                 </ol>
+                
+                <!-- تم نقل العبارة هنا بعد الخطوات - خلفية صفراء باردة -->
+                <div class="conclusion-box">
+                    يسمى الكسر العشري الناتج كسرًا عشريًا منتهيًا لأنه يحتوي على عدد منتهٍ من الأرقام.
+                </div>
             </div>
             
             <div class="practice">
@@ -739,65 +839,59 @@
                 
                 <div class="division-container-new">
                     <div class="division-box">
-                        <div class="division-row">
+                        <div class="division-result-container">
                             <div class="division-result">0.333...</div>
                         </div>
                         
-                        <!-- التصميم المعدل حسب التعليمات -->
-                        <div class="division-operand-row">
-                            <div class="division-divisor">3</div>
-                            <div class="division-dividend-container">
-                                <div class="division-dividend">1.000</div>
+                        <div class="division-steps-container">
+                            <!-- التصميم المعدل حسب التعليمات -->
+                            <div class="division-operand-row">
+                                <div class="division-divisor">3</div>
+                                <div class="division-dividend-container">
+                                    <div class="division-dividend">1.000</div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <!-- خطوات القسمة -->
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">0</div>
+                            
+                            <!-- خطوات القسمة مع الخط تحت الأعداد -->
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">0</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">1</div>
+                                    <div class="step-number">0</div>
+                                </div>
                             </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">1</div>
-                                <div class="division-number-box">0</div>
+                            
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">9</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">1</div>
+                                    <div class="step-number">0</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">9</div>
-                            </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">1</div>
-                                <div class="division-number-box">0</div>
-                            </div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">9</div>
-                            </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">1</div>
+                            
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">9</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">1</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -890,88 +984,78 @@
                 
                 <div class="division-container-new">
                     <div class="division-box">
-                        <div class="division-row">
+                        <div class="division-result-container">
                             <div class="division-result">1.625</div>
                         </div>
                         
-                        <!-- التصميم المعدل حسب التعليمات -->
-                        <div class="division-operand-row">
-                            <div class="division-divisor">8</div>
-                            <div class="division-dividend-container">
-                                <div class="division-dividend">13.000</div>
+                        <div class="division-steps-container">
+                            <!-- التصميم المعدل حسب التعليمات -->
+                            <div class="division-operand-row">
+                                <div class="division-divisor">8</div>
+                                <div class="division-dividend-container">
+                                    <div class="division-dividend">13.000</div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <!-- خطوات القسمة -->
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">8</div>
+                            
+                            <!-- خطوات القسمة مع الخط تحت الأعداد -->
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">8</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">5</div>
+                                    <div class="step-number">0</div>
+                                </div>
                             </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">5</div>
-                                <div class="division-number-box">0</div>
+                            
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">4</div>
+                                    <div class="step-number">8</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">2</div>
+                                    <div class="step-number">0</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">4</div>
-                                <div class="division-number-box">8</div>
+                            
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">1</div>
+                                    <div class="step-number">6</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">4</div>
+                                    <div class="step-number">0</div>
+                                </div>
                             </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">2</div>
-                                <div class="division-number-box">0</div>
-                            </div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">1</div>
-                                <div class="division-number-box">6</div>
-                            </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">4</div>
-                                <div class="division-number-box">0</div>
-                            </div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">-</div>
-                                <div class="division-number-box">4</div>
-                                <div class="division-number-box">0</div>
-                            </div>
-                            <div class="division-line-box"></div>
-                        </div>
-                        <div class="division-step-box">
-                            <div class="division-row">
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-indent-box"></div>
-                                <div class="division-number-box">0</div>
+                            
+                            <div class="division-step">
+                                <div class="step-row">
+                                    <div class="step-sign">-</div>
+                                    <div class="step-number">4</div>
+                                    <div class="step-number">0</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-row">
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-indent"></div>
+                                    <div class="step-number">0</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -992,14 +1076,14 @@
                     <div class="note-title">نصائح للقسمة الطويلة:</div>
                     <p>1. تأكد من كتابة الأرقام في الأعمدة الصحيحة</p>
                     <p>2. ابدأ دائمًا من اليسار إلى اليمين</p>
-                    <p>3. أضف أصفارًا بعد الفاصلة العشرية حسب الحاجة</p>
+                   极<p>3. أضف أصفارًا بعد الفاصلة العشرية حسب الحاجة</p>
                     <p>4. توقف عندما يصبح الباقي صفرًا أو عندما تلاحظ نمطًا متكررًا</p>
                 </div>
                 
                 <div class="note">
                     <div class="note-title">قابلية الكسور للتحويل إلى كسور عشرية منتهية:</div>
                     <p>يمكن تحويل الكسر إلى كسر عشري منتهٍ إذا كان مقامه يحتوي فقط على العوامل الأولية 2 أو 5</p>
-                    <p>مثال: \( \frac{3}{8} = \frac{3}{2^3} = 0.375 \) (مقامه 8 = 2³)</p>
+                    <p>مثال: \( \frac{3}{8} = \frac极{3}{2^3} = 0.375 \) (مقامه 8 = 2³)</p>
                     <p>مثال: \( \frac{7}{20} = \frac{7}{2^2 \times 5} = 0.35 \)</p>
                 </div>
             </div>
@@ -1065,7 +1149,7 @@
             
             if (isCorrect) {
                 feedbackElement.textContent = "✓ إجابة صحيحة! أحسنت!";
-                feedbackElement.className = "feedback correct";
+                feedbackElement.class极 = "feedback correct";
             } else {
                 feedbackElement.textContent = `✗ إجابة غير صحيحة. الإجابة الصحيحة هي: ${answers[problemId]}`;
                 feedbackElement.className = "feedback incorrect";
