@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحويل العدد النسبي إلى كسر عشري باستخدام القسمة الطويلة</title>
+    <title>تحويل الكسور إلى كسور عشرية باستخدام القسمة الطويلة</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
@@ -116,7 +116,7 @@
             font-size: 24px;
         }
         
-        /* التنسيق الجديد لإشارة القسمة */
+        /* التعديلات الجديدة حسب الطلب */
         .division-container-new {
             background: #e8f4fc;
             padding: 30px;
@@ -140,7 +140,6 @@
             text-align: center;
         }
         
-        /* التصميم الجديد حسب التعليمات */
         .division-row {
             display: flex;
             justify-content: center;
@@ -159,33 +158,41 @@
             margin-bottom: 10px;
         }
         
-        /* إخفاء رمز القسمة القديم */
         .division-symbol {
             display: none;
         }
         
-        /* بناء رمز القسمة على المقسوم نفسه */
-        .division-dividend {
-            font-weight: bold;
-            min-width: 100px;
-            text-align: center;
-            position: relative;
-            padding-top: 20px; /* زيادة المساحة العلوية للخط العلوي */
-            padding-right: 20px;
-            border-top: 2px solid #000;
-            border-left: 2px solid #000;
-            border-top-left-radius: 8px;
-            margin-top: 5px;
-            margin-left: 10px;
+        /* التعديلات الرئيسية هنا: */
+        .division-operand-row {
+            direction: ltr;
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 5px;
         }
         
         .division-divisor {
             font-weight: bold;
             color: #2d6187;
-            margin: 20px 5px 0 0; /* تعديل الهوامش لمحاذاة أفضل */
+            margin-right: 10px;
             min-width: 20px;
             text-align: center;
             align-self: flex-start;
+        }
+        
+        .division-dividend-container {
+            position: relative;
+            border-top: 2px solid #000;
+            border-left: 2px solid #000;
+            border-top-left-radius: 8px;
+            padding-top: 15px;
+            margin-left: 10px;
+        }
+        
+        .division-dividend {
+            font-weight: bold;
+            min-width: 100px;
+            text-align: right;
+            padding: 0 15px 5px 5px;
         }
         
         .division-step-box {
@@ -428,7 +435,6 @@
             font-size: 30px;
         }
         
-        /* إضافة أنماط أزرار التنقل */
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
@@ -557,7 +563,7 @@
             }
             
             .division-dividend {
-                padding-top: 15px; /* تعديل المساحة العلوية للهواتف */
+                padding-top: 15px;
             }
             
             .division-divisor {
@@ -603,13 +609,16 @@
                 
                 <div class="division-container-new">
                     <div class="division-box">
-                        <!-- التصميم الجديد حسب التعليمات -->
                         <div class="division-row">
                             <div class="division-result">0.625</div>
                         </div>
-                        <div class="division-row">
+                        
+                        <!-- التصميم المعدل حسب التعليمات -->
+                        <div class="division-operand-row">
                             <div class="division-divisor">8</div>
-                            <div class="division-dividend">5.000</div>
+                            <div class="division-dividend-container">
+                                <div class="division-dividend">5.000</div>
+                            </div>
                         </div>
                         
                         <!-- خطوات القسمة -->
@@ -730,13 +739,16 @@
                 
                 <div class="division-container-new">
                     <div class="division-box">
-                        <!-- التصميم الجديد حسب التعليمات -->
                         <div class="division-row">
                             <div class="division-result">0.333...</div>
                         </div>
-                        <div class="division-row">
+                        
+                        <!-- التصميم المعدل حسب التعليمات -->
+                        <div class="division-operand-row">
                             <div class="division-divisor">3</div>
-                            <div class="division-dividend">1.000</div>
+                            <div class="division-dividend-container">
+                                <div class="division-dividend">1.000</div>
+                            </div>
                         </div>
                         
                         <!-- خطوات القسمة -->
@@ -878,13 +890,16 @@
                 
                 <div class="division-container-new">
                     <div class="division-box">
-                        <!-- التصميم الجديد حسب التعليمات -->
                         <div class="division-row">
                             <div class="division-result">1.625</div>
                         </div>
-                        <div class="division-row">
+                        
+                        <!-- التصميم المعدل حسب التعليمات -->
+                        <div class="division-operand-row">
                             <div class="division-divisor">8</div>
-                            <div class="division-dividend">13.000</div>
+                            <div class="division-dividend-container">
+                                <div class="division-dividend">13.000</div>
+                            </div>
                         </div>
                         
                         <!-- خطوات القسمة -->
