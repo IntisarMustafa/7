@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>الكرات الغاضبة - لعبة تعليمية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            touch-action: manipulation;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            flex-direction: column;
+            color: white;
+            overflow-y: auto;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        header {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+            color: #FFD700;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #FFA500;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .canvas-wrapper {
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        canvas {
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            border-radius: 10px;
+            display: block;
+            border: 3px solid #444;
+            width: 100%;
+            height: 350px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 30px;
+            min-width: 100px;
+        }
+        
+        .stat span {
+            font-weight: bold;
+            color: #FFD700;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 15px;
+            width: 100%;
+        }
+        
+        .control-group {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #FFD700;
+            text-align: center;
+        }
+        
+        button {
+            background: linear-gradient(to bottom, #FF8C00, #FF4500);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 8px 0;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to bottom, #FFA500, #FF6347);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .power-container {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .power-bar {
+            height: 100%;
+            background: linear-gradient(to right, #4CAF50, #FFEB3B, #F44336);
+            width: 0%;
+            transition: width 0.1s;
+        }
+        
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: right;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ul {
+            list-style-type: none;
+            padding-right: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        
+        .instructions li::before {
+            content: "•";
+            color: #FFD700;
+            font-size: 1.5rem;
+            position: absolute;
+            right: -20px;
+            top: -8px;
+        }
+        
+        .status-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: calc(100% - 30px);
+        }
+        
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #FF8C00, #FF4500);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .scroll-top-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                gap: 15px;
+            }
+            
+            header {
+                padding: 12px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            canvas {
+                height: 300px;
+            }
+            
+            .stat {
+                min-width: 90px;
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .controls {
+                padding: 12px;
+            }
+            
+            .control-group {
+                padding: 12px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            
+            .instructions {
+                padding: 15px;
+            }
+            
+            .instructions li {
+                font-size: 0.9rem;
+            }
+            
+            .scroll-top-btn {
+                bottom: 15px;
+                left: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            canvas {
+                height: 250px;
+            }
+            
+            .stat {
+                min-width: 80px;
+                padding: 5px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .instructions li {
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* لوحة السؤال التعليمي */
+        .question-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .question-text {
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        
+        .info-text {
+            color: #64FFDA;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        /* أهداف الأسئلة - تم تكبير الحجم هنا */
+        .target {
+            position: absolute;
+            width: 100px; /* تم التكبير من 60px */
+            height: 70px; /* تم التكبير من 40px */
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: 2px solid #666;
+            transition: transform 0.3s, background 0.3s;
+            cursor: pointer;
+            font-size: 1.3rem; /* تم تكبير حجم الخط */
+        }
+        
+        .target.hit {
+            background: #888;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* رسالة الإجابة */
+        .answer-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 20;
+            text-align: center;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: pulse 1s infinite alternate;
+        }
+        
+        .answer-message.correct {
+            color: #4CAF50;
+            border: 3px solid #4CAF50;
+        }
+        
+        .answer-message.incorrect {
+            color: #F44336;
+            border: 3px solid #F44336;
+        }
+        
+        @keyframes pulse {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to { transform: translate(-50%, -50%) scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>الكرات الغاضبة - لعبة تعليمية</h1>
+            <div class="subtitle">أجب على الأسئلة الرياضية لإحراز نقاط إضافية!</div>
+        </header>
+        
+        <div class="question-panel">
+            <div class="question-text" id="questionText">ما هي الصورة العشرية للعدد 3/4؟</div>
+            <div class="info-text" id="infoText">جميع الأهداف متشابهة، اختر بعناية!</div>
+        </div>
+        
+        <div class="game-container">
+            <div class="canvas-wrapper">
+                <canvas id="gameCanvas" width="600" height="400"></canvas>
+                <div class="status-panel" id="statusPanel">الحالة: اضغط 'ابدأ اللعبة'</div>
+                <div class="answer-message" id="answerMessage"></div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">الكرات: <span id="ballsCount">5</span></div>
+                <div class="stat">النقاط: <span id="score">0</span></div>
+                <div class="stat">المستوى: <span id="level">1</span></div>
+                <div class="stat">الإجابات: <span id="correctAnswers">0</span></div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <h2>التحكم</h2>
+                    <button id="startBtn">ابدأ اللعبة</button>
+                    <button id="resetBtn">إعادة التشغيل</button>
+                </div>
+                
+                <div class="control-group">
+                    <h2>قوة الرمي</h2>
+                    <div class="power-container">
+                        <div class="power-bar" id="powerBar"></div>
+                    </div>
+                    <p style="text-align: center; margin-top: 10px;">اسحب وأطلق لتحديد القوة</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>كيفية اللعب</h2>
+            <ul>
+                <li>اضغط على زر 'ابدأ اللعبة' للبدء</li>
+                <li>اسحب الكرة نحو الخلف لتحديد قوة الرمي واتجاهها</li>
+                <li>أطلق الكرة لإصابة الهدف الصحيح</li>
+                <li>أجب على الأسئلة الرياضية بإصابة الهدف الصحيح</li>
+                <li>كل إجابة صحيحة تكسبك 50 نقطة إضافية وتنقلك للمستوى التالي</li>
+                <li>لديك 5 كرات فقط لكل مستوى</li>
+                <li>جميع الأهداف متشابهة - اختر بعناية!</li>
+            </ul>
+        </div>
+    </div>
+    
+    <button class="scroll-top-btn" id="scrollTopBtn">↑</button>
+
+    <script>
+        // عناصر DOM
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const ballsCountElement = document.getElementById('ballsCount');
+        const scoreElement = document.getElementById('score');
+        const levelElement = document.getElementById('level');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const powerBar = document.getElementById('powerBar');
+        const statusPanel = document.getElementById('statusPanel');
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        const questionText = document.getElementById('questionText');
+        const answerMessage = document.getElementById('answerMessage');
+        const correctAnswersElement = document.getElementById('correctAnswers');
+        const infoText = document.getElementById('infoText');
+        
+        // متغيرات اللعبة
+        let balls = 5;
+        let score = 0;
+        let level = 1;
+        let gameStarted = false;
+        let currentBall = null;
+        let isDragging = false;
+        let dragStartX, dragStartY;
+        let power = 0;
+        let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        let targets = [];
+        let currentQuestion = null;
+        let correctAnswers = 0;
+        
+        // وظيفة لتحويل إحداثيات الماوس/اللمس إلى إحداثيات الـ Canvas
+        function getCanvasPos(clientX, clientY) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+        
+        // كائن الكرة
+        class Ball {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 25;
+                this.color = '#FFD700';
+                this.velocity = { x: 0, y: 0 };
+                this.gravity = 0.4;
+                this.friction = 0.97;
+                this.launched = false;
+                this.initialX = x;
+                this.initialY = y;
+                this.trail = [];
+                this.trailLength = 10;
+            }
+            
+            draw() {
+                // رسم أثر الكرة
+                for (let i = 0; i < this.trail.length; i++) {
+                    const alpha = i / this.trailLength;
+                    ctx.beginPath();
+                    ctx.arc(this.trail[i].x, this.trail[i].y, this.radius * alpha, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 215, 0, ${alpha * 0.5})`;
+                    ctx.fill();
+                    ctx.closePath();
+                }
+                
+                // رسم الكرة
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+                
+                // إضافة تفاصيل للكرة
+                ctx.beginPath();
+                ctx.arc(this.x - 8, this.y - 8, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fill();
+                ctx.closePath();
+                
+                // رسم خط القوة عند السحب
+                if (isDragging && !this.launched) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(dragStartX, dragStartY);
+                    ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
+                    ctx.lineWidth = 4;
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+            }
+            
+            update() {
+                // تحديث أثر الكرة
+                this.trail.push({x: this.x, y: this.y});
+                if (this.trail.length > this.trailLength) {
+                    this.trail.shift();
+                }
+                
+                if (!this.launched) return;
+                
+                // تطبيق الجاذبية
+                this.velocity.y += this.gravity;
+                
+                // تطبيق الاحتكاك
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                
+                // تحديث الموضع
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                
+                // اكتشاف الاصطدام مع الجدران
+                if (this.x - this.radius < 0) {
+                    this.x = this.radius;
+                    this.velocity.x *= -0.7;
+                    statusPanel.textContent = "الكرة اصطدمت بالجدار!";
+                } else if (this.x + this.radius > canvas.width) {
+                    this.x = canvas.width - this.radius;
+                    this.velocity.x *= -0.7;
+                    statusPanel.textContent = "الكرة اصطدمت بالجدار!";
+                }
+                
+                if (this.y + this.radius > canvas.height) {
+                    this.y = canvas.height - this.radius;
+                    this.velocity.y *= -0.7;
+                    statusPanel.textContent = "الكرة اصطدمت بالأرض!";
+                    
+                    // إيقاف الكرة عندما تصبح سرعتها صغيرة
+                    if (Math.abs(this.velocity.y) < 0.5) {
+                        this.velocity.y = 0;
+                    }
+                }
+                
+                // اكتشاف الاصطدام مع الأهداف
+                for (let i = targets.length - 1; i >= 0; i--) {
+                    const target = targets[i];
+                    if (this.collidesWithTarget(target)) {
+                        // إصابة الهدف
+                        target.hit = true;
+                        
+                        if (target.isCorrect) {
+                            // إجابة صحيحة
+                            score += 50;
+                            scoreElement.textContent = score;
+                            correctAnswers++;
+                            correctAnswersElement.textContent = correctAnswers;
+                            
+                            // عرض رسالة الإجابة الصحيحة
+                            showAnswerMessage("إجابة صحيحة! +50 نقطة", true);
+                            statusPanel.textContent = "إجابة صحيحة! +50 نقطة";
+                            
+                            // الانتقال للمستوى التالي بعد تأخير
+                            setTimeout(() => {
+                                levelUp();
+                            }, 2000);
+                        } else {
+                            // إجابة خاطئة
+                            showAnswerMessage("إجابة خاطئة! حاول مرة أخرى", false);
+                            statusPanel.textContent = "إجابة خاطئة! حاول مرة أخرى";
+                        }
+                        
+                        // تغيير اتجاه الكرة بعد الاصطدام
+                        this.velocity.x *= -0.5;
+                        this.velocity.y *= -0.5;
+                        
+                        break;
+                    }
+                }
+                
+                // إذا توقفت الكرة عن الحركة
+                if (this.launched && 
+                    Math.abs(this.velocity.x) < 0.1 && 
+                    Math.abs(this.velocity.y) < 0.1 && 
+                    this.y >= canvas.height - this.radius) {
+                    this.launched = false;
+                    prepareNextBall();
+                }
+            }
+            
+            collidesWithTarget(target) {
+                // اكتشاف الاصطدام بين الكرة والهدف
+                const dx = this.x - (target.x + target.width/2);
+                const dy = this.y - (target.y + target.height/2);
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                return distance < this.radius + Math.max(target.width, target.height)/2;
+            }
+        }
+        
+        // كائن الهدف التعليمي - تم تكبير الأبعاد هنا
+        class Target {
+            constructor(x, y, width, height, answer, isCorrect) {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                this.answer = answer;
+                this.isCorrect = isCorrect;
+                this.hit = false;
+            }
+            
+            draw() {
+                // لون الخلفية: عند الضرب رمادي، وإلا أبيض
+                if (this.hit) {
+                    ctx.fillStyle = '#888';
+                } else {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                }
+                
+                ctx.beginPath();
+                ctx.roundRect(this.x, this.y, this.width, this.height, 15);
+                ctx.fill();
+                
+                // لون الحدود: رمادي غامق ثابت
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // لون النص: عند الضرب أبيض، وإلا أسود
+                ctx.fillStyle = this.hit ? 'white' : '#333';
+                ctx.font = 'bold 1.3rem Arial'; // تم تكبير حجم الخط
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.answer, this.x + this.width/2, this.y + this.height/2);
+            }
+        }
+        
+        // عرض رسالة الإجابة
+        function showAnswerMessage(message, isCorrect) {
+            answerMessage.textContent = message;
+            answerMessage.className = isCorrect ? 'answer-message correct' : 'answer-message incorrect';
+            answerMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                answerMessage.style.display = 'none';
+            }, 2000);
+        }
+        
+        // توليد سؤال تعليمي
+        function generateQuestion() {
+            const fractions = [
+                { num: 1, den: 2, answer: "0.5" },
+                { num: 1, den: 4, answer: "0.25" },
+                { num: 3, den: 4, answer: "0.75" },
+                { num: 2, den: 5, answer: "0.4" },
+                { num: 3, den: 5, answer: "0.6" },
+                { num: 4, den: 5, answer: "0.8" },
+                { num: 1, den: 8, answer: "0.125" },
+                { num: 3, den: 8, answer: "0.375" },
+                { num: 5, den: 8, answer: "0.625" },
+                { num: 7, den: 8, answer: "0.875" },
+                { num: 1, den: 3, answer: "0.333" },
+                { num: 2, den: 3, answer: "0.666" },
+                { num: 1, den: 5, answer: "0.2" },
+                { num: 1, den: 10, answer: "0.1" },
+                { num: 3, den: 10, answer: "0.3" },
+                { num: 7, den: 10, answer: "0.7" },
+                { num: 9, den: 10, answer: "0.9" },
+                { num: 1, den: 20, answer: "0.05" },
+                { num: 3, den: 20, answer: "0.15" },
+                { num: 7, den: 20, answer: "0.35" }
+            ];
+            
+            // اختيار سؤال عشوائي
+            const question = fractions[Math.floor(Math.random() * fractions.length)];
+            currentQuestion = question;
+            
+            // تحديث نص السؤال
+            questionText.textContent = `ما هي الصورة العشرية للعدد ${question.num}/${question.den}؟`;
+        }
+        
+        // إنشاء الأهداف التعليمية - تم تكبير الأبعاد هنا
+        function createTargets() {
+            targets = [];
+            
+            // إجابات خاطئة
+            const incorrectAnswers = [
+                (currentQuestion.num / currentQuestion.den + 0.1).toFixed(3),
+                (currentQuestion.num / currentQuestion.den - 0.1).toFixed(3),
+                (currentQuestion.num / currentQuestion.den * 2).toFixed(3),
+                (currentQuestion.num / currentQuestion.den / 2).toFixed(3),
+                (currentQuestion.den / currentQuestion.num).toFixed(3)
+            ];
+            
+            // اختيار إجابتين خاطئتين
+            const selectedIncorrect = [];
+            while (selectedIncorrect.length < 2) {
+                const rand = incorrectAnswers[Math.floor(Math.random() * incorrectAnswers.length)];
+                if (!selectedIncorrect.includes(rand) && rand !== currentQuestion.answer) {
+                    selectedIncorrect.push(rand);
+                }
+            }
+            
+            // جميع الإجابات (صحيحة + خاطئتين)
+            const allAnswers = [currentQuestion.answer, ...selectedIncorrect];
+            
+            // خلط الإجابات
+            for (let i = allAnswers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allAnswers[i], allAnswers[j]] = [allAnswers[j], allAnswers[i]];
+            }
+            
+            // إنشاء الأهداف - تم تكبير الأبعاد هنا
+            const targetWidth = 100; // تم التكبير من 60px
+            const targetHeight = 70; // تم التكبير من 40px
+            const spacing = 40;
+            const totalWidth = targetWidth * 3 + spacing * 2;
+            const startX = (canvas.width - totalWidth) / 2;
+            const startY = canvas.height * 0.3; // وضع الأهداف في مكان بارز
+            
+            for (let i = 0; i < 3; i++) {
+                const isCorrect = allAnswers[i] === currentQuestion.answer;
+                const target = new Target(
+                    startX + i * (targetWidth + spacing),
+                    startY,
+                    targetWidth,
+                    targetHeight,
+                    allAnswers[i],
+                    isCorrect
+                );
+                
+                targets.push(target);
+            }
+        }
+        
+        // تهيئة اللعبة
+        function initGame() {
+            balls = 5;
+            score = 0;
+            level = 1;
+            gameStarted = false;
+            currentBall = null;
+            targets = [];
+            correctAnswers = 0;
+            
+            ballsCountElement.textContent = balls;
+            scoreElement.textContent = score;
+            levelElement.textContent = level;
+            correctAnswersElement.textContent = correctAnswers;
+            
+            generateQuestion();
+            createTargets();
+            prepareNextBall();
+            startBtn.disabled = false;
+            
+            statusPanel.textContent = "اللعبة جاهزة. اضغط 'ابدأ اللعبة'";
+        }
+        
+        // تحضير الكرة التالية
+        function prepareNextBall() {
+            if (balls > 0) {
+                currentBall = new Ball(100, canvas.height - 60);
+                isDragging = false;
+                powerBar.style.width = '0%';
+                statusPanel.textContent = "اسحب الكرة وأطلقها!";
+            } else {
+                // انتهت الكرات
+                setTimeout(() => {
+                    alert(`انتهت اللعبة! النقاط النهائية: ${score}\nالإجابات الصحيحة: ${correctAnswers}`);
+                    initGame();
+                }, 500);
+            }
+        }
+        
+        // الانتقال للمستوى التالي
+        function levelUp() {
+            level++;
+            balls = 5; // إعادة تعيين عدد الكرات للمستوى الجديد
+            levelElement.textContent = level;
+            ballsCountElement.textContent = balls;
+            generateQuestion();
+            createTargets();
+            prepareNextBall();
+            statusPanel.textContent = `مرحبًا بالمستوى ${level}!`;
+        }
+        
+        // تحديث شريط القوة
+        function updatePowerBar() {
+            if (!isDragging || !currentBall) return;
+            
+            const dx = dragStartX - currentBall.x;
+            const dy = dragStartY - currentBall.y;
+            const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 150);
+            power = distance / 150 * 100;
+            powerBar.style.width = power + '%';
+            
+            statusPanel.textContent = `قوة الرمي: ${Math.round(power)}%`;
+        }
+        
+        // حلقة اللعبة الرئيسية
+        function gameLoop() {
+            // مسح الـ Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // رسم خلفية بسيطة
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // رسم الأرض
+            ctx.fillStyle = '#8BC34A';
+            ctx.fillRect(0, canvas.height - 25, canvas.width, 25);
+            
+            // رسم العشب
+            ctx.fillStyle = '#7CB342';
+            for (let i = 0; i < canvas.width; i += 10) {
+                ctx.fillRect(i, canvas.height - 25, 4, -15 - Math.random() * 15);
+            }
+            
+            // رسم المقلاع
+            if (currentBall && !currentBall.launched) {
+                ctx.beginPath();
+                ctx.moveTo(50, canvas.height - 60);
+                ctx.lineTo(currentBall.x, currentBall.y);
+                ctx.lineTo(150, canvas.height - 60);
+                ctx.strokeStyle = '#795548';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+            }
+            
+            // رسم الأهداف التعليمية
+            targets.forEach(target => {
+                target.draw();
+            });
+            
+            // تحديث ورسم الكرة
+            if (currentBall) {
+                currentBall.update();
+                currentBall.draw();
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // معالجة بدء السحب
+        function handleStart(x, y) {
+            if (!gameStarted || !currentBall || currentBall.launched) return;
+            
+            // التحقق من النقر على الكرة
+            const dx = x - currentBall.x;
+            const dy = y - currentBall.y;
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            
+            if (distance < currentBall.radius) {
+                isDragging = true;
+                dragStartX = currentBall.x;
+                dragStartY = currentBall.y;
+                statusPanel.textContent = "جاري سحب الكرة...";
+            }
+        }
+        
+        // معالجة حركة السحب
+        function handleMove(x, y) {
+            if (!isDragging || !currentBall) return;
+            
+            // تحديد موقع الكرة أثناء السحب
+            const dx = x - dragStartX;
+            const dy = y - dragStartY;
+            const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 150);
+            const angle = Math.atan2(dy, dx);
+            
+            currentBall.x = dragStartX + Math.cos(angle) * distance;
+            currentBall.y = dragStartY + Math.sin(angle) * distance;
+            
+            updatePowerBar();
+        }
+        
+        // معالجة إطلاق الكرة
+        function handleEnd() {
+            if (!isDragging || !currentBall) return;
+            
+            isDragging = false;
+            
+            // حساب السرعة بناءً على المسافة
+            const dx = dragStartX - currentBall.x;
+            const dy = dragStartY - currentBall.y;
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            
+            if (distance > 10) {
+                // زيادة قوة الدفع للهواتف
+                const forceMultiplier = isMobile ? 0.4 : 0.25;
+                currentBall.velocity.x = dx * forceMultiplier;
+                currentBall.velocity.y = dy * forceMultiplier;
+                currentBall.launched = true;
+                balls--;
+                ballsCountElement.textContent = balls;
+                
+                // إخفاء شريط القوة
+                powerBar.style.width = '0%';
+                statusPanel.textContent = `تم الإطلاق! الكرات المتبقية: ${balls}`;
+            } else {
+                // إرجاع الكرة إذا كانت المسافة صغيرة
+                currentBall.x = dragStartX;
+                currentBall.y = dragStartY;
+                powerBar.style.width = '0%';
+                statusPanel.textContent = "اسحب الكرة وأطلقها!";
+            }
+        }
+        
+        // وظيفة زر التمرير للأعلى
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // إعداد معالجي الأحداث
+        function setupEventListeners() {
+            // معالجة أحداث الفأرة
+            canvas.addEventListener('mousedown', (e) => {
+                const pos = getCanvasPos(e.clientX, e.clientY);
+                handleStart(pos.x, pos.y);
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                const pos = getCanvasPos(e.clientX, e.clientY);
+                handleMove(pos.x, pos.y);
+            });
+            
+            canvas.addEventListener('mouseup', () => {
+                handleEnd();
+            });
+            
+            canvas.addEventListener('mouseleave', () => {
+                if (isDragging) handleEnd();
+            });
+            
+            // معالجة أحداث اللمس للهواتف
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const pos = getCanvasPos(touch.clientX, touch.clientY);
+                handleStart(pos.x, pos.y);
+            });
+            
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const pos = getCanvasPos(touch.clientX, touch.clientY);
+                handleMove(pos.x, pos.y);
+            });
+            
+            canvas.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                handleEnd();
+            });
+            
+            canvas.addEventListener('touchcancel', (e) => {
+                e.preventDefault();
+                if (isDragging) handleEnd();
+            });
+            
+            // معالجة أحداث الأزرار
+            startBtn.addEventListener('click', () => {
+                gameStarted = true;
+                startBtn.disabled = true;
+                statusPanel.textContent = "اللعبة بدأت! اسحب الكرة وأطلقها";
+            });
+            
+            resetBtn.addEventListener('click', initGame);
+            
+            // زر التمرير للأعلى
+            scrollTopBtn.addEventListener('click', scrollToTop);
+            
+            // إظهار/إخفاء زر التمرير للأعلى
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollTopBtn.style.display = 'flex';
+                } else {
+                    scrollTopBtn.style.display = 'none';
+                }
+            });
+        }
+        
+        // بدء اللعبة
+        initGame();
+        setupEventListeners();
+        gameLoop();
+    </script>
+</body>
+</html>
