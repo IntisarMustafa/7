@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تمارين تحويل الكسور إلى أعداد عشرية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a237e, #4a148c);
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 30px; /* تقليل المساحة السفلية */
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #e0e0e0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            padding-bottom: 20px; /* إضافة مساحة للأزرار */
+        }
+        
+        .tabs {
+            display: flex;
+            background: #4a69bd;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab.active {
+            background: white;
+            color: #1a237e;
+            border-bottom: 4px solid #ff9800;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question-group {
+            margin-bottom: 35px;
+            border-bottom: 2px solid #e0e7ff;
+            padding-bottom: 25px;
+        }
+        
+        .question-group:last-child {
+            border-bottom: none;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8faff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #4a69bd;
+            transition: transform 0.3s;
+        }
+        
+        .question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: #1a237e;
+            line-height: 1.8;
+        }
+        
+        .answer-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #4a69bd;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            text-align: center;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.2);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .check-btn {
+            background: linear-gradient(to right, #4a69bd, #1a237e);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            font-weight: bold;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .check-btn:hover {
+            background: linear-gradient(to right, #3a59ad, #0a136e);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .hint-btn {
+            background: linear-gradient(to right, #ff9800, #f57c00);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            font-weight: bold;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .hint-btn:hover {
+            background: linear-gradient(to right, #e68a00, #e56c00);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+            font-size: 1.1rem;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #f44336;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .section-title {
+            color: #1a237e;
+            margin: 0 0 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4a69bd;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title i {
+            color: #ff9800;
+        }
+        
+        .progress-container {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-weight: bold;
+            color: #1a237e;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .hint-box {
+            background: #fff8e1;
+            border: 2px dashed #ffb300;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .hint-box h4 {
+            color: #ff6f00;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 30px;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .question {
+                padding: 15px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .check-btn, .hint-btn {
+                width: 100%;
+            }
+        }
+        
+        .MathJax * {
+            font-family: inherit !important;
+        }
+        
+        mjx-container[jax="CHTML"] {
+            direction: rtl;
+            text-align: right;
+        }
+        
+        /* أزرار التنقل المعدلة */
+        .nav-buttons-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px auto 20px;
+            padding: 0 15px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .nav-button {
+            padding: 14px 28px;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 150px;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+        
+        .nav-button:active {
+            transform: translateY(1px);
+        }
+        
+        .prev-btn {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+        }
+        
+        .game-btn {
+            background: linear-gradient(to right, #FF9800, #EF6C00);
+        }
+        
+        .home-btn {
+            background: linear-gradient(to right, #2196F3, #0D47A1);
+        }
+        
+        .prev-btn:hover {
+            background: linear-gradient(to right, #43A047, #1B5E20);
+        }
+        
+        .game-btn:hover {
+            background: linear-gradient(to right, #FB8C00, #E65100);
+        }
+        
+        .home-btn:hover {
+            background: linear-gradient(to right, #1E88E5, #01579B);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-buttons-container {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .nav-button {
+                min-width: 120px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-calculator"></i> تحويل الكسور إلى أعداد عشرية</h1>
+        <p>تدرب على تحويل الأعداد النسبية إلى صورتها العشرية مع تمارين تفاعلية وتصحيح فوري</p>
+    </div>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="basic">التمارين الأساسية</div>
+            <div class="tab" data-tab="division">التحويل بالقسمة</div>
+            <div class="tab" data-tab="applied">أسئلة تطبيقية</div>
+        </div>
+        
+        <!-- التمارين الأساسية -->
+        <div class="tab-content active" id="basic">
+            <div class="section-title">
+                <i class="fas fa-star"></i>
+                <span>اكتب كل مما يأتي بالصورة العشرية</span>
+            </div>
+            
+            <div class="question-group">
+                <div class="question">
+                    <div class="question-text">1) \( \frac{1}{4} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q1" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="1">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="1">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                        <div class="hint-box" id="hint-q1">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 1</h4>
+                            <p>لتحويل \( \frac{1}{4} \) إلى عدد عشري، قسم البسط على المقام: 1 ÷ 4 = 0.25</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">2) \( \frac{4}{5} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q2" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="2">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="2">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                        <div class="hint-box" id="hint-q2">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 2</h4>
+                            <p>لتحويل \( \frac{4}{5} \) إلى عدد عشري، قسم البسط على المقام: 4 ÷ 5 = 0.8</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">3) \( -\frac{6}{25} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q3" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="3">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="3">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                        <div class="hint-box" id="hint-q3">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 3</h4>
+                            <p>لتحويل \( -\frac{6}{25} \) إلى عدد عشري، قسم البسط على المقام مع الإشارة السالبة: 6 ÷ 25 = 0.24، إذن الإجابة هي -0.24</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">4) \( \frac{9}{20} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q4" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="4">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="4">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q4"></div>
+                        <div class="hint-box" id="hint-q4">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 4</h4>
+                            <p>لتحويل \( \frac{9}{20} \) إلى عدد عشري، قسم البسط على المقام: 9 ÷ 20 = 0.45</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">5) \( -\frac{7}{8} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q5" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="5">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="5">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q5"></div>
+                        <div class="hint-box" id="hint-q5">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 5</h4>
+                            <p>لتحويل \( -\frac{7}{8} \) إلى عدد عشري، قسم البسط على المقام مع الإشارة السالبة: 7 ÷ 8 = 0.875، إذن الإجابة هي -0.875</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">6) \( \frac{9}{16} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q6" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="6">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="6">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q6"></div>
+                        <div class="hint-box" id="hint-q6">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 6</h4>
+                            <p>لتحويل \( \frac{9}{16} \) إلى عدد عشري، قسم البسط على المقام: 9 ÷ 16 = 0.5625</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-text">التقدم: <span id="progress-text">0/6</span></div>
+                <div class="progress-bar">
+                    <div class="progress" id="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- التحويل بالقسمة -->
+        <div class="tab-content" id="division">
+            <div class="section-title">
+                <i class="fas fa-divide"></i>
+                <span>استخدم القسمة لكتابة كل عدد نسبي مما يأتي بالصورة العشرية</span>
+            </div>
+            
+            <div class="question-group">
+                <div class="question">
+                    <div class="question-text">7) \( \frac{1}{9} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q7" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="7">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="7">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q7"></div>
+                        <div class="hint-box" id="hint-q7">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 7</h4>
+                            <p>عند قسمة 1 على 9: 1 ÷ 9 = 0.111... (عدد عشري دوري)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">8) \( -\frac{1}{3} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q8" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="8">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="8">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q8"></div>
+                        <div class="hint-box" id="hint-q8">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 8</h4>
+                            <p>عند قسمة 1 على 3: 1 ÷ 3 = 0.333... (عدد عشري دوري) مع الإشارة السالبة</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">9) \( \frac{1}{6} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q9" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="9">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="9">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q9"></div>
+                        <div class="hint-box" id="hint-q9">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 9</h4>
+                            <p>عند قسمة 1 على 6: 1 ÷ 6 = 0.1666... (عدد عشري دوري)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">10) \( -\frac{5}{11} \)</div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q10" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="10">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="10">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q10"></div>
+                        <div class="hint-box" id="hint-q10">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال 10</h4>
+                            <p>عند قسمة 5 على 11: 5 ÷ 11 = 0.4545... (عدد عشري دوري) مع الإشارة السالبة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- الأسئلة التطبيقية مع إضافة سؤال رامي -->
+        <div class="tab-content" id="applied">
+            <div class="section-title">
+                <i class="fas fa-globe-asia"></i>
+                <span>أسئلة تطبيقية</span>
+            </div>
+            
+            <div class="question-group">
+                <!-- سؤال رامي من العمل المنزلي -->
+                <div class="question">
+                    <div class="question-text">
+                        أعد رامي \( \frac{17}{3} \) لتر من عصير البرتقال.<br>
+                        1) اكتب كمية العصير بالصورة العشرية.<br>
+                        2) هل العدد العشري الذي حصل عليه دوري أم لا؟ أبرر إجابتك.
+                    </div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q11" placeholder="الإجابة للسؤال 1...">
+                        <input type="text" class="answer-input" id="q12" placeholder="الإجابة للسؤال 2...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="11">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="11">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q11"></div>
+                        <div class="hint-box" id="hint-q11">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال</h4>
+                            <p>1) قسمة 17 على 3: 17 ÷ 3 = 5.666... (عدد عشري دوري)</p>
+                            <p>2) العدد دوري لأن القسمة لا تنتهي وتتكرر الرقم 6 بشكل لانهائي</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">
+                        يُعد منجم الشيدية أكبر منجم فوسفات في الأردن؛ إذ يسهم بـ 72% من إنتاج المملكة من الفوسفات.<br>
+                        ما الكسر العشري الدال على نسبة ما ينتجه المنجم من الفوسفات الأردني؟
+                    </div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q13" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="13">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="13">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q13"></div>
+                        <div class="hint-box" id="hint-q13">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال</h4>
+                            <p>72% تعني 72 من 100، أي \( \frac{72}{100} = 0.72 \)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">
+                        في عام 2012م سجل رقم قياسي لأطول نبتة دوار الشمس؛ إذ بلغ طولها \( 8\frac{1}{4} \) متر.<br>
+                        ما العدد العشري الدال على طول النبتة؟
+                    </div>
+                    <div class="answer-area">
+                        <input type="text" class="answer-input" id="q14" placeholder="أدخل الإجابة هنا...">
+                        <div class="controls">
+                            <button class="check-btn" data-question="14">
+                                <i class="fas fa-check-circle"></i> تحقق من الإجابة
+                            </button>
+                            <button class="hint-btn" data-hint="14">
+                                <i class="fas fa-lightbulb"></i> تلميح
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback-q14"></div>
+                        <div class="hint-box" id="hint-q14">
+                            <h4><i class="fas fa-lightbulb"></i> تلميح للسؤال</h4>
+                            <p>\( 8\frac{1}{4} = 8 + \frac{1}{4} = 8 + 0.25 = 8.25 \) متر</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- أزرار التنقل الجديدة - تم نقلها هنا -->
+        <div class="nav-buttons-container">
+            <a href="u1.html" class="nav-link">
+                <button class="nav-button home-btn">
+                    <i class="fas fa-home"></i> القائمة الرئيسية
+                </button>
+            </a>
+            
+            <a href="u1l2p4.html" class="nav-link">
+                <button class="nav-button game-btn">
+                    <i class="fas fa-gamepad"></i> العب لعبة
+                </button>
+            </a>
+            
+            <a href="u1l2p2.html" class="nav-link">
+                <button class="nav-button prev-btn">
+                    <i class="fas fa-arrow-right"></i> السابق
+                </button>
+            </a>
+        </div>
+    </div>
+    
+    <div class="footer">
+        تم تصميم هذا التطبيق التعليمي لمساعدة الطلاب على فهم تحويل الكسور إلى أعداد عشرية &copy; 2023
+    </div>
+
+    <script>
+        // تخزين الإجابات الصحيحة
+        const correctAnswers = {
+            1: "0.25",
+            2: "0.8",
+            3: "-0.24",
+            4: "0.45",
+            5: "-0.875",
+            6: "0.5625",
+            7: "0.111...",
+            8: "-0.333...",
+            9: "0.1666...",
+            10: "-0.4545...",
+            11: "5.666...", // للعمل المنزلي الجزء 1
+            12: "نعم، العدد دوري", // للعمل المنزلي الجزء 2
+            13: "0.72",
+            14: "8.25"
+        };
+
+        // تتبع الإجابات الصحيحة
+        let correctCount = 0;
+        const totalBasicQuestions = 6;
+        
+        // عناصر DOM
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const checkButtons = document.querySelectorAll('.check-btn');
+        const hintButtons = document.querySelectorAll('.hint-btn');
+        
+        // تغيير التبويبات
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // إزالة النشاط من جميع التبويبات والمحتويات
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+                
+                // إضافة النشاط للتبويب والمحتوى المحدد
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // إضافة أحداث لأزرار التحقق
+        checkButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const questionId = this.getAttribute('data-question');
+                let feedbackElement;
+                let userAnswer;
+                
+                // معالجة الأسئلة متعددة الأجزاء
+                if(questionId === "11") {
+                    const answer1 = document.getElementById(`q${questionId}`).value.trim();
+                    const answer2 = document.getElementById(`q${parseInt(questionId)+1}`).value.trim();
+                    userAnswer = [answer1, answer2];
+                    feedbackElement = document.getElementById(`feedback-q${questionId}`);
+                    
+                    // التحقق من الإجابة
+                    const isAnswer1Correct = answer1 === correctAnswers[questionId];
+                    const isAnswer2Correct = answer2.toLowerCase().includes("دوري");
+                    
+                    if (isAnswer1Correct && isAnswer2Correct) {
+                        feedbackElement.innerHTML = '<i class="fas fa-check-circle"></i> إجابة صحيحة! ✓';
+                        feedbackElement.className = "feedback correct";
+                    } else if (answer1 === "" || answer2 === "") {
+                        feedbackElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i> الرجاء إدخال إجابتين';
+                        feedbackElement.className = "feedback incorrect";
+                    } else {
+                        feedbackElement.innerHTML = `<i class="fas fa-times-circle"></i> إجابة غير صحيحة. الإجابة الصحيحة: ${correctAnswers[questionId]} ونعم، العدد دوري`;
+                        feedbackElement.className = "feedback incorrect";
+                    }
+                    
+                    feedbackElement.style.display = "flex";
+                    return;
+                }
+                
+                // معالجة الأسئلة العادية
+                const inputElement = document.getElementById(`q${questionId}`);
+                userAnswer = inputElement.value.trim();
+                feedbackElement = document.getElementById(`feedback-q${questionId}`);
+                
+                // التحقق من الإجابة
+                if (userAnswer === correctAnswers[questionId]) {
+                    feedbackElement.innerHTML = '<i class="fas fa-check-circle"></i> إجابة صحيحة! ✓';
+                    feedbackElement.className = "feedback correct";
+                    
+                    // زيادة العداد إذا كانت الإجابة صحيحة ولم تكن محسوبة من قبل
+                    if (!inputElement.dataset.correct) {
+                        correctCount++;
+                        inputElement.dataset.correct = "true";
+                        updateProgress();
+                    }
+                } else if (userAnswer === "") {
+                    feedbackElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i> الرجاء إدخال إجابة';
+                    feedbackElement.className = "feedback incorrect";
+                } else {
+                    feedbackElement.innerHTML = `<i class="fas fa-times-circle"></i> إجابة غير صحيحة. الإجابة الصحيحة هي: ${correctAnswers[questionId]}`;
+                    feedbackElement.className = "feedback incorrect";
+                }
+                
+                feedbackElement.style.display = "flex";
+            });
+        });
+        
+        // تحديث شريط التقدم
+        function updateProgress() {
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctCount / totalBasicQuestions) * 100;
+            
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${correctCount}/${totalBasicQuestions}`;
+        }
+        
+        // إظهار التلميحات
+        hintButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const hintId = this.getAttribute('data-hint');
+                const hintBox = document.getElementById(`hint-q${hintId}`);
+                hintBox.style.display = 'block';
+            });
+        });
+        
+        // إعادة تحميل MathJax بعد تغييرات DOM
+        window.addEventListener('load', function() {
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typeset();
+            }
+        });
+    </script>
+</body>
+</html>
