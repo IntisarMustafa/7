@@ -15,8 +15,8 @@
         }
         
         body {
-            background: linear-gradient(135deg, #0c2461, #1e3799);
-            color: #2c3e50;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #343a40;
             line-height: 1.8;
             padding: 20px;
             min-height: 100vh;
@@ -25,57 +25,58 @@
         .container {
             max-width: 900px;
             margin: 20px auto;
-            background: linear-gradient(145deg, #ffffff, #f8f9fa);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             padding: 30px;
             position: relative;
             overflow: hidden;
-            border: 1px solid #d1e0e0;
+            border: 1px solid #e0e0e0;
         }
         
         .header {
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 3px solid #4e89ae;
+            border-bottom: 3px solid #4a69bb;
             position: relative;
-            background: linear-gradient(145deg, #e3f2fd, #bbdefb);
-            border-radius: 15px;
-            padding: 20px;
+            background: linear-gradient(135deg, #4a69bb, #6a89cc);
+            border-radius: 16px;
+            padding: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .header h1 {
-            background: linear-gradient(135deg, #0c2461, #1e3799);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: white; /* تم تعديل لون الخط إلى أبيض */
             font-size: 36px;
             margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
             padding: 10px 20px;
             display: inline-block;
             border-radius: 12px;
-            border: 2px solid #c5e3f6;
+            border: 2px solid rgba(255, 255, 255, 0.5); /* تعديل لون الحدود */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* إضافة ظل للنص */
+            font-weight: 600; /* زيادة سماكة الخط */
         }
         
         .header p {
-            color: #0c2461;
+            color: white; /* تم تعديل لون الخط إلى أبيض */
             font-size: 20px;
             max-width: 700px;
             margin: 0 auto;
             font-weight: 500;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 10px;
+            background: transparent;
+            padding: 12px;
             border-radius: 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* إضافة ظل للنص */
         }
         
+        /* باقي الأنماط كما هي دون تغيير */
         .section {
             margin-bottom: 40px;
             padding: 25px;
-            border-radius: 15px;
-            background: linear-gradient(145deg, #f8fafc, #f1f5f9);
-            border-left: 5px solid #4e89ae;
+            border-radius: 16px;
+            background: #ffffff;
+            border-left: 5px solid #4a69bb;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -89,88 +90,58 @@
             left: 0;
             width: 100%;
             height: 5px;
-            background: linear-gradient(90deg, #4e89ae, #28abb9);
+            background: linear-gradient(90deg, #4a69bb, #6a89cc);
         }
         
         .section:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         
-        /* ألوان متنوعة للعناوين الرئيسية */
         .section-title {
             font-size: 28px;
             margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed #a8d0e6;
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.85);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-            color: #0c2461;
-            border-left: 5px solid #0c2461;
-        }
-        
-        /* تخصيص ألوان مختلفة لكل عنوان رئيسي */
-        .section:nth-child(2) .section-title {
-            background: linear-gradient(to right, #ffebee, #ffffff);
-            border-left: 5px solid #d32f2f;
-            color: #d32f2f;
-        }
-        
-        .section:nth-child(3) .section-title {
-            background: linear-gradient(to right, #f3e5f5, #ffffff);
-            border-left: 5px solid #7b1fa2;
-            color: #7b1fa2;
-        }
-        
-        .section:nth-child(4) .section-title {
-            background: linear-gradient(to right, #e8f5e9, #ffffff);
-            border-left: 5px solid #2e7d32;
-            color: #2e7d32;
-        }
-        
-        .section:nth-child(5) .section-title {
-            background: linear-gradient(to right, #fff3e0, #ffffff);
-            border-left: 5px solid #ef6c00;
-            color: #ef6c00;
+            padding: 15px 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4a69bb, #6a89cc);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid #34495e;
         }
         
         .content {
             font-size: 19px;
             margin-bottom: 20px;
             line-height: 1.9;
-            color: #34495e;
+            color: #2c3e50;
         }
         
         .example {
-            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            background: #f8f9fa;
             border-radius: 12px;
             padding: 25px;
             margin: 25px 0;
             border: 1px solid #e0e0e0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
         }
         
         .example-title {
-            color: #1e3799;
+            color: #4a69bb;
             font-weight: bold;
             margin-bottom: 20px;
             font-size: 24px;
-            background: linear-gradient(to right, #e1f5fe, #ffffff);
-            padding: 8px 15px;
+            background: linear-gradient(to right, #e3f2fd, #ffffff);
+            padding: 10px 15px;
             border-radius: 8px;
-            border-left: 4px solid #0288d1;
+            border-left: 4px solid #4a69bb;
         }
         
         .division-container-new {
-            background: linear-gradient(145deg, #e8f4fc, #d1e8f9);
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
             padding: 30px;
             border-radius: 12px;
             margin: 30px 0;
-            border: 1px solid #c5e3f6;
+            border: 1px solid #90caf9;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -180,10 +151,10 @@
         .division-box {
             font-family: 'Courier New', monospace;
             font-size: 24px;
-            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            background: #ffffff;
             padding: 25px 30px;
             border-radius: 8px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
             min-width: 300px;
             text-align: center;
             direction: ltr;
@@ -198,13 +169,14 @@
         .division-result {
             font-size: 24px;
             font-weight: bold;
-            color: #1e3799;
-            padding: 5px 10px;
-            border-radius: 5px;
-            background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
+            color: #4a69bb;
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: #e3f2fd;
             display: inline-block;
             direction: ltr;
             text-align: center;
+            border: 2px solid #bbdefb;
         }
         
         .division-steps-container {
@@ -226,12 +198,13 @@
         
         .division-divisor {
             font-weight: bold;
-            color: #1e3799;
+            color: #4a69bb;
             margin-right: 10px;
             min-width: 20px;
             text-align: center;
             align-self: flex-start;
             direction: ltr;
+            font-size: 26px;
         }
         
         .division-dividend-container {
@@ -250,6 +223,7 @@
             text-align: right;
             padding: 0 15px 5px 5px;
             direction: ltr;
+            font-size: 26px;
         }
         
         .division-step {
@@ -278,6 +252,7 @@
             text-align: center;
             padding: 0 3px;
             direction: ltr;
+            font-size: 22px;
         }
         
         .step-sign {
@@ -287,28 +262,29 @@
             color: #d32f2f;
             font-weight: bold;
             direction: ltr;
+            font-size: 22px;
         }
         
         .step-line {
             border-top: 3px solid #000;
             height: 0;
             width: 80%;
-            margin: 3px auto;
+            margin: 5px auto;
         }
         
         .math-formula {
             font-size: 24px;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
-            margin: 20px 0;
-            background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
-            border-radius: 10px;
-            border: 1px solid #c5e3f6;
+            margin: 25px 0;
+            background: #f1f8e9;
+            border-radius: 12px;
+            border: 2px solid #c5e1a5;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
         
-        /* صندوق الاستنتاج الجديد - لون أصفر بارد */
         .conclusion-box {
-            background: linear-gradient(135deg, #fffde7, #fff9c4);
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
             color: #5d4037;
             padding: 25px;
             border-radius: 15px;
@@ -316,18 +292,19 @@
             font-size: 26px;
             font-weight: bold;
             text-align: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            border: 3px solid #ffecb3;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border: 3px solid #ffd54f;
             line-height: 1.6;
         }
         
         .practice {
-            background: linear-gradient(145deg, #e8f4fc, #d1e8f9);
-            border-radius: 15px;
-            padding: 25px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 16px;
+            padding: 30px;
             margin: 30px 0;
-            border: 1px solid #bbdefb;
+            border: 1px solid #90caf9;
             position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
         
         .practice:before {
@@ -335,91 +312,94 @@
             position: absolute;
             top: -15px;
             left: -15px;
-            background: linear-gradient(145deg, #0c2461, #1e3799);
+            background: linear-gradient(135deg, #4a69bb, #6a89cc);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            font-size: 28px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            z-index: 10;
         }
         
         .practice-title {
-            color: #0c2461;
-            margin-bottom: 20px;
+            color: #4a69bb;
+            margin-bottom: 25px;
             font-size: 26px;
             text-align: center;
-            padding: 10px;
-            border-radius: 10px;
-            background: linear-gradient(to right, #e3f2fd, #ffffff);
-            border-bottom: 3px solid #0c2461;
+            padding: 15px;
+            border-radius: 12px;
+            background: #e3f2fd;
+            border-bottom: 3px solid #4a69bb;
+            font-weight: bold;
         }
         
         .problem {
-            margin: 20px 0;
+            margin: 25px 0;
             font-size: 22px;
-            padding: 20px;
-            background: linear-gradient(145deg, #ffffff, #f8f9fa);
-            border-radius: 10px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-            border-left: 4px solid #0c2461;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #4a69bb;
         }
         
         .input-group {
             display: flex;
             align-items: center;
-            margin: 20px 0;
+            margin: 25px 0;
             gap: 15px;
         }
         
         .input-group label {
             font-size: 20px;
             min-width: 120px;
-            color: #0c2461;
+            color: #4a69bb;
             font-weight: 600;
         }
         
         .input-group input {
-            padding: 14px 18px;
-            border: 2px solid #a8d0e6;
+            padding: 15px 20px;
+            border: 2px solid #bbdefb;
             border-radius: 10px;
             font-size: 20px;
             flex: 1;
             max-width: 300px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
             background: #ffffff;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         
         .input-group input:focus {
-            border-color: #0c2461;
+            border-color: #4a69bb;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(12, 36, 97, 0.2);
+            box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.2);
         }
         
         .btn {
-            background: linear-gradient(145deg, #0c2461, #1e3799);
+            background: linear-gradient(135deg, #4a69bb, #6a89cc);
             color: white;
             border: none;
-            padding: 14px 30px;
-            border-radius: 10px;
+            padding: 15px 35px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 20px;
             transition: all 0.3s;
             margin: 10px 5px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
         .btn:hover {
-            background: linear-gradient(145deg, #1a3f5f, #0c2461);
+            background: linear-gradient(135deg, #3a59ab, #5a79bc);
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.15);
         }
         
         .btn:active {
@@ -428,7 +408,7 @@
         
         .feedback {
             margin-top: 20px;
-            padding: 18px;
+            padding: 20px;
             border-radius: 10px;
             font-size: 20px;
             display: none;
@@ -441,15 +421,15 @@
         }
         
         .correct {
-            background: linear-gradient(145deg, #d4edda, #c3e6cb);
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
         }
         
         .incorrect {
-            background: linear-gradient(145deg, #f8d7da, #f5c6cb);
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #c62828;
+            border: 1px solid #ffcdd2;
         }
         
         .decimal-types {
@@ -457,20 +437,20 @@
             justify-content: space-around;
             margin: 40px 0;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 25px;
         }
         
         .decimal-type {
-            background: linear-gradient(145deg, #ffffff, #f8f9fa);
-            border-radius: 15px;
+            background: #ffffff;
+            border-radius: 16px;
             padding: 30px;
             flex: 1;
             min-width: 300px;
             text-align: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             margin: 10px;
-            border-top: 5px solid #0c2461;
             transition: transform 0.3s ease;
+            border-top: 5px solid #4a69bb;
         }
         
         .decimal-type:hover {
@@ -480,32 +460,35 @@
         .decimal-type h3 {
             margin-bottom: 20px;
             font-size: 26px;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 15px;
+            border-radius: 12px;
             margin-top: -40px;
-            background: linear-gradient(135deg, #0c2461, #1e3799);
+            background: linear-gradient(135deg, #4a69bb, #6a89cc);
             color: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .decimal-example {
             font-size: 32px;
             font-weight: bold;
-            color: #0c2461;
+            color: #4a69bb;
             margin: 25px 0;
             padding: 15px;
-            background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
+            background: #e3f2fd;
             border-radius: 10px;
             font-family: 'Courier New', monospace;
+            border: 2px solid #bbdefb;
         }
         
         .real-life {
-            background: linear-gradient(145deg, #e8f4fc, #d1e8f9);
-            border-radius: 20px;
-            padding: 30px;
+            background: linear-gradient(135deg, #f1f8e9, #dcedc8);
+            border-radius: 16px;
+            padding: 35px;
             margin: 40px 0;
             position: relative;
             overflow: hidden;
+            border: 1px solid #c5e1a5;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
         
         .real-life:before {
@@ -515,48 +498,49 @@
             left: 0;
             width: 100%;
             height: 8px;
-            background: linear-gradient(90deg, #0c2461, #1e3799);
+            background: linear-gradient(90deg, #7cb342, #9ccc65);
         }
         
         .real-life-title {
-            color: #0c2461;
+            color: #558b2f;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             font-size: 30px;
             padding: 15px;
-            background: linear-gradient(to right, #e3f2fd, #ffffff);
+            background: linear-gradient(to right, #f1f8e9, #ffffff);
             border-radius: 12px;
-            border-left: 5px solid #0c2461;
+            border-left: 5px solid #7cb342;
+            font-weight: bold;
         }
         
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
             margin: 40px 0;
-            padding: 0 10px;
+            padding: 0 15px;
         }
         
         .nav-btn {
-            background: linear-gradient(145deg, #0c2461, #1e3799);
+            background: linear-gradient(135deg, #4a69bb, #6a89cc);
             color: white;
             border: none;
-            padding: 14px 30px;
-            border-radius: 10px;
+            padding: 16px 35px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 20px;
             transition: all 0.3s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
         }
         
         .nav-btn:hover {
-            background: linear-gradient(145deg, #1a3f5f, #0c2461);
+            background: linear-gradient(135deg, #3a59ab, #5a79bc);
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.15);
         }
         
         .nav-btn:active {
@@ -564,47 +548,51 @@
         }
         
         .nav-btn.prev {
-            background: linear-gradient(145deg, #1e3799, #0c2461);
+            background: linear-gradient(135deg, #5c6bc0, #7986cb);
         }
         
         .nav-btn.next {
-            background: linear-gradient(145deg, #0c2461, #1e3799);
+            background: linear-gradient(135deg, #4a69bb, #6a89cc);
         }
         
         .footer {
             text-align: center;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 2px solid #a8d0e6;
-            color: #0c2461;
+            margin-top: 30px;
+            padding: 25px;
+            border-top: 2px solid #bbdefb;
+            color: #4a69bb;
             font-size: 20px;
             font-weight: 500;
+            background: #e3f2fd;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         
         .highlight {
             background: linear-gradient(120deg, #e3f2fd, #bbdefb);
-            padding: 3px 8px;
+            padding: 3px 10px;
             border-radius: 6px;
             font-weight: 600;
             display: inline-block;
-            color: #0c2461;
+            color: #4a69bb;
         }
         
         .steps {
-            margin: 20px 0;
-            padding-right: 20px;
-            background: linear-gradient(145deg, #e8f4fc, #d1e8f9);
-            border-radius: 12px;
+            margin: 25px 0;
             padding: 25px;
-            border-left: 5px solid #0c2461;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #4a69bb;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
         
         .steps li {
             margin-bottom: 15px;
-            padding-right: 10px;
-            border-right: 3px solid #a8d0e6;
+            padding-right: 15px;
+            border-right: 3px solid #bbdefb;
             position: relative;
             font-size: 20px;
+            line-height: 1.8;
         }
         
         .steps li:before {
@@ -612,31 +600,57 @@
             position: absolute;
             right: -15px;
             top: 0;
-            color: #0c2461;
+            color: #4a69bb;
             font-weight: bold;
+            font-size: 22px;
         }
         
         .note {
-            background: linear-gradient(145deg, #e3f2fd, #d1e8f9);
-            padding: 20px;
-            border-radius: 10px;
-            border-right: 5px solid #0c2461;
-            margin: 25px 0;
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
             font-size: 18px;
+            border-left: 5px solid #4a69bb;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         
         .note-title {
             font-weight: bold;
-            color: #0c2461;
-            margin-bottom: 10px;
-            font-size: 20px;
+            color: #4a69bb;
+            margin-bottom: 15px;
+            font-size: 22px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
+            gap: 12px;
+            padding: 10px 15px;
             background: linear-gradient(to right, #bbdefb, #ffffff);
-            border-radius: 6px;
-            border-left: 4px solid #0c2461;
+            border-radius: 8px;
+            border-left: 4px solid #4a69bb;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4a69bb, #6a89cc);
+            width: 50%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-label {
+            text-align: right;
+            font-size: 16px;
+            color: #4a69bb;
+            font-weight: 500;
+            margin-top: 8px;
         }
         
         @media (max-width: 768px) {
@@ -685,7 +699,7 @@
             }
             
             .nav-btn {
-                padding: 12px 20px;
+                padding: 14px 25px;
                 font-size: 18px;
             }
             
@@ -702,31 +716,6 @@
                 padding: 20px;
             }
         }
-        
-        /* شريط التقدم */
-        .progress-bar {
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, #0c2461, #1e3799);
-            width: 50%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-        
-        .progress-label {
-            text-align: right;
-            font-size: 16px;
-            color: #0c2461;
-            font-weight: 500;
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -739,7 +728,7 @@
         <div class="progress-bar">
             <div class="progress" id="lesson-progress"></div>
         </div>
-        <div class="progress-label"></div>
+        <div class="progress-label">50% اكتمال الدرس</div>
         
         <div class="section">
             <h2 class="section-title">المقدمة</h2>
@@ -761,7 +750,6 @@
                         </div>
                         
                         <div class="division-steps-container">
-                            <!-- التصميم المعدل حسب التعليمات -->
                             <div class="division-operand-row">
                                 <div class="division-divisor">8</div>
                                 <div class="division-dividend-container">
@@ -769,7 +757,6 @@
                                 </div>
                             </div>
                             
-                            <!-- خطوات القسمة مع الخط تحت الأعداد -->
                             <div class="division-step">
                                 <div class="step-row">
                                     <div class="step-sign">-</div>
@@ -817,12 +804,10 @@
                     </div>
                 </div>
                 
-                <!-- تم نقل الصيغة الرياضية هنا بعد المثال مباشرة وقبل الخطوات -->
                 <div class="math-formula">
                     \[ \frac{5}{8} = 0.625 \]
                 </div>
                 
-                <!-- تم نقل الخطوات هنا بعد الصيغة الرياضية -->
                 <h3>الخطوات:</h3>
                 <ol class="steps">
                     <li>أقسم 5 على 8 (5 أصغر من 8، لذا نضع 0 ونضيف فاصلة عشرية)</li>
@@ -837,7 +822,6 @@
                     <li>عندما يصبح الباقي صفرًا تنتهي عملية القسمة</li>
                 </ol>
                 
-                <!-- تم نقل العبارة هنا بعد الخطوات - خلفية صفراء باردة -->
                 <div class="conclusion-box">
                     يسمى الكسر العشري الناتج كسرًا عشريًا منتهيًا لأنه يحتوي على عدد منتهٍ من الأرقام.
                 </div>
@@ -885,7 +869,6 @@
                         </div>
                         
                         <div class="division-steps-container">
-                            <!-- التصميم المعدل حسب التعليمات -->
                             <div class="division-operand-row">
                                 <div class="division-divisor">3</div>
                                 <div class="division-dividend-container">
@@ -893,7 +876,6 @@
                                 </div>
                             </div>
                             
-                            <!-- خطوات القسمة مع الخط تحت الأعداد -->
                             <div class="division-step">
                                 <div class="step-row">
                                     <div class="step-sign">-</div>
@@ -1030,7 +1012,6 @@
                         </div>
                         
                         <div class="division-steps-container">
-                            <!-- التصميم المعدل حسب التعليمات -->
                             <div class="division-operand-row">
                                 <div class="division-divisor">8</div>
                                 <div class="division-dividend-container">
@@ -1038,7 +1019,6 @@
                                 </div>
                             </div>
                             
-                            <!-- خطوات القسمة مع الخط تحت الأعداد -->
                             <div class="division-step">
                                 <div class="step-row">
                                     <div class="step-sign">-</div>
@@ -1130,7 +1110,6 @@
             </div>
         </div>
         
-        <!-- أزرار التنقل -->
         <div class="navigation-buttons">
             <a href="u1l2p1.html" class="nav-btn prev">
                 <span>← السابق</span>
