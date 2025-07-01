@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار مقارنة الأعداد الصحيحة والكسور والكسور العشرية</title>
+    <title>اختبار التعلم السابق لدرس مقارنة الأعداد النسبية وترتيبها</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,7 +16,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #e6f7ff, #d6f0ff, #e0f7ff);
+            background: linear-gradient(135deg, #e6e9ff, #d6dcff, #e0e0ff);
             color: #333;
             min-height: 100vh;
             padding: 20px;
@@ -35,9 +35,9 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 10% 20%, rgba(100, 180, 255, 0.2) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(80, 160, 240, 0.2) 0%, transparent 30%),
-                radial-gradient(circle at 30% 60%, rgba(120, 200, 250, 0.2) 0%, transparent 25%);
+                radial-gradient(circle at 10% 20%, rgba(180, 180, 255, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(150, 150, 220, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 30% 60%, rgba(200, 200, 250, 0.2) 0%, transparent 25%);
             z-index: -1;
             animation: waterEffect 15s infinite alternate;
         }
@@ -56,17 +56,17 @@
             width: 100%;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
-            box-shadow: 0 12px 30px rgba(0, 120, 215, 0.2);
+            box-shadow: 0 12px 30px rgba(80, 80, 180, 0.2);
             overflow: hidden;
             margin: 20px 0;
-            border: 1px solid rgba(100, 180, 255, 0.5);
+            border: 1px solid rgba(180, 180, 255, 0.5);
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 1;
         }
         
         header {
-            background: linear-gradient(135deg, #0066cc, #0088ff);
+            background: linear-gradient(135deg, #4a6fdc, #6a5acd);
             color: white;
             text-align: center;
             padding: 35px 20px;
@@ -81,7 +81,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
             transform: rotate(30deg);
             animation: shine 8s infinite linear;
         }
@@ -120,16 +120,16 @@
         }
         
         .instructions {
-            background: linear-gradient(to bottom, #e6f7ff, #d6f0ff);
+            background: linear-gradient(to bottom, #eef2ff, #e0e7ff);
             padding: 25px;
-            border-bottom: 1px solid #cce7ff;
+            border-bottom: 1px solid #d1d9ff;
             font-size: 1.15rem;
             line-height: 1.7;
-            color: #004080;
+            color: #4a5568;
         }
         
         .instructions h3 {
-            color: #0066cc;
+            color: #4a6fdc;
             margin-bottom: 20px;
             font-size: 1.5rem;
             display: flex;
@@ -151,7 +151,7 @@
         
         .instructions li i {
             margin-left: 12px;
-            color: #0066cc;
+            color: #4a6fdc;
             margin-top: 6px;
             font-size: 1.2rem;
         }
@@ -165,8 +165,8 @@
             border-radius: 14px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0, 102, 204, 0.1);
-            border-left: 5px solid #0066cc;
+            box-shadow: 0 5px 20px rgba(74, 109, 220, 0.1);
+            border-left: 5px solid #4a6fdc;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -174,7 +174,7 @@
         
         .question:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.2);
+            box-shadow: 0 8px 25px rgba(74, 109, 220, 0.2);
         }
         
         .question-header {
@@ -184,7 +184,7 @@
         }
         
         .question-number {
-            background: linear-gradient(to bottom, #0066cc, #0055aa);
+            background: linear-gradient(to bottom, #4a6fdc, #3a5fcc);
             color: white;
             width: 40px;
             height: 40px;
@@ -196,12 +196,12 @@
             font-size: 1.2rem;
             margin-left: 15px;
             flex-shrink: 0;
-            box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);
+            box-shadow: 0 4px 8px rgba(74, 109, 220, 0.3);
         }
         
         .question-title {
             font-size: 1.35rem;
-            color: #0066cc;
+            color: #4a6fdc;
             font-weight: 700;
         }
         
@@ -210,7 +210,7 @@
             line-height: 1.7;
             margin-bottom: 22px;
             padding: 0 12px;
-            color: #004080;
+            color: #4a5568;
         }
         
         .math {
@@ -218,24 +218,24 @@
             text-align: center;
             margin: 20px 0;
             padding: 15px;
-            background: #e6f7ff;
+            background: #edf2ff;
             border-radius: 10px;
             font-weight: bold;
-            border: 1px solid #cce7ff;
-            color: #0066cc;
-            box-shadow: inset 0 0 10px rgba(0, 102, 204, 0.1);
+            border: 1px solid #d1d9ff;
+            color: #4a6fdc;
+            box-shadow: inset 0 0 10px rgba(74, 109, 220, 0.1);
         }
         
         .number-line {
             width: 100%;
             height: 70px;
-            background: #e6f7ff;
+            background: #edf2ff;
             border-radius: 10px;
             position: relative;
             margin: 25px 0;
-            border: 1px solid #cce7ff;
+            border: 1px solid #d1d9ff;
             overflow: hidden;
-            box-shadow: inset 0 0 10px rgba(0, 102, 204, 0.1);
+            box-shadow: inset 0 0 10px rgba(74, 109, 220, 0.1);
         }
         
         .line {
@@ -244,7 +244,7 @@
             left: 5%;
             width: 90%;
             height: 3px;
-            background: #0066cc;
+            background: #4a6fdc;
             transform: translateY(-50%);
         }
         
@@ -253,7 +253,7 @@
             top: 30%;
             width: 3px;
             height: 18px;
-            background: #0066cc;
+            background: #4a6fdc;
         }
         
         .tick-label {
@@ -261,7 +261,7 @@
             top: 65%;
             font-size: 1.1rem;
             transform: translateX(-50%);
-            color: #0066cc;
+            color: #4a6fdc;
             font-weight: 600;
         }
         
@@ -270,7 +270,7 @@
             top: 50%;
             width: 26px;
             height: 26px;
-            background: linear-gradient(to bottom, #0088ff, #0066cc);
+            background: linear-gradient(to bottom, #5b7cff, #4a6fdc);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             display: flex;
@@ -279,7 +279,7 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);
+            box-shadow: 0 4px 8px rgba(74, 109, 220, 0.3);
             font-size: 1rem;
             transition: all 0.3s ease;
             z-index: 2;
@@ -287,7 +287,7 @@
         
         .point:hover {
             transform: translate(-50%, -50%) scale(1.1);
-            background: linear-gradient(to bottom, #0066cc, #0055aa);
+            background: linear-gradient(to bottom, #6a5acd, #5a4acd);
         }
         
         .options {
@@ -299,18 +299,18 @@
             align-items: center;
             padding: 16px 20px;
             margin-bottom: 15px;
-            background: #e6f7ff;
+            background: #f0f4ff;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid #cce7ff;
+            border: 2px solid #d1d9ff;
             position: relative;
             overflow: hidden;
         }
         
         .option:hover {
-            background: #d6f0ff;
-            border-color: #99d6ff;
+            background: #e6edff;
+            border-color: #b3c1ff;
             transform: translateX(5px);
         }
         
@@ -321,7 +321,7 @@
             right: 0;
             width: 5px;
             height: 100%;
-            background: #0066cc;
+            background: #4a6fdc;
             opacity: 0;
             transition: all 0.3s ease;
         }
@@ -334,14 +334,14 @@
             margin-left: 12px;
             transform: scale(1.4);
             cursor: pointer;
-            accent-color: #0066cc;
+            accent-color: #4a6fdc;
         }
         
         .option label {
             flex: 1;
             font-size: 1.15rem;
             cursor: pointer;
-            color: #004080;
+            color: #4a5568;
             font-weight: 500;
         }
         
@@ -364,7 +364,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 6px 15px rgba(0, 102, 204, 0.2);
+            box-shadow: 0 6px 15px rgba(80, 80, 180, 0.2);
             position: relative;
             overflow: hidden;
             z-index: 1;
@@ -388,27 +388,27 @@
         }
         
         #submit-btn {
-            background: linear-gradient(to right, #0066cc, #0088ff);
+            background: linear-gradient(to right, #4a6fdc, #6a5acd);
             color: white;
         }
         
         #submit-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.4);
+            box-shadow: 0 8px 20px rgba(74, 109, 220, 0.4);
         }
         
         #reset-btn {
-            background: linear-gradient(to right, #0088ff, #0066cc);
+            background: linear-gradient(to right, #5b7cff, #6a5acd);
             color: white;
         }
         
         #reset-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 136, 255, 0.4);
+            box-shadow: 0 8px 20px rgba(91, 124, 255, 0.4);
         }
         
         .start-btn {
-            background: linear-gradient(to right, #0066cc, #0088ff);
+            background: linear-gradient(to right, #4a6fdc, #6a5acd);
             color: white;
             margin: 25px auto;
             display: none;
@@ -417,23 +417,23 @@
         
         .start-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.4);
+            box-shadow: 0 8px 20px rgba(74, 109, 220, 0.4);
         }
         
         .result {
             text-align: center;
             padding: 35px;
-            background: #e6f7ff;
+            background: #f0f4ff;
             border-radius: 16px;
             margin: 25px;
             display: none;
-            border: 1px solid #cce7ff;
-            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.1);
+            border: 1px solid #d1d9ff;
+            box-shadow: 0 5px 15px rgba(74, 109, 220, 0.1);
         }
         
         .result h2 {
             font-size: 2.2rem;
-            color: #0066cc;
+            color: #4a6fdc;
             margin-bottom: 25px;
             font-weight: 700;
         }
@@ -441,7 +441,7 @@
         .score {
             font-size: 4rem;
             font-weight: 800;
-            background: linear-gradient(to right, #0066cc, #0088ff);
+            background: linear-gradient(to right, #4a6fdc, #6a5acd);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -453,7 +453,7 @@
             font-size: 1.4rem;
             margin: 25px 0;
             line-height: 1.7;
-            color: #0066cc;
+            color: #4a6fdc;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
@@ -466,15 +466,15 @@
             padding: 25px;
             background: white;
             border-radius: 14px;
-            border: 1px solid #cce7ff;
+            border: 1px solid #d1d9ff;
         }
         
         .correct-answers h3 {
-            color: #0066cc;
+            color: #4a6fdc;
             margin-bottom: 25px;
             font-size: 1.6rem;
             padding-bottom: 15px;
-            border-bottom: 3px solid #0066cc;
+            border-bottom: 3px solid #4a6fdc;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -483,7 +483,7 @@
         .answer-item {
             margin-bottom: 22px;
             padding-bottom: 22px;
-            border-bottom: 2px dashed #cce7ff;
+            border-bottom: 2px dashed #d1d9ff;
         }
         
         .answer-item:last-child {
@@ -495,12 +495,12 @@
         .answer-item p {
             margin-bottom: 10px;
             line-height: 1.7;
-            color: #004080;
+            color: #4a5568;
             font-size: 1.1rem;
         }
         
         .answer-item strong {
-            color: #0066cc;
+            color: #4a6fdc;
             font-weight: 600;
         }
         
@@ -517,7 +517,7 @@
         footer {
             text-align: center;
             padding: 25px;
-            color: rgba(0, 64, 128, 0.8);
+            color: rgba(74, 85, 104, 0.8);
             font-size: 1.1rem;
             width: 100%;
             max-width: 800px;
@@ -528,8 +528,8 @@
         
         .skill-tag {
             display: inline-block;
-            background: linear-gradient(to right, #d6f0ff, #cce7ff);
-            color: #0066cc;
+            background: linear-gradient(to right, #e0e7ff, #d1d9ff);
+            color: #4a6fdc;
             padding: 6px 15px;
             border-radius: 20px;
             font-size: 0.9rem;
@@ -548,7 +548,7 @@
         }
         
         .comparison-table th {
-            background: #0066cc;
+            background: #4a6fdc;
             color: white;
             padding: 12px;
             font-weight: 600;
@@ -557,15 +557,15 @@
         .comparison-table td {
             padding: 12px;
             text-align: center;
-            border: 1px solid #cce7ff;
+            border: 1px solid #d1d9ff;
         }
         
         .comparison-table tr:nth-child(even) {
-            background: #e6f7ff;
+            background: #eef2ff;
         }
         
         .comparison-table tr:hover {
-            background: #d6f0ff;
+            background: #e0e7ff;
         }
         
         @media (max-width: 600px) {
@@ -620,8 +620,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>اختبار مقارنة الأعداد الصحيحة والكسور والكسور العشرية</h1>
-            <p class="subtitle">اختبر مهاراتك في المقارنة بين أنواع الأعداد المختلفة</p>
+            <h1>اختبار التعلم السابق لدرس مقارنة الأعداد النسبية وترتيبها</h1>
+            <p class="subtitle">هذا الاختبار لقياس استعدادك للبدء بالدرس</p>
         </header>
         
         <div class="instructions">
@@ -839,7 +839,7 @@
         </div>
         
         <div class="result" id="result">
-            <h2>نتيجة الاختبار</h2>
+            <h2>نتيجة اختبار الاستعداد</h2>
             <div class="score" id="score">0/5</div>
             <div class="feedback" id="feedback"></div>
             
@@ -869,7 +869,7 @@
             
             <button id="start-lesson-btn" class="start-btn">
                 <i class="fas fa-book"></i>
-                <span>بدء الدرس التالي</span>
+                <span>بدء الدرس</span>
             </button>
         </div>
     </div>
@@ -940,11 +940,11 @@
                 
                 // تقديم التغذية الراجعة
                 if (score === 5) {
-                    feedbackElement.innerHTML = '<p class="correct">ممتاز! لديك فهم ممتاز لمقارنة الأعداد بأنواعها المختلفة.</p>';
+                    feedbackElement.innerHTML = '<p class="correct">ممتاز! أنت جاهز لبدء درس مقارنة الأعداد النسبية وترتيبها.</p>';
                 } else if (score >= 3) {
-                    feedbackElement.innerHTML = '<p>جيد! لديك فهم جيد لكن ننصح بمراجعة بعض المفاهيم.</p>';
+                    feedbackElement.innerHTML = '<p>جيد! لديك أساس جيد لكن ننصح بمراجعة بعض المفاهيم قبل البدء.</p>';
                 } else {
-                    feedbackElement.innerHTML = '<p class="incorrect">يحتاج إلى تحسين. ننصحك بمراجعة أساسيات مقارنة الأعداد.</p>';
+                    feedbackElement.innerHTML = '<p class="incorrect">يحتاج إلى تحسين. ننصحك بمراجعة المهارات الأساسية قبل بدء الدرس.</p>';
                 }
                 
                 // إظهار زر بدء الدرس
@@ -971,8 +971,8 @@
                 
                 // إزالة تأثيرات التحديد
                 document.querySelectorAll('.option').forEach(option => {
-                    option.style.background = '#e6f7ff';
-                    option.style.borderColor = '#cce7ff';
+                    option.style.background = '#f0f4ff';
+                    option.style.borderColor = '#d1d9ff';
                 });
                 
                 // التمرير إلى الأعلى
@@ -987,13 +987,13 @@
                     
                     // إزالة التحديد من جميع الخيارات
                     this.parentElement.querySelectorAll('.option').forEach(opt => {
-                        opt.style.background = '#e6f7ff';
-                        opt.style.borderColor = '#cce7ff';
+                        opt.style.background = '#f0f4ff';
+                        opt.style.borderColor = '#d1d9ff';
                     });
                     
                     // تمييز الخيار المحدد
-                    this.style.background = '#d6f0ff';
-                    this.style.borderColor = '#99d6ff';
+                    this.style.background = '#e6edff';
+                    this.style.borderColor = '#b3c1ff';
                 });
             });
             
