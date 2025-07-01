@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>درس تفاعلي: مقارنة الأعداد النسبية وترتيبها</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.8;
+            padding: 10px;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1a2a6c, #b21f1f, #1a2a6c);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #b21f1f;
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .lesson-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .info-box {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #1a2a6c;
+        }
+        
+        .info-box h3 {
+            color: #1a2a6c;
+            border-bottom: 2px solid #b21f1f;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-box ul {
+            padding-right: 15px;
+        }
+        
+        .info-box li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-right: 18px;
+            font-size: 0.95rem;
+        }
+        
+        .info-box li::before {
+            content: "•";
+            color: #b21f1f;
+            font-size: 1.2rem;
+            position: absolute;
+            right: 0;
+            top: -2px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 12px;
+            padding: 20px 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            border: 2px solid #1a2a6c;
+        }
+        
+        .section h2 {
+            color: #b21f1f;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #1a2a6c;
+            display: flex;
+            align-items: center;
+            font-size: 1.4rem;
+            gap: 10px;
+        }
+        
+        .section p {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        
+        .exploration {
+            background: linear-gradient(to bottom right, #e6f7ff, #ccefff);
+        }
+        
+        .method {
+            background: linear-gradient(to bottom right, #fff9e6, #ffedb3);
+        }
+        
+        .comparison {
+            background: linear-gradient(to bottom right, #e6ffe6, #ccffcc);
+        }
+        
+        .ordering {
+            background: linear-gradient(to bottom right, #f9e6ff, #f0ccff);
+        }
+        
+        .target-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        
+        .archer {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+            border: 2px solid #1a2a6c;
+        }
+        
+        .archer h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .target {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #ff3333 0%, #ff3333 10%, #ff6666 10%, #ff6666 20%, #ff9999 20%, #ff9999 30%, #ffe6e6 30%);
+            border-radius: 50%;
+            margin: 10px auto;
+            position: relative;
+            border: 2px solid #333;
+        }
+        
+        .hits {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 15px;
+        }
+        
+        .hit {
+            width: 20px;
+            height: 20px;
+            background: #ff4d4d;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .miss {
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .result-btn {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-top: 15px;
+            font-weight: 600;
+            width: 100%;
+            max-width: 200px;
+            display: block;
+            margin: 15px auto 0;
+        }
+        
+        .number-line {
+            height: 80px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            position: relative;
+            margin: 20px 0;
+            border: 2px solid #1a2a6c;
+            overflow: hidden;
+        }
+        
+        .line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #333;
+        }
+        
+        .number-point {
+            position: absolute;
+            top: 50%;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(to bottom, #b21f1f, #8a1818);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            border: 1px solid white;
+        }
+        
+        .exercise {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #1a2a6c;
+        }
+        
+        .exercise-title {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            gap: 8px;
+            border-bottom: 2px solid #b21f1f;
+            padding-bottom: 10px;
+        }
+        
+        .comparison-options {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .comp-option {
+            padding: 8px 15px;
+            background: #e0e0e0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-width: 50px;
+            text-align: center;
+            flex: 1;
+            max-width: 70px;
+        }
+        
+        .comp-option.selected {
+            background: linear-gradient(to bottom, #b21f1f, #8a1818);
+            color: white;
+        }
+        
+        .check-btn {
+            background: linear-gradient(to right, #1a2a6c, #0d1a4d);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            font-weight: 600;
+            display: block;
+            margin: 15px auto;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.95rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .feedback.correct {
+            background: linear-gradient(to right, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 2px solid #28a745;
+            display: block;
+        }
+        
+        .feedback.incorrect {
+            background: linear-gradient(to right, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 2px solid #dc3545;
+            display: block;
+        }
+        
+        .ordering-exercise {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .number-item {
+            background: linear-gradient(to right, #e6f7ff, #d1f0ff);
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            cursor: move;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: 2px solid #1a2a6c;
+        }
+        
+        .number-item i {
+            margin-left: 10px;
+            color: #1a2a6c;
+            font-size: 1.2rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 2px solid #b21f1f;
+            font-size: 0.9rem;
+        }
+        
+        .footer h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #ff9999;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+            font-weight: bold;
+            color: #b21f1f;
+            font-size: 1rem;
+            text-align: center;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 6px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        
+        .steps {
+            margin: 15px 0;
+            padding-right: 15px;
+        }
+        
+        .step {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            border-right: 4px solid #1a2a6c;
+            font-size: 0.95rem;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(to bottom, #b21f1f, #8a1818);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            margin-left: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .math-expression {
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            border: 2px solid #1a2a6c;
+            overflow-x: auto;
+        }
+        
+        .number-line-labels {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5px;
+            font-weight: bold;
+            margin-top: 5px;
+            color: #1a2a6c;
+            font-size: 0.8rem;
+        }
+        
+        .highlight {
+            background: linear-gradient(to right, rgba(178, 31, 31, 0.2), rgba(26, 42, 108, 0.2));
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        
+        /* تحسينات للشاشات الصغيرة جدًا */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section h2 {
+                font-size: 1.3rem;
+            }
+            
+            .target {
+                width: 85px;
+                height: 85px;
+            }
+            
+            .hit, .miss {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .math-expression {
+                font-size: 1rem;
+                padding: 8px;
+            }
+            
+            .number-point {
+                width: 24px;
+                height: 24px;
+                font-size: 0.8rem;
+            }
+            
+            .number-item {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+        
+        /* تحسينات للوضع الأفقي للهاتف */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+                font-size: 14px;
+            }
+            
+            .container {
+                padding: 3px;
+            }
+            
+            header {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .section {
+                padding: 12px 8px;
+            }
+            
+            .target-grid {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .archer {
+                flex: 1;
+                min-width: 150px;
+            }
+        }
+        
+        /* أنماط جديدة لأزرار التنقل */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 0 10px;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #0d1a4d, #8a1818);
+        }
+        
+        .nav-btn i {
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 600px) {
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-sort-amount-down-alt"></i> مقارنة الأعداد النسبية وترتيبها</h1>
+            <div class="subtitle">درس تفاعلي - الرياضيات للصف الأول المتوسط</div>
+            
+            <div class="lesson-info">
+                <div class="info-box">
+                    <h3><i class="fas fa-lightbulb"></i> فكرة الدرس</h3>
+                    <p>أقارن بين الأعداد النسبية، وأرتبها.</p>
+                    <p>سأتعلم في هذا الدرس كيفية:</p>
+                    <ul>
+                        <li>مقارنة عددين نسبيين باستخدام خط الأعداد</li>
+                        <li>ترتيب الأعداد النسبية تصاعديًا وتنازليًا</li>
+                        <li>استخدام الكسور المتكافئة للمقارنة</li>
+                        <li>تطبيق طرق المقارنة في مواقف حياتية</li>
+                    </ul>
+                </div>
+                <div class="info-box">
+                    <h3><i class="fas fa-book"></i> أهداف الدرس</h3>
+                    <p>بنهاية هذا الدرس، سأكون قادرًا على:</p>
+                    <ul>
+                        <li>مقارنة أي عددين نسبيين باستخدام عدة طرق</li>
+                        <li>ترتيب مجموعة من الأعداد النسبية تصاعديًا وتنازليًا</li>
+                        <li>استخدام خط الأعداد لتحديد موقع الأعداد النسبية</li>
+                        <li>تحويل الكسور إلى صيغة عشرية والعكس</li>
+                        <li>حل مسائل حياتية تتضمن مقارنة الأعداد النسبية</li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="section exploration">
+                <h2><i class="fas fa-binoculars"></i> أستكشف</h2>
+                <p>صَوَّبَ ثلاثة رماة نحو لوحة الهدف، فرمى الأول 6 رميات، أصابَتْ 5 منها الهدف، ورمى الثاني 9 رميات، أصابت 4 منها الهدف، أما الثالث فرمی 3 رميات، أصابت رميتان منها الهدف.</p>
+                <div class="pulse">
+                    <strong>أي الرماة أحرز أفضل نتيجة ؟</strong>
+                </div>
+                
+                <div class="target-grid">
+                    <div class="archer">
+                        <h3>الرامي الأول</h3>
+                        <div class="target"></div>
+                        <p>6 رميات: 5 إصابات</p>
+                        <div class="hits">
+                            <div class="hit"></div>
+                            <div class="hit"></div>
+                            <div class="hit"></div>
+                            <div class="hit"></div>
+                            <div class="hit"></div>
+                            <div class="miss"></div>
+                        </div>
+                        <button class="result-btn" onclick="calculateRatio(5,6,1)">احسب النسبة</button>
+                        <div class="math-expression" id="ratio1"></div>
+                    </div>
+                    
+                    <div class="archer">
+                        <h3>الرامي الثاني</h3>
+                        <div class="target"></div>
+                        <p>9 رميات: 4 إصابات</p>
+                        <div class="hits">
+                            <div class="hit"></div>
+                            <div class="hit"></div>
+                            <div class="hit"></div>
+                            <div class="hit"></div>
+                            <div class="miss"></div>
+                            <div class="miss"></div>
+                            <div class="miss"></div>
+                            <div class="miss"></div>
+                            <div class="miss"></div>
+                        </div>
+                        <button class="result-btn" onclick="calculateRatio(4,9,2)">احسب النسبة</button>
+                        <div class="math-expression" id="ratio2"></div>
+                    </div>
+                    
+                    <div class="archer">
+                        <h3>الرامي الثالث</h3>
+                        <div class="target"></div>
+                        <p>3 رميات: 2 إصابات</p>
+                        <div class="hits">
+                            <div class="hit"></div>
+                            <div class="hit"></div>
+                            <div class="miss"></div>
+                        </div>
+                        <button class="result-btn" onclick="calculateRatio(2,3,3)">احسب النسبة</button>
+                        <div class="math-expression" id="ratio3"></div>
+                    </div>
+                </div>
+                
+                <div id="archer-result" class="feedback"></div>
+            </div>
+            
+            <div class="section method">
+                <h2><i class="fas fa-brain"></i> المقارنة بالحساب الذهني</h2>
+                <p>يمكن المقارنة بين عددين نسبيين بطريقة الحساب الذهني، وذلك بتحديد أقربهما إلى القيم المَرْجِعية: 1, 0, -1, \( \frac{1}{2} \)</p>
+                
+                <div class="exercise">
+                    <div class="exercise-title"><i class="fas fa-pencil-alt"></i> مثال 1: قارن بين الأعداد التالية</div>
+                    
+                    <div class="comparison-exercise">
+                        <div class="math-expression">
+                            1) \( \frac{5}{8} \) □ \( \frac{3}{10} \)
+                        </div>
+                        <div class="comparison-options">
+                            <div class="comp-option" onclick="selectOption(this, 'greater')">></div>
+                            <div class="comp-option" onclick="selectOption(this, 'less')"><</div>
+                            <div class="comp-option" onclick="selectOption(this, 'equal')">=</div>
+                        </div>
+                        <button class="check-btn" onclick="checkComparison('greater', 'لأن \( \\frac{5}{8} > \\frac{1}{2} \) بينما \( \\frac{3}{10} < \\frac{1}{2} \)')">تحقق</button>
+                        <div id="comp-feedback1" class="feedback"></div>
+                    </div>
+                    
+                    <div class="comparison-exercise" style="margin-top: 20px;">
+                        <div class="math-expression">
+                            2) \( \left| -\frac{1}{4} \right| \) □ \( -0.5 \)
+                        </div>
+                        <div class="comparison-options">
+                            <div class="comp-option" onclick="selectOption(this, 'greater')">></div>
+                            <div class="comp-option" onclick="selectOption(this, 'less')"><</div>
+                            <div class="comp-option" onclick="selectOption(this, 'equal')">=</div>
+                        </div>
+                        <button class="check-btn" onclick="checkComparison('greater', 'لأن \( \\left| -\\frac{1}{4} \\right| = \\frac{1}{4} \) (عدد موجب) و \( -0.5 \) (عدد سالب)، والموجب أكبر من السالب')">تحقق</button>
+                        <div id="comp-feedback2" class="feedback"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section comparison">
+                <h2><i class="fas fa-chart-line"></i> المقارنة باستخدام خط الأعداد</h2>
+                <p>يمكنني مقارنة الأعداد النسبية وترتيبها بتحويلها إلى الصيغة العشرية، ثم تمثيلها على خط الأعداد، ومقارنتها بِحَسْبِ مواقعها.</p>
+                
+                <div class="exercise">
+                    <div class="exercise-title"><i class="fas fa-pencil-alt"></i> مثال 2: أرتب الأعداد تصاعدياً</div>
+                    <div class="math-expression">
+                        الأعداد: \( -0.8, -\frac{1}{2}, 0.2, \frac{3}{4} \)
+                    </div>
+                    
+                    <div class="steps">
+                        <div class="step">
+                            <span class="step-number">1</span> أحوِّل الأعداد إلى الصيغة العشرية:
+                            <div class="math-expression">
+                                \( -\frac{1}{2} = -0.5 \quad , \quad \frac{3}{4} = 0.75 \)
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <span class="step-number">2</span> أمثل الأعداد على خط الأعداد:
+                            <div class="number-line">
+                                <div class="line"></div>
+                                <div class="number-point" style="left: 0%;">-1</div>
+                                <div class="number-point" style="left: 10%;">-0.8</div>
+                                <div class="number-point" style="left: 25%;">-0.5</div>
+                                <div class="number-point" style="left: 50%;">0</div>
+                                <div class="number-point" style="left: 60%;">0.2</div>
+                                <div class="number-point" style="left: 75%;">0.75</div>
+                                <div class="number-point" style="left: 100%;">1</div>
+                            </div>
+                            <div class="number-line-labels">
+                                <span>-1</span>
+                                <span>-0.5</span>
+                                <span>0</span>
+                                <span>0.5</span>
+                                <span>1</span>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <span class="step-number">3</span> أرتب الأعداد بالنظر إلى مواقعها:
+                            <div class="math-expression">
+                                \( -0.8 < -0.5 < 0.2 < 0.75 \)
+                            </div>
+                            <p>الترتيب التصاعدي: <span class="highlight">\( -0.8, -\frac{1}{2}, 0.2, \frac{3}{4} \)</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section ordering">
+                <h2><i class="fas fa-sort-amount-down"></i> الترتيب بتوحيد المقامات</h2>
+                <p>يمكن مقارنة الأعداد النسبية وترتيبها بتحويلها إلى صورة كسر \( \frac{a}{b} \) ثم توحيد مقاماتها ثم مقارنة قيم البسط فيها.</p>
+                
+                <div class="exercise">
+                    <div class="exercise-title"><i class="fas fa-pencil-alt"></i> مثال 3: أرتب الأعداد تنازلياً</div>
+                    <div class="math-expression">
+                        الأعداد: \( \frac{1}{12}, \frac{2}{3}, 0.35 \)
+                    </div>
+                    
+                    <div class="steps">
+                        <div class="step">
+                            <span class="step-number">1</span> أحوّل الأعداد إلى صورة كسر:
+                            <div class="math-expression">
+                                \( 0.35 = \frac{35}{100} = \frac{7}{20} \)
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <span class="step-number">2</span> أوحد المقامات (المضاعف المشترك الأصغر لـ 12، 3، 20 هو 60):
+                            <div class="math-expression">
+                                \( \frac{1}{12} = \frac{1 \times 5}{12 \times 5} = \frac{5}{60} \)
+                            </div>
+                            <div class="math-expression">
+                                \( \frac{2}{3} = \frac{2 \times 20}{3 \times 20} = \frac{40}{60} \)
+                            </div>
+                            <div class="math-expression">
+                                \( \frac{7}{20} = \frac{7 \times 3}{20 \times 3} = \frac{21}{60} \)
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <span class="step-number">3</span> أقارن وأرتب عن طريق البسط:
+                            <div class="math-expression">
+                                \( \frac{40}{60} > \frac{21}{60} > \frac{5}{60} \)
+                            </div>
+                            <p>الترتيب التنازلي: <span class="highlight">\( \frac{2}{3}, 0.35, \frac{1}{12} \)</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-title"><i class="fas fa-tasks"></i> تدرب بنفسك: رتب الأعداد تصاعدياً</div>
+                    <div class="math-expression">
+                        الأعداد: \( -1.8, 1\frac{9}{10}, -1.25 \)
+                    </div>
+                    
+                    <div class="ordering-exercise" id="ordering-container">
+                        <div class="number-item" draggable="true" data-value="-1.8">
+                            <i class="fas fa-arrows-alt"></i> \( -1.8 \)
+                        </div>
+                        <div class="number-item" draggable="true" data-value="1.9">
+                            <i class="fas fa-arrows-alt"></i> \( 1\frac{9}{10} = 1.9 \)
+                        </div>
+                        <div class="number-item" draggable="true" data-value="-1.25">
+                            <i class="fas fa-arrows-alt"></i> \( -1.25 \)
+                        </div>
+                    </div>
+                    
+                    <button class="check-btn" onclick="checkOrder()">تحقق من الترتيب</button>
+                    <div id="order-feedback" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- أزرار التنقل -->
+        <div class="navigation-buttons">
+            <a href="u1l3p0.html" class="nav-btn">
+                <i class="fas fa-arrow-right"></i> السابق
+            </a>
+            <a href="u1l3p2.html" class="nav-btn">
+                التالي <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <h3>الوحدة 1: الأعداد النسبية</h3>
+            <p>© 2023 الرياضيات التفاعلية - جميع الحقوق محفوظة</p>
+            <p>مصمم لتعزيز فهم مقارنة وترتيب الأعداد النسبية بطريقة ممتعة وجذابة</p>
+        </div>
+    </div>
+
+    <script>
+        // حساب نسب الرماة
+        function calculateRatio(hits, total, archer) {
+            const ratio = (hits / total).toFixed(3);
+            const fraction = `${hits}/${total}`;
+            const percentage = (ratio * 100).toFixed(1);
+            
+            const ratioElement = document.getElementById(`ratio${archer}`);
+            ratioElement.innerHTML = `\\( \\dfrac{${hits}}{${total}} = ${ratio} = ${percentage}\\% \\)`;
+            
+            // معالجة رموز الرياضيات فورًا بعد التحديث
+            if (window.MathJax) {
+                MathJax.typesetPromise([ratioElement]).catch(err => console.log('Typeset failed: ' + err.message));
+            }
+            
+            if (archer === 3) {
+                const ratio1 = (5/6).toFixed(3);
+                const ratio2 = (4/9).toFixed(3);
+                const ratio3 = (2/3).toFixed(3);
+                
+                const resultElement = document.getElementById('archer-result');
+                resultElement.innerHTML = 
+                    '<strong>النتيجة:</strong> الرامي الثالث لديه أفضل نتيجة بنسبة ' + 
+                    `\\( \\dfrac{2}{3} = ${ratio3} \\) تليها الأولى \\( \\dfrac{5}{6} = ${ratio1} \\) ثم الثانية \\( \\dfrac{4}{9} = ${ratio2} \\)`;
+                resultElement.className = 'feedback correct';
+                
+                // معالجة رموز الرياضيات فورًا بعد التحديث
+                if (window.MathJax) {
+                    MathJax.typesetPromise([resultElement]).catch(err => console.log('Typeset failed: ' + err.message));
+                }
+            }
+        }
+        
+        // اختيار خيار المقارنة
+        function selectOption(element, value) {
+            // إزالة التحديد من جميع الخيارات
+            const options = element.parentElement.querySelectorAll('.comp-option');
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+                opt.style.background = '#e0e0e0';
+                opt.style.color = '#333';
+            });
+            
+            // تحديد الخيار المختار
+            element.classList.add('selected');
+            element.dataset.selected = value;
+            element.style.background = 'linear-gradient(to bottom, #b21f1f, #8a1818)';
+            element.style.color = 'white';
+        }
+        
+        // التحقق من المقارنة
+        function checkComparison(correctValue, explanation) {
+            const feedbackId = event.target.nextElementSibling.id;
+            const selectedOption = event.target.previousElementSibling.querySelector('.selected');
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (!selectedOption) {
+                feedbackElement.innerHTML = 'الرجاء اختيار إشارة المقارنة';
+                feedbackElement.className = 'feedback incorrect';
+                return;
+            }
+            
+            if (selectedOption.dataset.selected === correctValue) {
+                feedbackElement.innerHTML = 'إجابة صحيحة! ' + explanation;
+                feedbackElement.className = 'feedback correct';
+            } else {
+                feedbackElement.innerHTML = 'إجابة خاطئة، حاول مرة أخرى';
+                feedbackElement.className = 'feedback incorrect';
+            }
+            
+            // معالجة رموز الرياضيات فورًا بعد التحديث
+            if (window.MathJax) {
+                MathJax.typesetPromise([feedbackElement]).catch(err => console.log('Typeset failed: ' + err.message));
+            }
+        }
+        
+        // التحقق من الترتيب
+        function checkOrder() {
+            const items = document.querySelectorAll('#ordering-container .number-item');
+            const order = Array.from(items).map(item => item.dataset.value);
+            
+            const correctOrder = ['-1.8', '-1.25', '1.9'];
+            
+            let isCorrect = true;
+            for (let i = 0; i < order.length; i++) {
+                if (order[i] !== correctOrder[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+            
+            const feedbackElement = document.getElementById('order-feedback');
+            if (isCorrect) {
+                feedbackElement.innerHTML = 'ترتيب صحيح! الترتيب التصاعدي: \( -1.8, -1.25, 1\\frac{9}{10} \)';
+                feedbackElement.className = 'feedback correct';
+            } else {
+                feedbackElement.innerHTML = 'الترتيب غير صحيح، حاول مرة أخرى. تذكر أن الأعداد السالبة تكون أصغر من الموجبة';
+                feedbackElement.className = 'feedback incorrect';
+            }
+            
+            // معالجة رموز الرياضيات فورًا بعد التحديث
+            if (window.MathJax) {
+                MathJax.typesetPromise([feedbackElement]).catch(err => console.log('Typeset failed: ' + err.message));
+            }
+        }
+        
+        // جعل الأرقام قابلة للسحب
+        document.querySelectorAll('.number-item').forEach(item => {
+            item.addEventListener('dragstart', dragStart);
+            item.addEventListener('dragover', dragOver);
+            item.addEventListener('drop', drop);
+            item.addEventListener('dragenter', dragEnter);
+            item.addEventListener('dragleave', dragLeave);
+        });
+        
+        let draggedItem = null;
+        
+        function dragStart(e) {
+            draggedItem = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+            this.classList.add('dragging');
+            this.style.opacity = '0.7';
+        }
+        
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+        
+        function dragEnter(e) {
+            this.classList.add('drag-over');
+            this.style.background = 'linear-gradient(to right, #b3e6ff, #99d6ff)';
+        }
+        
+        function dragLeave(e) {
+            this.classList.remove('drag-over');
+            this.style.background = 'linear-gradient(to right, #e6f7ff, #d1f0ff)';
+        }
+        
+        function drop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            this.style.background = 'linear-gradient(to right, #e6f7ff, #d1f0ff)';
+            
+            if (draggedItem !== this) {
+                // الحصول على العناصر
+                const items = Array.from(this.parentElement.children);
+                const draggedIndex = items.indexOf(draggedItem);
+                const targetIndex = items.indexOf(this);
+                
+                // تبديل المواقع
+                if (draggedIndex < targetIndex) {
+                    this.parentElement.insertBefore(draggedItem, this.nextSibling);
+                } else {
+                    this.parentElement.insertBefore(draggedItem, this);
+                }
+            }
+            
+            draggedItem.style.opacity = '1';
+            return false;
+        }
+        
+        // تهيئة MathJax بعد تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        });
+    </script>
+</body>
+</html>
