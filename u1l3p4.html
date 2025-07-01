@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة تعليمية: مقارنة الأعداد النسبية - الإصدار المصحح</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        body {
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Tajawal', sans-serif;
+            perspective: 1000px;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            padding: 12px 10px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.5);
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        h1 {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+            text-shadow: 0 0 10px #00b4ff;
+            background: linear-gradient(to right, #4dabf7, #da1b60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 0.85rem;
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        #game-container {
+            position: relative;
+            width: 100%;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        
+        .coin {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .coin-value {
+            position: absolute;
+            z-index: 3;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+            font-weight: 800;
+            font-size: 2em;
+            color: #000;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .coin-gold {
+            background: radial-gradient(circle at 30% 30%, #ffd700, #daa520);
+            border: 2px solid #daa520;
+        }
+        
+        .coin-silver {
+            background: radial-gradient(circle at 30% 30%, #c0c0c0, #a0a0a0);
+            border: 2px solid #a0a0a0;
+        }
+        
+        .coin-bronze {
+            background: radial-gradient(circle at 30% 30%, #cd7f32, #8c531b);
+            border: 2px solid #8c531b;
+        }
+        
+        .coin-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        
+        .coin-highlight {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 30%;
+            height: 30%;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 1;
+        }
+        
+        #score-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            z-index: 10;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+        
+        #score {
+            color: gold;
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: inline-block;
+            margin-left: 5px;
+        }
+        
+        .mobile-controls {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 20;
+            direction: ltr;
+        }
+        
+        .control-btn {
+            width: 65px;
+            height: 65px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.1s;
+        }
+        
+        .control-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0.95);
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            display: none;
+        }
+        
+        .game-over-content {
+            background: rgba(30, 30, 50, 0.95);
+            padding: 25px 20px;
+            border-radius: 18px;
+            text-align: center;
+            width: 85%;
+            max-width: 380px;
+            border: 2px solid #ff3366;
+            box-shadow: 0 0 25px rgba(255, 51, 102, 0.5);
+        }
+        
+        .game-over h2 {
+            font-size: 1.9rem;
+            margin-bottom: 15px;
+            color: #ff3366;
+        }
+        
+        .final-score {
+            font-size: 1.6rem;
+            margin: 15px 0;
+        }
+        
+        .final-score span {
+            color: gold;
+            font-weight: bold;
+        }
+        
+        .start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 30, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .start-btn {
+            background: linear-gradient(to right, #4dabf7, #da1b60);
+            color: white;
+            border: none;
+            padding: 13px 35px;
+            font-size: 1.2rem;
+            border-radius: 45px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(77, 171, 247, 0.4);
+        }
+        
+        .start-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .instructions {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 18px;
+            max-width: 480px;
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 8px;
+            color: #4dabf7;
+        }
+        
+        .how-to-play {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 12px 0;
+            text-align: right;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .step .example-number {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .correct-example {
+            background: #4dabf7;
+            color: white;
+        }
+        
+        .wrong-example {
+            background: #da1b60;
+            color: white;
+        }
+        
+        .controls-info {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+            direction: ltr;
+        }
+        
+        .control-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .control-icon {
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+        
+        footer {
+            padding: 8px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .obstacle-indicator {
+            position: absolute;
+            top: 45px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #ff6b6b;
+            z-index: 15;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 7px;
+            display: none;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        .stats-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            z-index: 10;
+            border: 2px solid rgba(77, 171, 247, 0.5);
+            box-shadow: 0 0 8px rgba(77, 171, 247, 0.3);
+            text-align: right;
+        }
+        
+        .stats-item {
+            margin: 4px 0;
+        }
+        
+        .correct-count {
+            color: #4dabf7;
+        }
+        
+        .wrong-count {
+            color: #da1b60;
+        }
+        
+        .accuracy {
+            color: #ffd700;
+        }
+        
+        .educational-message {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.85);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            z-index: 50;
+            text-align: center;
+            display: none;
+            border: 2px solid;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+            animation: fadeInOut 1.5s ease-in-out;
+            max-width: 90%;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -40%); }
+            20% { opacity: 1; transform: translate(-50%, -50%); }
+            80% { opacity: 1; transform: translate(-50%, -50%); }
+            100% { opacity: 0; transform: translate(-50%, -60%); }
+        }
+        
+        .correct-message {
+            color: #4dabf7;
+            border-color: #4dabf7;
+        }
+        
+        .wrong-message {
+            color: #da1b60;
+            border-color: #da1b60;
+        }
+        
+        .progress-container {
+            position: absolute;
+            bottom: 160px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 15;
+        }
+        
+        .progress-bar {
+            width: 240px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #4dabf7, #00c853);
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        
+        .progress-label {
+            position: absolute;
+            top: -22px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #4dabf7;
+        }
+        
+        .loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 30, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            text-align: center;
+        }
+        
+        .loader {
+            width: 45px;
+            height: 45px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #4dabf7;
+            animation: spin 1s linear infinite;
+            margin-bottom: 18px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .number-display {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 1.4rem;
+            color: white;
+            z-index: 15;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px;
+            font-weight: bold;
+        }
+        
+        .number-info {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 1rem;
+            color: #ffd700;
+            z-index: 15;
+            padding: 5px;
+        }
+        
+        .difficulty-label {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 51, 102, 0.8);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 15;
+            animation: difficultyPulse 2s infinite;
+        }
+        
+        @keyframes difficultyPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 51, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); }
+        }
+        
+        .educational-tip {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(77, 171, 247, 0.9);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            z-index: 15;
+            max-width: 90%;
+            text-align: center;
+            display: none;
+        }
+        
+        .tip-content {
+            margin-bottom: 8px;
+        }
+        
+        .tip-examples {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 8px;
+        }
+        
+        .tip-example {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .fixed-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>لعبة تعليمية: مقارنة الأعداد النسبية</h1>
+            <div class="subtitle">الإصدار المصحح | الأعداد معروضة بشكل صحيح الآن</div>
+        </header>
+        
+        <div id="game-container">
+            <div class="loading-screen" id="loading-screen">
+                <div class="loader"></div>
+                <p>جاري تحميل اللعبة التعليمية...</p>
+            </div>
+            
+            <div class="difficulty-label" id="difficulty-label">صعوبة متزايدة: عقبات أكثر وأعداد صحيحة أقل</div>
+            
+            <div id="score-panel">
+                النقاط: <span id="score">0</span>
+            </div>
+            
+            <div class="number-display" id="number-display">الهدف: جمع الأعداد &lt; 0.7</div>
+            <div class="number-info" id="number-info">(تشمل الأعداد السالبة والموجبة الأقل من 0.7)</div>
+            
+            <div class="stats-panel">
+                <div class="stats-item">الأعداد الصحيحة: <span class="correct-count" id="correct-count">0</span></div>
+                <div class="stats-item">الأعداد الخاطئة: <span class="wrong-count" id="wrong-count">0</span></div>
+                <div class="stats-item">الدقة: <span class="accuracy" id="accuracy">0%</span></div>
+            </div>
+            
+            <div class="obstacle-indicator" id="obstacle-warning">! انتبه عقبة قريبة</div>
+            
+            <div class="educational-tip" id="educational-tip">
+                <div class="tip-content">تذكر: جميع الأعداد السالبة أصغر من 0.7، والأعداد الموجبة يجب أن تكون أقل من 0.7</div>
+                <div class="tip-examples">
+                    <span class="tip-example">✓ -0.5</span>
+                    <span class="tip-example">✓ 0.6</span>
+                    <span class="tip-example">✗ 0.8</span>
+                    <span class="tip-example">✗ 1.0</span>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                    <div class="progress-label">تقدمك في اللعبة</div>
+                </div>
+            </div>
+            
+            <div class="mobile-controls">
+                <div class="control-btn" id="left-btn">←</div>
+                <div class="control-btn" id="right-btn">→</div>
+            </div>
+            
+            <div class="educational-message" id="educational-message"></div>
+            
+            <div class="game-over" id="game-over">
+                <div class="game-over-content">
+                    <h2>انتهت اللعبة!</h2>
+                    <p>لقد خسرت جميع محاولاتك</p>
+                    <div class="final-score">النتيجة النهائية: <span id="final-score">0</span></div>
+                    <div class="stats-panel" style="position: relative; margin: 15px auto; width: 90%;">
+                        <div class="stats-item">الأعداد الصحيحة: <span class="correct-count" id="final-correct">0</span></div>
+                        <div class="stats-item">الأعداد الخاطئة: <span class="wrong-count" id="final-wrong">0</span></div>
+                        <div class="stats-item">الدقة: <span class="accuracy" id="final-accuracy">0%</span></div>
+                    </div>
+                    <button class="start-btn" id="restart-btn">إعادة اللعب</button>
+                </div>
+            </div>
+            
+            <div class="start-screen" id="start-screen">
+                <h1>لعبة تعليمية: مقارنة الأعداد النسبية</h1>
+                <div class="instructions">
+                    <h3>كيفية اللعب:</h3>
+                    <div class="how-to-play">
+                        <div class="step">
+                            <div class="example-number correct-example">-0.5</div>
+                            <div>اجمع الأعداد <b>الأصغر من 0.7</b> (أي الأعداد السالبة أو الأعداد الموجبة الأقل من 0.7)</div>
+                        </div>
+                        <div class="step">
+                            <div class="example-number correct-example">0.6</div>
+                            <div>الأعداد الموجبة الصحيحة: أقل من 0.7</div>
+                        </div>
+                        <div class="step">
+                            <div class="example-number wrong-example">0.8</div>
+                            <div>تجنب الأعداد <b>الأكبر من أو تساوي 0.7</b></div>
+                        </div>
+                        <div class="step">
+                            <div style="color: #ff6b6b; font-size: 1.4rem;">●</div>
+                            <div>تجنب العقبات الحمراء (أربع عقبات الآن)</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-top: 15px; color: #ffd700;">هدف اللعبة التعليمي:</h3>
+                    <p>تعلم كيفية مقارنة الأعداد العشرية الموجبة والسالبة. تذكر أن جميع الأعداد السالبة أصغر من 0.7، والأعداد الموجبة يجب أن تكون أقل من 0.7.</p>
+                    
+                    <div class="controls-info">
+                        <div class="control-info">
+                            <div class="control-icon">←</div>
+                            <div>يسار</div>
+                        </div>
+                        <div class="control-info">
+                            <div class="control-icon">→</div>
+                            <div>يمين</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="start-btn" id="start-btn">بدء اللعب</button>
+            </div>
+        </div>
+        
+        <footer>
+            تم تطوير اللعبة التعليمية باستخدام Three.js | الإصدار المصحح | مقارنة الأعداد النسبية الموجبة والسالبة
+        </footer>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const leftBtn = document.getElementById('left-btn');
+        const rightBtn = document.getElementById('right-btn');
+        const scoreElement = document.getElementById('score');
+        const finalScoreElement = document.getElementById('final-score');
+        const gameOverPanel = document.getElementById('game-over');
+        const startScreen = document.getElementById('start-screen');
+        const obstacleWarning = document.getElementById('obstacle-warning');
+        const educationalMessage = document.getElementById('educational-message');
+        const correctCountElement = document.getElementById('correct-count');
+        const wrongCountElement = document.getElementById('wrong-count');
+        const accuracyElement = document.getElementById('accuracy');
+        const finalCorrectElement = document.getElementById('final-correct');
+        const finalWrongElement = document.getElementById('final-wrong');
+        const finalAccuracyElement = document.getElementById('final-accuracy');
+        const progressFill = document.getElementById('progress-fill');
+        const loadingScreen = document.getElementById('loading-screen');
+        const numberDisplay = document.getElementById('number-display');
+        const numberInfo = document.getElementById('number-info');
+        const educationalTip = document.getElementById('educational-tip');
+        
+        let scene, camera, renderer, car, numbers = [], obstacles = [];
+        let road, roadWidth = 20, roadSegments = 200;
+        let score = 0, gameActive = false, carSpeed = 0.4;
+        let carPosition = 0, maxCarPosition = 7;
+        let touchStartX = 0;
+        let correctCount = 0, wrongCount = 0;
+        let totalNumbers = 0;
+        
+        let moveSpeed = 0.5;
+        let acceleration = 0;
+        
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog = new THREE.Fog(0x87CEEB, 100, 300);
+            
+            const aspectRatio = document.getElementById('game-container').offsetWidth / 
+                              document.getElementById('game-container').offsetHeight;
+            camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
+            camera.position.set(0, 10, 15);
+            camera.lookAt(0, 0, -30);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(document.getElementById('game-container').offsetWidth, 
+                             document.getElementById('game-container').offsetHeight);
+            renderer.shadowMap.enabled = true;
+            document.getElementById('game-container').appendChild(renderer.domElement);
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(20, 30, 20);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+            
+            createRoad();
+            createCar();
+            createNumbersAndObstacles();
+            addEnvironment();
+            
+            window.addEventListener('resize', onWindowResize);
+            
+            document.addEventListener('touchstart', handleTouchStart, { passive: false });
+            document.addEventListener('touchmove', handleTouchMove, { passive: false });
+            
+            leftBtn.addEventListener('touchstart', () => moveCar('left'));
+            leftBtn.addEventListener('touchend', () => stopMove());
+            leftBtn.addEventListener('touchcancel', () => stopMove());
+            
+            rightBtn.addEventListener('touchstart', () => moveCar('right'));
+            rightBtn.addEventListener('touchend', () => stopMove());
+            rightBtn.addEventListener('touchcancel', () => stopMove());
+            
+            startBtn.addEventListener('click', startGame);
+            restartBtn.addEventListener('click', restartGame);
+            
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                startScreen.style.display = 'flex';
+            }, 800);
+        }
+        
+        function createRoad() {
+            const roadGeometry = new THREE.PlaneGeometry(roadWidth, roadSegments);
+            const roadMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x333333,
+                roughness: 0.9,
+                metalness: 0.1
+            });
+            
+            road = new THREE.Mesh(roadGeometry, roadMaterial);
+            road.rotation.x = -Math.PI / 2;
+            road.position.y = 0;
+            road.position.z = -roadSegments / 2;
+            road.receiveShadow = true;
+            scene.add(road);
+            
+            for (let i = 0; i < roadSegments / 5; i++) {
+                const lineGeometry = new THREE.PlaneGeometry(1, 3);
+                const lineMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 });
+                
+                const line = new THREE.Mesh(lineGeometry, lineMaterial);
+                line.rotation.x = -Math.PI / 2;
+                line.position.y = 0.1;
+                line.position.z = -i * 10;
+                line.receiveShadow = true;
+                scene.add(line);
+            }
+        }
+        
+        function createCar() {
+            const carGroup = new THREE.Group();
+            
+            const carBodyGeometry = new THREE.BoxGeometry(3, 1.5, 5);
+            const carBodyMaterial = new THREE.MeshPhongMaterial({ color: 0xff3366 });
+            const carBody = new THREE.Mesh(carBodyGeometry, carBodyMaterial);
+            carBody.position.y = 1;
+            carBody.castShadow = true;
+            carGroup.add(carBody);
+            
+            const carTopGeometry = new THREE.BoxGeometry(2, 1, 3);
+            const carTopMaterial = new THREE.MeshPhongMaterial({ color: 0x44aaff });
+            const carTop = new THREE.Mesh(carTopGeometry, carTopMaterial);
+            carTop.position.y = 2.2;
+            carTop.position.z = -0.5;
+            carTop.castShadow = true;
+            carGroup.add(carTop);
+            
+            const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 16);
+            wheelGeometry.rotateZ(Math.PI / 2);
+            const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x222222 });
+            
+            for (let i = -1; i <= 1; i += 2) {
+                for (let j = -1; j <= 1; j += 2) {
+                    const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
+                    wheel.position.x = i * 1.5;
+                    wheel.position.y = 0.5;
+                    wheel.position.z = j * 1.5;
+                    wheel.castShadow = true;
+                    carGroup.add(wheel);
+                }
+            }
+            
+            carGroup.position.set(0, 1.5, 0);
+            scene.add(carGroup);
+            car = carGroup;
+        }
+        
+        function createNumbersAndObstacles() {
+            for (let i = 0; i < 6; i++) {
+                const isNegative = Math.random() > 0.5;
+                const numberValue = parseFloat((isNegative ? -1 : 1) * (Math.random() * 0.99).toFixed(2));
+                const isCorrect = numberValue < 0.7;
+                
+                const coinGeometry = new THREE.CylinderGeometry(2.0, 2.0, 0.4, 32);
+                const coinMaterial = new THREE.MeshPhongMaterial({ 
+                    color: isCorrect ? 0x4dabf7 : 0xda1b60,
+                    emissive: isCorrect ? 0x1a3f7a : 0x5c0a1f,
+                    shininess: 100
+                });
+                
+                const coinMesh = new THREE.Mesh(coinGeometry, coinMaterial);
+                coinMesh.rotation.x = Math.PI / 2;
+                coinMesh.position.y = 2;
+                coinMesh.position.x = (Math.random() - 0.5) * (roadWidth - 4);
+                coinMesh.position.z = -Math.random() * roadSegments - 20;
+                coinMesh.castShadow = true;
+                
+                coinMesh.userData = { 
+                    value: numberValue, 
+                    isCorrect: isCorrect,
+                    text: numberValue.toString() 
+                };
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 256;
+                canvas.height = 256;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // تحسين الخط ليكون أوضح وأكبر
+                ctx.font = 'bold 90px Tajawal';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // جعل النص أكثر وضوحًا
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.lineWidth = 10;
+                ctx.strokeText(numberValue.toString(), canvas.width/2, canvas.height/2);
+                
+                ctx.fillStyle = '#000000';
+                ctx.fillText(numberValue.toString(), canvas.width/2, canvas.height/2);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.flipY = false;
+                
+                const material = new THREE.MeshBasicMaterial({ 
+                    map: texture,
+                    transparent: true,
+                    side: THREE.DoubleSide
+                });
+                
+                const textGeometry = new THREE.PlaneGeometry(3.8, 3.8);
+                const textMesh = new THREE.Mesh(textGeometry, material);
+                textMesh.position.y = 0.21;
+                
+                // التصحيح: تدوير النص حول المحور X فقط وقلبه حول المحور Y
+                textMesh.rotation.x = -Math.PI/2;
+                textMesh.rotation.z = Math.PI; // تدوير 180 درجة حول المحور Z لتصحيح الاتجاه
+                textMesh.scale.x = -1; // قلب النص حول المحور Y
+                
+                coinMesh.add(textMesh);
+                
+                numbers.push(coinMesh);
+                scene.add(coinMesh);
+            }
+            
+            for (let i = 0; i < 4; i++) {
+                const obstacleGeometry = new THREE.CylinderGeometry(0.8, 0.8, 2, 8);
+                const obstacleMaterial = new THREE.MeshPhongMaterial({ color: 0xaa0000 });
+                
+                const obstacle = new THREE.Mesh(obstacleGeometry, obstacleMaterial);
+                obstacle.position.y = 1;
+                obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
+                obstacle.position.z = -Math.random() * roadSegments - 20;
+                obstacle.castShadow = true;
+                
+                const circleGeometry = new THREE.RingGeometry(1.2, 1.5, 32);
+                const circleMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0xff0000, 
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.6
+                });
+                const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+                circle.rotation.x = Math.PI / 2;
+                circle.position.y = 0.1;
+                obstacle.add(circle);
+                
+                obstacles.push(obstacle);
+                scene.add(obstacle);
+            }
+            
+            totalNumbers = numbers.length;
+        }
+        
+        function addEnvironment() {
+            for (let i = 0; i < 15; i++) {
+                const treeGroup = new THREE.Group();
+                
+                const trunkGeometry = new THREE.CylinderGeometry(0.3, 0.4, 3, 8);
+                const trunkMaterial = new THREE.MeshPhongMaterial({ color: 0x8b4513 });
+                const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                trunk.position.y = 1.5;
+                trunk.castShadow = true;
+                treeGroup.add(trunk);
+                
+                const leavesGeometry = new THREE.ConeGeometry(2, 5, 8);
+                const leavesMaterial = new THREE.MeshPhongMaterial({ color: 0x228833 });
+                const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+                leaves.position.y = 4;
+                leaves.castShadow = true;
+                treeGroup.add(leaves);
+                
+                const side = Math.random() > 0.5 ? 1 : -1;
+                const distanceFromRoad = 10 + Math.random() * 30;
+                treeGroup.position.x = side * (roadWidth/2 + distanceFromRoad);
+                treeGroup.position.z = -Math.random() * roadSegments - 20;
+                treeGroup.position.y = 0;
+                
+                scene.add(treeGroup);
+            }
+            
+            for (let i = 0; i < 8; i++) {
+                const buildingHeight = Math.random() * 10 + 5;
+                const buildingGeometry = new THREE.BoxGeometry(8, buildingHeight, 8);
+                const buildingMaterial = new THREE.MeshPhongMaterial({ 
+                    color: Math.random() * 0x888888 + 0x444444,
+                    emissive: 0x111111
+                });
+                
+                const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+                building.position.x = (Math.random() > 0.5 ? 1 : -1) * (40 + Math.random() * 30);
+                building.position.z = -Math.random() * roadSegments - 50;
+                building.position.y = buildingHeight / 2;
+                building.castShadow = true;
+                scene.add(building);
+            }
+        }
+        
+        function handleTouchStart(event) {
+            if (!gameActive) return;
+            touchStartX = event.touches[0].clientX;
+            event.preventDefault();
+        }
+        
+        function handleTouchMove(event) {
+            if (!gameActive) return;
+            const touchX = event.touches[0].clientX;
+            const diff = touchX - touchStartX;
+            
+            if (Math.abs(diff) > 10) {
+                if (diff > 0) {
+                    carPosition = Math.min(carPosition + moveSpeed, maxCarPosition);
+                } else {
+                    carPosition = Math.max(carPosition - moveSpeed, -maxCarPosition);
+                }
+                touchStartX = touchX;
+                acceleration = Math.min(acceleration + 0.05, 1);
+            }
+            event.preventDefault();
+        }
+        
+        function moveCar(direction) {
+            if (!gameActive) return;
+            
+            if (direction === 'right') {
+                carPosition = Math.min(carPosition + moveSpeed, maxCarPosition);
+            } else if (direction === 'left') {
+                carPosition = Math.max(carPosition - moveSpeed, -maxCarPosition);
+            }
+            acceleration = Math.min(acceleration + 0.05, 1);
+        }
+        
+        function stopMove() {
+            acceleration = 0;
+        }
+        
+        function startGame() {
+            gameActive = true;
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            scoreElement.textContent = score;
+            correctCountElement.textContent = correctCount;
+            wrongCountElement.textContent = wrongCount;
+            accuracyElement.textContent = "0%";
+            progressFill.style.width = "0%";
+            startScreen.style.display = 'none';
+            educationalTip.style.display = 'block';
+            
+            showEducationalMessage("ابدأ اللعب! الأرقام مصححة الآن", true);
+            
+            setTimeout(() => {
+                educationalTip.style.display = 'none';
+            }, 5000);
+            
+            animate();
+        }
+        
+        function restartGame() {
+            gameOverPanel.style.display = 'none';
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            scoreElement.textContent = score;
+            correctCountElement.textContent = correctCount;
+            wrongCountElement.textContent = wrongCount;
+            accuracyElement.textContent = "0%";
+            progressFill.style.width = "0%";
+            gameActive = true;
+            educationalTip.style.display = 'block';
+            
+            numbers.forEach(number => {
+                const isNegative = Math.random() > 0.5;
+                const numberValue = parseFloat((isNegative ? -1 : 1) * (Math.random() * 0.99).toFixed(2));
+                const isCorrect = numberValue < 0.7;
+                
+                number.userData.value = numberValue;
+                number.userData.isCorrect = isCorrect;
+                number.material.color.set(isCorrect ? 0x4dabf7 : 0xda1b60);
+                number.material.emissive.set(isCorrect ? 0x1a3f7a : 0x5c0a1f);
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 256;
+                canvas.height = 256;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // تحسين الخط ليكون أوضح وأكبر
+                ctx.font = 'bold 90px Tajawal';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // جعل النص أكثر وضوحًا
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.lineWidth = 10;
+                ctx.strokeText(numberValue.toString(), canvas.width/2, canvas.height/2);
+                
+                ctx.fillStyle = '#000000';
+                ctx.fillText(numberValue.toString(), canvas.width/2, canvas.height/2);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.flipY = false;
+                
+                const textMesh = number.children[0];
+                textMesh.material.map = texture;
+                textMesh.material.needsUpdate = true;
+                
+                // التصحيح: تدوير النص حول المحور X فقط وقلبه حول المحور Y
+                textMesh.rotation.x = -Math.PI/2;
+                textMesh.rotation.z = Math.PI; // تدوير 180 درجة حول المحور Z لتصحيح الاتجاه
+                textMesh.scale.x = -1; // قلب النص حول المحور Y
+                
+                number.position.z = -Math.random() * roadSegments - 20;
+                number.position.x = (Math.random() - 0.5) * (roadWidth - 4);
+                number.visible = true;
+            });
+            
+            obstacles.forEach(obstacle => {
+                obstacle.position.z = -Math.random() * roadSegments - 50;
+                obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
+                obstacle.visible = true;
+            });
+            
+            carPosition = 0;
+            
+            showEducationalMessage("ابدأ اللعب من جديد! الأرقام مصححة", true);
+            
+            setTimeout(() => {
+                educationalTip.style.display = 'none';
+            }, 5000);
+            
+            animate();
+        }
+        
+        function update() {
+            if (!gameActive) return;
+            
+            road.position.z += carSpeed;
+            if (road.position.z > roadSegments / 2) {
+                road.position.z = -roadSegments / 2;
+            }
+            
+            const effectiveSpeed = moveSpeed + (acceleration * 0.2);
+            car.position.x = THREE.MathUtils.lerp(car.position.x, carPosition, 0.1 * effectiveSpeed);
+            
+            numbers.forEach(number => {
+                number.position.z += carSpeed;
+                if (number.position.z > 20) {
+                    number.position.z = -Math.random() * roadSegments - 20;
+                    number.position.x = (Math.random() - 0.5) * (roadWidth - 4);
+                    number.visible = true;
+                }
+                
+                if (number.visible && 
+                    Math.abs(car.position.x - number.position.x) < 2.5 &&
+                    Math.abs(car.position.z - number.position.z) < 3.5) {
+                    
+                    const numberValue = number.userData.value;
+                    const isCorrect = number.userData.isCorrect;
+                    
+                    numberDisplay.textContent = `جمعت: ${numberValue} (${isCorrect ? 'صحيح' : 'خاطئ'})`;
+                    
+                    if (isCorrect) {
+                        score += 10;
+                        correctCount++;
+                        scoreElement.textContent = score;
+                        
+                        if (numberValue < 0) {
+                            showEducationalMessage(`أحسنت! ${numberValue} سالب وأصغر من 0.7`, true);
+                        } else {
+                            showEducationalMessage(`أحسنت! ${numberValue} موجب وأصغر من 0.7`, true);
+                        }
+                    } else {
+                        score = Math.max(0, score - 5);
+                        wrongCount++;
+                        scoreElement.textContent = score;
+                        
+                        showEducationalMessage(`انتبه! ${numberValue} أكبر من أو يساوي 0.7`, false);
+                    }
+                    
+                    correctCountElement.textContent = correctCount;
+                    wrongCountElement.textContent = wrongCount;
+                    
+                    const totalAttempts = correctCount + wrongCount;
+                    const accuracy = totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0;
+                    accuracyElement.textContent = `${accuracy}%`;
+                    
+                    const progress = Math.min(100, Math.round((correctCount / 6) * 100));
+                    progressFill.style.width = `${progress}%`;
+                    
+                    number.visible = false;
+                    
+                    document.getElementById('score-panel').animate([
+                        { transform: 'scale(1)', backgroundColor: 'rgba(0,0,0,0.6)' },
+                        { transform: 'scale(1.2)', backgroundColor: isCorrect ? 'rgba(0,50,50,0.8)' : 'rgba(50,0,0,0.8)' },
+                        { transform: 'scale(1)', backgroundColor: 'rgba(0,0,0,0.6)' }
+                    ], {
+                        duration: 300,
+                        iterations: 1
+                    });
+                }
+            });
+            
+            let obstacleNearby = false;
+            obstacles.forEach(obstacle => {
+                obstacle.position.z += carSpeed;
+                if (obstacle.position.z > 20) {
+                    obstacle.position.z = -Math.random() * roadSegments - 50;
+                    obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
+                    obstacle.visible = true;
+                }
+                
+                if (obstacle.visible && 
+                    Math.abs(car.position.x - obstacle.position.x) < 2.5 &&
+                    Math.abs(car.position.z - obstacle.position.z) < 3) {
+                    gameOver();
+                }
+                
+                if (obstacle.visible && 
+                    Math.abs(car.position.x - obstacle.position.x) < 5 &&
+                    obstacle.position.z - car.position.z < 10 &&
+                    obstacle.position.z - car.position.z > 0) {
+                    obstacleNearby = true;
+                }
+            });
+            
+            if (obstacleNearby) {
+                obstacleWarning.style.display = 'block';
+            } else {
+                obstacleWarning.style.display = 'none';
+            }
+        }
+        
+        function showEducationalMessage(message, isCorrect) {
+            educationalMessage.textContent = message;
+            educationalMessage.className = isCorrect ? "educational-message correct-message" : "educational-message wrong-message";
+            educationalMessage.style.display = "block";
+            
+            setTimeout(() => {
+                educationalMessage.style.display = "none";
+            }, 1500);
+        }
+        
+        function gameOver() {
+            gameActive = false;
+            finalScoreElement.textContent = score;
+            
+            const totalAttempts = correctCount + wrongCount;
+            const accuracy = totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0;
+            
+            finalCorrectElement.textContent = correctCount;
+            finalWrongElement.textContent = wrongCount;
+            finalAccuracyElement.textContent = `${accuracy}%`;
+            
+            gameOverPanel.style.display = 'flex';
+        }
+        
+        function animate() {
+            if (!gameActive) return;
+            
+            requestAnimationFrame(animate);
+            update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('game-container');
+            camera.aspect = container.offsetWidth / container.offsetHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+        }
+        
+        window.onload = function() {
+            init();
+        };
+    </script>
+</body>
+</html>
