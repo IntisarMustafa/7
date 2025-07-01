@@ -15,7 +15,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #e0f7fa, #bbdefb);
+            background: linear-gradient(135deg, #0c2461, #1e3799);
             color: #2c3e50;
             line-height: 1.8;
             padding: 20px;
@@ -25,13 +25,13 @@
         .container {
             max-width: 900px;
             margin: 20px auto;
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
             padding: 30px;
             position: relative;
             overflow: hidden;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #d1e0e0;
         }
         
         .header {
@@ -40,10 +40,14 @@
             padding-bottom: 20px;
             border-bottom: 3px solid #4e89ae;
             position: relative;
+            background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .header h1 {
-            background: linear-gradient(135deg, #4e89ae, #2d6187);
+            background: linear-gradient(135deg, #0c2461, #1e3799);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-size: 36px;
@@ -56,22 +60,26 @@
         }
         
         .header p {
-            color: #28abb9;
+            color: #0c2461;
             font-size: 20px;
             max-width: 700px;
             margin: 0 auto;
             font-weight: 500;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 8px;
         }
         
         .section {
             margin-bottom: 40px;
             padding: 25px;
             border-radius: 15px;
-            background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
+            background: linear-gradient(145deg, #f8fafc, #f1f5f9);
             border-left: 5px solid #4e89ae;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         
         .section:before {
@@ -86,7 +94,7 @@
         
         .section:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         
         /* ألوان متنوعة للعناوين الرئيسية */
@@ -99,33 +107,35 @@
             align-items: center;
             padding: 10px 15px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.85);
             box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            color: #0c2461;
+            border-left: 5px solid #0c2461;
         }
         
         /* تخصيص ألوان مختلفة لكل عنوان رئيسي */
         .section:nth-child(2) .section-title {
-            color: #d32f2f; /* أحمر */
             background: linear-gradient(to right, #ffebee, #ffffff);
             border-left: 5px solid #d32f2f;
+            color: #d32f2f;
         }
         
         .section:nth-child(3) .section-title {
-            color: #7b1fa2; /* بنفسجي */
             background: linear-gradient(to right, #f3e5f5, #ffffff);
             border-left: 5px solid #7b1fa2;
+            color: #7b1fa2;
         }
         
         .section:nth-child(4) .section-title {
-            color: #2e7d32; /* أخضر */
             background: linear-gradient(to right, #e8f5e9, #ffffff);
             border-left: 5px solid #2e7d32;
+            color: #2e7d32;
         }
         
         .section:nth-child(5) .section-title {
-            color: #ef6c00; /* برتقالي */
             background: linear-gradient(to right, #fff3e0, #ffffff);
             border-left: 5px solid #ef6c00;
+            color: #ef6c00;
         }
         
         .content {
@@ -145,7 +155,7 @@
         }
         
         .example-title {
-            color: #28abb9;
+            color: #1e3799;
             font-weight: bold;
             margin-bottom: 20px;
             font-size: 24px;
@@ -188,7 +198,7 @@
         .division-result {
             font-size: 24px;
             font-weight: bold;
-            color: #2d6187;
+            color: #1e3799;
             padding: 5px 10px;
             border-radius: 5px;
             background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
@@ -216,7 +226,7 @@
         
         .division-divisor {
             font-weight: bold;
-            color: #2d6187;
+            color: #1e3799;
             margin-right: 10px;
             min-width: 20px;
             text-align: center;
@@ -325,7 +335,7 @@
             position: absolute;
             top: -15px;
             left: -15px;
-            background: linear-gradient(145deg, #4e89ae, #2d6187);
+            background: linear-gradient(145deg, #0c2461, #1e3799);
             color: white;
             width: 40px;
             height: 40px;
@@ -338,14 +348,14 @@
         }
         
         .practice-title {
-            color: #c2185b;
+            color: #0c2461;
             margin-bottom: 20px;
             font-size: 26px;
             text-align: center;
             padding: 10px;
             border-radius: 10px;
-            background: linear-gradient(to right, #f8bbd0, #ffffff);
-            border-bottom: 3px solid #c2185b;
+            background: linear-gradient(to right, #e3f2fd, #ffffff);
+            border-bottom: 3px solid #0c2461;
         }
         
         .problem {
@@ -355,7 +365,7 @@
             background: linear-gradient(145deg, #ffffff, #f8f9fa);
             border-radius: 10px;
             box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-            border-left: 4px solid #4e89ae;
+            border-left: 4px solid #0c2461;
         }
         
         .input-group {
@@ -368,7 +378,7 @@
         .input-group label {
             font-size: 20px;
             min-width: 120px;
-            color: #5d4037;
+            color: #0c2461;
             font-weight: 600;
         }
         
@@ -384,13 +394,13 @@
         }
         
         .input-group input:focus {
-            border-color: #4e89ae;
+            border-color: #0c2461;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(78, 137, 174, 0.2);
+            box-shadow: 0 0 0 3px rgba(12, 36, 97, 0.2);
         }
         
         .btn {
-            background: linear-gradient(145deg, #4e89ae, #2d6187);
+            background: linear-gradient(145deg, #0c2461, #1e3799);
             color: white;
             border: none;
             padding: 14px 30px;
@@ -407,7 +417,7 @@
         }
         
         .btn:hover {
-            background: linear-gradient(145deg, #2d6187, #1a3f5f);
+            background: linear-gradient(145deg, #1a3f5f, #0c2461);
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
@@ -459,7 +469,7 @@
             text-align: center;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
             margin: 10px;
-            border-top: 5px solid #4e89ae;
+            border-top: 5px solid #0c2461;
             transition: transform 0.3s ease;
         }
         
@@ -473,7 +483,7 @@
             padding: 12px;
             border-radius: 10px;
             margin-top: -40px;
-            background: linear-gradient(135deg, #4e89ae, #2d6187);
+            background: linear-gradient(135deg, #0c2461, #1e3799);
             color: white;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
@@ -481,7 +491,7 @@
         .decimal-example {
             font-size: 32px;
             font-weight: bold;
-            color: #28abb9;
+            color: #0c2461;
             margin: 25px 0;
             padding: 15px;
             background: linear-gradient(145deg, #f0f8ff, #e1f5fe);
@@ -505,18 +515,18 @@
             left: 0;
             width: 100%;
             height: 8px;
-            background: linear-gradient(90deg, #4e89ae, #28abb9);
+            background: linear-gradient(90deg, #0c2461, #1e3799);
         }
         
         .real-life-title {
-            color: #5d4037;
+            color: #0c2461;
             text-align: center;
             margin-bottom: 25px;
             font-size: 30px;
             padding: 15px;
-            background: linear-gradient(to right, #ffecb3, #ffffff);
+            background: linear-gradient(to right, #e3f2fd, #ffffff);
             border-radius: 12px;
-            border-left: 5px solid #5d4037;
+            border-left: 5px solid #0c2461;
         }
         
         .navigation-buttons {
@@ -527,7 +537,7 @@
         }
         
         .nav-btn {
-            background: linear-gradient(145deg, #4e89ae, #2d6187);
+            background: linear-gradient(145deg, #0c2461, #1e3799);
             color: white;
             border: none;
             padding: 14px 30px;
@@ -544,7 +554,7 @@
         }
         
         .nav-btn:hover {
-            background: linear-gradient(145deg, #2d6187, #1a3f5f);
+            background: linear-gradient(145deg, #1a3f5f, #0c2461);
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
@@ -554,11 +564,11 @@
         }
         
         .nav-btn.prev {
-            background: linear-gradient(145deg, #28abb9, #2d6187);
+            background: linear-gradient(145deg, #1e3799, #0c2461);
         }
         
         .nav-btn.next {
-            background: linear-gradient(145deg, #2d6187, #28abb9);
+            background: linear-gradient(145deg, #0c2461, #1e3799);
         }
         
         .footer {
@@ -566,17 +576,18 @@
             margin-top: 25px;
             padding-top: 25px;
             border-top: 2px solid #a8d0e6;
-            color: #28abb9;
+            color: #0c2461;
             font-size: 20px;
             font-weight: 500;
         }
         
         .highlight {
-            background: linear-gradient(120deg, #fff9c4, #ffecb3);
+            background: linear-gradient(120deg, #e3f2fd, #bbdefb);
             padding: 3px 8px;
             border-radius: 6px;
             font-weight: 600;
             display: inline-block;
+            color: #0c2461;
         }
         
         .steps {
@@ -585,7 +596,7 @@
             background: linear-gradient(145deg, #e8f4fc, #d1e8f9);
             border-radius: 12px;
             padding: 25px;
-            border-left: 5px solid #4e89ae;
+            border-left: 5px solid #0c2461;
         }
         
         .steps li {
@@ -601,7 +612,7 @@
             position: absolute;
             right: -15px;
             top: 0;
-            color: #4e89ae;
+            color: #0c2461;
             font-weight: bold;
         }
         
@@ -609,14 +620,14 @@
             background: linear-gradient(145deg, #e3f2fd, #d1e8f9);
             padding: 20px;
             border-radius: 10px;
-            border-right: 5px solid #4e89ae;
+            border-right: 5px solid #0c2461;
             margin: 25px 0;
             font-size: 18px;
         }
         
         .note-title {
             font-weight: bold;
-            color: #2d6187;
+            color: #0c2461;
             margin-bottom: 10px;
             font-size: 20px;
             display: flex;
@@ -625,7 +636,7 @@
             padding: 8px 12px;
             background: linear-gradient(to right, #bbdefb, #ffffff);
             border-radius: 6px;
-            border-left: 4px solid #1976d2;
+            border-left: 4px solid #0c2461;
         }
         
         @media (max-width: 768px) {
@@ -691,14 +702,44 @@
                 padding: 20px;
             }
         }
+        
+        /* شريط التقدم */
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            width: 50%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-label {
+            text-align: right;
+            font-size: 16px;
+            color: #0c2461;
+            font-weight: 500;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>تحويل العدد النسبي إلى كسر عشري باستخدام القسمة الطويلة</h1>
-            <p> </p>
+            <p>دروس تفاعلية في الرياضيات - الصف السابع</p>
         </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="lesson-progress"></div>
+        </div>
+        <div class="progress-label">50% مكتمل</div>
         
         <div class="section">
             <h2 class="section-title">المقدمة</h2>
@@ -862,7 +903,7 @@
                                 <div class="step-row">
                                     <div class="step-indent"></div>
                                     <div class="step-number">1</div>
-                                    <div class="step-number">0</div>
+                                    <极div class="step-number">0</div>
                                 </div>
                             </div>
                             
@@ -1076,7 +1117,7 @@
                     <div class="note-title">نصائح للقسمة الطويلة:</div>
                     <p>1. تأكد من كتابة الأرقام في الأعمدة الصحيحة</p>
                     <p>2. ابدأ دائمًا من اليسار إلى اليمين</p>
-                   极<p>3. أضف أصفارًا بعد الفاصلة العشرية حسب الحاجة</p>
+                    <p>3. أضف أصفارًا بعد الفاصلة العشرية حسب الحاجة</p>
                     <p>4. توقف عندما يصبح الباقي صفرًا أو عندما تلاحظ نمطًا متكررًا</p>
                 </div>
                 
@@ -1149,7 +1190,7 @@
             
             if (isCorrect) {
                 feedbackElement.textContent = "✓ إجابة صحيحة! أحسنت!";
-                feedbackElement.class极 = "feedback correct";
+                feedbackElement.className = "feedback correct";
             } else {
                 feedbackElement.textContent = `✗ إجابة غير صحيحة. الإجابة الصحيحة هي: ${answers[problemId]}`;
                 feedbackElement.className = "feedback incorrect";
@@ -1169,6 +1210,12 @@
                     checkAnswer(problemId);
                 }
             });
+        });
+        
+        // تحديث شريط التقدم
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBar = document.getElementById('lesson-progress');
+            progressBar.style.width = '50%';
         });
     </script>
 </body>
