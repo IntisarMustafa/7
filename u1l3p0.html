@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار مقارنة الأعداد الصحيحة والكسور والكسور العشرية</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e6f7ff, #d6f0ff, #e0f7ff);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(100, 180, 255, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(80, 160, 240, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 30% 60%, rgba(120, 200, 250, 0.2) 0%, transparent 25%);
+            z-index: -1;
+            animation: waterEffect 15s infinite alternate;
+        }
+        
+        @keyframes waterEffect {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0, 120, 215, 0.2);
+            overflow: hidden;
+            margin: 20px 0;
+            border: 1px solid rgba(100, 180, 255, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0066cc, #0088ff);
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+            transform: rotate(30deg);
+            animation: shine 8s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% {
+                transform: rotate(30deg) translateX(-100%);
+            }
+            100% {
+                transform: rotate(30deg) translateX(100%);
+            }
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            color: #fff;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 15px auto 0;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+        }
+        
+        .instructions {
+            background: linear-gradient(to bottom, #e6f7ff, #d6f0ff);
+            padding: 25px;
+            border-bottom: 1px solid #cce7ff;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #004080;
+        }
+        
+        .instructions h3 {
+            color: #0066cc;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-right: 25px;
+            margin: 20px 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.6;
+        }
+        
+        .instructions li i {
+            margin-left: 12px;
+            color: #0066cc;
+            margin-top: 6px;
+            font-size: 1.2rem;
+        }
+        
+        .question-container {
+            padding: 20px;
+        }
+        
+        .question {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 102, 204, 0.1);
+            border-left: 5px solid #0066cc;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.2);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+        
+        .question-number {
+            background: linear-gradient(to bottom, #0066cc, #0055aa);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-left: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);
+        }
+        
+        .question-title {
+            font-size: 1.35rem;
+            color: #0066cc;
+            font-weight: 700;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 22px;
+            padding: 0 12px;
+            color: #004080;
+        }
+        
+        .math {
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e6f7ff;
+            border-radius: 10px;
+            font-weight: bold;
+            border: 1px solid #cce7ff;
+            color: #0066cc;
+            box-shadow: inset 0 0 10px rgba(0, 102, 204, 0.1);
+        }
+        
+        .number-line {
+            width: 100%;
+            height: 70px;
+            background: #e6f7ff;
+            border-radius: 10px;
+            position: relative;
+            margin: 25px 0;
+            border: 1px solid #cce7ff;
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0, 102, 204, 0.1);
+        }
+        
+        .line {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            width: 90%;
+            height: 3px;
+            background: #0066cc;
+            transform: translateY(-50%);
+        }
+        
+        .tick {
+            position: absolute;
+            top: 30%;
+            width: 3px;
+            height: 18px;
+            background: #0066cc;
+        }
+        
+        .tick-label {
+            position: absolute;
+            top: 65%;
+            font-size: 1.1rem;
+            transform: translateX(-50%);
+            color: #0066cc;
+            font-weight: 600;
+        }
+        
+        .point {
+            position: absolute;
+            top: 50%;
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(to bottom, #0088ff, #0066cc);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .point:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: linear-gradient(to bottom, #0066cc, #0055aa);
+        }
+        
+        .options {
+            margin: 25px 0;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            margin-bottom: 15px;
+            background: #e6f7ff;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #cce7ff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option:hover {
+            background: #d6f0ff;
+            border-color: #99d6ff;
+            transform: translateX(5px);
+        }
+        
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: #0066cc;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover::before {
+            opacity: 1;
+        }
+        
+        .option input {
+            margin-left: 12px;
+            transform: scale(1.4);
+            cursor: pointer;
+            accent-color: #0066cc;
+        }
+        
+        .option label {
+            flex: 1;
+            font-size: 1.15rem;
+            cursor: pointer;
+            color: #004080;
+            font-weight: 500;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 16px 36px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 15px rgba(0, 102, 204, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+        
+        button:hover::before {
+            transform: translateX(100%);
+        }
+        
+        #submit-btn {
+            background: linear-gradient(to right, #0066cc, #0088ff);
+            color: white;
+        }
+        
+        #submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.4);
+        }
+        
+        #reset-btn {
+            background: linear-gradient(to right, #0088ff, #0066cc);
+            color: white;
+        }
+        
+        #reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 136, 255, 0.4);
+        }
+        
+        .start-btn {
+            background: linear-gradient(to right, #0066cc, #0088ff);
+            color: white;
+            margin: 25px auto;
+            display: none;
+            padding: 16px 45px;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.4);
+        }
+        
+        .result {
+            text-align: center;
+            padding: 35px;
+            background: #e6f7ff;
+            border-radius: 16px;
+            margin: 25px;
+            display: none;
+            border: 1px solid #cce7ff;
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.1);
+        }
+        
+        .result h2 {
+            font-size: 2.2rem;
+            color: #0066cc;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        
+        .score {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #0066cc, #0088ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 25px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .feedback {
+            font-size: 1.4rem;
+            margin: 25px 0;
+            line-height: 1.7;
+            color: #0066cc;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+        
+        .correct-answers {
+            text-align: right;
+            margin-top: 35px;
+            padding: 25px;
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #cce7ff;
+        }
+        
+        .correct-answers h3 {
+            color: #0066cc;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #0066cc;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .answer-item {
+            margin-bottom: 22px;
+            padding-bottom: 22px;
+            border-bottom: 2px dashed #cce7ff;
+        }
+        
+        .answer-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .answer-item p {
+            margin-bottom: 10px;
+            line-height: 1.7;
+            color: #004080;
+            font-size: 1.1rem;
+        }
+        
+        .answer-item strong {
+            color: #0066cc;
+            font-weight: 600;
+        }
+        
+        .correct {
+            color: #38a169;
+            font-weight: bold;
+        }
+        
+        .incorrect {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: rgba(0, 64, 128, 0.8);
+            font-size: 1.1rem;
+            width: 100%;
+            max-width: 800px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: linear-gradient(to right, #d6f0ff, #cce7ff);
+            color: #0066cc;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 8px 5px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th {
+            background: #0066cc;
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #cce7ff;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #e6f7ff;
+        }
+        
+        .comparison-table tr:hover {
+            background: #d6f0ff;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question-title {
+                font-size: 1.2rem;
+            }
+            
+            .question-text {
+                font-size: 1.05rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .math {
+                font-size: 1.2rem;
+                padding: 12px;
+            }
+            
+            .number-line {
+                height: 60px;
+            }
+            
+            .tick-label {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin: 15px 0;
+            }
+            
+            .question {
+                padding: 20px;
+            }
+            
+            .result h2 {
+                font-size: 1.8rem;
+            }
+            
+            .score {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>اختبار مقارنة الأعداد الصحيحة والكسور والكسور العشرية</h1>
+            <p class="subtitle">اختبر مهاراتك في المقارنة بين أنواع الأعداد المختلفة</p>
+        </header>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> تعليمات الاختبار:</h3>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> يتكون الاختبار من 5 أسئلة تشمل مقارنة الأعداد الصحيحة والكسور والكسور العشرية</li>
+                <li><i class="fas fa-check-circle"></i> قم باختيار الإجابة الصحيحة لكل سؤال من الخيارات المتاحة</li>
+                <li><i class="fas fa-check-circle"></i> بعد الانتهاء، اضغط على زر "تصحيح الإجابات" لمعرفة نتيجتك</li>
+                <li><i class="fas fa-check-circle"></i> يمكنك إعادة الاختبار باستخدام زر "إعادة الاختبار"</li>
+            </ul>
+        </div>
+        
+        <div class="question-container">
+            <!-- Question 1: مقارنة الأعداد الصحيحة -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div class="question-title">مقارنة الأعداد الصحيحة</div>
+                </div>
+                <div class="question-text">
+                    أي العبارات التالية صحيحة؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1a" value="a">
+                        <label for="q1a">-5 &gt; -3</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1b" value="b">
+                        <label for="q1b">-3 &gt; -5</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1c" value="c">
+                        <label for="q1c">0 &lt; -1</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1d" value="d">
+                        <label for="q1d">7 = -7</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: مقارنة الأعداد الصحيحة</span>
+                </div>
+            </div>
+            
+            <!-- Question 2: مقارنة كسرين -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div class="question-title">مقارنة كسرين</div>
+                </div>
+                <div class="question-text">
+                    قارن بين الكسرين \( \frac{3}{4} \) و \( \frac{2}{3} \)
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2a" value="a">
+                        <label for="q2a">\( \frac{3}{4} > \frac{2}{3} \)</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2b" value="b">
+                        <label for="q2b">\( \frac{3}{4} < \frac{2}{3} \)</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2c" value="c">
+                        <label for="q2c">\( \frac{3}{4} = \frac{2}{3} \)</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2d" value="d">
+                        <label for="q2d">لا يمكن المقارنة</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: مقارنة كسرين</span>
+                </div>
+            </div>
+            
+            <!-- Question 3: مقارنة كسرين عشريين -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div class="question-title">مقارنة كسرين عشريين</div>
+                </div>
+                <div class="question-text">
+                    أي من المقارنات التالية صحيحة؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3a" value="a">
+                        <label for="q3a">0.5 &lt; 0.49</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3b" value="b">
+                        <label for="q3b">0.3 &gt; 0.4</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3c" value="c">
+                        <label for="q3c">0.75 = 0.750</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3d" value="d">
+                        <label for="q3d">1.2 &lt; 1.02</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: مقارنة كسرين عشريين</span>
+                </div>
+            </div>
+            
+            <!-- Question 4: اختيار العدد الأكبر بين مجموعة أعداد صحيحة -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div class="question-title">اختيار العدد الأكبر</div>
+                </div>
+                <div class="question-text">
+                    أي الأعداد الصحيحة التالية هو الأكبر؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4a" value="a">
+                        <label for="q4a">10</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4b" value="b">
+                        <label for="q4b">-5</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4c" value="c">
+                        <label for="q4c">0</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4d" value="d">
+                        <label for="q4d">-10</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: تمييز الأعداد الصحيحة</span>
+                </div>
+            </div>
+            
+            <!-- Question 5: مقارنة بين نقطتين على خط الأعداد -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div class="question-title">المقارنة على خط الأعداد</div>
+                </div>
+                <div class="question-text">
+                    بناءً على خط الأعداد أدناه، أي العبارات التالية صحيحة؟
+                </div>
+                
+                <div class="number-line">
+                    <div class="line"></div>
+                    
+                    <!-- Ticks and labels -->
+                    <div class="tick" style="left: 5%;"></div>
+                    <div class="tick-label" style="left: 5%;">-3</div>
+                    
+                    <div class="tick" style="left: 20%;"></div>
+                    <div class="tick-label" style="left: 20%;">-2</div>
+                    
+                    <div class="tick" style="left: 35%;"></div>
+                    <div class="tick-label" style="left: 35%;">-1</div>
+                    
+                    <div class="tick" style="left: 50%;"></div>
+                    <div class="tick-label" style="left: 50%;">0</div>
+                    
+                    <div class="tick" style="left: 65%;"></div>
+                    <div class="tick-label" style="left: 65%;">1</div>
+                    
+                    <div class="tick" style="left: 80%;"></div>
+                    <div class="tick-label" style="left: 80%;">2</div>
+                    
+                    <div class="tick" style="left: 95%;"></div>
+                    <div class="tick-label" style="left: 95%;">3</div>
+                    
+                    <!-- Points -->
+                    <div class="point" style="left: 20%;">B</div>
+                    <div class="point" style="left: 65%;">E</div>
+                </div>
+                
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5a" value="a">
+                        <label for="q5a">النقطة B أكبر من النقطة E</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5b" value="b">
+                        <label for="q5b">النقطة E أكبر من النقطة B</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5c" value="c">
+                        <label for="q5c">النقطتان B و E متساويتان</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5d" value="d">
+                        <label for="q5d">لا يمكن المقارنة</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: تعيين الأعداد الصحيحة</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="submit-btn">
+                <i class="fas fa-check-circle"></i>
+                <span>تصحيح الإجابات</span>
+            </button>
+            <button id="reset-btn">
+                <i class="fas fa-redo-alt"></i>
+                <span>إعادة الاختبار</span>
+            </button>
+        </div>
+        
+        <div class="result" id="result">
+            <h2>نتيجة الاختبار</h2>
+            <div class="score" id="score">0/5</div>
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="correct-answers">
+                <h3><i class="fas fa-check-square"></i> التصحيح:</h3>
+                <div class="answer-item">
+                    <p><strong>السؤال 1:</strong> -3 &gt; -5</p>
+                    <p>التفسير: عند مقارنة الأعداد الصحيحة السالبة، كلما كان العدد أقرب إلى الصفر كان أكبر</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 2:</strong> \( \frac{3}{4} > \frac{2}{3} \)</p>
+                    <p>التفسير: \( \frac{3}{4} = 0.75 \) و \( \frac{2}{3} ≈ 0.666 \) وبالتالي 0.75 أكبر من 0.666</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 3:</strong> 0.75 = 0.750</p>
+                    <p>التفسير: إضافة صفر بعد الكسر العشري لا تغير قيمته</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 4:</strong> 10</p>
+                    <p>التفسير: الأعداد الصحيحة الموجبة أكبر من الأعداد السالبة والصفر</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 5:</strong> النقطة E أكبر من النقطة B</p>
+                    <p>التفسير: النقطة B تمثل العدد -2 والنقطة E تمثل العدد 1، و1 أكبر من -2</p>
+                </div>
+            </div>
+            
+            <button id="start-lesson-btn" class="start-btn">
+                <i class="fas fa-book"></i>
+                <span>بدء الدرس التالي</span>
+            </button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>تم تصميم هذا الاختبار لمساعدة الطلاب على فهم أساسيات مقارنة الأعداد بأنواعها المختلفة</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitBtn = document.getElementById('submit-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const startLessonBtn = document.getElementById('start-lesson-btn');
+            const resultSection = document.getElementById('result');
+            const scoreElement = document.getElementById('score');
+            const feedbackElement = document.getElementById('feedback');
+            
+            // الإجابات الصحيحة
+            const correctAnswers = {
+                q1: 'b', // -3 > -5
+                q2: 'a', // 3/4 > 2/3
+                q3: 'c', // 0.75 = 0.750
+                q4: 'a', // 10
+                q5: 'b'  // E أكبر من B
+            };
+            
+            submitBtn.addEventListener('click', function() {
+                let score = 0;
+                const userAnswers = {};
+                
+                // السؤال 1
+                const q1Selected = document.querySelector('input[name="q1"]:checked');
+                userAnswers.q1 = q1Selected ? q1Selected.value : '';
+                if (userAnswers.q1 === correctAnswers.q1) {
+                    score++;
+                }
+                
+                // السؤال 2
+                const q2Selected = document.querySelector('input[name="q2"]:checked');
+                userAnswers.q2 = q2Selected ? q2Selected.value : '';
+                if (userAnswers.q2 === correctAnswers.q2) {
+                    score++;
+                }
+                
+                // السؤال 3
+                const q3Selected = document.querySelector('input[name="q3"]:checked');
+                userAnswers.q3 = q3Selected ? q3Selected.value : '';
+                if (userAnswers.q3 === correctAnswers.q3) {
+                    score++;
+                }
+                
+                // السؤال 4
+                const q4Selected = document.querySelector('input[name="q4"]:checked');
+                userAnswers.q4 = q4Selected ? q4Selected.value : '';
+                if (userAnswers.q4 === correctAnswers.q4) {
+                    score++;
+                }
+                
+                // السؤال 5
+                const q5Selected = document.querySelector('input[name="q5"]:checked');
+                userAnswers.q5 = q5Selected ? q5Selected.value : '';
+                if (userAnswers.q5 === correctAnswers.q5) {
+                    score++;
+                }
+                
+                // عرض النتيجة
+                scoreElement.textContent = `${score}/5`;
+                
+                // تقديم التغذية الراجعة
+                if (score === 5) {
+                    feedbackElement.innerHTML = '<p class="correct">ممتاز! لديك فهم ممتاز لمقارنة الأعداد بأنواعها المختلفة.</p>';
+                } else if (score >= 3) {
+                    feedbackElement.innerHTML = '<p>جيد! لديك فهم جيد لكن ننصح بمراجعة بعض المفاهيم.</p>';
+                } else {
+                    feedbackElement.innerHTML = '<p class="incorrect">يحتاج إلى تحسين. ننصحك بمراجعة أساسيات مقارنة الأعداد.</p>';
+                }
+                
+                // إظهار زر بدء الدرس
+                startLessonBtn.style.display = 'flex';
+                
+                resultSection.style.display = 'block';
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            });
+            
+            resetBtn.addEventListener('click', function() {
+                // مسح جميع الإجابات
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // إخفاء النتيجة
+                resultSection.style.display = 'none';
+                
+                // إخفاء زر بدء الدرس
+                startLessonBtn.style.display = 'none';
+                
+                // إزالة تأثيرات التحديد
+                document.querySelectorAll('.option').forEach(option => {
+                    option.style.background = '#e6f7ff';
+                    option.style.borderColor = '#cce7ff';
+                });
+                
+                // التمرير إلى الأعلى
+                window.scrollTo(0, 0);
+            });
+            
+            // إضافة تأثير عند اختيار الإجابة
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    // إزالة التحديد من جميع الخيارات
+                    this.parentElement.querySelectorAll('.option').forEach(opt => {
+                        opt.style.background = '#e6f7ff';
+                        opt.style.borderColor = '#cce7ff';
+                    });
+                    
+                    // تمييز الخيار المحدد
+                    this.style.background = '#d6f0ff';
+                    this.style.borderColor = '#99d6ff';
+                });
+            });
+            
+            // زر بدء الدرس
+            startLessonBtn.addEventListener('click', function() {
+                alert('الدرس التالي: تمثيل الأعداد النسبية على خط الأعداد');
+            });
+        });
+    </script>
+</body>
+</html>
