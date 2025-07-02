@@ -593,13 +593,46 @@
             75% { transform: translateX(-5px); }
             100% { transform: translateX(0); }
         }
+        
+        /* نظام الصعوبة */
+        .difficulty-indicator {
+            position: absolute;
+            top: 100px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 10;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+        
+        .difficulty-label {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .difficulty-level {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 5px;
+            background-color: #00c853;
+        }
+        
+        .difficulty-level.level-2 { background-color: #ffd700; }
+        .difficulty-level.level-3 { background-color: #ff9800; }
+        .difficulty-level.level-4 { background-color: #ff5722; }
+        .difficulty-level.level-5 { background-color: #f44336; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>لعبة تعليمية: مقارنة الأعداد النسبية</h1>
-            <div class="subtitle">نظام الأرواح الثلاثة | الإصدار المحسن</div>
+            <div class="subtitle">نظام الأرواح الثلاثة | الإصدار المتطور</div>
         </header>
         
         <div id="game-container">
@@ -616,6 +649,15 @@
                 <div class="life" id="life-1">❤️</div>
                 <div class="life" id="life-2">❤️</div>
                 <div class="life" id="life-3">❤️</div>
+            </div>
+            
+            <div class="difficulty-indicator">
+                مستوى الصعوبة: 
+                <span class="difficulty-level" id="difficulty-level-1"></span>
+                <span class="difficulty-level" id="difficulty-level-2"></span>
+                <span class="difficulty-level" id="difficulty-level-3"></span>
+                <span class="difficulty-level" id="difficulty-level-4"></span>
+                <span class="difficulty-level" id="difficulty-level-5"></span>
             </div>
             
             <div class="number-display" id="number-display">الهدف: جمع الأعداد &lt; 0.7</div>
@@ -659,7 +701,6 @@
             
             <div class="start-screen" id="start-screen">
                 <div class="start-content">
-                    <h1>لعبة تعليمية: مقارنة الأعداد النسبية</h1>
                     <div class="instructions">
                         <h3>كيفية اللعب:</h3>
                         <div class="how-to-play">
@@ -678,6 +719,10 @@
                             <div class="step">
                                 <div style="color: #ff3366; font-size: 1.4rem;">❤️</div>
                                 <div>لديك ثلاث أرواح فقط</div>
+                            </div>
+                            <div class="step">
+                                <div style="color: #ffd700; font-size: 1.4rem;">★</div>
+                                <div>تزداد الصعوبة مع تقدمك</div>
                             </div>
                         </div>
                         
@@ -727,17 +772,91 @@
         const life2 = document.getElementById('life-2');
         const life3 = document.getElementById('life-3');
         
+        // عناصر نظام الصعوبة
+        const difficultyLevelElements = [
+            document.getElementById('difficulty-level-1'),
+            document.getElementById('difficulty-level-2'),
+            document.getElementById('difficulty-level-3'),
+            document.getElementById('difficulty-level-4'),
+            document.getElementById('difficulty-level-5')
+        ];
+        
         let scene, camera, renderer, car, numbers = [], obstacles = [];
         let road, roadWidth = 20, roadSegments = 200;
-        let score = 0, gameActive = false, carSpeed = 0.4;
+        let score = 0, gameActive = false;
         let carPosition = 0, maxCarPosition = 7;
         let touchStartX = 0;
         let correctCount = 0, wrongCount = 0;
-        let totalNumbers = 0;
         let lives = 3;
         
-        let moveSpeed = 0.5;
-        let acceleration = 0;
+        // إعدادات نظام الصعوبة
+        let baseCarSpeed = 0.4;
+        let currentDifficulty = 0;
+        let lastDifficultyUpdate = 0;
+        let extraObstacles = [];
+        
+        // مستويات الصعوبة
+        const DIFFICULTY_LEVELS = [
+            { speed: 0.4, obstacleInterval: 200, closeNumbers: 0.1, negativeRatio: 0.5 },
+            { speed: 0.5, obstacleInterval: 180, closeNumbers: 0.2, negativeRatio: 0.6 },
+            { speed: 0.6, obstacleInterval: 150, closeNumbers: 0.3, negativeRatio: 0.7 },
+            { speed: 0.7, obstacleInterval: 120, closeNumbers: 0.4, negativeRatio: 0.8 },
+            { speed: 0.8, obstacleInterval: 100, closeNumbers: 0.5, negativeRatio: 0.9 }
+        ];
+        
+        // العقبات الإضافية
+        const EXTRA_OBSTACLES = [
+            { 
+                type: 'spike', 
+                create: function() {
+                    const obstacle = new THREE.ConeGeometry(1.5, 3, 4);
+                    const material = new THREE.MeshPhongMaterial({ color: 0xaa0000 });
+                    const mesh = new THREE.Mesh(obstacle, material);
+                    
+                    const circleGeometry = new THREE.RingGeometry(1.8, 2.0, 32);
+                    const circleMaterial = new THREE.MeshBasicMaterial({ 
+                        color: 0xff0000, 
+                        side: THREE.DoubleSide,
+                        transparent: true,
+                        opacity: 0.6
+                    });
+                    const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+                    circle.rotation.x = Math.PI / 2;
+                    circle.position.y = 0.1;
+                    mesh.add(circle);
+                    
+                    return mesh;
+                }
+            },
+            { 
+                type: 'barrier', 
+                create: function() {
+                    const obstacle = new THREE.BoxGeometry(1.5, 3, 0.5);
+                    const material = new THREE.MeshPhongMaterial({ color: 0xaa0000 });
+                    const mesh = new THREE.Mesh(obstacle, material);
+                    
+                    for (let i = 0; i < 3; i++) {
+                        const barrier = mesh.clone();
+                        barrier.position.x = i * 1.8 - 1.8;
+                        mesh.add(barrier);
+                    }
+                    
+                    const circleGeometry = new THREE.RingGeometry(3.5, 3.8, 32);
+                    const circleMaterial = new THREE.MeshBasicMaterial({ 
+                        color: 0xff0000, 
+                        side: THREE.DoubleSide,
+                        transparent: true,
+                        opacity: 0.6
+                    });
+                    const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+                    circle.rotation.x = Math.PI / 2;
+                    circle.position.y = 0.1;
+                    mesh.add(circle);
+                    
+                    return mesh;
+                }
+            }
+        ];
         
         function init() {
             scene = new THREE.Scene();
@@ -857,11 +976,30 @@
             car = carGroup;
         }
         
+        function generateNumberValue() {
+            const difficulty = DIFFICULTY_LEVELS[currentDifficulty];
+            const isNegative = Math.random() > (1 - difficulty.negativeRatio);
+            const isCloseToThreshold = Math.random() < difficulty.closeNumbers;
+            
+            let numberValue;
+            
+            if (isCloseToThreshold) {
+                if (isNegative) {
+                    numberValue = parseFloat((-0.7 + Math.random() * 0.15).toFixed(2));
+                } else {
+                    numberValue = parseFloat((0.55 + Math.random() * 0.25).toFixed(2));
+                }
+            } else {
+                numberValue = parseFloat((isNegative ? -1 : 1) * (Math.random() * 0.99).toFixed(2));
+            }
+            
+            const isCorrect = numberValue < 0.7;
+            return { value: numberValue, isCorrect };
+        }
+        
         function createNumbersAndObstacles() {
             for (let i = 0; i < 6; i++) {
-                const isNegative = Math.random() > 0.5;
-                const numberValue = parseFloat((isNegative ? -1 : 1) * (Math.random() * 0.99).toFixed(2));
-                const isCorrect = numberValue < 0.7;
+                const { value: numberValue, isCorrect } = generateNumberValue();
                 
                 const coinGeometry = new THREE.CylinderGeometry(2.0, 2.0, 0.4, 32);
                 const coinMaterial = new THREE.MeshPhongMaterial({ 
@@ -949,8 +1087,6 @@
                 obstacles.push(obstacle);
                 scene.add(obstacle);
             }
-            
-            totalNumbers = numbers.length;
         }
         
         function addEnvironment() {
@@ -1010,12 +1146,11 @@
             
             if (Math.abs(diff) > 10) {
                 if (diff > 0) {
-                    carPosition = Math.min(carPosition + moveSpeed, maxCarPosition);
+                    carPosition = Math.min(carPosition + 0.5, maxCarPosition);
                 } else {
-                    carPosition = Math.max(carPosition - moveSpeed, -maxCarPosition);
+                    carPosition = Math.max(carPosition - 0.5, -maxCarPosition);
                 }
                 touchStartX = touchX;
-                acceleration = Math.min(acceleration + 0.05, 1);
             }
             event.preventDefault();
         }
@@ -1024,15 +1159,10 @@
             if (!gameActive) return;
             
             if (direction === 'right') {
-                carPosition = Math.min(carPosition + moveSpeed, maxCarPosition);
+                carPosition = Math.min(carPosition + 0.5, maxCarPosition);
             } else if (direction === 'left') {
-                carPosition = Math.max(carPosition - moveSpeed, -maxCarPosition);
+                carPosition = Math.max(carPosition - 0.5, -maxCarPosition);
             }
-            acceleration = Math.min(acceleration + 0.05, 1);
-        }
-        
-        function stopMove() {
-            acceleration = 0;
         }
         
         function startGame() {
@@ -1041,6 +1171,8 @@
             correctCount = 0;
             wrongCount = 0;
             lives = 3;
+            currentDifficulty = 0;
+            lastDifficultyUpdate = 0;
             scoreElement.textContent = score;
             correctCountElement.textContent = correctCount;
             wrongCountElement.textContent = wrongCount;
@@ -1048,9 +1180,16 @@
             progressFill.style.width = "0%";
             startScreen.style.display = 'none';
             
+            // إعادة تعيين العقبات الإضافية
+            extraObstacles.forEach(obstacle => scene.remove(obstacle));
+            extraObstacles = [];
+            
             life1.classList.remove('lost');
             life2.classList.remove('lost');
             life3.classList.remove('lost');
+            
+            // تحديث مؤشر الصعوبة
+            updateDifficultyIndicator();
             
             showEducationalMessage("ابدأ اللعب! لديك ثلاث أرواح", true);
             
@@ -1063,6 +1202,8 @@
             correctCount = 0;
             wrongCount = 0;
             lives = 3;
+            currentDifficulty = 0;
+            lastDifficultyUpdate = 0;
             scoreElement.textContent = score;
             correctCountElement.textContent = correctCount;
             wrongCountElement.textContent = wrongCount;
@@ -1070,14 +1211,19 @@
             progressFill.style.width = "0%";
             gameActive = true;
             
+            // إعادة تعيين العقبات الإضافية
+            extraObstacles.forEach(obstacle => scene.remove(obstacle));
+            extraObstacles = [];
+            
             life1.classList.remove('lost');
             life2.classList.remove('lost');
             life3.classList.remove('lost');
             
+            // تحديث مؤشر الصعوبة
+            updateDifficultyIndicator();
+            
             numbers.forEach(number => {
-                const isNegative = Math.random() > 0.5;
-                const numberValue = parseFloat((isNegative ? -1 : 1) * (Math.random() * 0.99).toFixed(2));
-                const isCorrect = numberValue < 0.7;
+                const { value: numberValue, isCorrect } = generateNumberValue();
                 
                 number.userData.value = numberValue;
                 number.userData.isCorrect = isCorrect;
@@ -1158,20 +1304,65 @@
             return lives <= 0;
         }
         
+        function updateDifficulty() {
+            if (correctCount - lastDifficultyUpdate >= 5 && currentDifficulty < DIFFICULTY_LEVELS.length - 1) {
+                currentDifficulty++;
+                lastDifficultyUpdate = correctCount;
+                
+                // إضافة عقبة إضافية
+                if (currentDifficulty > 0 && extraObstacles.length < 2) {
+                    const obstacleType = EXTRA_OBSTACLES[extraObstacles.length];
+                    const obstacle = obstacleType.create();
+                    obstacle.position.z = -Math.random() * roadSegments - 50;
+                    obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
+                    obstacle.position.y = 1;
+                    obstacle.castShadow = true;
+                    extraObstacles.push(obstacle);
+                    scene.add(obstacle);
+                    
+                    showEducationalMessage(`انتبه! ظهرت عقبة جديدة: ${obstacleType.type}`, false);
+                }
+                
+                // تحديث مؤشر الصعوبة
+                updateDifficultyIndicator();
+                
+                showEducationalMessage(`زادت الصعوبة! المستوى ${currentDifficulty + 1}`, false);
+            }
+        }
+        
+        function updateDifficultyIndicator() {
+            difficultyLevelElements.forEach((el, index) => {
+                if (index <= currentDifficulty) {
+                    el.classList.add(`level-${currentDifficulty}`);
+                } else {
+                    el.className = 'difficulty-level';
+                }
+            });
+        }
+        
         function update() {
             if (!gameActive) return;
             
-            road.position.z += carSpeed;
+            updateDifficulty();
+            
+            const currentSpeed = DIFFICULTY_LEVELS[currentDifficulty].speed;
+            road.position.z += currentSpeed;
             if (road.position.z > roadSegments / 2) {
                 road.position.z = -roadSegments / 2;
             }
             
-            const effectiveSpeed = moveSpeed + (acceleration * 0.2);
-            car.position.x = THREE.MathUtils.lerp(car.position.x, carPosition, 0.1 * effectiveSpeed);
+            car.position.x = THREE.MathUtils.lerp(car.position.x, carPosition, 0.1);
             
             numbers.forEach(number => {
-                number.position.z += carSpeed;
+                number.position.z += currentSpeed;
                 if (number.position.z > 20) {
+                    const { value: numberValue, isCorrect } = generateNumberValue();
+                    
+                    number.userData.value = numberValue;
+                    number.userData.isCorrect = isCorrect;
+                    number.material.color.set(isCorrect ? 0x4dabf7 : 0xda1b60);
+                    number.material.emissive.set(isCorrect ? 0x1a3f7a : 0x5c0a1f);
+                    
                     number.position.z = -Math.random() * roadSegments - 20;
                     number.position.x = (Math.random() - 0.5) * (roadWidth - 4);
                     number.visible = true;
@@ -1234,7 +1425,7 @@
             
             let obstacleNearby = false;
             obstacles.forEach(obstacle => {
-                obstacle.position.z += carSpeed;
+                obstacle.position.z += currentSpeed;
                 if (obstacle.position.z > 20) {
                     obstacle.position.z = -Math.random() * roadSegments - 50;
                     obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
@@ -1255,6 +1446,32 @@
                 
                 if (obstacle.visible && 
                     Math.abs(car.position.x - obstacle.position.x) < 5 &&
+                    obstacle.position.z - car.position.z < 10 &&
+                    obstacle.position.z - car.position.z > 0) {
+                    obstacleNearby = true;
+                }
+            });
+            
+            // تحديث العقبات الإضافية
+            extraObstacles.forEach(obstacle => {
+                obstacle.position.z += currentSpeed;
+                if (obstacle.position.z > 20) {
+                    obstacle.position.z = -Math.random() * roadSegments - 50;
+                    obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
+                }
+                
+                if (Math.abs(car.position.x - obstacle.position.x) < 3.0 &&
+                    Math.abs(car.position.z - obstacle.position.z) < 3) {
+                    scene.remove(obstacle);
+                    showEducationalMessage("انتبه! اصطدمت بعقبة متقدمة. فقدت روحًا", false);
+                    
+                    if (loseLife()) {
+                        gameOver();
+                        return;
+                    }
+                }
+                
+                if (Math.abs(car.position.x - obstacle.position.x) < 5 &&
                     obstacle.position.z - car.position.z < 10 &&
                     obstacle.position.z - car.position.z > 0) {
                     obstacleNearby = true;
