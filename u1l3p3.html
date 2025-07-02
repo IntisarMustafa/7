@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة تعليمية: مقارنة الأعداد النسبية - الإصدار المصحح</title>
+    <title>لعبة تعليمية: مقارنة الأعداد النسبية - نظام الأرواح</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -589,13 +589,63 @@
             border-radius: 10px;
             z-index: 1000;
         }
+        
+        /* نظام الأرواح الثلاثة */
+        #lives-panel {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 30px;
+            z-index: 10;
+            border: 2px solid rgba(255, 51, 102, 0.5);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
+        }
+        
+        .life {
+            font-size: 1.8rem;
+            color: #ff3366;
+            transition: all 0.3s;
+        }
+        
+        .life.lost {
+            color: #555;
+            transform: scale(0.8);
+            opacity: 0.5;
+        }
+        
+        .life-pulse {
+            animation: lifePulse 0.5s ease-in-out;
+        }
+        
+        @keyframes lifePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        .life-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>لعبة تعليمية: مقارنة الأعداد النسبية</h1>
-            <div class="subtitle">الإصدار المصحح | الأعداد معروضة بشكل صحيح الآن</div>
+            <div class="subtitle">نظام الأرواح الثلاثة | الإصدار المحسن</div>
         </header>
         
         <div id="game-container">
@@ -604,10 +654,15 @@
                 <p>جاري تحميل اللعبة التعليمية...</p>
             </div>
             
-            <div class="difficulty-label" id="difficulty-label">صعوبة متزايدة: عقبات أكثر وأعداد صحيحة أقل</div>
-            
+            <div class="difficulty-label" id="difficulty-label">
             <div id="score-panel">
                 النقاط: <span id="score">0</span>
+            </div>
+            
+            <div id="lives-panel">
+                <div class="life" id="life-1">❤️</div>
+                <div class="life" id="life-2">❤️</div>
+                <div class="life" id="life-3">❤️</div>
             </div>
             
             <div class="number-display" id="number-display">الهدف: جمع الأعداد &lt; 0.7</div>
@@ -622,12 +677,7 @@
             <div class="obstacle-indicator" id="obstacle-warning">! انتبه عقبة قريبة</div>
             
             <div class="educational-tip" id="educational-tip">
-                <div class="tip-content">تذكر: جميع الأعداد السالبة أصغر من 0.7، والأعداد الموجبة يجب أن تكون أقل من 0.7</div>
-                <div class="tip-examples">
-                    <span class="tip-example">✓ -0.5</span>
-                    <span class="tip-example">✓ 0.6</span>
-                    <span class="tip-example">✗ 0.8</span>
-                    <span class="tip-example">✗ 1.0</span>
+                
                 </div>
             </div>
             
@@ -648,7 +698,7 @@
             <div class="game-over" id="game-over">
                 <div class="game-over-content">
                     <h2>انتهت اللعبة!</h2>
-                    <p>لقد خسرت جميع محاولاتك</p>
+                    <p>لقد خسرت جميع أرواحك</p>
                     <div class="final-score">النتيجة النهائية: <span id="final-score">0</span></div>
                     <div class="stats-panel" style="position: relative; margin: 15px auto; width: 90%;">
                         <div class="stats-item">الأعداد الصحيحة: <span class="correct-count" id="final-correct">0</span></div>
@@ -680,6 +730,10 @@
                             <div style="color: #ff6b6b; font-size: 1.4rem;">●</div>
                             <div>تجنب العقبات الحمراء (أربع عقبات الآن)</div>
                         </div>
+                        <div class="step">
+                            <div style="color: #ff3366; font-size: 1.4rem;">❤️</div>
+                            <div>لديك ثلاث أرواح فقط! ستخسر روحًا عند ارتكاب خطأ أو الاصطدام بعقبة</div>
+                        </div>
                     </div>
                     
                     <h3 style="margin-top: 15px; color: #ffd700;">هدف اللعبة التعليمي:</h3>
@@ -701,7 +755,7 @@
         </div>
         
         <footer>
-            تم تطوير اللعبة التعليمية باستخدام Three.js | الإصدار المصحح | مقارنة الأعداد النسبية الموجبة والسالبة
+            إعداد الخبيرة التربوية: انتصار مصطفى
         </footer>
     </div>
 
@@ -727,6 +781,9 @@
         const numberDisplay = document.getElementById('number-display');
         const numberInfo = document.getElementById('number-info');
         const educationalTip = document.getElementById('educational-tip');
+        const life1 = document.getElementById('life-1');
+        const life2 = document.getElementById('life-2');
+        const life3 = document.getElementById('life-3');
         
         let scene, camera, renderer, car, numbers = [], obstacles = [];
         let road, roadWidth = 20, roadSegments = 200;
@@ -735,6 +792,7 @@
         let touchStartX = 0;
         let correctCount = 0, wrongCount = 0;
         let totalNumbers = 0;
+        let lives = 3;
         
         let moveSpeed = 0.5;
         let acceleration = 0;
@@ -1044,6 +1102,7 @@
             score = 0;
             correctCount = 0;
             wrongCount = 0;
+            lives = 3;
             scoreElement.textContent = score;
             correctCountElement.textContent = correctCount;
             wrongCountElement.textContent = wrongCount;
@@ -1052,7 +1111,12 @@
             startScreen.style.display = 'none';
             educationalTip.style.display = 'block';
             
-            showEducationalMessage("ابدأ اللعب! الأرقام مصححة الآن", true);
+            // إعادة تعيين الأرواح
+            life1.classList.remove('lost');
+            life2.classList.remove('lost');
+            life3.classList.remove('lost');
+            
+            showEducationalMessage("ابدأ اللعب! لديك ثلاث أرواح", true);
             
             setTimeout(() => {
                 educationalTip.style.display = 'none';
@@ -1066,6 +1130,7 @@
             score = 0;
             correctCount = 0;
             wrongCount = 0;
+            lives = 3;
             scoreElement.textContent = score;
             correctCountElement.textContent = correctCount;
             wrongCountElement.textContent = wrongCount;
@@ -1073,6 +1138,11 @@
             progressFill.style.width = "0%";
             gameActive = true;
             educationalTip.style.display = 'block';
+            
+            // إعادة تعيين الأرواح
+            life1.classList.remove('lost');
+            life2.classList.remove('lost');
+            life3.classList.remove('lost');
             
             numbers.forEach(number => {
                 const isNegative = Math.random() > 0.5;
@@ -1130,13 +1200,41 @@
             
             carPosition = 0;
             
-            showEducationalMessage("ابدأ اللعب من جديد! الأرقام مصححة", true);
+            showEducationalMessage("ابدأ اللعب من جديد! لديك ثلاث أرواح", true);
             
             setTimeout(() => {
                 educationalTip.style.display = 'none';
             }, 5000);
             
             animate();
+        }
+        
+        function loseLife() {
+            lives--;
+            
+            // تحديث عرض الأرواح
+            if (lives === 2) {
+                life3.classList.add('lost');
+                life3.classList.add('life-shake');
+                setTimeout(() => life3.classList.remove('life-shake'), 500);
+            } else if (lives === 1) {
+                life2.classList.add('lost');
+                life2.classList.add('life-shake');
+                setTimeout(() => life2.classList.remove('life-shake'), 500);
+            } else if (lives === 0) {
+                life1.classList.add('lost');
+                life1.classList.add('life-shake');
+                setTimeout(() => life1.classList.remove('life-shake'), 500);
+            }
+            
+            // إشارة بصرية للأرواح المتبقية
+            if (lives > 0) {
+                const currentLife = document.getElementById(`life-${lives}`);
+                currentLife.classList.add('life-pulse');
+                setTimeout(() => currentLife.classList.remove('life-pulse'), 500);
+            }
+            
+            return lives <= 0;
         }
         
         function update() {
@@ -1182,7 +1280,13 @@
                         wrongCount++;
                         scoreElement.textContent = score;
                         
-                        showEducationalMessage(`انتبه! ${numberValue} أكبر من أو يساوي 0.7`, false);
+                        showEducationalMessage(`انتبه! ${numberValue} أكبر من أو يساوي 0.7. فقدت روحًا`, false);
+                        
+                        // خسارة روح عند جمع عدد خاطئ
+                        if (loseLife()) {
+                            gameOver();
+                            return;
+                        }
                     }
                     
                     correctCountElement.textContent = correctCount;
@@ -1220,7 +1324,14 @@
                 if (obstacle.visible && 
                     Math.abs(car.position.x - obstacle.position.x) < 2.5 &&
                     Math.abs(car.position.z - obstacle.position.z) < 3) {
-                    gameOver();
+                    obstacle.visible = false;
+                    showEducationalMessage("انتبه! اصطدمت بعقبة. فقدت روحًا", false);
+                    
+                    // خسارة روح عند الاصطدام بعقبة
+                    if (loseLife()) {
+                        gameOver();
+                        return;
+                    }
                 }
                 
                 if (obstacle.visible && 
