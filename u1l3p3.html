@@ -240,7 +240,6 @@
             z-index: 200;
             text-align: center;
             padding: 20px;
-            overflow-y: auto; /* إضافة شريط التمرير الرأسي */
         }
         
         .start-content {
@@ -531,58 +530,6 @@
             padding: 5px;
         }
         
-        .difficulty-label {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 51, 102, 0.8);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            z-index: 15;
-            animation: difficultyPulse 2s infinite;
-        }
-        
-        @keyframes difficultyPulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 51, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); }
-        }
-        
-        .educational-tip {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(77, 171, 247, 0.9);
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            z-index: 15;
-            max-width: 90%;
-            text-align: center;
-            display: none;
-        }
-        
-        .tip-content {
-            margin-bottom: 8px;
-        }
-        
-        .tip-examples {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 8px;
-        }
-        
-        .tip-example {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        
         .fixed-text {
             position: absolute;
             top: 50%;
@@ -661,8 +608,6 @@
                 <p>جاري تحميل اللعبة التعليمية...</p>
             </div>
             
-            <div class="difficulty-label" id="difficulty-label">صعوبة متزايدة: عقبات أكثر وأعداد صحيحة أقل</div>
-            
             <div id="score-panel">
                 النقاط: <span id="score">0</span>
             </div>
@@ -683,16 +628,6 @@
             </div>
             
             <div class="obstacle-indicator" id="obstacle-warning">! انتبه عقبة قريبة</div>
-            
-            <div class="educational-tip" id="educational-tip">
-                <div class="tip-content">تذكر: جميع الأعداد السالبة أصغر من 0.7، والأعداد الموجبة يجب أن تكون أقل من 0.7</div>
-                <div class="tip-examples">
-                    <span class="tip-example">✓ -0.5</span>
-                    <span class="tip-example">✓ 0.6</span>
-                    <span class="tip-example">✗ 0.8</span>
-                    <span class="tip-example">✗ 1.0</span>
-                </div>
-            </div>
             
             <div class="progress-container">
                 <div class="progress-bar">
@@ -730,11 +665,7 @@
                         <div class="how-to-play">
                             <div class="step">
                                 <div class="example-number correct-example">-0.5</div>
-                                <div>اجمع الأعداد <b>الأصغر من 0.7</b> (أي الأعداد السالبة أو الأعداد الموجبة الأقل من 0.7)</div>
-                            </div>
-                            <div class="step">
-                                <div class="example-number correct-example">0.6</div>
-                                <div>الأعداد الموجبة الصحيحة: أقل من 0.7</div>
+                                <div>اجمع الأعداد <b>الأصغر من 0.7</b></div>
                             </div>
                             <div class="step">
                                 <div class="example-number wrong-example">0.8</div>
@@ -742,16 +673,13 @@
                             </div>
                             <div class="step">
                                 <div style="color: #ff6b6b; font-size: 1.4rem;">●</div>
-                                <div>تجنب العقبات الحمراء (أربع عقبات الآن)</div>
+                                <div>تجنب العقبات الحمراء</div>
                             </div>
                             <div class="step">
                                 <div style="color: #ff3366; font-size: 1.4rem;">❤️</div>
-                                <div>لديك ثلاث أرواح فقط! ستخسر روحًا عند ارتكاب خطأ أو الاصطدام بعقبة</div>
+                                <div>لديك ثلاث أرواح فقط</div>
                             </div>
                         </div>
-                        
-                        <h3 style="margin-top: 15px; color: #ffd700;">هدف اللعبة التعليمي:</h3>
-                        <p>تعلم كيفية مقارنة الأعداد العشرية الموجبة والسالبة. تذكر أن جميع الأعداد السالبة أصغر من 0.7، والأعداد الموجبة يجب أن تكون أقل من 0.7.</p>
                         
                         <div class="controls-info">
                             <div class="control-info">
@@ -770,7 +698,7 @@
         </div>
         
         <footer>
-            تم تطوير اللعبة التعليمية باستخدام Three.js | نظام الأرواح الثلاثة | مقارنة الأعداد النسبية الموجبة والسالبة
+            تم تطوير اللعبة التعليمية باستخدام Three.js | نظام الأرواح الثلاثة
         </footer>
     </div>
 
@@ -795,7 +723,6 @@
         const loadingScreen = document.getElementById('loading-screen');
         const numberDisplay = document.getElementById('number-display');
         const numberInfo = document.getElementById('number-info');
-        const educationalTip = document.getElementById('educational-tip');
         const life1 = document.getElementById('life-1');
         const life2 = document.getElementById('life-2');
         const life3 = document.getElementById('life-3');
@@ -964,12 +891,10 @@
                 ctx.fillStyle = 'rgba(0, 0, 0, 0)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
-                // تحسين الخط ليكون أوضح وأكبر
                 ctx.font = 'bold 90px Tajawal';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 
-                // جعل النص أكثر وضوحًا
                 ctx.strokeStyle = '#FFFFFF';
                 ctx.lineWidth = 10;
                 ctx.strokeText(numberValue.toString(), canvas.width/2, canvas.height/2);
@@ -989,11 +914,9 @@
                 const textGeometry = new THREE.PlaneGeometry(3.8, 3.8);
                 const textMesh = new THREE.Mesh(textGeometry, material);
                 textMesh.position.y = 0.21;
-                
-                // التصحيح: تدوير النص حول المحور X فقط وقلبه حول المحور Y
                 textMesh.rotation.x = -Math.PI/2;
-                textMesh.rotation.z = Math.PI; // تدوير 180 درجة حول المحور Z لتصحيح الاتجاه
-                textMesh.scale.x = -1; // قلب النص حول المحور Y
+                textMesh.rotation.z = Math.PI;
+                textMesh.scale.x = -1;
                 
                 coinMesh.add(textMesh);
                 
@@ -1124,18 +1047,12 @@
             accuracyElement.textContent = "0%";
             progressFill.style.width = "0%";
             startScreen.style.display = 'none';
-            educationalTip.style.display = 'block';
             
-            // إعادة تعيين الأرواح
             life1.classList.remove('lost');
             life2.classList.remove('lost');
             life3.classList.remove('lost');
             
             showEducationalMessage("ابدأ اللعب! لديك ثلاث أرواح", true);
-            
-            setTimeout(() => {
-                educationalTip.style.display = 'none';
-            }, 5000);
             
             animate();
         }
@@ -1152,9 +1069,7 @@
             accuracyElement.textContent = "0%";
             progressFill.style.width = "0%";
             gameActive = true;
-            educationalTip.style.display = 'block';
             
-            // إعادة تعيين الأرواح
             life1.classList.remove('lost');
             life2.classList.remove('lost');
             life3.classList.remove('lost');
@@ -1177,12 +1092,10 @@
                 ctx.fillStyle = 'rgba(0, 0, 0, 0)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
-                // تحسين الخط ليكون أوضح وأكبر
                 ctx.font = 'bold 90px Tajawal';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 
-                // جعل النص أكثر وضوحًا
                 ctx.strokeStyle = '#FFFFFF';
                 ctx.lineWidth = 10;
                 ctx.strokeText(numberValue.toString(), canvas.width/2, canvas.height/2);
@@ -1197,10 +1110,9 @@
                 textMesh.material.map = texture;
                 textMesh.material.needsUpdate = true;
                 
-                // التصحيح: تدوير النص حول المحور X فقط وقلبه حول المحور Y
                 textMesh.rotation.x = -Math.PI/2;
-                textMesh.rotation.z = Math.PI; // تدوير 180 درجة حول المحور Z لتصحيح الاتجاه
-                textMesh.scale.x = -1; // قلب النص حول المحور Y
+                textMesh.rotation.z = Math.PI;
+                textMesh.scale.x = -1;
                 
                 number.position.z = -Math.random() * roadSegments - 20;
                 number.position.x = (Math.random() - 0.5) * (roadWidth - 4);
@@ -1217,17 +1129,12 @@
             
             showEducationalMessage("ابدأ اللعب من جديد! لديك ثلاث أرواح", true);
             
-            setTimeout(() => {
-                educationalTip.style.display = 'none';
-            }, 5000);
-            
             animate();
         }
         
         function loseLife() {
             lives--;
             
-            // تحديث عرض الأرواح
             if (lives === 2) {
                 life3.classList.add('lost');
                 life3.classList.add('life-shake');
@@ -1242,7 +1149,6 @@
                 setTimeout(() => life1.classList.remove('life-shake'), 500);
             }
             
-            // إشارة بصرية للأرواح المتبقية
             if (lives > 0) {
                 const currentLife = document.getElementById(`life-${lives}`);
                 currentLife.classList.add('life-pulse');
@@ -1297,7 +1203,6 @@
                         
                         showEducationalMessage(`انتبه! ${numberValue} أكبر من أو يساوي 0.7. فقدت روحًا`, false);
                         
-                        // خسارة روح عند جمع عدد خاطئ
                         if (loseLife()) {
                             gameOver();
                             return;
@@ -1342,7 +1247,6 @@
                     obstacle.visible = false;
                     showEducationalMessage("انتبه! اصطدمت بعقبة. فقدت روحًا", false);
                     
-                    // خسارة روح عند الاصطدام بعقبة
                     if (loseLife()) {
                         gameOver();
                         return;
