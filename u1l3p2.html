@@ -543,6 +543,7 @@
             justify-content: space-between;
             margin: 30px 0;
             padding: 0 10px;
+            gap: 15px;
         }
         
         .nav-btn {
@@ -561,12 +562,20 @@
             transition: all 0.3s ease;
             border: 2px solid rgba(255, 255, 255, 0.3);
             text-decoration: none;
+            flex: 1;
+            text-align: center;
+            justify-content: center;
         }
         
         .nav-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
             background: linear-gradient(to right, #0d1a4d, #8a1818);
+        }
+        
+        .nav-btn.home {
+            background: linear-gradient(to right, #b21f1f, #8a1818);
+            flex: 0.8;
         }
         
         .nav-btn i {
@@ -581,7 +590,6 @@
             
             .nav-btn {
                 width: 100%;
-                justify-content: center;
             }
         }
     </style>
@@ -950,10 +958,13 @@
         
         <!-- أزرار التنقل -->
         <div class="navigation-buttons">
-            <a href="#" class="nav-btn">
+            <a href="u1l3p1.html" class="nav-btn">
                 <i class="fas fa-arrow-right"></i> السابق
             </a>
-            <a href="#" class="nav-btn">
+            <a href="u1.html" class="nav-btn home">
+                <i class="fas fa-home"></i> الرئيسية
+            </a>
+            <a href="u1l3p3.html" class="nav-btn">
                 التالي <i class="fas fa-arrow-left"></i>
             </a>
         </div>
