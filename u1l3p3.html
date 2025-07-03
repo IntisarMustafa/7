@@ -11,8 +11,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            touch-action: none;
-            -webkit-tap-highlight-color: transparent;
+            /* touch-action: none; Removed from global, applied specifically where needed */
             -webkit-user-select: none;
             user-select: none;
         }
@@ -67,6 +66,7 @@
             width: 100%;
             flex-grow: 1;
             overflow: hidden;
+            touch-action: none; /* Apply touch-action specifically to the game area */
         }
         
         .coin {
@@ -183,6 +183,13 @@
         .control-btn:active {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(0.95);
+        }
+
+        /* Hide mobile controls on larger screens (desktops) */
+        @media (min-width: 768px) {
+            .mobile-controls {
+                display: none;
+            }
         }
         
         .game-over {
@@ -341,6 +348,21 @@
             align-items: center;
             justify-content: center;
             font-size: 1.4rem;
+        }
+        /* Desktop specific control info */
+        @media (min-width: 768px) {
+            .control-info.mobile {
+                display: none; /* Hide touch icon on desktop */
+            }
+            .control-info.desktop {
+                display: flex; /* Show keyboard icon on desktop */
+            }
+        }
+        /* Mobile specific control info */
+        @media (max-width: 767px) {
+            .control-info.desktop {
+                display: none; /* Hide keyboard icon on mobile */
+            }
         }
         
         footer {
@@ -597,15 +619,19 @@
         /* نظام الصعوبة */
         .difficulty-indicator {
             position: absolute;
-            top: 100px;
+            top: 15px; /* Adjusted position */
             right: 15px;
             background: rgba(0, 0, 0, 0.6);
-            padding: 6px 12px;
+            padding: 8px 12px; /* Consistent padding with score-panel */
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 1rem; /* Consistent font size with score-panel */
             z-index: 10;
-            border: 2px solid rgba(255, 215, 0, 0.5);
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(77, 171, 247, 0.5);
+            box-shadow: 0 0 8px rgba(77, 171, 247, 0.3);
+            text-align: right;
+            display: flex; /* Use flex for alignment */
+            align-items: center;
+            gap: 5px;
         }
         
         .difficulty-label {
@@ -618,10 +644,11 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            margin-left: 5px;
+            /* margin-left: 5px; Handled by gap in flexbox */
             background-color: #00c853;
         }
         
+        .difficulty-level.level-1 { background-color: #00c853; } /* Explicit levels */
         .difficulty-level.level-2 { background-color: #ffd700; }
         .difficulty-level.level-3 { background-color: #ff9800; }
         .difficulty-level.level-4 { background-color: #ff5722; }
@@ -653,11 +680,10 @@
             
             <div class="difficulty-indicator">
                 مستوى الصعوبة: 
-                <span class="difficulty-level" id="difficulty-level-1"></span>
+                <span class="difficulty-level" id="difficulty-level-0"></span> <span class="difficulty-level" id="difficulty-level-1"></span>
                 <span class="difficulty-level" id="difficulty-level-2"></span>
                 <span class="difficulty-level" id="difficulty-level-3"></span>
                 <span class="difficulty-level" id="difficulty-level-4"></span>
-                <span class="difficulty-level" id="difficulty-level-5"></span>
             </div>
             
             <div class="number-display" id="number-display">الهدف: جمع الأعداد &lt; 0.7</div>
@@ -727,13 +753,17 @@
                         </div>
                         
                         <div class="controls-info">
-                            <div class="control-info">
-                                <div class="control-icon">←</div>
-                                <div>يسار</div>
+                            <div class="control-info mobile">
+                                <div class="control-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-touch-screen"><path d="M12 2a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path><path d="M12 6h.01"></path><path d="M12 18h.01"></path><path d="M8 8H6a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2"></path><path d="M16 8h2a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"></path></svg>
+                                </div>
+                                <div>لمس الشاشة</div>
                             </div>
-                            <div class="control-info">
-                                <div class="control-icon">→</div>
-                                <div>يمين</div>
+                            <div class="control-info desktop">
+                                <div class="control-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-keyboard"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><path d="M9 11h6"></path><path d="M8 15h8"></path></svg>
+                                </div>
+                                <div>أزرار الأسهم</div>
                             </div>
                         </div>
                     </div>
@@ -746,6 +776,13 @@
             تم تطوير اللعبة التعليمية باستخدام Three.js | نظام الأرواح الثلاثة
         </footer>
     </div>
+
+    <audio id="correctSound" src="https://www.soundjay.com/buttons/beep-07a.mp3" preload="auto"></audio>
+    <audio id="wrongSound" src="https://www.soundjay.com/misc/fail-buzzer-01.mp3" preload="auto"></audio>
+    <audio id="collisionSound" src="https://www.soundjay.com/misc/impact-soft-01.mp3" preload="auto"></audio>
+    <audio id="gameOverSound" src="https://www.soundjay.com/misc/fail-trombone-01.mp3" preload="auto"></audio>
+    <audio id="lifeLostSound" src="https://www.soundjay.com/mechanical/whoosh-04.mp3" preload="auto"></audio>
+    <audio id="levelUpSound" src="https://www.soundjay.com/misc/magic-wand-chimes-01.mp3" preload="auto"></audio>
 
     <script>
         const startBtn = document.getElementById('start-btn');
@@ -772,13 +809,21 @@
         const life2 = document.getElementById('life-2');
         const life3 = document.getElementById('life-3');
         
-        // عناصر نظام الصعوبة
+        // Audio elements
+        const correctSound = document.getElementById('correctSound');
+        const wrongSound = document.getElementById('wrongSound');
+        const collisionSound = document.getElementById('collisionSound');
+        const gameOverSound = document.getElementById('gameOverSound');
+        const lifeLostSound = document.getElementById('lifeLostSound');
+        const levelUpSound = document.getElementById('levelUpSound');
+
+        // elements نظام الصعوبة
         const difficultyLevelElements = [
+            document.getElementById('difficulty-level-0'), // Corrected IDs to match 0-indexed array
             document.getElementById('difficulty-level-1'),
             document.getElementById('difficulty-level-2'),
             document.getElementById('difficulty-level-3'),
-            document.getElementById('difficulty-level-4'),
-            document.getElementById('difficulty-level-5')
+            document.getElementById('difficulty-level-4')
         ];
         
         let scene, camera, renderer, car, numbers = [], obstacles = [];
@@ -890,16 +935,21 @@
             
             window.addEventListener('resize', onWindowResize);
             
+            // Touch controls for mobile
             document.addEventListener('touchstart', handleTouchStart, { passive: false });
             document.addEventListener('touchmove', handleTouchMove, { passive: false });
             
-            leftBtn.addEventListener('touchstart', () => moveCar('left'));
+            leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveCar('left'); });
             leftBtn.addEventListener('touchend', () => stopMove());
             leftBtn.addEventListener('touchcancel', () => stopMove());
             
-            rightBtn.addEventListener('touchstart', () => moveCar('right'));
+            rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveCar('right'); });
             rightBtn.addEventListener('touchend', () => stopMove());
             rightBtn.addEventListener('touchcancel', () => stopMove());
+
+            // Keyboard controls for desktop
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
             
             startBtn.addEventListener('click', startGame);
             restartBtn.addEventListener('click', restartGame);
@@ -1023,510 +1073,4 @@
                 
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                canvas.width = 256;
-                canvas.height = 256;
-                
-                ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.font = 'bold 90px Tajawal';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                
-                ctx.strokeStyle = '#FFFFFF';
-                ctx.lineWidth = 10;
-                ctx.strokeText(numberValue.toString(), canvas.width/2, canvas.height/2);
-                
-                ctx.fillStyle = '#000000';
-                ctx.fillText(numberValue.toString(), canvas.width/2, canvas.height/2);
-                
-                const texture = new THREE.CanvasTexture(canvas);
-                texture.flipY = false;
-                
-                const material = new THREE.MeshBasicMaterial({ 
-                    map: texture,
-                    transparent: true,
-                    side: THREE.DoubleSide
-                });
-                
-                const textGeometry = new THREE.PlaneGeometry(3.8, 3.8);
-                const textMesh = new THREE.Mesh(textGeometry, material);
-                textMesh.position.y = 0.21;
-                textMesh.rotation.x = -Math.PI/2;
-                textMesh.rotation.z = Math.PI;
-                textMesh.scale.x = -1;
-                
-                coinMesh.add(textMesh);
-                
-                numbers.push(coinMesh);
-                scene.add(coinMesh);
-            }
-            
-            for (let i = 0; i < 4; i++) {
-                const obstacleGeometry = new THREE.CylinderGeometry(0.8, 0.8, 2, 8);
-                const obstacleMaterial = new THREE.MeshPhongMaterial({ color: 0xaa0000 });
-                
-                const obstacle = new THREE.Mesh(obstacleGeometry, obstacleMaterial);
-                obstacle.position.y = 1;
-                obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
-                obstacle.position.z = -Math.random() * roadSegments - 20;
-                obstacle.castShadow = true;
-                
-                const circleGeometry = new THREE.RingGeometry(1.2, 1.5, 32);
-                const circleMaterial = new THREE.MeshBasicMaterial({ 
-                    color: 0xff0000, 
-                    side: THREE.DoubleSide,
-                    transparent: true,
-                    opacity: 0.6
-                });
-                const circle = new THREE.Mesh(circleGeometry, circleMaterial);
-                circle.rotation.x = Math.PI / 2;
-                circle.position.y = 0.1;
-                obstacle.add(circle);
-                
-                obstacles.push(obstacle);
-                scene.add(obstacle);
-            }
-        }
-        
-        function addEnvironment() {
-            for (let i = 0; i < 15; i++) {
-                const treeGroup = new THREE.Group();
-                
-                const trunkGeometry = new THREE.CylinderGeometry(0.3, 0.4, 3, 8);
-                const trunkMaterial = new THREE.MeshPhongMaterial({ color: 0x8b4513 });
-                const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
-                trunk.position.y = 1.5;
-                trunk.castShadow = true;
-                treeGroup.add(trunk);
-                
-                const leavesGeometry = new THREE.ConeGeometry(2, 5, 8);
-                const leavesMaterial = new THREE.MeshPhongMaterial({ color: 0x228833 });
-                const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
-                leaves.position.y = 4;
-                leaves.castShadow = true;
-                treeGroup.add(leaves);
-                
-                const side = Math.random() > 0.5 ? 1 : -1;
-                const distanceFromRoad = 10 + Math.random() * 30;
-                treeGroup.position.x = side * (roadWidth/2 + distanceFromRoad);
-                treeGroup.position.z = -Math.random() * roadSegments - 20;
-                treeGroup.position.y = 0;
-                
-                scene.add(treeGroup);
-            }
-            
-            for (let i = 0; i < 8; i++) {
-                const buildingHeight = Math.random() * 10 + 5;
-                const buildingGeometry = new THREE.BoxGeometry(8, buildingHeight, 8);
-                const buildingMaterial = new THREE.MeshPhongMaterial({ 
-                    color: Math.random() * 0x888888 + 0x444444,
-                    emissive: 0x111111
-                });
-                
-                const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
-                building.position.x = (Math.random() > 0.5 ? 1 : -1) * (40 + Math.random() * 30);
-                building.position.z = -Math.random() * roadSegments - 50;
-                building.position.y = buildingHeight / 2;
-                building.castShadow = true;
-                scene.add(building);
-            }
-        }
-        
-        function handleTouchStart(event) {
-            if (!gameActive) return;
-            touchStartX = event.touches[0].clientX;
-            event.preventDefault();
-        }
-        
-        function handleTouchMove(event) {
-            if (!gameActive) return;
-            const touchX = event.touches[0].clientX;
-            const diff = touchX - touchStartX;
-            
-            if (Math.abs(diff) > 10) {
-                if (diff > 0) {
-                    carPosition = Math.min(carPosition + 0.5, maxCarPosition);
-                } else {
-                    carPosition = Math.max(carPosition - 0.5, -maxCarPosition);
-                }
-                touchStartX = touchX;
-            }
-            event.preventDefault();
-        }
-        
-        function moveCar(direction) {
-            if (!gameActive) return;
-            
-            if (direction === 'right') {
-                carPosition = Math.min(carPosition + 0.5, maxCarPosition);
-            } else if (direction === 'left') {
-                carPosition = Math.max(carPosition - 0.5, -maxCarPosition);
-            }
-        }
-        
-        function startGame() {
-            gameActive = true;
-            score = 0;
-            correctCount = 0;
-            wrongCount = 0;
-            lives = 3;
-            currentDifficulty = 0;
-            lastDifficultyUpdate = 0;
-            scoreElement.textContent = score;
-            correctCountElement.textContent = correctCount;
-            wrongCountElement.textContent = wrongCount;
-            accuracyElement.textContent = "0%";
-            progressFill.style.width = "0%";
-            startScreen.style.display = 'none';
-            
-            // إعادة تعيين العقبات الإضافية
-            extraObstacles.forEach(obstacle => scene.remove(obstacle));
-            extraObstacles = [];
-            
-            life1.classList.remove('lost');
-            life2.classList.remove('lost');
-            life3.classList.remove('lost');
-            
-            // تحديث مؤشر الصعوبة
-            updateDifficultyIndicator();
-            
-            showEducationalMessage("ابدأ اللعب! لديك ثلاث أرواح", true);
-            
-            animate();
-        }
-        
-        function restartGame() {
-            gameOverPanel.style.display = 'none';
-            score = 0;
-            correctCount = 0;
-            wrongCount = 0;
-            lives = 3;
-            currentDifficulty = 0;
-            lastDifficultyUpdate = 0;
-            scoreElement.textContent = score;
-            correctCountElement.textContent = correctCount;
-            wrongCountElement.textContent = wrongCount;
-            accuracyElement.textContent = "0%";
-            progressFill.style.width = "0%";
-            gameActive = true;
-            
-            // إعادة تعيين العقبات الإضافية
-            extraObstacles.forEach(obstacle => scene.remove(obstacle));
-            extraObstacles = [];
-            
-            life1.classList.remove('lost');
-            life2.classList.remove('lost');
-            life3.classList.remove('lost');
-            
-            // تحديث مؤشر الصعوبة
-            updateDifficultyIndicator();
-            
-            numbers.forEach(number => {
-                const { value: numberValue, isCorrect } = generateNumberValue();
-                
-                number.userData.value = numberValue;
-                number.userData.isCorrect = isCorrect;
-                number.material.color.set(isCorrect ? 0x4dabf7 : 0xda1b60);
-                number.material.emissive.set(isCorrect ? 0x1a3f7a : 0x5c0a1f);
-                
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = 256;
-                canvas.height = 256;
-                
-                ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.font = 'bold 90px Tajawal';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                
-                ctx.strokeStyle = '#FFFFFF';
-                ctx.lineWidth = 10;
-                ctx.strokeText(numberValue.toString(), canvas.width/2, canvas.height/2);
-                
-                ctx.fillStyle = '#000000';
-                ctx.fillText(numberValue.toString(), canvas.width/2, canvas.height/2);
-                
-                const texture = new THREE.CanvasTexture(canvas);
-                texture.flipY = false;
-                
-                const textMesh = number.children[0];
-                textMesh.material.map = texture;
-                textMesh.material.needsUpdate = true;
-                
-                textMesh.rotation.x = -Math.PI/2;
-                textMesh.rotation.z = Math.PI;
-                textMesh.scale.x = -1;
-                
-                number.position.z = -Math.random() * roadSegments - 20;
-                number.position.x = (Math.random() - 0.5) * (roadWidth - 4);
-                number.visible = true;
-            });
-            
-            obstacles.forEach(obstacle => {
-                obstacle.position.z = -Math.random() * roadSegments - 50;
-                obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
-                obstacle.visible = true;
-            });
-            
-            carPosition = 0;
-            
-            showEducationalMessage("ابدأ اللعب من جديد! لديك ثلاث أرواح", true);
-            
-            animate();
-        }
-        
-        function loseLife() {
-            lives--;
-            
-            if (lives === 2) {
-                life3.classList.add('lost');
-                life3.classList.add('life-shake');
-                setTimeout(() => life3.classList.remove('life-shake'), 500);
-            } else if (lives === 1) {
-                life2.classList.add('lost');
-                life2.classList.add('life-shake');
-                setTimeout(() => life2.classList.remove('life-shake'), 500);
-            } else if (lives === 0) {
-                life1.classList.add('lost');
-                life1.classList.add('life-shake');
-                setTimeout(() => life1.classList.remove('life-shake'), 500);
-            }
-            
-            if (lives > 0) {
-                const currentLife = document.getElementById(`life-${lives}`);
-                currentLife.classList.add('life-pulse');
-                setTimeout(() => currentLife.classList.remove('life-pulse'), 500);
-            }
-            
-            return lives <= 0;
-        }
-        
-        function updateDifficulty() {
-            if (correctCount - lastDifficultyUpdate >= 5 && currentDifficulty < DIFFICULTY_LEVELS.length - 1) {
-                currentDifficulty++;
-                lastDifficultyUpdate = correctCount;
-                
-                // إضافة عقبة إضافية
-                if (currentDifficulty > 0 && extraObstacles.length < 2) {
-                    const obstacleType = EXTRA_OBSTACLES[extraObstacles.length];
-                    const obstacle = obstacleType.create();
-                    obstacle.position.z = -Math.random() * roadSegments - 50;
-                    obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
-                    obstacle.position.y = 1;
-                    obstacle.castShadow = true;
-                    extraObstacles.push(obstacle);
-                    scene.add(obstacle);
-                    
-                    showEducationalMessage(`انتبه! ظهرت عقبة جديدة: ${obstacleType.type}`, false);
-                }
-                
-                // تحديث مؤشر الصعوبة
-                updateDifficultyIndicator();
-                
-                showEducationalMessage(`زادت الصعوبة! المستوى ${currentDifficulty + 1}`, false);
-            }
-        }
-        
-        function updateDifficultyIndicator() {
-            difficultyLevelElements.forEach((el, index) => {
-                if (index <= currentDifficulty) {
-                    el.classList.add(`level-${currentDifficulty}`);
-                } else {
-                    el.className = 'difficulty-level';
-                }
-            });
-        }
-        
-        function update() {
-            if (!gameActive) return;
-            
-            updateDifficulty();
-            
-            const currentSpeed = DIFFICULTY_LEVELS[currentDifficulty].speed;
-            road.position.z += currentSpeed;
-            if (road.position.z > roadSegments / 2) {
-                road.position.z = -roadSegments / 2;
-            }
-            
-            car.position.x = THREE.MathUtils.lerp(car.position.x, carPosition, 0.1);
-            
-            numbers.forEach(number => {
-                number.position.z += currentSpeed;
-                if (number.position.z > 20) {
-                    const { value: numberValue, isCorrect } = generateNumberValue();
-                    
-                    number.userData.value = numberValue;
-                    number.userData.isCorrect = isCorrect;
-                    number.material.color.set(isCorrect ? 0x4dabf7 : 0xda1b60);
-                    number.material.emissive.set(isCorrect ? 0x1a3f7a : 0x5c0a1f);
-                    
-                    number.position.z = -Math.random() * roadSegments - 20;
-                    number.position.x = (Math.random() - 0.5) * (roadWidth - 4);
-                    number.visible = true;
-                }
-                
-                if (number.visible && 
-                    Math.abs(car.position.x - number.position.x) < 2.5 &&
-                    Math.abs(car.position.z - number.position.z) < 3.5) {
-                    
-                    const numberValue = number.userData.value;
-                    const isCorrect = number.userData.isCorrect;
-                    
-                    numberDisplay.textContent = `جمعت: ${numberValue} (${isCorrect ? 'صحيح' : 'خاطئ'})`;
-                    
-                    if (isCorrect) {
-                        score += 10;
-                        correctCount++;
-                        scoreElement.textContent = score;
-                        
-                        if (numberValue < 0) {
-                            showEducationalMessage(`أحسنت! ${numberValue} سالب وأصغر من 0.7`, true);
-                        } else {
-                            showEducationalMessage(`أحسنت! ${numberValue} موجب وأصغر من 0.7`, true);
-                        }
-                    } else {
-                        score = Math.max(0, score - 5);
-                        wrongCount++;
-                        scoreElement.textContent = score;
-                        
-                        showEducationalMessage(`انتبه! ${numberValue} أكبر من أو يساوي 0.7. فقدت روحًا`, false);
-                        
-                        if (loseLife()) {
-                            gameOver();
-                            return;
-                        }
-                    }
-                    
-                    correctCountElement.textContent = correctCount;
-                    wrongCountElement.textContent = wrongCount;
-                    
-                    const totalAttempts = correctCount + wrongCount;
-                    const accuracy = totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0;
-                    accuracyElement.textContent = `${accuracy}%`;
-                    
-                    const progress = Math.min(100, Math.round((correctCount / 6) * 100));
-                    progressFill.style.width = `${progress}%`;
-                    
-                    number.visible = false;
-                    
-                    document.getElementById('score-panel').animate([
-                        { transform: 'scale(1)', backgroundColor: 'rgba(0,0,0,0.6)' },
-                        { transform: 'scale(1.2)', backgroundColor: isCorrect ? 'rgba(0,50,50,0.8)' : 'rgba(50,0,0,0.8)' },
-                        { transform: 'scale(1)', backgroundColor: 'rgba(0,0,0,0.6)' }
-                    ], {
-                        duration: 300,
-                        iterations: 1
-                    });
-                }
-            });
-            
-            let obstacleNearby = false;
-            obstacles.forEach(obstacle => {
-                obstacle.position.z += currentSpeed;
-                if (obstacle.position.z > 20) {
-                    obstacle.position.z = -Math.random() * roadSegments - 50;
-                    obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
-                    obstacle.visible = true;
-                }
-                
-                if (obstacle.visible && 
-                    Math.abs(car.position.x - obstacle.position.x) < 2.5 &&
-                    Math.abs(car.position.z - obstacle.position.z) < 3) {
-                    obstacle.visible = false;
-                    showEducationalMessage("انتبه! اصطدمت بعقبة. فقدت روحًا", false);
-                    
-                    if (loseLife()) {
-                        gameOver();
-                        return;
-                    }
-                }
-                
-                if (obstacle.visible && 
-                    Math.abs(car.position.x - obstacle.position.x) < 5 &&
-                    obstacle.position.z - car.position.z < 10 &&
-                    obstacle.position.z - car.position.z > 0) {
-                    obstacleNearby = true;
-                }
-            });
-            
-            // تحديث العقبات الإضافية
-            extraObstacles.forEach(obstacle => {
-                obstacle.position.z += currentSpeed;
-                if (obstacle.position.z > 20) {
-                    obstacle.position.z = -Math.random() * roadSegments - 50;
-                    obstacle.position.x = (Math.random() - 0.5) * (roadWidth - 4);
-                }
-                
-                if (Math.abs(car.position.x - obstacle.position.x) < 3.0 &&
-                    Math.abs(car.position.z - obstacle.position.z) < 3) {
-                    scene.remove(obstacle);
-                    showEducationalMessage("انتبه! اصطدمت بعقبة متقدمة. فقدت روحًا", false);
-                    
-                    if (loseLife()) {
-                        gameOver();
-                        return;
-                    }
-                }
-                
-                if (Math.abs(car.position.x - obstacle.position.x) < 5 &&
-                    obstacle.position.z - car.position.z < 10 &&
-                    obstacle.position.z - car.position.z > 0) {
-                    obstacleNearby = true;
-                }
-            });
-            
-            if (obstacleNearby) {
-                obstacleWarning.style.display = 'block';
-            } else {
-                obstacleWarning.style.display = 'none';
-            }
-        }
-        
-        function showEducationalMessage(message, isCorrect) {
-            educationalMessage.textContent = message;
-            educationalMessage.className = isCorrect ? "educational-message correct-message" : "educational-message wrong-message";
-            educationalMessage.style.display = "block";
-            
-            setTimeout(() => {
-                educationalMessage.style.display = "none";
-            }, 1500);
-        }
-        
-        function gameOver() {
-            gameActive = false;
-            finalScoreElement.textContent = score;
-            
-            const totalAttempts = correctCount + wrongCount;
-            const accuracy = totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0;
-            
-            finalCorrectElement.textContent = correctCount;
-            finalWrongElement.textContent = wrongCount;
-            finalAccuracyElement.textContent = `${accuracy}%`;
-            
-            gameOverPanel.style.display = 'flex';
-        }
-        
-        function animate() {
-            if (!gameActive) return;
-            
-            requestAnimationFrame(animate);
-            update();
-            renderer.render(scene, camera);
-        }
-        
-        function onWindowResize() {
-            const container = document.getElementById('game-container');
-            camera.aspect = container.offsetWidth / container.offsetHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.offsetWidth, container.offsetHeight);
-        }
-        
-        window.onload = function() {
-            init();
-        };
-    </script>
-</body>
-</html>
+                can
