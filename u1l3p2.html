@@ -8,6 +8,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
+        /* Base styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -18,24 +19,25 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
             color: #333;
-            line-height: 1.8;
-            padding: 20px; /* Increased from 10px */
-            font-size: 24px; /* Increased from 16px */
+            line-height: 1.6; /* Adjusted for better readability */
+            padding: 15px; /* Adjusted for mobile */
+            font-size: 18px; /* Base font size for mobile */
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 10px; /* Increased from 5px */
+            padding: 10px;
         }
         
+        /* Header styles */
         header {
             text-align: center;
-            padding: 25px; /* Increased from 15px */
+            padding: 20px; /* Adjusted */
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 18px; /* Increased from 12px */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Increased shadow */
-            margin-bottom: 25px; /* Increased from 15px */
+            border-radius: 15px; /* Adjusted */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Adjusted */
+            margin-bottom: 20px; /* Adjusted */
             animation: fadeIn 1s ease-out;
             position: relative;
             overflow: hidden;
@@ -47,14 +49,14 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 6px; /* Increased from 4px */
+            height: 5px; /* Adjusted */
             background: linear-gradient(90deg, #1a2a6c, #b21f1f, #1a2a6c);
         }
         
         h1 {
             color: #1a2a6c;
-            font-size: 3rem; /* Increased from 1.8rem */
-            margin-bottom: 15px; /* Increased from 10px */
+            font-size: 2.2rem; /* Adjusted for mobile */
+            margin-bottom: 10px;
             position: relative;
             display: inline-block;
         }
@@ -62,98 +64,99 @@
         h1::after {
             content: "";
             position: absolute;
-            bottom: -10px; /* Adjusted */
+            bottom: -8px; /* Adjusted */
             left: 50%;
             transform: translateX(-50%);
-            width: 100px; /* Increased from 80px */
-            height: 4px; /* Increased from 3px */
+            width: 80px; /* Adjusted */
+            height: 3px; /* Adjusted */
             background: #b21f1f;
             border-radius: 2px;
         }
         
         .subtitle {
             color: #b21f1f;
-            font-size: 2rem; /* Increased from 1.2rem */
-            margin-bottom: 25px; /* Increased from 15px */
+            font-size: 1.2rem; /* Adjusted for mobile */
+            margin-bottom: 20px; /* Adjusted */
             font-weight: 600;
         }
         
         .lesson-info {
             display: flex;
             flex-direction: column;
-            gap: 25px; /* Increased from 15px */
-            margin-top: 30px; /* Increased from 20px */
+            gap: 20px; /* Adjusted */
+            margin-top: 20px; /* Adjusted */
         }
         
         .info-box {
             background: #f0f8ff;
-            padding: 25px; /* Increased from 15px */
-            border-radius: 15px; /* Increased from 10px */
+            padding: 20px; /* Adjusted */
+            border-radius: 12px; /* Adjusted */
             width: 100%;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Increased shadow */
-            border: 3px solid #1a2a6c; /* Increased border */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adjusted */
+            border: 2px solid #1a2a6c; /* Adjusted */
         }
         
         .info-box h3 {
             color: #1a2a6c;
-            border-bottom: 3px solid #b21f1f; /* Increased border */
-            padding-bottom: 12px; /* Increased from 8px */
-            margin-bottom: 25px; /* Increased from 15px */
-            font-size: 2rem; /* Increased from 1.2rem */
+            border-bottom: 2px solid #b21f1f; /* Adjusted */
+            padding-bottom: 10px; /* Adjusted */
+            margin-bottom: 20px; /* Adjusted */
+            font-size: 1.4rem; /* Adjusted for mobile */
             display: flex;
             align-items: center;
-            gap: 12px; /* Increased from 8px */
+            gap: 10px; /* Adjusted */
         }
         
         .info-box ul {
-            padding-right: 25px; /* Increased from 15px */
+            padding-right: 20px; /* Adjusted */
         }
         
         .info-box li {
-            margin-bottom: 12px; /* Increased from 8px */
+            margin-bottom: 10px; /* Adjusted */
             position: relative;
-            padding-right: 30px; /* Increased from 18px */
-            font-size: 1.6rem; /* Increased from 0.95rem */
+            padding-right: 25px; /* Adjusted */
+            font-size: 1rem; /* Adjusted for mobile */
         }
         
         .info-box li::before {
             content: "•";
             color: #b21f1f;
-            font-size: 2rem; /* Increased from 1.2rem */
+            font-size: 1.2rem; /* Adjusted */
             position: absolute;
             right: 0;
-            top: -4px; /* Adjusted */
+            top: -2px; /* Adjusted */
         }
         
+        /* Content sections */
         .content {
             display: flex;
             flex-direction: column;
-            gap: 30px; /* Increased from 20px */
-            margin-bottom: 40px; /* Increased from 30px */
+            gap: 25px; /* Adjusted */
+            margin-bottom: 30px; /* Adjusted */
         }
         
         .section {
             background: rgba(255, 255, 255, 0.97);
-            border-radius: 18px; /* Increased from 12px */
-            padding: 30px 25px; /* Increased from 20px 15px */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Increased shadow */
-            border: 3px solid #1a2a6c; /* Increased border */
+            border-radius: 15px; /* Adjusted */
+            padding: 25px 20px; /* Adjusted */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Adjusted */
+            border: 2px solid #1a2a6c; /* Adjusted */
         }
         
         .section h2 {
             color: #b21f1f;
-            margin-bottom: 30px; /* Increased from 20px */
-            padding-bottom: 18px; /* Increased from 12px */
-            border-bottom: 3px dashed #1a2a6c; /* Increased border */
+            margin-bottom: 25px; /* Adjusted */
+            padding-bottom: 15px; /* Adjusted */
+            border-bottom: 2px dashed #1a2a6c; /* Adjusted */
             display: flex;
             align-items: center;
-            font-size: 2.2rem; /* Increased from 1.4rem */
-            gap: 15px; /* Increased from 10px */
+            font-size: 1.6rem; /* Adjusted for mobile */
+            gap: 12px; /* Adjusted */
         }
         
         .section p {
-            font-size: 1.6rem; /* Increased from 0.95rem */
-            margin-bottom: 25px; /* Increased from 15px */
+            font-size: 1rem; /* Adjusted for mobile */
+            margin-bottom: 20px; /* Adjusted */
         }
         
         .exploration {
@@ -172,45 +175,46 @@
             background: linear-gradient(to bottom right, #f9e6ff, #f0ccff);
         }
         
+        /* Exercise elements */
         .exercise {
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px; /* Increased from 10px */
-            padding: 25px; /* Increased from 15px */
-            margin: 25px 0; /* Increased from 15px 0 */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Increased shadow */
-            border: 3px solid #1a2a6c; /* Increased border */
+            border-radius: 12px; /* Adjusted */
+            padding: 20px; /* Adjusted */
+            margin: 20px 0; /* Adjusted */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adjusted */
+            border: 2px solid #1a2a6c; /* Adjusted */
         }
         
         .exercise-title {
             color: #1a2a6c;
-            margin-bottom: 25px; /* Increased from 15px */
+            margin-bottom: 20px; /* Adjusted */
             display: flex;
             align-items: center;
-            font-size: 2rem; /* Increased from 1.2rem */
-            gap: 12px; /* Increased from 8px */
-            border-bottom: 3px solid #b21f1f; /* Increased border */
-            padding-bottom: 15px; /* Increased from 10px */
+            font-size: 1.4rem; /* Adjusted for mobile */
+            gap: 10px; /* Adjusted */
+            border-bottom: 2px solid #b21f1f; /* Adjusted */
+            padding-bottom: 12px; /* Adjusted */
         }
         
         .comparison-options {
             display: flex;
-            gap: 15px; /* Increased from 10px */
-            margin: 25px 0; /* Increased from 15px 0 */
+            gap: 10px; /* Adjusted */
+            margin: 20px 0; /* Adjusted */
             justify-content: center;
             flex-wrap: wrap;
         }
         
         .comp-option {
-            padding: 15px 30px; /* Increased from 8px 15px */
+            padding: 12px 25px; /* Adjusted for better touch target */
             background: #e0e0e0;
-            border-radius: 35px; /* Increased from 25px */
+            border-radius: 30px; /* Adjusted */
             cursor: pointer;
-            font-size: 2rem; /* Increased from 1.1rem */
+            font-size: 1.1rem; /* Adjusted for mobile */
             font-weight: bold;
-            min-width: 90px; /* Increased from 50px */
+            min-width: 70px; /* Adjusted */
             text-align: center;
             flex: 1;
-            max-width: 120px; /* Increased from 70px */
+            max-width: 100px; /* Adjusted */
         }
         
         .comp-option.selected {
@@ -222,24 +226,24 @@
             background: linear-gradient(to right, #1a2a6c, #0d1a4d);
             color: white;
             border: none;
-            padding: 18px 35px; /* Increased from 10px 20px */
-            border-radius: 35px; /* Increased from 25px */
+            padding: 15px 30px; /* Adjusted for better touch target */
+            border-radius: 30px; /* Adjusted */
             cursor: pointer;
-            font-size: 1.8rem; /* Increased from 0.95rem */
-            margin-top: 20px; /* Increased from 10px */
+            font-size: 1.1rem; /* Adjusted for mobile */
+            margin-top: 15px; /* Adjusted */
             font-weight: 600;
             display: block;
-            margin: 25px auto; /* Increased from 15px auto */
+            margin: 20px auto; /* Adjusted */
             width: 100%;
-            max-width: 300px; /* Increased from 200px */
+            max-width: 280px; /* Adjusted */
         }
         
         .feedback {
-            margin-top: 25px; /* Increased from 15px */
-            padding: 18px; /* Increased from 10px */
-            border-radius: 12px; /* Increased from 8px */
+            margin-top: 20px; /* Adjusted */
+            padding: 15px; /* Adjusted */
+            border-radius: 10px; /* Adjusted */
             display: none;
-            font-size: 1.6rem; /* Increased from 0.95rem */
+            font-size: 1rem; /* Adjusted for mobile */
             text-align: center;
             font-weight: 600;
         }
@@ -247,61 +251,63 @@
         .feedback.correct {
             background: linear-gradient(to right, #d4edda, #c3e6cb);
             color: #155724;
-            border: 3px solid #28a745; /* Increased border */
+            border: 2px solid #28a745; /* Adjusted */
             display: block;
         }
         
         .feedback.incorrect {
             background: linear-gradient(to right, #f8d7da, #f5c6cb);
             color: #721c24;
-            border: 3px solid #dc3545; /* Increased border */
+            border: 2px solid #dc3545; /* Adjusted */
             display: block;
         }
         
         .ordering-exercise {
             display: flex;
             flex-direction: column;
-            gap: 18px; /* Increased from 12px */
-            margin: 30px 0; /* Increased from 20px 0 */
+            gap: 15px; /* Adjusted */
+            margin: 25px 0; /* Adjusted */
         }
         
         .number-item {
             background: linear-gradient(to right, #e6f7ff, #d1f0ff);
-            padding: 25px; /* Increased from 15px */
-            border-radius: 15px; /* Increased from 10px */
+            padding: 20px; /* Adjusted */
+            border-radius: 12px; /* Adjusted */
             display: flex;
             align-items: center;
             cursor: move;
-            font-size: 1.8rem; /* Increased from 1.1rem */
+            font-size: 1.2rem; /* Adjusted for mobile */
             font-weight: bold;
-            border: 3px solid #1a2a6c; /* Increased border */
+            border: 2px solid #1a2a6c; /* Adjusted */
         }
         
         .number-item i {
-            margin-left: 15px; /* Increased from 10px */
+            margin-left: 10px; /* Adjusted */
             color: #1a2a6c;
-            font-size: 2rem; /* Increased from 1.2rem */
+            font-size: 1.4rem; /* Adjusted */
         }
         
+        /* Footer styles */
         .footer {
             text-align: center;
-            padding: 25px; /* Increased from 15px */
+            padding: 20px; /* Adjusted */
             background: rgba(0, 0, 0, 0.8);
             color: white;
-            border-radius: 18px; /* Increased from 12px */
-            margin-top: 30px; /* Increased from 20px */
-            border: 3px solid #b21f1f; /* Increased border */
-            font-size: 1.6rem; /* Increased from 0.9rem */
+            border-radius: 15px; /* Adjusted */
+            margin-top: 25px; /* Adjusted */
+            border: 2px solid #b21f1f; /* Adjusted */
+            font-size: 0.9rem; /* Adjusted for mobile */
         }
         
         .footer h3 {
-            font-size: 2rem; /* Increased from 1.2rem */
-            margin-bottom: 15px; /* Increased from 10px */
+            font-size: 1.2rem; /* Adjusted for mobile */
+            margin-bottom: 10px; /* Adjusted */
             color: #ff9999;
         }
         
+        /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-25px); } /* Adjusted */
+            from { opacity: 0; transform: translateY(-20px); } /* Adjusted */
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -309,174 +315,178 @@
             animation: pulse 1.5s infinite;
             font-weight: bold;
             color: #b21f1f;
-            font-size: 1.8rem; /* Increased from 1rem */
+            font-size: 1.1rem; /* Adjusted for mobile */
             text-align: center;
-            padding: 15px; /* Increased from 8px */
+            padding: 12px; /* Adjusted */
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 9px; /* Increased from 6px */
+            border-radius: 8px; /* Adjusted */
             display: inline-block;
-            margin: 15px 0; /* Increased from 10px 0 */
+            margin: 12px 0; /* Adjusted */
         }
         
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); } /* Increased scale */
+            50% { transform: scale(1.03); } /* Adjusted scale */
             100% { transform: scale(1); }
         }
         
+        /* Steps */
         .steps {
-            margin: 25px 0; /* Increased from 15px 0 */
-            padding-right: 25px; /* Increased from 15px */
+            margin: 20px 0; /* Adjusted */
+            padding-right: 20px; /* Adjusted */
         }
         
         .step {
-            margin-bottom: 25px; /* Increased from 15px */
-            padding: 25px; /* Increased from 15px */
+            margin-bottom: 20px; /* Adjusted */
+            padding: 20px; /* Adjusted */
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px; /* Increased from 8px */
-            border-right: 6px solid #1a2a6c; /* Increased border */
-            font-size: 1.6rem; /* Increased from 0.95rem */
+            border-radius: 10px; /* Adjusted */
+            border-right: 5px solid #1a2a6c; /* Adjusted */
+            font-size: 1rem; /* Adjusted for mobile */
         }
         
         .step-number {
             display: inline-block;
-            width: 45px; /* Increased from 28px */
-            height: 45px; /* Increased from 28px */
+            width: 38px; /* Adjusted */
+            height: 38px; /* Adjusted */
             background: linear-gradient(to bottom, #b21f1f, #8a1818);
             color: white;
             border-radius: 50%;
             text-align: center;
-            line-height: 45px; /* Adjusted line-height */
-            margin-left: 15px; /* Increased from 10px */
+            line-height: 38px; /* Adjusted */
+            margin-left: 12px; /* Adjusted */
             font-weight: bold;
-            font-size: 1.8rem; /* Increased from 1rem */
+            font-size: 1.1rem; /* Adjusted */
         }
         
+        /* Math expressions */
         .math-expression {
-            font-size: 1.8rem; /* Increased from 1.1rem */
+            font-size: 1.2rem; /* Adjusted for mobile */
             font-weight: bold;
             text-align: center;
-            margin: 15px 0; /* Increased from 10px 0 */
-            padding: 18px; /* Increased from 10px */
+            margin: 12px 0; /* Adjusted */
+            padding: 15px; /* Adjusted */
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px; /* Increased from 8px */
-            border: 3px solid #1a2a6c; /* Increased border */
+            border-radius: 10px; /* Adjusted */
+            border: 2px solid #1a2a6c; /* Adjusted */
             overflow-x: auto;
         }
         
         .number-line-labels {
             display: flex;
             justify-content: space-between;
-            padding: 0 10px; /* Increased from 0 5px */
+            padding: 0 8px; /* Adjusted */
             font-weight: bold;
-            margin-top: 10px; /* Increased from 5px */
+            margin-top: 8px; /* Adjusted */
             color: #1a2a6c;
-            font-size: 1.4rem; /* Increased from 0.8rem */
+            font-size: 0.9rem; /* Adjusted for mobile */
         }
         
         .highlight {
             background: linear-gradient(to right, rgba(178, 31, 31, 0.2), rgba(26, 42, 108, 0.2));
-            padding: 5px 12px; /* Increased from 3px 8px */
-            border-radius: 6px; /* Increased from 4px */
+            padding: 4px 10px; /* Adjusted */
+            border-radius: 5px; /* Adjusted */
             font-weight: bold;
             display: inline-block;
-            margin-top: 8px; /* Increased from 5px */
+            margin-top: 6px; /* Adjusted */
         }
         
+        /* Question container */
         .question-container {
-            margin: 30px 0; /* Increased from 20px 0 */
-            padding: 25px; /* Increased from 15px */
+            margin: 25px 0; /* Adjusted */
+            padding: 20px; /* Adjusted */
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px; /* Increased from 10px */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Increased shadow */
-            border-left: 6px solid #1a2a6c; /* Increased border */
+            border-radius: 12px; /* Adjusted */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adjusted */
+            border-left: 5px solid #1a2a6c; /* Adjusted */
         }
         
         .question-title {
             display: flex;
             align-items: center;
-            gap: 15px; /* Increased from 10px */
-            margin-bottom: 25px; /* Increased from 15px */
+            gap: 12px; /* Adjusted */
+            margin-bottom: 20px; /* Adjusted */
             color: #1a2a6c;
-            font-size: 1.8rem; /* Increased from 1.1rem */
+            font-size: 1.2rem; /* Adjusted for mobile */
         }
         
         .question-title .number {
             background: linear-gradient(to bottom, #b21f1f, #8a1818);
             color: white;
-            width: 45px; /* Increased from 30px */
-            height: 45px; /* Increased from 30px */
+            width: 38px; /* Adjusted */
+            height: 38px; /* Adjusted */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.8rem; /* Consistent with question-title */
+            font-size: 1.2rem; /* Consistent with question-title */
         }
         
         .question-content {
-            padding: 15px; /* Increased from 10px */
-            font-size: 1.7rem; /* Increased from 1.05rem */
+            padding: 12px; /* Adjusted */
+            font-size: 1.1rem; /* Adjusted for mobile */
         }
         
         .answer-input {
             width: 100%;
-            padding: 18px; /* Increased from 10px */
-            border: 3px solid #1a2a6c; /* Increased border */
-            border-radius: 12px; /* Increased from 8px */
-            font-size: 1.8rem; /* Increased from 1.1rem */
-            margin-top: 15px; /* Increased from 10px */
+            padding: 15px; /* Adjusted */
+            border: 2px solid #1a2a6c; /* Adjusted */
+            border-radius: 10px; /* Adjusted */
+            font-size: 1.2rem; /* Adjusted for mobile */
+            margin-top: 12px; /* Adjusted */
             text-align: center;
         }
         
         .answer-input:focus {
             outline: none;
             border-color: #b21f1f;
-            box-shadow: 0 0 0 4px rgba(178, 31, 31, 0.3); /* Increased shadow */
+            box-shadow: 0 0 0 3px rgba(178, 31, 31, 0.3); /* Adjusted */
         }
         
+        /* Application section */
         .application-box {
             background: linear-gradient(to bottom right, #fff9e6, #ffedb3);
-            border-radius: 15px; /* Increased from 10px */
-            padding: 25px; /* Increased from 15px */
-            margin: 25px 0; /* Increased from 15px 0 */
-            border: 3px solid #1a2a6c; /* Increased border */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Increased shadow */
+            border-radius: 12px; /* Adjusted */
+            padding: 20px; /* Adjusted */
+            margin: 20px 0; /* Adjusted */
+            border: 2px solid #1a2a6c; /* Adjusted */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adjusted */
         }
         
         .application-title {
             color: #1a2a6c;
-            border-bottom: 3px solid #b21f1f; /* Increased border */
-            padding-bottom: 12px; /* Increased from 8px */
-            margin-bottom: 25px; /* Increased from 15px */
-            font-size: 2rem; /* Increased from 1.2rem */
+            border-bottom: 2px solid #b21f1f; /* Adjusted */
+            padding-bottom: 10px; /* Adjusted */
+            margin-bottom: 20px; /* Adjusted */
+            font-size: 1.4rem; /* Adjusted for mobile */
             display: flex;
             align-items: center;
-            gap: 12px; /* Increased from 8px */
+            gap: 10px; /* Adjusted */
         }
         
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 25px 0; /* Increased from 15px 0 */
+            margin: 20px 0; /* Adjusted */
             background: white;
-            border-radius: 12px; /* Increased from 8px */
+            border-radius: 10px; /* Adjusted */
             overflow: hidden;
         }
         
         .data-table th {
             background: linear-gradient(to right, #1a2a6c, #0d1a4d);
             color: white;
-            padding: 18px; /* Increased from 12px */
+            padding: 15px; /* Adjusted */
             text-align: center;
-            font-size: 1.8rem; /* New property */
+            font-size: 1.1rem; /* Adjusted */
         }
         
         .data-table td {
-            padding: 18px; /* Increased from 12px */
+            padding: 15px; /* Adjusted */
             text-align: center;
-            border-bottom: 2px solid #ddd; /* Increased border */
-            font-size: 1.7rem; /* New property */
+            border-bottom: 1px solid #ddd; /* Adjusted */
+            font-size: 1rem; /* Adjusted */
         }
         
         .data-table tr:last-child td {
@@ -487,149 +497,30 @@
             background-color: #f2f2f2;
         }
         
-        /* تحسينات للشاشات الصغيرة جدًا */
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2.6rem; /* Adjusted */
-            }
-            
-            .subtitle {
-                font-size: 1.8rem; /* Adjusted */
-            }
-            
-            .section h2 {
-                font-size: 2rem; /* Adjusted */
-            }
-            
-            .math-expression {
-                font-size: 1.6rem; /* Adjusted */
-                padding: 12px; /* Adjusted */
-            }
-            
-            .number-item {
-                padding: 20px; /* Adjusted */
-                font-size: 1.6rem; /* Adjusted */
-            }
-            
-            .question-container {
-                padding: 18px; /* Adjusted */
-            }
-            
-            body {
-                font-size: 20px; /* Adjusted */
-            }
-            
-            .comp-option {
-                padding: 12px 25px; /* Adjusted */
-                font-size: 1.6rem; /* Adjusted */
-                min-width: 70px;
-                max-width: 100px;
-            }
-            
-            .check-btn {
-                padding: 15px 30px; /* Adjusted */
-                font-size: 1.6rem; /* Adjusted */
-                max-width: 250px;
-            }
-            
-            .feedback {
-                padding: 15px; /* Adjusted */
-                font-size: 1.4rem; /* Adjusted */
-            }
-            
-            .info-box li, .section p, .step {
-                font-size: 1.4rem; /* Adjusted */
-            }
-        }
-        
-        /* تحسينات للوضع الأفقي للهاتف */
-        @media (max-height: 500px) and (orientation: landscape) {
-            body {
-                padding: 10px; /* Adjusted */
-                font-size: 20px; /* Adjusted */
-            }
-            
-            .container {
-                padding: 5px; /* Adjusted */
-            }
-            
-            header {
-                padding: 15px; /* Adjusted */
-            }
-            
-            h1 {
-                font-size: 2.2rem; /* Adjusted */
-            }
-            
-            .section {
-                padding: 20px 15px; /* Adjusted */
-            }
-            
-            .subtitle {
-                font-size: 1.6rem; /* Adjusted */
-            }
-            
-            .section h2 {
-                font-size: 1.8rem; /* Adjusted */
-            }
-            
-            .nav-btn {
-                padding: 14px 28px; /* Adjusted */
-                font-size: 1.2rem; /* Adjusted */
-            }
-            
-            .nav-btn i {
-                font-size: 1.3rem; /* Adjusted */
-            }
-            
-            .question-container {
-                padding: 15px; /* Adjusted */
-            }
-            
-            .question-title {
-                font-size: 1.4rem; /* Adjusted */
-            }
-            
-            .question-title .number {
-                width: 35px; /* Adjusted */
-                height: 35px; /* Adjusted */
-                font-size: 1.4rem; /* Adjusted */
-            }
-            
-            .question-content, .answer-input {
-                font-size: 1.4rem; /* Adjusted */
-            }
-            
-            .data-table th, .data-table td {
-                padding: 14px; /* Adjusted */
-                font-size: 1.3rem; /* Adjusted */
-            }
-        }
-        
-        /* أنماط جديدة لأزرار التنقل */
+        /* Navigation buttons */
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
-            margin: 40px 0; /* Increased from 30px 0 */
-            padding: 0 15px; /* Increased from 0 10px */
-            gap: 20px; /* Increased from 15px */
+            margin: 30px 0; /* Adjusted */
+            padding: 0 10px; /* Adjusted */
+            gap: 15px; /* Adjusted */
         }
         
         .nav-btn {
             background: linear-gradient(to right, #1a2a6c, #b21f1f);
             color: white;
             border: none;
-            padding: 18px 35px; /* Increased from 12px 25px */
-            border-radius: 40px; /* Increased from 30px */
+            padding: 15px 30px; /* Adjusted */
+            border-radius: 35px; /* Adjusted */
             cursor: pointer;
-            font-size: 1.8rem; /* Increased from 1.1rem */
+            font-size: 1.1rem; /* Adjusted for mobile */
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 15px; /* Increased from 10px */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Increased shadow */
+            gap: 12px; /* Adjusted */
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2); /* Adjusted */
             transition: all 0.3s ease;
-            border: 3px solid rgba(255, 255, 255, 0.3); /* Increased border */
+            border: 2px solid rgba(255, 255, 255, 0.3); /* Adjusted */
             text-decoration: none;
             flex: 1;
             text-align: center;
@@ -637,28 +528,137 @@
         }
         
         .nav-btn:hover {
-            transform: translateY(-5px); /* Increased transform */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Increased shadow */
+            transform: translateY(-3px); /* Adjusted */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Adjusted */
             background: linear-gradient(to right, #0d1a4d, #8a1818);
         }
         
         .nav-btn.home {
             background: linear-gradient(to right, #b21f1f, #8a1818);
-            flex: 0.8;
+            flex: 0.8; /* Adjusted */
         }
         
         .nav-btn i {
-            font-size: 2rem; /* Increased from 1.2rem */
+            font-size: 1.4rem; /* Adjusted */
         }
         
+        /* Responsive adjustments */
         @media (max-width: 600px) {
             .navigation-buttons {
                 flex-direction: column;
-                gap: 20px; /* Increased from 15px */
+                gap: 15px; /* Adjusted */
             }
             
             .nav-btn {
                 width: 100%;
+            }
+        }
+
+        /* Very small screens adjustments */
+        @media (max-width: 480px) {
+            body {
+                font-size: 16px; /* Smaller base font */
+                padding: 10px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            .section h2 {
+                font-size: 1.4rem;
+            }
+            .math-expression {
+                font-size: 1.1rem;
+                padding: 10px;
+            }
+            .number-item {
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+            .question-container {
+                padding: 15px;
+            }
+            .comp-option {
+                padding: 10px 20px;
+                font-size: 1rem;
+                min-width: 60px;
+                max-width: 90px;
+            }
+            .check-btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+                max-width: 200px;
+            }
+            .feedback {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            .info-box li, .section p, .step {
+                font-size: 0.9rem;
+            }
+            .question-title {
+                font-size: 1.1rem;
+            }
+            .question-title .number {
+                width: 32px;
+                height: 32px;
+                font-size: 1.1rem;
+            }
+            .question-content, .answer-input, .data-table th, .data-table td {
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Landscape orientation for phones */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+                font-size: 16px;
+            }
+            .container {
+                padding: 5px;
+            }
+            header {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .section {
+                padding: 18px 12px;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .section h2 {
+                font-size: 1.3rem;
+            }
+            .nav-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            .nav-btn i {
+                font-size: 1.1rem;
+            }
+            .question-container {
+                padding: 12px;
+            }
+            .question-title {
+                font-size: 1rem;
+            }
+            .question-title .number {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+            }
+            .question-content, .answer-input {
+                font-size: 0.9rem;
+            }
+            .data-table th, .data-table td {
+                padding: 10px;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -1054,7 +1054,7 @@
             const feedbackElement = document.getElementById(`feedback-${questionId}`);
             
             if (!selectedOption) {
-                feedbackElement.innerHTML = 'إجابة خاطئة';
+                feedbackElement.innerHTML = 'الرجاء اختيار إجابة.'; // Improved error message
                 feedbackElement.className = 'feedback incorrect';
                 return;
             }
@@ -1147,8 +1147,18 @@
             }
             
             draggedItem.style.opacity = '1';
+            draggedItem.classList.remove('dragging'); // Remove dragging class
             return false;
         }
+
+        // Handle dragend to clean up
+        document.querySelectorAll('.number-item').forEach(item => {
+            item.addEventListener('dragend', () => {
+                draggedItem.classList.remove('dragging');
+                draggedItem.style.opacity = '1';
+                draggedItem = null; // Clear dragged item
+            });
+        });
         
         // تهيئة MathJax بعد تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
