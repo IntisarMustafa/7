@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PONG المحترفة - النسخة المحسنة</title>
+    <title>PONG المحترفة - النسخة المحسنة للكمبيوتر</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* إعادة تعيين أساسي وتحديد الخط */
@@ -279,7 +279,7 @@
             box-shadow: 0 10px 25px rgba(255, 0, 204, 0.8);
         }
 
-        /* مناطق اللمس */
+        /* مناطق اللمس (أصبحت أقل أهمية للكمبيوتر ولكن تبقى للموبايل) */
         .touch-areas {
             position: absolute;
             width: 100%;
@@ -688,9 +688,12 @@
         // إعدادات المضارب
         const PADDLE_HEIGHT_PERCENT = 2; // نسبة مئوية من ارتفاع الحاوية
         const PADDLE_WIDTH_PERCENT = 25; // نسبة مئوية من عرض الحاوية
-        const PADDLE_MOVE_SPEED = 1; // سرعة تحريك المضرب (وحدة لكل تحديث إطار)
+        const PADDLE_MOVE_SPEED_PERCENT = 1.5; // سرعة تحريك المضرب (وحدة لكل تحديث إطار) - تم زيادتها للكمبيوتر
         let topPaddleX = 50; // بالمئة
         let bottomPaddleX = 50; // بالمئة
+
+        // حالة مفاتيح لوحة المفاتيح
+        let keysPressed = {};
 
         // إعدادات صعوبة الكمبيوتر
         const COMPUTER_DIFFICULTY_SETTINGS = {
@@ -715,8 +718,8 @@
                 startBtn.style.display = 'block';
                 topPlayerInstruction.textContent = "مضرب اللاعب العلوي";
                 bottomPlayerInstruction.textContent = "مضرب اللاعب السفلي";
-                player1Instruction.innerHTML = 'المس فوق المضرب العلوي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
-                player2Instruction.innerHTML = 'المس فوق المضرب السفلي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
+                player1Instruction.innerHTML = 'اللاعب العلوي: حرك باللمس أو مفتاحَي <i class="fas fa-arrow-left"></i> / <i class="fas fa-arrow-right"></i> أو A / D';
+                player2Instruction.innerHTML = 'اللاعب السفلي: حرك باللمس أو مفتاحَي <i class="fas fa-arrow-left"></i> / <i class="fas fa-arrow-right"></i>'; // تم تعديل التعليمات
                 computerDifficultyDisplay.style.display = 'none';
             });
 
@@ -728,7 +731,7 @@
                 topPlayerInstruction.textContent = "مضرب الكمبيوتر (الأعلى)";
                 bottomPlayerInstruction.textContent = "مضربك (الأسفل)";
                 player1Instruction.innerHTML = 'مضرب الكمبيوتر يتحرك تلقائياً';
-                player2Instruction.innerHTML = 'المس فوق المضرب السفلي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
+                player2Instruction.innerHTML = 'حرك باللمس أو مفتاحَي <i class="fas fa-arrow-left"></i> / <i class="fas fa-arrow-right"></i>'; // تم تعديل التعليمات
                 computerDifficultyDisplay.style.display = 'block';
                 currentComputerDifficulty = COMPUTER_DIFFICULTY_SETTINGS[computerDifficultySelect.value];
                 updateComputerDifficultyDisplay();
@@ -758,11 +761,55 @@
             });
         });
 
-        // --- دوال التحكم باللمس والماوس ---
+        // --- دوال التحكم باللمس والماوس ولوحة المفاتيح ---
+
+        // أحداث لوحة المفاتيح
+        document.addEventListener('keydown', (e) => {
+            keysPressed[e.key] = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            keysPressed[e.key] = false;
+        });
+
+        function handleKeyboardInput() {
+            if (gameRunning && !waitingForAnswer) {
+                // التحكم باللاعب السفلي (Player 2)
+                if (keysPressed['ArrowLeft'] || keysPressed['a']) {
+                    bottomPaddleX = Math.max(PADDLE_WIDTH_PERCENT / 2, bottomPaddleX - PADDLE_MOVE_SPEED_PERCENT);
+                }
+                if (keysPressed['ArrowRight'] || keysPressed['d']) {
+                    bottomPaddleX = Math.min(100 - PADDLE_WIDTH_PERCENT / 2, bottomPaddleX + PADDLE_MOVE_SPEED_PERCENT);
+                }
+
+                // التحكم باللاعب العلوي (Player 1) في وضع الصديق فقط
+                if (gameMode === 'friend') {
+                    if (keysPressed['q']) { // يمكن تغيير المفاتيح هنا
+                        topPaddleX = Math.max(PADDLE_WIDTH_PERCENT / 2, topPaddleX - PADDLE_MOVE_SPEED_PERCENT);
+                    }
+                    if (keysPressed['e']) { // يمكن تغيير المفاتيح هنا
+                        topPaddleX = Math.min(100 - PADDLE_WIDTH_PERCENT / 2, topPaddleX + PADDLE_MOVE_SPEED_PERCENT);
+                    }
+                }
+
+                paddleBottom.style.left = `${bottomPaddleX}%`;
+                paddleBottom.style.transform = `translateX(-50%)`;
+                if (gameMode === 'friend') {
+                    paddleTop.style.left = `${topPaddleX}%`;
+                    paddleTop.style.transform = `translateX(-50%)`;
+                }
+            }
+        }
+
+
         function handleInteractionStart(e, playerNum) {
+            // قم بتعطيل معالجة اللمس/الماوس إذا كانت هناك مفاتيح ضغطت حديثًا أو إذا لم تكن اللعبة قيد التشغيل بعد
+            // هذا لضمان أن لا تتعارض الطرق.
+            if (Object.keys(keysPressed).some(key => keysPressed[key])) return; // إذا كان هناك أي مفتاح مضغوط، لا تستجب للمس/الماوس
+
             e.preventDefault();
             if (playerNum === 1) {
-                if (gameMode === 'friend') { // فقط إذا كان الوضع "مع صديق"
+                if (gameMode === 'friend') {
                     isPlayer1Active = true;
                     player1TouchArea.classList.add('active');
                 }
@@ -774,7 +821,10 @@
         }
 
         function handleInteractionMove(e, playerNum) {
-            if ((playerNum === 1 && isPlayer1Active) || (playerNum === 2 && isPlayer2Active)) {
+            if ((playerNum === 1 && isPlayer1Active && gameMode === 'friend') || (playerNum === 2 && isPlayer2Active)) {
+                // قم بتعطيل معالجة اللمس/الماوس إذا كانت هناك مفاتيح ضغطت حديثًا
+                if (Object.keys(keysPressed).some(key => keysPressed[key])) return;
+
                 updatePaddlePosition(e, playerNum);
             }
             e.preventDefault();
@@ -794,10 +844,12 @@
         player1TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 1), { passive: false });
         player1TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 1), { passive: false });
         player1TouchArea.addEventListener('touchend', () => handleInteractionEnd(1));
-        player1TouchArea.addEventListener('mousedown', (e) => handleInteractionStart(e, 1));
-        player1TouchArea.addEventListener('mousemove', (e) => handleInteractionMove(e, 1));
-        player1TouchArea.addEventListener('mouseup', () => handleInteractionEnd(1));
-        player1TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(1));
+        // تم تعطيل أحداث الماوس للاعب 1 افتراضياً للسماح بالتحكم بلوحة المفاتيح بشكل أساسي على الكمبيوتر
+        // player1TouchArea.addEventListener('mousedown', (e) => handleInteractionStart(e, 1));
+        // player1TouchArea.addEventListener('mousemove', (e) => handleInteractionMove(e, 1));
+        // player1TouchArea.addEventListener('mouseup', () => handleInteractionEnd(1));
+        // player1TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(1));
+
 
         player2TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 2), { passive: false });
         player2TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 2), { passive: false });
@@ -1063,6 +1115,9 @@
                 moveComputerPaddle();
             }
 
+            // معالجة مدخلات لوحة المفاتيح
+            handleKeyboardInput();
+
             if (!waitingForAnswer) {
                 ballX += ballSpeedX;
                 ballY += ballSpeedY;
@@ -1214,6 +1269,9 @@
         function gameLoop() {
             if (gameRunning && !waitingForAnswer) {
                 update();
+                requestAnimationFrame(gameLoop);
+            } else if (waitingForAnswer) {
+                // إذا كنا ننتظر إجابة، لا تفعل شيئًا ولكن استمر في حلقة اللعبة
                 requestAnimationFrame(gameLoop);
             }
         }
