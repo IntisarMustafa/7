@@ -9,6 +9,10 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         /* Base styles */
+        :root {
+            font-size: 16px; /* Define base font size for rem unit */
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -19,25 +23,25 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
             color: #333;
-            line-height: 1.6; /* Adjusted for better readability */
-            padding: 15px; /* Adjusted for mobile */
-            font-size: 18px; /* Base font size for mobile */
+            line-height: 1.6;
+            padding: 1rem; /* Use rem for padding */
+            font-size: 1.125rem; /* Base font size (18px) for larger screens */
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 10px;
+            padding: 0.625rem; /* Use rem for padding */
         }
         
         /* Header styles */
         header {
             text-align: center;
-            padding: 20px; /* Adjusted */
+            padding: 1.25rem; /* Use rem */
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px; /* Adjusted */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Adjusted */
-            margin-bottom: 20px; /* Adjusted */
+            border-radius: 0.9375rem; /* Use rem */
+            box-shadow: 0 0.375rem 0.9375rem rgba(0, 0, 0, 0.2); /* Use rem */
+            margin-bottom: 1.25rem; /* Use rem */
             animation: fadeIn 1s ease-out;
             position: relative;
             overflow: hidden;
@@ -49,14 +53,14 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 5px; /* Adjusted */
+            height: 0.3125rem; /* Use rem */
             background: linear-gradient(90deg, #1a2a6c, #b21f1f, #1a2a6c);
         }
         
         h1 {
             color: #1a2a6c;
-            font-size: 2.2rem; /* Adjusted for mobile */
-            margin-bottom: 10px;
+            font-size: 2.5rem; /* Increased size using rem */
+            margin-bottom: 0.625rem; /* Use rem */
             position: relative;
             display: inline-block;
         }
@@ -64,99 +68,99 @@
         h1::after {
             content: "";
             position: absolute;
-            bottom: -8px; /* Adjusted */
+            bottom: -0.5rem; /* Use rem */
             left: 50%;
             transform: translateX(-50%);
-            width: 80px; /* Adjusted */
-            height: 3px; /* Adjusted */
+            width: 5rem; /* Use rem */
+            height: 0.1875rem; /* Use rem */
             background: #b21f1f;
-            border-radius: 2px;
+            border-radius: 0.125rem; /* Use rem */
         }
         
         .subtitle {
             color: #b21f1f;
-            font-size: 1.2rem; /* Adjusted for mobile */
-            margin-bottom: 20px; /* Adjusted */
+            font-size: 1.3rem; /* Increased size using rem */
+            margin-bottom: 1.25rem; /* Use rem */
             font-weight: 600;
         }
         
         .lesson-info {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Adjusted */
-            margin-top: 20px; /* Adjusted */
+            gap: 1.25rem; /* Use rem */
+            margin-top: 1.25rem; /* Use rem */
         }
         
         .info-box {
             background: #f0f8ff;
-            padding: 20px; /* Adjusted */
-            border-radius: 12px; /* Adjusted */
+            padding: 1.25rem; /* Use rem */
+            border-radius: 0.75rem; /* Use rem */
             width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adjusted */
-            border: 2px solid #1a2a6c; /* Adjusted */
+            box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1); /* Use rem */
+            border: 0.125rem solid #1a2a6c; /* Use rem */
         }
         
         .info-box h3 {
             color: #1a2a6c;
-            border-bottom: 2px solid #b21f1f; /* Adjusted */
-            padding-bottom: 10px; /* Adjusted */
-            margin-bottom: 20px; /* Adjusted */
-            font-size: 1.4rem; /* Adjusted for mobile */
+            border-bottom: 0.125rem solid #b21f1f; /* Use rem */
+            padding-bottom: 0.625rem; /* Use rem */
+            margin-bottom: 1.25rem; /* Use rem */
+            font-size: 1.5rem; /* Increased size using rem */
             display: flex;
             align-items: center;
-            gap: 10px; /* Adjusted */
+            gap: 0.625rem; /* Use rem */
         }
         
         .info-box ul {
-            padding-right: 20px; /* Adjusted */
+            padding-right: 1.25rem; /* Use rem */
         }
         
         .info-box li {
-            margin-bottom: 10px; /* Adjusted */
+            margin-bottom: 0.625rem; /* Use rem */
             position: relative;
-            padding-right: 25px; /* Adjusted */
-            font-size: 1rem; /* Adjusted for mobile */
+            padding-right: 1.5625rem; /* Use rem */
+            font-size: 1.1rem; /* Increased size using rem */
         }
         
         .info-box li::before {
             content: "•";
             color: #b21f1f;
-            font-size: 1.2rem; /* Adjusted */
+            font-size: 1.3rem; /* Increased size using rem */
             position: absolute;
             right: 0;
-            top: -2px; /* Adjusted */
+            top: -0.125rem; /* Use rem */
         }
         
         /* Content sections */
         .content {
             display: flex;
             flex-direction: column;
-            gap: 25px; /* Adjusted */
-            margin-bottom: 30px; /* Adjusted */
+            gap: 1.5625rem; /* Use rem */
+            margin-bottom: 1.875rem; /* Use rem */
         }
         
         .section {
             background: rgba(255, 255, 255, 0.97);
-            border-radius: 15px; /* Adjusted */
-            padding: 25px 20px; /* Adjusted */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Adjusted */
-            border: 2px solid #1a2a6c; /* Adjusted */
+            border-radius: 0.9375rem; /* Use rem */
+            padding: 1.5625rem 1.25rem; /* Use rem */
+            box-shadow: 0 0.375rem 0.9375rem rgba(0, 0, 0, 0.15); /* Use rem */
+            border: 0.125rem solid #1a2a6c; /* Use rem */
         }
         
         .section h2 {
             color: #b21f1f;
-            margin-bottom: 25px; /* Adjusted */
-            padding-bottom: 15px; /* Adjusted */
-            border-bottom: 2px dashed #1a2a6c; /* Adjusted */
+            margin-bottom: 1.5625rem; /* Use rem */
+            padding-bottom: 0.9375rem; /* Use rem */
+            border-bottom: 0.125rem dashed #1a2a6c; /* Use rem */
             display: flex;
             align-items: center;
-            font-size: 1.6rem; /* Adjusted for mobile */
-            gap: 12px; /* Adjusted */
+            font-size: 1.8rem; /* Increased size using rem */
+            gap: 0.75rem; /* Use rem */
         }
         
         .section p {
-            font-size: 1rem; /* Adjusted for mobile */
-            margin-bottom: 20px; /* Adjusted */
+            font-size: 1.1rem; /* Increased size using rem */
+            margin-bottom: 1.25rem; /* Use rem */
         }
         
         .exploration {
@@ -178,43 +182,43 @@
         /* Exercise elements */
         .exercise {
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px; /* Adjusted */
-            padding: 20px; /* Adjusted */
-            margin: 20px 0; /* Adjusted */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adjusted */
-            border: 2px solid #1a2a6c; /* Adjusted */
+            border-radius: 0.75rem; /* Use rem */
+            padding: 1.25rem; /* Use rem */
+            margin: 1.25rem 0; /* Use rem */
+            box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1); /* Use rem */
+            border: 0.125rem solid #1a2a6c; /* Use rem */
         }
         
         .exercise-title {
             color: #1a2a6c;
-            margin-bottom: 20px; /* Adjusted */
+            margin-bottom: 1.25rem; /* Use rem */
             display: flex;
             align-items: center;
-            font-size: 1.4rem; /* Adjusted for mobile */
-            gap: 10px; /* Adjusted */
-            border-bottom: 2px solid #b21f1f; /* Adjusted */
-            padding-bottom: 12px; /* Adjusted */
+            font-size: 1.6rem; /* Increased size using rem */
+            gap: 0.625rem; /* Use rem */
+            border-bottom: 0.125rem solid #b21f1f; /* Use rem */
+            padding-bottom: 0.75rem; /* Use rem */
         }
         
         .comparison-options {
             display: flex;
-            gap: 10px; /* Adjusted */
-            margin: 20px 0; /* Adjusted */
+            gap: 0.625rem; /* Use rem */
+            margin: 1.25rem 0; /* Use rem */
             justify-content: center;
             flex-wrap: wrap;
         }
         
         .comp-option {
-            padding: 12px 25px; /* Adjusted for better touch target */
+            padding: 0.75rem 1.5625rem; /* Use rem for better touch target */
             background: #e0e0e0;
-            border-radius: 30px; /* Adjusted */
+            border-radius: 1.875rem; /* Use rem */
             cursor: pointer;
-            font-size: 1.1rem; /* Adjusted for mobile */
+            font-size: 1.2rem; /* Increased size using rem */
             font-weight: bold;
-            min-width: 70px; /* Adjusted */
+            min-width: 4.375rem; /* Use rem */
             text-align: center;
             flex: 1;
-            max-width: 100px; /* Adjusted */
+            max-width: 6.25rem; /* Use rem */
         }
         
         .comp-option.selected {
@@ -226,24 +230,24 @@
             background: linear-gradient(to right, #1a2a6c, #0d1a4d);
             color: white;
             border: none;
-            padding: 15px 30px; /* Adjusted for better touch target */
-            border-radius: 30px; /* Adjusted */
+            padding: 0.9375rem 1.875rem; /* Use rem for better touch target */
+            border-radius: 1.875rem; /* Use rem */
             cursor: pointer;
-            font-size: 1.1rem; /* Adjusted for mobile */
-            margin-top: 15px; /* Adjusted */
+            font-size: 1.2rem; /* Increased size using rem */
+            margin-top: 0.9375rem; /* Use rem */
             font-weight: 600;
             display: block;
-            margin: 20px auto; /* Adjusted */
+            margin: 1.25rem auto; /* Use rem */
             width: 100%;
-            max-width: 280px; /* Adjusted */
+            max-width: 17.5rem; /* Use rem */
         }
         
         .feedback {
-            margin-top: 20px; /* Adjusted */
-            padding: 15px; /* Adjusted */
-            border-radius: 10px; /* Adjusted */
+            margin-top: 1.25rem; /* Use rem */
+            padding: 0.9375rem; /* Use rem */
+            border-radius: 0.625rem; /* Use rem */
             display: none;
-            font-size: 1rem; /* Adjusted for mobile */
+            font-size: 1.1rem; /* Increased size using rem */
             text-align: center;
             font-weight: 600;
         }
@@ -251,63 +255,63 @@
         .feedback.correct {
             background: linear-gradient(to right, #d4edda, #c3e6cb);
             color: #155724;
-            border: 2px solid #28a745; /* Adjusted */
+            border: 0.125rem solid #28a745; /* Use rem */
             display: block;
         }
         
         .feedback.incorrect {
             background: linear-gradient(to right, #f8d7da, #f5c6cb);
             color: #721c24;
-            border: 2px solid #dc3545; /* Adjusted */
+            border: 0.125rem solid #dc3545; /* Use rem */
             display: block;
         }
         
         .ordering-exercise {
             display: flex;
             flex-direction: column;
-            gap: 15px; /* Adjusted */
-            margin: 25px 0; /* Adjusted */
+            gap: 0.9375rem; /* Use rem */
+            margin: 1.5625rem 0; /* Use rem */
         }
         
         .number-item {
             background: linear-gradient(to right, #e6f7ff, #d1f0ff);
-            padding: 20px; /* Adjusted */
-            border-radius: 12px; /* Adjusted */
+            padding: 1.25rem; /* Use rem */
+            border-radius: 0.75rem; /* Use rem */
             display: flex;
             align-items: center;
             cursor: move;
-            font-size: 1.2rem; /* Adjusted for mobile */
+            font-size: 1.3rem; /* Increased size using rem */
             font-weight: bold;
-            border: 2px solid #1a2a6c; /* Adjusted */
+            border: 0.125rem solid #1a2a6c; /* Use rem */
         }
         
         .number-item i {
-            margin-left: 10px; /* Adjusted */
+            margin-left: 0.625rem; /* Use rem */
             color: #1a2a6c;
-            font-size: 1.4rem; /* Adjusted */
+            font-size: 1.5rem; /* Increased size using rem */
         }
         
         /* Footer styles */
         .footer {
             text-align: center;
-            padding: 20px; /* Adjusted */
+            padding: 1.25rem; /* Use rem */
             background: rgba(0, 0, 0, 0.8);
             color: white;
-            border-radius: 15px; /* Adjusted */
-            margin-top: 25px; /* Adjusted */
-            border: 2px solid #b21f1f; /* Adjusted */
-            font-size: 0.9rem; /* Adjusted for mobile */
+            border-radius: 0.9375rem; /* Use rem */
+            margin-top: 1.5625rem; /* Use rem */
+            border: 0.125rem solid #b21f1f; /* Use rem */
+            font-size: 1rem; /* Use rem */
         }
         
         .footer h3 {
-            font-size: 1.2rem; /* Adjusted for mobile */
-            margin-bottom: 10px; /* Adjusted */
+            font-size: 1.3rem; /* Increased size using rem */
+            margin-bottom: 0.625rem; /* Use rem */
             color: #ff9999;
         }
         
         /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); } /* Adjusted */
+            from { opacity: 0; transform: translateY(-1.25rem); } /* Use rem */
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -315,178 +319,178 @@
             animation: pulse 1.5s infinite;
             font-weight: bold;
             color: #b21f1f;
-            font-size: 1.1rem; /* Adjusted for mobile */
+            font-size: 1.2rem; /* Increased size using rem */
             text-align: center;
-            padding: 12px; /* Adjusted */
+            padding: 0.75rem; /* Use rem */
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 8px; /* Adjusted */
+            border-radius: 0.5rem; /* Use rem */
             display: inline-block;
-            margin: 12px 0; /* Adjusted */
+            margin: 0.75rem 0; /* Use rem */
         }
         
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.03); } /* Adjusted scale */
+            50% { transform: scale(1.03); }
             100% { transform: scale(1); }
         }
         
         /* Steps */
         .steps {
-            margin: 20px 0; /* Adjusted */
-            padding-right: 20px; /* Adjusted */
+            margin: 1.25rem 0; /* Use rem */
+            padding-right: 1.25rem; /* Use rem */
         }
         
         .step {
-            margin-bottom: 20px; /* Adjusted */
-            padding: 20px; /* Adjusted */
+            margin-bottom: 1.25rem; /* Use rem */
+            padding: 1.25rem; /* Use rem */
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px; /* Adjusted */
-            border-right: 5px solid #1a2a6c; /* Adjusted */
-            font-size: 1rem; /* Adjusted for mobile */
+            border-radius: 0.625rem; /* Use rem */
+            border-right: 0.3125rem solid #1a2a6c; /* Use rem */
+            font-size: 1.1rem; /* Increased size using rem */
         }
         
         .step-number {
             display: inline-block;
-            width: 38px; /* Adjusted */
-            height: 38px; /* Adjusted */
+            width: 2.375rem; /* Use rem */
+            height: 2.375rem; /* Use rem */
             background: linear-gradient(to bottom, #b21f1f, #8a1818);
             color: white;
             border-radius: 50%;
             text-align: center;
-            line-height: 38px; /* Adjusted */
-            margin-left: 12px; /* Adjusted */
+            line-height: 2.375rem; /* Use rem */
+            margin-left: 0.75rem; /* Use rem */
             font-weight: bold;
-            font-size: 1.1rem; /* Adjusted */
+            font-size: 1.2rem; /* Increased size using rem */
         }
         
         /* Math expressions */
         .math-expression {
-            font-size: 1.2rem; /* Adjusted for mobile */
+            font-size: 1.3rem; /* Increased size using rem */
             font-weight: bold;
             text-align: center;
-            margin: 12px 0; /* Adjusted */
-            padding: 15px; /* Adjusted */
+            margin: 0.75rem 0; /* Use rem */
+            padding: 0.9375rem; /* Use rem */
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px; /* Adjusted */
-            border: 2px solid #1a2a6c; /* Adjusted */
+            border-radius: 0.625rem; /* Use rem */
+            border: 0.125rem solid #1a2a6c; /* Use rem */
             overflow-x: auto;
         }
         
         .number-line-labels {
             display: flex;
             justify-content: space-between;
-            padding: 0 8px; /* Adjusted */
+            padding: 0 0.5rem; /* Use rem */
             font-weight: bold;
-            margin-top: 8px; /* Adjusted */
+            margin-top: 0.5rem; /* Use rem */
             color: #1a2a6c;
-            font-size: 0.9rem; /* Adjusted for mobile */
+            font-size: 1rem; /* Use rem */
         }
         
         .highlight {
             background: linear-gradient(to right, rgba(178, 31, 31, 0.2), rgba(26, 42, 108, 0.2));
-            padding: 4px 10px; /* Adjusted */
-            border-radius: 5px; /* Adjusted */
+            padding: 0.25rem 0.625rem; /* Use rem */
+            border-radius: 0.3125rem; /* Use rem */
             font-weight: bold;
             display: inline-block;
-            margin-top: 6px; /* Adjusted */
+            margin-top: 0.375rem; /* Use rem */
         }
         
         /* Question container */
         .question-container {
-            margin: 25px 0; /* Adjusted */
-            padding: 20px; /* Adjusted */
+            margin: 1.5625rem 0; /* Use rem */
+            padding: 1.25rem; /* Use rem */
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px; /* Adjusted */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adjusted */
-            border-left: 5px solid #1a2a6c; /* Adjusted */
+            border-radius: 0.75rem; /* Use rem */
+            box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1); /* Use rem */
+            border-left: 0.3125rem solid #1a2a6c; /* Use rem */
         }
         
         .question-title {
             display: flex;
             align-items: center;
-            gap: 12px; /* Adjusted */
-            margin-bottom: 20px; /* Adjusted */
+            gap: 0.75rem; /* Use rem */
+            margin-bottom: 1.25rem; /* Use rem */
             color: #1a2a6c;
-            font-size: 1.2rem; /* Adjusted for mobile */
+            font-size: 1.3rem; /* Increased size using rem */
         }
         
         .question-title .number {
             background: linear-gradient(to bottom, #b21f1f, #8a1818);
             color: white;
-            width: 38px; /* Adjusted */
-            height: 38px; /* Adjusted */
+            width: 2.375rem; /* Use rem */
+            height: 2.375rem; /* Use rem */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.2rem; /* Consistent with question-title */
+            font-size: 1.3rem; /* Consistent with question-title */
         }
         
         .question-content {
-            padding: 12px; /* Adjusted */
-            font-size: 1.1rem; /* Adjusted for mobile */
+            padding: 0.75rem; /* Use rem */
+            font-size: 1.2rem; /* Increased size using rem */
         }
         
         .answer-input {
             width: 100%;
-            padding: 15px; /* Adjusted */
-            border: 2px solid #1a2a6c; /* Adjusted */
-            border-radius: 10px; /* Adjusted */
-            font-size: 1.2rem; /* Adjusted for mobile */
-            margin-top: 12px; /* Adjusted */
+            padding: 0.9375rem; /* Use rem */
+            border: 0.125rem solid #1a2a6c; /* Use rem */
+            border-radius: 0.625rem; /* Use rem */
+            font-size: 1.2rem; /* Increased size using rem */
+            margin-top: 0.75rem; /* Use rem */
             text-align: center;
         }
         
         .answer-input:focus {
             outline: none;
             border-color: #b21f1f;
-            box-shadow: 0 0 0 3px rgba(178, 31, 31, 0.3); /* Adjusted */
+            box-shadow: 0 0 0 0.1875rem rgba(178, 31, 31, 0.3); /* Use rem */
         }
         
         /* Application section */
         .application-box {
             background: linear-gradient(to bottom right, #fff9e6, #ffedb3);
-            border-radius: 12px; /* Adjusted */
-            padding: 20px; /* Adjusted */
-            margin: 20px 0; /* Adjusted */
-            border: 2px solid #1a2a6c; /* Adjusted */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adjusted */
+            border-radius: 0.75rem; /* Use rem */
+            padding: 1.25rem; /* Use rem */
+            margin: 1.25rem 0; /* Use rem */
+            border: 0.125rem solid #1a2a6c; /* Use rem */
+            box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1); /* Use rem */
         }
         
         .application-title {
             color: #1a2a6c;
-            border-bottom: 2px solid #b21f1f; /* Adjusted */
-            padding-bottom: 10px; /* Adjusted */
-            margin-bottom: 20px; /* Adjusted */
-            font-size: 1.4rem; /* Adjusted for mobile */
+            border-bottom: 0.125rem solid #b21f1f; /* Use rem */
+            padding-bottom: 0.625rem; /* Use rem */
+            margin-bottom: 1.25rem; /* Use rem */
+            font-size: 1.6rem; /* Increased size using rem */
             display: flex;
             align-items: center;
-            gap: 10px; /* Adjusted */
+            gap: 0.625rem; /* Use rem */
         }
         
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0; /* Adjusted */
+            margin: 1.25rem 0; /* Use rem */
             background: white;
-            border-radius: 10px; /* Adjusted */
+            border-radius: 0.625rem; /* Use rem */
             overflow: hidden;
         }
         
         .data-table th {
             background: linear-gradient(to right, #1a2a6c, #0d1a4d);
             color: white;
-            padding: 15px; /* Adjusted */
+            padding: 0.9375rem; /* Use rem */
             text-align: center;
-            font-size: 1.1rem; /* Adjusted */
+            font-size: 1.2rem; /* Increased size using rem */
         }
         
         .data-table td {
-            padding: 15px; /* Adjusted */
+            padding: 0.9375rem; /* Use rem */
             text-align: center;
-            border-bottom: 1px solid #ddd; /* Adjusted */
-            font-size: 1rem; /* Adjusted */
+            border-bottom: 0.0625rem solid #ddd; /* Use rem */
+            font-size: 1.1rem; /* Increased size using rem */
         }
         
         .data-table tr:last-child td {
@@ -501,26 +505,26 @@
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
-            margin: 30px 0; /* Adjusted */
-            padding: 0 10px; /* Adjusted */
-            gap: 15px; /* Adjusted */
+            margin: 1.875rem 0; /* Use rem */
+            padding: 0 0.625rem; /* Use rem */
+            gap: 0.9375rem; /* Use rem */
         }
         
         .nav-btn {
             background: linear-gradient(to right, #1a2a6c, #b21f1f);
             color: white;
             border: none;
-            padding: 15px 30px; /* Adjusted */
-            border-radius: 35px; /* Adjusted */
+            padding: 0.9375rem 1.875rem; /* Use rem */
+            border-radius: 2.1875rem; /* Use rem */
             cursor: pointer;
-            font-size: 1.1rem; /* Adjusted for mobile */
+            font-size: 1.2rem; /* Increased size using rem */
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 12px; /* Adjusted */
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2); /* Adjusted */
+            gap: 0.75rem; /* Use rem */
+            box-shadow: 0 0.3125rem 0.75rem rgba(0, 0, 0, 0.2); /* Use rem */
             transition: all 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.3); /* Adjusted */
+            border: 0.125rem solid rgba(255, 255, 255, 0.3); /* Use rem */
             text-decoration: none;
             flex: 1;
             text-align: center;
@@ -528,37 +532,64 @@
         }
         
         .nav-btn:hover {
-            transform: translateY(-3px); /* Adjusted */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Adjusted */
+            transform: translateY(-0.1875rem); /* Use rem */
+            box-shadow: 0 0.375rem 0.9375rem rgba(0, 0, 0, 0.3); /* Use rem */
             background: linear-gradient(to right, #0d1a4d, #8a1818);
         }
         
         .nav-btn.home {
             background: linear-gradient(to right, #b21f1f, #8a1818);
-            flex: 0.8; /* Adjusted */
+            flex: 0.8;
         }
         
         .nav-btn i {
-            font-size: 1.4rem; /* Adjusted */
+            font-size: 1.5rem; /* Increased size using rem */
         }
         
         /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .navigation-buttons {
-                flex-direction: column;
-                gap: 15px; /* Adjusted */
+        @media (max-width: 992px) { /* Tablet landscape and smaller */
+            body {
+                font-size: 1.0625rem; /* 17px */
             }
-            
+            h1 {
+                font-size: 2.2rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .section h2 {
+                font-size: 1.7rem;
+            }
+            .question-title {
+                font-size: 1.25rem;
+            }
+            .question-title .number {
+                width: 2.2rem;
+                height: 2.2rem;
+                font-size: 1.25rem;
+            }
+            .question-content, .answer-input {
+                font-size: 1.1rem;
+            }
+            .comp-option, .check-btn, .feedback, .number-item, .footer {
+                font-size: 1.1rem;
+            }
+            .info-box li, .section p, .step {
+                font-size: 1rem;
+            }
             .nav-btn {
-                width: 100%;
+                font-size: 1.1rem;
+                padding: 0.8rem 1.5rem;
+            }
+            .nav-btn i {
+                font-size: 1.3rem;
             }
         }
 
-        /* Very small screens adjustments */
-        @media (max-width: 480px) {
+        @media (max-width: 768px) { /* Tablet portrait and smaller */
             body {
-                font-size: 16px; /* Smaller base font */
-                padding: 10px;
+                font-size: 1rem; /* 16px base */
+                padding: 0.8rem;
             }
             h1 {
                 font-size: 2rem;
@@ -567,32 +598,109 @@
                 font-size: 1.1rem;
             }
             .section h2 {
+                font-size: 1.6rem;
+            }
+            .info-box h3, .application-title {
                 font-size: 1.4rem;
             }
             .math-expression {
-                font-size: 1.1rem;
-                padding: 10px;
+                font-size: 1.2rem;
+                padding: 0.8rem;
             }
             .number-item {
-                padding: 15px;
+                padding: 1rem;
+                font-size: 1.2rem;
+            }
+            .question-container {
+                padding: 1rem;
+            }
+            .comp-option {
+                padding: 0.6rem 1.2rem;
+                font-size: 1.1rem;
+                min-width: 4rem;
+                max-width: 5.5rem;
+            }
+            .check-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1.1rem;
+                max-width: 15rem;
+            }
+            .feedback {
+                padding: 0.8rem;
+                font-size: 1rem;
+            }
+            .info-box li, .section p, .step {
+                font-size: 0.95rem;
+            }
+            .question-title {
+                font-size: 1.2rem;
+            }
+            .question-title .number {
+                width: 2rem;
+                height: 2rem;
+                font-size: 1.2rem;
+            }
+            .question-content, .answer-input, .data-table th, .data-table td {
+                font-size: 1rem;
+            }
+            .nav-btn {
+                font-size: 1rem;
+                padding: 0.7rem 1.3rem;
+            }
+            .nav-btn i {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) { /* Mobile phones */
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 0.9375rem; /* Use rem */
+            }
+            
+            .nav-btn {
+                width: 100%;
+            }
+            body {
+                font-size: 0.9375rem; /* 15px base */
+                padding: 0.625rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .section h2 {
+                font-size: 1.5rem;
+            }
+            .info-box h3, .application-title {
+                font-size: 1.3rem;
+            }
+            .math-expression {
+                font-size: 1.1rem;
+                padding: 0.7rem;
+            }
+            .number-item {
+                padding: 0.9rem;
                 font-size: 1.1rem;
             }
             .question-container {
-                padding: 15px;
+                padding: 0.9rem;
             }
             .comp-option {
-                padding: 10px 20px;
+                padding: 0.5rem 1rem;
                 font-size: 1rem;
-                min-width: 60px;
-                max-width: 90px;
+                min-width: 3.5rem;
+                max-width: 5rem;
             }
             .check-btn {
-                padding: 12px 25px;
+                padding: 0.7rem 1.2rem;
                 font-size: 1rem;
-                max-width: 200px;
+                max-width: 12rem;
             }
             .feedback {
-                padding: 12px;
+                padding: 0.7rem;
                 font-size: 0.9rem;
             }
             .info-box li, .section p, .step {
@@ -602,63 +710,76 @@
                 font-size: 1.1rem;
             }
             .question-title .number {
-                width: 32px;
-                height: 32px;
+                width: 1.8rem;
+                height: 1.8rem;
                 font-size: 1.1rem;
             }
             .question-content, .answer-input, .data-table th, .data-table td {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
+            }
+            .footer {
+                font-size: 0.85rem;
+            }
+            .footer h3 {
+                font-size: 1.1rem;
+            }
+            .nav-btn {
+                font-size: 0.9rem;
+                padding: 0.6rem 1rem;
+            }
+            .nav-btn i {
+                font-size: 1.1rem;
             }
         }
 
         /* Landscape orientation for phones */
         @media (max-height: 500px) and (orientation: landscape) {
             body {
-                padding: 10px;
-                font-size: 16px;
+                padding: 0.625rem;
+                font-size: 0.875rem; /* 14px */
             }
             .container {
-                padding: 5px;
+                padding: 0.3125rem;
             }
             header {
-                padding: 15px;
+                padding: 0.9375rem;
             }
             h1 {
-                font-size: 2rem;
-            }
-            .section {
-                padding: 18px 12px;
+                font-size: 1.7rem;
             }
             .subtitle {
-                font-size: 1rem;
+                font-size: 0.9rem;
+            }
+            .section {
+                padding: 1.125rem 0.75rem;
             }
             .section h2 {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
             .nav-btn {
-                padding: 12px 20px;
-                font-size: 1rem;
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
             }
             .nav-btn i {
                 font-size: 1.1rem;
             }
             .question-container {
-                padding: 12px;
+                padding: 0.75rem;
             }
             .question-title {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             .question-title .number {
-                width: 30px;
-                height: 30px;
-                font-size: 1rem;
+                width: 1.7rem;
+                height: 1.7rem;
+                font-size: 0.9rem;
             }
             .question-content, .answer-input {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
             .data-table th, .data-table td {
-                padding: 10px;
-                font-size: 0.9rem;
+                padding: 0.625rem;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -1054,7 +1175,7 @@
             const feedbackElement = document.getElementById(`feedback-${questionId}`);
             
             if (!selectedOption) {
-                feedbackElement.innerHTML = 'الرجاء اختيار إجابة.'; // Improved error message
+                feedbackElement.innerHTML = 'الرجاء اختيار إجابة.';
                 feedbackElement.className = 'feedback incorrect';
                 return;
             }
@@ -1147,7 +1268,7 @@
             }
             
             draggedItem.style.opacity = '1';
-            draggedItem.classList.remove('dragging'); // Remove dragging class
+            draggedItem.classList.remove('dragging');
             return false;
         }
 
@@ -1156,7 +1277,7 @@
             item.addEventListener('dragend', () => {
                 draggedItem.classList.remove('dragging');
                 draggedItem.style.opacity = '1';
-                draggedItem = null; // Clear dragged item
+                draggedItem = null;
             });
         });
         
