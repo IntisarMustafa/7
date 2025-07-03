@@ -19,23 +19,23 @@
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
             color: #333;
             line-height: 1.8;
-            padding: 10px;
-            font-size: 18px; /* زيادة حجم الخط الأساسي */
+            padding: 15px;
+            font-size: 22px; /* زيادة كبيرة في حجم الخط الأساسي */
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px; /* زيادة عرض الحاوية */
             margin: 0 auto;
-            padding: 10px; /* زيادة الحشو */
+            padding: 15px;
         }
         
         header {
             text-align: center;
-            padding: 20px; /* زيادة الحشو */
+            padding: 30px; /* زيادة كبيرة في الحشو */
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px; /* زيادة المسافة */
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* زيادة الظل */
+            margin-bottom: 30px;
             animation: fadeIn 1s ease-out;
             position: relative;
             overflow: hidden;
@@ -47,14 +47,14 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 6px; /* زيادة سمك الخط */
+            height: 8px; /* زيادة كبيرة في سمك الخط */
             background: linear-gradient(90deg, #1a2a6c, #b21f1f, #1a2a6c);
         }
         
         h1 {
             color: #1a2a6c;
-            font-size: 2.2rem; /* زيادة حجم العنوان الرئيسي */
-            margin-bottom: 15px; /* زيادة المسافة */
+            font-size: 3rem; /* حجم خط كبير جدًا */
+            margin-bottom: 20px;
             position: relative;
             display: inline-block;
         }
@@ -62,98 +62,99 @@
         h1::after {
             content: "";
             position: absolute;
-            bottom: -10px; /* زيادة المسافة */
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px; /* زيادة العرض */
-            height: 4px; /* زيادة السمك */
+            width: 150px;
+            height: 5px;
             background: #b21f1f;
-            border-radius: 2px;
+            border-radius: 3px;
         }
         
         .subtitle {
             color: #b21f1f;
-            font-size: 1.4rem; /* زيادة حجم العنوان الفرعي */
-            margin-bottom: 20px; /* زيادة المسافة */
-            font-weight: 600;
+            font-size: 1.8rem; /* حجم خط كبير */
+            margin-bottom: 30px;
+            font-weight: 700;
         }
         
         .lesson-info {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* زيادة المسافة بين العناصر */
-            margin-top: 25px; /* زيادة المسافة */
+            gap: 30px;
+            margin-top: 35px;
         }
         
         .info-box {
             background: #f0f8ff;
-            padding: 20px; /* زيادة الحشو */
-            border-radius: 10px;
+            padding: 30px; /* زيادة كبيرة في الحشو */
+            border-radius: 15px;
             width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: 2px solid #1a2a6c;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            border: 3px solid #1a2a6c;
         }
         
         .info-box h3 {
             color: #1a2a6c;
-            border-bottom: 3px solid #b21f1f; /* زيادة سمك الخط */
-            padding-bottom: 12px; /* زيادة الحشو */
-            margin-bottom: 20px; /* زيادة المسافة */
-            font-size: 1.5rem; /* زيادة حجم الخط */
+            border-bottom: 4px solid #b21f1f; /* زيادة كبيرة في السمك */
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2rem; /* حجم خط كبير جدًا */
             display: flex;
             align-items: center;
-            gap: 12px; /* زيادة المسافة بين العناصر */
+            gap: 15px;
         }
         
         .info-box ul {
-            padding-right: 20px; /* زيادة الحشو */
+            padding-right: 30px;
         }
         
         .info-box li {
-            margin-bottom: 12px; /* زيادة المسافة */
+            margin-bottom: 20px;
             position: relative;
-            padding-right: 25px; /* زيادة الحشو */
-            font-size: 1.1rem; /* زيادة حجم الخط */
+            padding-right: 35px;
+            font-size: 1.5rem; /* حجم خط كبير */
         }
         
         .info-box li::before {
             content: "•";
             color: #b21f1f;
-            font-size: 1.8rem; /* زيادة حجم النقطة */
+            font-size: 2.5rem; /* حجم كبير جدًا للنقطة */
             position: absolute;
             right: 0;
-            top: -5px; /* تعديل الموضع */
+            top: -5px;
         }
         
         .content {
             display: flex;
             flex-direction: column;
-            gap: 25px; /* زيادة المسافة بين الأقسام */
-            margin-bottom: 35px; /* زيادة المسافة */
+            gap: 35px;
+            margin-bottom: 50px;
         }
         
         .section {
             background: rgba(255, 255, 255, 0.97);
-            border-radius: 12px;
-            padding: 25px 20px; /* زيادة الحشو */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            border: 3px solid #1a2a6c; /* زيادة سمك الحدود */
+            border-radius: 15px;
+            padding: 35px 30px; /* زيادة كبيرة في الحشو */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 4px solid #1a2a6c; /* زيادة كبيرة في سمك الحدود */
         }
         
         .section h2 {
             color: #b21f1f;
-            margin-bottom: 25px; /* زيادة المسافة */
-            padding-bottom: 15px; /* زيادة الحشو */
-            border-bottom: 3px dashed #1a2a6c; /* زيادة سمك الخط */
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 4px dashed #1a2a6c; /* زيادة كبيرة في السمك */
             display: flex;
             align-items: center;
-            font-size: 1.8rem; /* زيادة حجم الخط */
-            gap: 15px; /* زيادة المسافة بين العناصر */
+            font-size: 2.2rem; /* حجم خط كبير جدًا */
+            gap: 20px;
         }
         
         .section p {
-            font-size: 1.15rem; /* زيادة حجم الخط */
-            margin-bottom: 20px; /* زيادة المسافة */
+            font-size: 1.6rem; /* حجم خط كبير */
+            margin-bottom: 30px;
+            line-height: 1.9;
         }
         
         .exploration {
@@ -174,134 +175,154 @@
         
         .exercise {
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            padding: 20px; /* زيادة الحشو */
-            margin: 20px 0; /* زيادة المسافة */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: 3px solid #1a2a6c; /* زيادة سمك الحدود */
+            border-radius: 15px;
+            padding: 30px; /* زيادة كبيرة في الحشو */
+            margin: 30px 0; /* زيادة كبيرة في الهوامش */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            border: 4px solid #1a2a6c; /* زيادة كبيرة في سمك الحدود */
         }
         
         .exercise-title {
             color: #1a2a6c;
-            margin-bottom: 20px; /* زيادة المسافة */
+            margin-bottom: 30px;
             display: flex;
             align-items: center;
-            font-size: 1.4rem; /* زيادة حجم الخط */
-            gap: 12px; /* زيادة المسافة بين العناصر */
-            border-bottom: 3px solid #b21f1f; /* زيادة سمك الخط */
-            padding-bottom: 15px; /* زيادة الحشو */
+            font-size: 1.8rem; /* حجم خط كبير */
+            gap: 20px;
+            border-bottom: 4px solid #b21f1f; /* زيادة كبيرة في السمك */
+            padding-bottom: 20px;
         }
         
         .comparison-options {
             display: flex;
-            gap: 15px; /* زيادة المسافة بين الأزرار */
-            margin: 20px 0; /* زيادة المسافة */
+            gap: 20px; /* زيادة كبيرة في المسافة بين الأزرار */
+            margin: 30px 0; /* زيادة كبيرة في الهوامش */
             justify-content: center;
             flex-wrap: wrap;
         }
         
         .comp-option {
-            padding: 12px 20px; /* زيادة الحشو */
+            padding: 20px 30px; /* زيادة كبيرة في الحشو */
             background: #e0e0e0;
-            border-radius: 30px; /* زيادة التدوير */
+            border-radius: 40px; /* زيادة كبيرة في التدوير */
             cursor: pointer;
-            font-size: 1.4rem; /* زيادة حجم الخط */
+            font-size: 2rem; /* حجم خط كبير جدًا */
             font-weight: bold;
-            min-width: 60px; /* زيادة العرض */
+            min-width: 80px; /* زيادة كبيرة في العرض */
             text-align: center;
             flex: 1;
-            max-width: 85px; /* زيادة العرض الأقصى */
+            max-width: 120px; /* زيادة كبيرة في العرض الأقصى */
+            transition: all 0.3s ease;
+        }
+        
+        .comp-option:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
         .comp-option.selected {
             background: linear-gradient(to bottom, #b21f1f, #8a1818);
             color: white;
+            transform: scale(1.1);
         }
         
         .check-btn {
             background: linear-gradient(to right, #1a2a6c, #0d1a4d);
             color: white;
             border: none;
-            padding: 15px 25px; /* زيادة الحشو */
-            border-radius: 30px;
+            padding: 20px 35px; /* زيادة كبيرة في الحشو */
+            border-radius: 40px;
             cursor: pointer;
-            font-size: 1.2rem; /* زيادة حجم الخط */
-            margin-top: 15px; /* زيادة المسافة */
-            font-weight: 600;
+            font-size: 1.6rem; /* حجم خط كبير */
+            margin-top: 20px;
+            font-weight: 700;
             display: block;
-            margin: 20px auto; /* زيادة المسافة */
+            margin: 30px auto; /* زيادة كبيرة في الهوامش */
             width: 100%;
-            max-width: 250px; /* زيادة العرض الأقصى */
+            max-width: 300px; /* زيادة كبيرة في العرض الأقصى */
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .check-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
         
         .feedback {
-            margin-top: 20px; /* زيادة المسافة */
-            padding: 15px; /* زيادة الحشو */
-            border-radius: 10px; /* زيادة التدوير */
+            margin-top: 30px;
+            padding: 20px; /* زيادة كبيرة في الحشو */
+            border-radius: 15px;
             display: none;
-            font-size: 1.2rem; /* زيادة حجم الخط */
+            font-size: 1.6rem; /* حجم خط كبير */
             text-align: center;
-            font-weight: 600;
+            font-weight: 700;
         }
         
         .feedback.correct {
             background: linear-gradient(to right, #d4edda, #c3e6cb);
             color: #155724;
-            border: 3px solid #28a745; /* زيادة سمك الحدود */
+            border: 4px solid #28a745; /* زيادة كبيرة في السمك */
             display: block;
         }
         
         .feedback.incorrect {
             background: linear-gradient(to right, #f8d7da, #f5c6cb);
             color: #721c24;
-            border: 3px solid #dc3545; /* زيادة سمك الحدود */
+            border: 4px solid #dc3545; /* زيادة كبيرة في السمك */
             display: block;
         }
         
         .ordering-exercise {
             display: flex;
             flex-direction: column;
-            gap: 15px; /* زيادة المسافة بين العناصر */
-            margin: 25px 0; /* زيادة المسافة */
+            gap: 25px; /* زيادة كبيرة في المسافة بين العناصر */
+            margin: 35px 0; /* زيادة كبيرة في الهوامش */
         }
         
         .number-item {
             background: linear-gradient(to right, #e6f7ff, #d1f0ff);
-            padding: 20px; /* زيادة الحشو */
-            border-radius: 15px; /* زيادة التدوير */
+            padding: 30px; /* زيادة كبيرة في الحشو */
+            border-radius: 20px; /* زيادة كبيرة في التدوير */
             display: flex;
             align-items: center;
             cursor: move;
-            font-size: 1.4rem; /* زيادة حجم الخط */
+            font-size: 1.8rem; /* حجم خط كبير */
             font-weight: bold;
-            border: 3px solid #1a2a6c; /* زيادة سمك الحدود */
+            border: 4px solid #1a2a6c; /* زيادة كبيرة في السمك */
+            transition: all 0.3s ease;
+        }
+        
+        .number-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
         
         .number-item i {
-            margin-left: 15px; /* زيادة المسافة */
+            margin-left: 25px; /* زيادة كبيرة في المسافة */
             color: #1a2a6c;
-            font-size: 1.6rem; /* زيادة حجم الأيقونة */
+            font-size: 2.2rem; /* حجم أيقونة كبير جدًا */
         }
         
         .footer {
             text-align: center;
-            padding: 20px; /* زيادة الحشو */
+            padding: 30px; /* زيادة كبيرة في الحشو */
             background: rgba(0, 0, 0, 0.8);
             color: white;
-            border-radius: 15px; /* زيادة التدوير */
-            margin-top: 25px; /* زيادة المسافة */
-            border: 3px solid #b21f1f; /* زيادة سمك الحدود */
-            font-size: 1.1rem; /* زيادة حجم الخط */
+            border-radius: 20px; /* زيادة كبيرة في التدوير */
+            margin-top: 40px;
+            border: 4px solid #b21f1f; /* زيادة كبيرة في السمك */
+            font-size: 1.4rem; /* حجم خط كبير */
         }
         
         .footer h3 {
-            font-size: 1.4rem; /* زيادة حجم الخط */
-            margin-bottom: 15px; /* زيادة المسافة */
+            font-size: 1.8rem; /* حجم خط كبير */
+            margin-bottom: 25px;
             color: #ff9999;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-15px); }
+            from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -309,175 +330,175 @@
             animation: pulse 1.5s infinite;
             font-weight: bold;
             color: #b21f1f;
-            font-size: 1.2rem; /* زيادة حجم الخط */
+            font-size: 1.5rem; /* حجم خط كبير */
             text-align: center;
-            padding: 12px; /* زيادة الحشو */
+            padding: 15px; /* زيادة كبيرة في الحشو */
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 8px; /* زيادة التدوير */
+            border-radius: 10px;
             display: inline-block;
-            margin: 15px 0; /* زيادة المسافة */
+            margin: 20px 0; /* زيادة كبيرة في الهوامش */
         }
         
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
         
         .steps {
-            margin: 20px 0; /* زيادة المسافة */
-            padding-right: 20px; /* زيادة الحشو */
+            margin: 30px 0; /* زيادة كبيرة في الهوامش */
+            padding-right: 30px; /* زيادة كبيرة في الحشو */
         }
         
         .step {
-            margin-bottom: 20px; /* زيادة المسافة */
-            padding: 20px; /* زيادة الحشو */
+            margin-bottom: 30px; /* زيادة كبيرة في الهوامش */
+            padding: 25px; /* زيادة كبيرة في الحشو */
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px; /* زيادة التدوير */
-            border-right: 5px solid #1a2a6c; /* زيادة سمك الحدود */
-            font-size: 1.1rem; /* زيادة حجم الخط */
+            border-radius: 15px; /* زيادة كبيرة في التدوير */
+            border-right: 6px solid #1a2a6c; /* زيادة كبيرة في السمك */
+            font-size: 1.5rem; /* حجم خط كبير */
         }
         
         .step-number {
             display: inline-block;
-            width: 35px; /* زيادة الحجم */
-            height: 35px; /* زيادة الحجم */
+            width: 45px; /* زيادة كبيرة في الحجم */
+            height: 45px; /* زيادة كبيرة في الحجم */
             background: linear-gradient(to bottom, #b21f1f, #8a1818);
             color: white;
             border-radius: 50%;
             text-align: center;
-            line-height: 35px; /* تعديل الارتفاع */
-            margin-left: 15px; /* زيادة المسافة */
+            line-height: 45px; /* تعديل الارتفاع */
+            margin-left: 20px; /* زيادة كبيرة في المسافة */
             font-weight: bold;
-            font-size: 1.2rem; /* زيادة حجم الخط */
+            font-size: 1.5rem; /* حجم خط كبير */
         }
         
         .math-expression {
-            font-size: 1.4rem; /* زيادة حجم الخط */
+            font-size: 1.8rem; /* حجم خط كبير */
             font-weight: bold;
             text-align: center;
-            margin: 15px 0; /* زيادة المسافة */
-            padding: 15px; /* زيادة الحشو */
+            margin: 25px 0; /* زيادة كبيرة في الهوامش */
+            padding: 25px; /* زيادة كبيرة في الحشو */
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px; /* زيادة التدوير */
-            border: 3px solid #1a2a6c; /* زيادة سمك الحدود */
+            border-radius: 15px; /* زيادة كبيرة في التدوير */
+            border: 4px solid #1a2a6c; /* زيادة كبيرة في السمك */
             overflow-x: auto;
         }
         
         .number-line-labels {
             display: flex;
             justify-content: space-between;
-            padding: 0 10px; /* زيادة الحشو */
+            padding: 0 15px; /* زيادة كبيرة في الحشو */
             font-weight: bold;
-            margin-top: 10px; /* زيادة المسافة */
+            margin-top: 15px; /* زيادة كبيرة في الهوامش */
             color: #1a2a6c;
-            font-size: 1rem; /* زيادة حجم الخط */
+            font-size: 1.4rem; /* حجم خط كبير */
         }
         
         .highlight {
             background: linear-gradient(to right, rgba(178, 31, 31, 0.2), rgba(26, 42, 108, 0.2));
-            padding: 5px 12px; /* زيادة الحشو */
-            border-radius: 6px; /* زيادة التدوير */
+            padding: 8px 15px; /* زيادة كبيرة في الحشو */
+            border-radius: 8px;
             font-weight: bold;
             display: inline-block;
-            margin-top: 10px; /* زيادة المسافة */
-            font-size: 1.1rem; /* زيادة حجم الخط */
+            margin-top: 15px; /* زيادة كبيرة في الهوامش */
+            font-size: 1.5rem; /* حجم خط كبير */
         }
         
         .question-container {
-            margin: 25px 0; /* زيادة المسافة */
-            padding: 20px; /* زيادة الحشو */
+            margin: 35px 0; /* زيادة كبيرة في الهوامش */
+            padding: 30px; /* زيادة كبيرة في الحشو */
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px; /* زيادة التدوير */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid #1a2a6c; /* زيادة سمك الحدود */
+            border-radius: 20px; /* زيادة كبيرة في التدوير */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            border-left: 6px solid #1a2a6c; /* زيادة كبيرة في السمك */
         }
         
         .question-title {
             display: flex;
             align-items: center;
-            gap: 15px; /* زيادة المسافة بين العناصر */
-            margin-bottom: 20px; /* زيادة المسافة */
+            gap: 20px; /* زيادة كبيرة في المسافة بين العناصر */
+            margin-bottom: 30px; /* زيادة كبيرة في الهوامش */
             color: #1a2a6c;
-            font-size: 1.3rem; /* زيادة حجم الخط */
+            font-size: 1.7rem; /* حجم خط كبير */
         }
         
         .question-title .number {
             background: linear-gradient(to bottom, #b21f1f, #8a1818);
             color: white;
-            width: 35px; /* زيادة الحجم */
-            height: 35px; /* زيادة الحجم */
+            width: 50px; /* زيادة كبيرة في الحجم */
+            height: 50px; /* زيادة كبيرة في الحجم */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.2rem; /* زيادة حجم الخط */
+            font-size: 1.7rem; /* حجم خط كبير */
         }
         
         .question-content {
-            padding: 15px; /* زيادة الحشو */
-            font-size: 1.2rem; /* زيادة حجم الخط */
+            padding: 20px; /* زيادة كبيرة في الحشو */
+            font-size: 1.6rem; /* حجم خط كبير */
         }
         
         .answer-input {
             width: 100%;
-            padding: 15px; /* زيادة الحشو */
-            border: 3px solid #1a2a6c; /* زيادة سمك الحدود */
-            border-radius: 10px; /* زيادة التدوير */
-            font-size: 1.3rem; /* زيادة حجم الخط */
-            margin-top: 15px; /* زيادة المسافة */
+            padding: 20px; /* زيادة كبيرة في الحشو */
+            border: 4px solid #1a2a6c; /* زيادة كبيرة في السمك */
+            border-radius: 15px; /* زيادة كبيرة في التدوير */
+            font-size: 1.8rem; /* حجم خط كبير */
+            margin-top: 20px; /* زيادة كبيرة في الهوامش */
             text-align: center;
         }
         
         .answer-input:focus {
             outline: none;
             border-color: #b21f1f;
-            box-shadow: 0 0 0 4px rgba(178, 31, 31, 0.2); /* زيادة الظل */
+            box-shadow: 0 0 0 6px rgba(178, 31, 31, 0.2); /* زيادة كبيرة في الظل */
         }
         
         .application-box {
             background: linear-gradient(to bottom right, #fff9e6, #ffedb3);
-            border-radius: 15px; /* زيادة التدوير */
-            padding: 20px; /* زيادة الحشو */
-            margin: 20px 0; /* زيادة المسافة */
-            border: 3px solid #1a2a6c; /* زيادة سمك الحدود */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 20px; /* زيادة كبيرة في التدوير */
+            padding: 30px; /* زيادة كبيرة في الحشو */
+            margin: 30px 0; /* زيادة كبيرة في الهوامش */
+            border: 4px solid #1a2a6c; /* زيادة كبيرة في السمك */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
         
         .application-title {
             color: #1a2a6c;
-            border-bottom: 3px solid #b21f1f; /* زيادة سمك الخط */
-            padding-bottom: 12px; /* زيادة الحشو */
-            margin-bottom: 20px; /* زيادة المسافة */
-            font-size: 1.4rem; /* زيادة حجم الخط */
+            border-bottom: 4px solid #b21f1f; /* زيادة كبيرة في السمك */
+            padding-bottom: 20px; /* زيادة كبيرة في الحشو */
+            margin-bottom: 30px; /* زيادة كبيرة في الهوامش */
+            font-size: 1.9rem; /* حجم خط كبير */
             display: flex;
             align-items: center;
-            gap: 12px; /* زيادة المسافة بين العناصر */
+            gap: 20px; /* زيادة كبيرة في المسافة بين العناصر */
         }
         
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0; /* زيادة المسافة */
+            margin: 30px 0; /* زيادة كبيرة في الهوامش */
             background: white;
-            border-radius: 10px; /* زيادة التدوير */
+            border-radius: 15px; /* زيادة كبيرة في التدوير */
             overflow: hidden;
         }
         
         .data-table th {
             background: linear-gradient(to right, #1a2a6c, #0d1a4d);
             color: white;
-            padding: 15px; /* زيادة الحشو */
+            padding: 20px; /* زيادة كبيرة في الحشو */
             text-align: center;
-            font-size: 1.2rem; /* زيادة حجم الخط */
+            font-size: 1.5rem; /* حجم خط كبير */
         }
         
         .data-table td {
-            padding: 15px; /* زيادة الحشو */
+            padding: 20px; /* زيادة كبيرة في الحشو */
             text-align: center;
-            border-bottom: 2px solid #ddd; /* زيادة سمك الخط */
-            font-size: 1.1rem; /* زيادة حجم الخط */
+            border-bottom: 3px solid #ddd; /* زيادة كبيرة في السمك */
+            font-size: 1.4rem; /* حجم خط كبير */
         }
         
         .data-table tr:last-child td {
@@ -490,54 +511,64 @@
         
         /* تحسينات للشاشات الصغيرة جدًا */
         @media (max-width: 480px) {
+            body {
+                font-size: 20px; /* حجم خط كبير على الجوال */
+                padding: 10px;
+            }
+            
             h1 {
-                font-size: 1.8rem; /* زيادة حجم العنوان على الجوال */
+                font-size: 2.2rem; /* حجم خط كبير على الجوال */
             }
             
             .subtitle {
-                font-size: 1.3rem; /* زيادة حجم العنوان الفرعي على الجوال */
+                font-size: 1.5rem; /* حجم خط كبير على الجوال */
             }
             
             .section h2 {
-                font-size: 1.5rem; /* زيادة حجم العناوين على الجوال */
+                font-size: 1.8rem; /* حجم خط كبير على الجوال */
             }
             
             .math-expression {
-                font-size: 1.2rem; /* زيادة حجم المعادلات على الجوال */
-                padding: 12px; /* زيادة الحشو على الجوال */
+                font-size: 1.5rem; /* حجم خط كبير على الجوال */
+                padding: 20px; /* زيادة كبيرة في الحشو */
             }
             
             .number-item {
-                padding: 15px; /* زيادة الحشو على الجوال */
-                font-size: 1.2rem; /* زيادة حجم الخط على الجوال */
+                padding: 20px; /* زيادة كبيرة في الحشو */
+                font-size: 1.5rem; /* حجم خط كبير على الجوال */
             }
             
             .question-container {
-                padding: 15px; /* زيادة الحشو على الجوال */
+                padding: 20px; /* زيادة كبيرة في الحشو */
+            }
+            
+            .comp-option {
+                font-size: 1.8rem; /* حجم خط كبير على الجوال */
+                padding: 15px 25px; /* زيادة كبيرة في الحشو */
             }
         }
         
         /* تحسينات للوضع الأفقي للهاتف */
         @media (max-height: 500px) and (orientation: landscape) {
             body {
-                padding: 8px; /* زيادة الحشو */
-                font-size: 16px; /* زيادة حجم الخط الأساسي */
+                padding: 12px; /* زيادة كبيرة في الحشو */
+                font-size: 20px; /* حجم خط كبير */
             }
             
             .container {
-                padding: 5px; /* زيادة الحشو */
+                padding: 8px; /* زيادة كبيرة في الحشو */
             }
             
             header {
-                padding: 15px; /* زيادة الحشو */
+                padding: 20px; /* زيادة كبيرة في الحشو */
             }
             
             h1 {
-                font-size: 1.6rem; /* زيادة حجم العنوان */
+                font-size: 2rem; /* حجم خط كبير */
             }
             
             .section {
-                padding: 15px 10px; /* زيادة الحشو */
+                padding: 20px 15px; /* زيادة كبيرة في الحشو */
             }
         }
         
@@ -545,26 +576,26 @@
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
-            margin: 35px 0; /* زيادة المسافة */
-            padding: 0 15px; /* زيادة الحشو */
-            gap: 20px; /* زيادة المسافة بين الأزرار */
+            margin: 40px 0; /* زيادة كبيرة في الهوامش */
+            padding: 0 20px; /* زيادة كبيرة في الحشو */
+            gap: 25px; /* زيادة كبيرة في المسافة بين الأزرار */
         }
         
         .nav-btn {
             background: linear-gradient(to right, #1a2a6c, #b21f1f);
             color: white;
             border: none;
-            padding: 15px 30px; /* زيادة الحشو */
-            border-radius: 35px; /* زيادة التدوير */
+            padding: 20px 35px; /* زيادة كبيرة في الحشو */
+            border-radius: 45px; /* زيادة كبيرة في التدوير */
             cursor: pointer;
-            font-size: 1.3rem; /* زيادة حجم الخط */
-            font-weight: 600;
+            font-size: 1.8rem; /* حجم خط كبير جدًا */
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 15px; /* زيادة المسافة بين العناصر */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            gap: 20px; /* زيادة كبيرة في المسافة بين العناصر */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
             transition: all 0.3s ease;
-            border: 3px solid rgba(255, 255, 255, 0.3); /* زيادة سمك الحدود */
+            border: 4px solid rgba(255, 255, 255, 0.3); /* زيادة كبيرة في السمك */
             text-decoration: none;
             flex: 1;
             text-align: center;
@@ -572,8 +603,8 @@
         }
         
         .nav-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
             background: linear-gradient(to right, #0d1a4d, #8a1818);
         }
         
@@ -583,17 +614,18 @@
         }
         
         .nav-btn i {
-            font-size: 1.5rem; /* زيادة حجم الأيقونات */
+            font-size: 2rem; /* حجم أيقونة كبير جدًا */
         }
         
         @media (max-width: 600px) {
             .navigation-buttons {
                 flex-direction: column;
-                gap: 15px; /* زيادة المسافة بين الأزرار */
+                gap: 20px; /* زيادة كبيرة في المسافة بين الأزرار */
             }
             
             .nav-btn {
                 width: 100%;
+                font-size: 1.6rem; /* حجم خط كبير على الجوال */
             }
         }
     </style>
