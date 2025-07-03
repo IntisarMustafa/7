@@ -377,8 +377,9 @@
         }
         
         /* Math expressions */
+        /* Increased font size for MathJax expressions */
         .math-expression {
-            font-size: 1.5rem; /* Increased size using rem */
+            font-size: 1.65rem; /* Increased from 1.5rem for better visibility */
             font-weight: bold;
             text-align: center;
             margin: 0.9rem 0; /* Use rem */
@@ -388,7 +389,11 @@
             border: 0.15rem solid #1a2a6c; /* Use rem */
             overflow-x: auto;
         }
-        
+        /* Further increase for MathJax-specific elements if needed, though parent scaling usually works */
+        mjx-container {
+            font-size: 100% !important; /* Ensure MathJax respects parent font size */
+        }
+
         .number-line-labels {
             display: flex;
             justify-content: space-between;
@@ -622,6 +627,9 @@
             .info-box h3 .fas, .application-title .fas {
                 font-size: 1.4rem;
             }
+            .math-expression { /* Adjusted for tablet */
+                font-size: 1.5rem;
+            }
             .nav-btn {
                 font-size: 1.25rem;
                 padding: 1rem 1.8rem;
@@ -660,8 +668,8 @@
             .info-box h3 .fas, .application-title .fas {
                 font-size: 1.3rem;
             }
-            .math-expression {
-                font-size: 1.3rem;
+            .math-expression { /* Adjusted for tablet portrait */
+                font-size: 1.4rem;
                 padding: 1rem;
             }
             .number-item {
@@ -752,8 +760,8 @@
             .info-box h3 .fas, .application-title .fas {
                 font-size: 1.2rem;
             }
-            .math-expression {
-                font-size: 1.2rem;
+            .math-expression { /* Adjusted for mobile */
+                font-size: 1.3rem; /* Further increased */
                 padding: 0.9rem;
             }
             .number-item {
@@ -865,11 +873,12 @@
                 padding: 0.75rem;
                 font-size: 0.9rem;
             }
+            /* Adjusted for landscape to avoid too small text */
             .info-box li, .section p, .step, .math-expression, .number-item, .comp-option, .check-btn, .feedback, .footer h3 {
-                font-size: 0.9rem;
+                font-size: 1rem; /* Slightly increased for readability on small landscape screens */
             }
             .number-item i {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
         }
     </style>
