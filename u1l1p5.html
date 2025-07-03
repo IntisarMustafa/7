@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة PONG مع العدد النسبي</title>
+    <title>PONG المحترفة - النسخة المحسنة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS الأصلي بدون تغييرات كبيرة، لأنه جيد الاستجابة */
+        /* إعادة تعيين أساسي وتحديد الخط */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            /* touch-action: manipulation; */ /* هذه الخاصية يمكن أن تكون مفيدة، لكن أحياناً تسبب مشاكل، يمكن إزالتها */
         }
-        
+
         body {
             background: linear-gradient(135deg, #1a2980, #26d0ce);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,19 +22,22 @@
             justify-content: center;
             align-items: center;
         }
-        
+
+        /* حاوية اللعبة */
         #game-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            max-width: 500px;
+            max-width: 500px; /* حجم شاشة الهاتف التقريبي */
             max-height: 700px;
             background: linear-gradient(135deg, #0c1445, #1a5f9e);
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
+            border-radius: 15px; /* زوايا أكثر استدارة */
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
-        
+
+        /* النجوم في الخلفية */
         .stars {
             position: absolute;
             width: 100%;
@@ -44,7 +46,8 @@
             animation: twinkle 3s infinite alternate;
             z-index: 1;
         }
-        
+
+        /* المضارب */
         .paddle {
             position: absolute;
             width: 25%;
@@ -52,23 +55,24 @@
             border-radius: 10px;
             z-index: 10;
             box-shadow: 0 0 15px rgba(0, 114, 255, 0.7);
-            transition: transform 0.05s ease;
+            transition: transform 0.05s ease, box-shadow 0.1s ease;
         }
-        
+
         #paddle-top {
             top: 10%;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(to right, #ff6b6b, #ff0000);
         }
-        
+
         #paddle-bottom {
             bottom: 15%;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(to right, #00c6ff, #0072ff);
         }
-        
+
+        /* الكرة */
         #ball {
             position: absolute;
             width: 15px;
@@ -79,20 +83,24 @@
             left: 50%;
             z-index: 10;
             box-shadow: 0 0 10px rgba(255, 0, 204, 0.8);
+            transition: box-shadow 0.3s ease;
         }
-        
+
+        /* النتيجة */
         #score {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            font-size: 36px;
+            font-size: 3.2rem; /* حجم أكبر للنتيجة */
             font-weight: bold;
             z-index: 10;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+            opacity: 0.7; /* شفافية خفيفة */
         }
-        
+
+        /* الخط الأوسط */
         #center-line {
             position: absolute;
             width: 100%;
@@ -101,12 +109,13 @@
             top: 50%;
             z-index: 1;
         }
-        
+
+        /* شاشة البدء */
         #start-screen {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: rgba(12, 20, 69, 0.9);
+            background: rgba(12, 20, 69, 0.95); /* خلفية أغمق قليلاً */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -117,110 +126,160 @@
             padding: 20px;
             backdrop-filter: blur(5px);
         }
-        
+
         .game-title {
-            font-size: 2.2rem;
-            margin-bottom: 15px;
+            font-size: 2.5rem; /* حجم أكبر للعنوان */
+            margin-bottom: 20px;
             background: linear-gradient(to right, #00c6ff, #0072ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(0, 198, 255, 0.5);
+            text-shadow: 0 0 15px rgba(0, 198, 255, 0.7);
         }
-        
+
         #mode-selection {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            margin: 30px 0;
-            width: 80%;
-            max-width: 300px;
+            gap: 18px; /* مسافة أقل بين الأزرار */
+            margin: 25px 0;
+            width: 90%;
+            max-width: 320px;
         }
-        
+
         .mode-btn {
-            padding: 15px 25px;
-            font-size: 1.1rem;
+            padding: 16px 25px; /* تكبير حجم الزر */
+            font-size: 1.2rem; /* تكبير الخط */
             background: linear-gradient(to right, #00c6ff, #0072ff);
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+            box-shadow: 0 6px 18px rgba(0, 114, 255, 0.5);
+            display: flex; /* لترتيب الأيقونة والنص */
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* مسافة بين الأيقونة والنص */
         }
-        
+
         .mode-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.6);
+            transform: translateY(-4px); /* تأثير رفع أكبر */
+            box-shadow: 0 10px 25px rgba(0, 114, 255, 0.8);
         }
-        
+
         .mode-btn:active {
             transform: translateY(1px);
+            box-shadow: 0 3px 10px rgba(0, 114, 255, 0.3);
         }
-        
+
+        /* اختيار صعوبة الكمبيوتر */
+        #difficulty-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 320px;
+        }
+
+        #difficulty-selection label {
+            color: #ffcc00;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        #difficulty-selection select {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #00c6ff;
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            appearance: none; /* إخفاء سهم الاختيار الافتراضي */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            outline: none;
+        }
+        #difficulty-selection select:focus {
+            border-color: #ff00cc;
+            box-shadow: 0 0 10px rgba(255, 0, 204, 0.5);
+        }
+
+        /* شاشة السؤال الرياضي */
         #math-question {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(12, 20, 69, 0.95);
+            background: rgba(12, 20, 69, 0.98); /* خلفية شبه معتمة */
             color: white;
-            padding: 25px;
-            border-radius: 15px;
+            padding: 30px; /* مساحة داخلية أكبر */
+            border-radius: 20px; /* زوايا أكثر استدارة */
             text-align: center;
             z-index: 30;
             display: none;
-            border: 2px solid #00c6ff;
-            box-shadow: 0 0 20px rgba(0, 198, 255, 0.5);
-            width: 85%;
-            max-width: 320px;
+            border: 3px solid #00c6ff;
+            box-shadow: 0 0 30px rgba(0, 198, 255, 0.7); /* ظل أقوى */
+            width: 90%;
+            max-width: 350px;
+            animation: fadeInScale 0.4s ease-out; /* تأثير ظهور */
         }
-        
+
         #math-question h3 {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: #00c6ff;
-        }
-        
-        #question-text {
             font-size: 1.8rem;
-            margin: 15px 0;
-            color: #ff00cc;
+            text-shadow: 0 0 8px rgba(0, 198, 255, 0.5);
         }
-        
+
+        #question-text {
+            font-size: 1.8rem; /* حجم خط أكبر */
+            margin: 20px 0;
+            color: #ffcc00; /* لون مميز للسؤال */
+            font-weight: bold;
+        }
+
         #answer-input {
-            padding: 12px;
-            font-size: 1.2rem;
-            width: 180px;
+            padding: 14px; /* تكبير حجم الإدخال */
+            font-size: 1.3rem; /* تكبير خط الإدخال */
+            width: 90%; /* عرض أكبر */
             text-align: center;
-            margin: 15px 0;
+            margin: 20px 0;
             border: 2px solid #00c6ff;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.4);
             color: white;
             outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
-        
+
         #answer-input:focus {
             border-color: #ff00cc;
-            box-shadow: 0 0 10px rgba(255, 0, 204, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 204, 0.7);
         }
-        
+
         #submit-answer {
-            padding: 12px 25px;
+            padding: 14px 30px; /* تكبير الزر */
             background: linear-gradient(to right, #ff00cc, #333399);
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(255, 0, 204, 0.4);
+            box-shadow: 0 6px 18px rgba(255, 0, 204, 0.5);
+            margin-top: 15px;
         }
-        
+
         #submit-answer:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 0, 204, 0.6);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(255, 0, 204, 0.8);
         }
-        
+
+        /* مناطق اللمس */
         .touch-areas {
             position: absolute;
             width: 100%;
@@ -230,71 +289,90 @@
             justify-content: space-between;
             z-index: 2;
         }
-        
-        .player-touch-area { /* تغيير الاسم ليكون أكثر عمومية */
+
+        .player-touch-area {
             width: 100%;
             height: 40%;
-            opacity: 0.1;
+            opacity: 0.05; /* شفافية أقل */
             transition: opacity 0.3s ease;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        
+
         #player1-touch-area {
             background: linear-gradient(to bottom, #ff6b6b, transparent);
         }
-        
+
         #player2-touch-area {
             background: linear-gradient(to top, #00c6ff, transparent);
         }
-        
+
         .player-touch-area.active {
-            opacity: 0.3;
+            opacity: 0.15; /* زيادة الشفافية عند التفعيل */
         }
-        
+
+        /* تأثيرات الحركة */
         .pulse {
             animation: pulse 1.5s infinite;
         }
-        
+
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(0, 198, 255, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(0, 198, 255, 0); }
             100% { box-shadow: 0 0 0 0 rgba(0, 198, 255, 0); }
         }
-        
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
         @keyframes twinkle {
             0% { opacity: 0.3; }
             100% { opacity: 1; }
         }
-        
+
         .bounce {
-            animation: bounce 0.5s ease;
+            animation: bounce 0.3s ease; /* مدة أقصر */
         }
-        
+
         @keyframes bounce {
             0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            50% { transform: scale(1.15); /* ارتداد أكبر */ }
             100% { transform: scale(1); }
         }
-        
+
+        .hit-effect {
+            animation: hit-pulse 0.15s ease-out; /* مدة أقصر */
+        }
+
+        @keyframes hit-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* تعليمات اللاعب */
         .player-instruction {
             position: absolute;
             width: 100%;
             text-align: center;
             color: rgba(255, 255, 255, 0.8);
-            font-size: 16px;
+            font-size: 1.1rem; /* حجم أكبر */
+            font-weight: bold;
             z-index: 10;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
-        
+
         #top-player {
             top: 12%;
         }
-        
+
         #bottom-player {
             bottom: 18%;
         }
-        
+
         .question-points {
             position: absolute;
             top: 20px;
@@ -306,96 +384,198 @@
             border-radius: 20px;
             font-size: 14px;
             z-index: 10;
+            box-shadow: 0 0 8px rgba(255, 165, 0, 0.5);
         }
-        
-        #start-btn {
-            position: absolute;
-            bottom: 40%;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 40px;
-            font-size: 1.3rem;
-            background: linear-gradient(to right, #4CAF50, #2E7D32);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-            display: none;
-            z-index: 25;
-        }
-        
-        #start-btn:hover {
-            transform: translate(-50%, -3px);
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
-        }
-        
-        .instructions {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            text-align: center;
-            width: 90%;
-            z-index: 10;
-        }
-        
-        .touch-instruction {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.2rem;
-            text-align: center;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            width: 80%;
-            max-width: 250px;
-            pointer-events: none; /* لتسمح بمرور أحداث اللمس/الماوس عبرها */
-        }
-        
-        .touch-instruction i {
-            margin-left: 5px;
-            animation: pulse 2s infinite;
-        }
-        
-        .fraction-example {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 10px;
-            margin: 10px 0;
-            border: 1px dashed #00c6ff;
-        }
-        
+
         .computer-difficulty {
             position: absolute;
             top: 20px;
             right: 20px;
             color: white;
             background: rgba(255, 100, 100, 0.7);
-            padding: 5px 10px;
+            padding: 7px 12px; /* حجم أكبر */
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 13px; /* حجم أكبر */
+            font-weight: bold;
             z-index: 10;
+            box-shadow: 0 0 8px rgba(255, 100, 100, 0.5);
+        }
+
+        /* زر البدء */
+        #start-btn {
+            position: absolute;
+            bottom: 35%; /* رفع الزر قليلاً */
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 18px 50px; /* حجم أكبر */
+            font-size: 1.5rem; /* حجم خط أكبر */
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 7px 20px rgba(76, 175, 80, 0.5);
+            display: none;
+            z-index: 25;
+        }
+
+        #start-btn:hover {
+            transform: translate(-50%, -5px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.8);
+        }
+
+        /* التعليمات في شاشة البدء */
+        .instructions {
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+            line-height: 1.5;
+        }
+
+        .instructions strong {
+            color: #ffcc00;
+        }
+
+        .fraction-example {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px auto; /* توسيط */
+            border: 1px dashed #00c6ff;
+            width: 90%;
+            max-width: 300px;
+        }
+
+        /* مؤشر السرعة */
+        #speed-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(100, 255, 100, 0.7);
+            padding: 8px 16px; /* حجم أكبر */
+            border-radius: 20px;
+            font-size: 15px; /* حجم خط أكبر */
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 0 12px rgba(100, 255, 100, 0.7);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* رسالة الفوز */
+        .winning-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 40;
+            display: none;
+            border: 4px solid gold;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.9);
+            width: 85%;
+            max-width: 350px;
+            animation: fadeInScale 0.5s ease-out;
+        }
+
+        .winning-message h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        .winning-message p {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .winning-message .mode-btn {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+            padding: 14px 35px;
+            font-size: 1.1rem;
+        }
+        .winning-message .mode-btn:hover {
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        /* أثر السرعة للكرة */
+        .speed-trail {
+            position: absolute;
+            width: 8px; /* حجم مبدئي أصغر */
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 0, 204, 0.6); /* لون الأثر */
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0; /* يبدأ شفاف */
+            animation: trailFadeOut 0.8s forwards; /* تأثير تلاشي */
+        }
+
+        @keyframes trailFadeOut {
+            from { opacity: 0.6; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.5); }
+        }
+
+        /* تعليمات اللمس التوضيحية */
+        .touch-instruction {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            text-align: center;
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 250px;
+            pointer-events: none;
+            line-height: 1.4;
+        }
+
+        .touch-instruction i {
+            margin-right: 5px; /* تم تعديل الاتجاه للغة العربية */
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 400px) {
+            .game-title { font-size: 2rem; }
+            .mode-btn { font-size: 1.1rem; padding: 14px 20px; }
+            #start-btn { font-size: 1.3rem; padding: 16px 40px; }
+            #math-question h3 { font-size: 1.6rem; }
+            #question-text { font-size: 1.5rem; }
+            #answer-input { font-size: 1.1rem; padding: 10px; }
+            #submit-answer { font-size: 1rem; padding: 12px 25px; }
+            .winning-message h2 { font-size: 2rem; }
+            .winning-message p { font-size: 1.1rem; }
+            #score { font-size: 2.8rem; }
         }
     </style>
 </head>
 <body>
     <div id="game-container">
         <div class="stars"></div>
-        
+
         <div id="paddle-top" class="paddle"></div>
         <div id="paddle-bottom" class="paddle"></div>
         <div id="ball"></div>
         <div id="center-line"></div>
         <div id="score">0 - 0</div>
         <div class="question-points">الأسئلة عند: 3, 6, 9 نقاط</div>
-        <div class="computer-difficulty">مستوى الكمبيوتر: سهل</div>
-        
+        <div class="computer-difficulty" id="computer-difficulty-display"></div>
+        <div id="speed-indicator">سرعة الكرة: 8 (مستوى 1)</div>
+
         <div class="player-instruction" id="top-player"></div>
         <div class="player-instruction" id="bottom-player"></div>
-        
+
         <div class="touch-areas">
             <div class="player-touch-area" id="player1-touch-area">
                 <div class="touch-instruction" id="player1-instruction"></div>
@@ -404,10 +584,10 @@
                 <div class="touch-instruction" id="player2-instruction"></div>
             </div>
         </div>
-        
+
         <div id="start-screen">
-            <h1 class="game-title">PONG مع تحويل الأعداد</h1>
-            <p>لعبة طاولة المضرب للهاتف والكمبيوتر</p>
+            <h1 class="game-title">PONG المحترفة</h1>
+            <p class="instructions">اختر وضع اللعب:</p>
             <div id="mode-selection">
                 <button class="mode-btn" id="vs-friend">
                     <i class="fas fa-user-friends"></i> لعب مع صديق
@@ -416,21 +596,40 @@
                     <i class="fas fa-laptop"></i> لعب مع الكمبيوتر
                 </button>
             </div>
-            <p>الأسئلة تظهر عند إحراز 3, 6, 9 نقاط</p>
+            <div id="difficulty-selection" style="display: none;">
+                <label for="computer-difficulty-select">اختر مستوى صعوبة الكمبيوتر:</label>
+                <select id="computer-difficulty-select">
+                    <option value="easy">سهل (يخطئ كثيرًا)</option>
+                    <option value="medium" selected>متوسط (خطأ معتدل)</option>
+                    <option value="hard">صعب (يخطئ قليلًا)</option>
+                </select>
+            </div>
+            <p class="instructions">
+                <strong>القواعد:</strong>
+                <br>الأسئلة الرياضية تظهر عند إحراز 3, 6, 9 نقاط.
+                <br>سرعة الكرة تبدأ أعلى وتزداد مع كل نقطة.
+            </p>
             <div class="fraction-example">
-                <p>سيُطلب منك تحويل الأعداد النسبية إلى صيغة a/b </p>
+                <p><strong>تلميح للسؤال:</strong> أدخل الكسور بصيغة a/b (مثال: 3/4 أو -2/5). للأعداد الصحيحة، يمكنك كتابة 5 أو 5/1.</p>
             </div>
         </div>
-        
+
         <div id="math-question">
             <h3><i class="fas fa-calculator"></i> حل السؤال للمتابعة</h3>
             <p id="question-text"></p>
-            <input type="text" id="answer-input" placeholder="أدخل على شكل a/b">
-            <p style="color: #ffcc00; font-size: 0.9rem; margin-top: 10px;">مثال: 3/4 أو -2/5</p>
+            <input type="text" id="answer-input" placeholder="أدخل على شكل a/b أو عدد صحيح">
             <button id="submit-answer"><i class="fas fa-check"></i> تحقق</button>
         </div>
-        
+
         <button id="start-btn"><i class="fas fa-play"></i> ابدأ اللعب</button>
+
+        <div class="winning-message" id="winning-message">
+            <h2 id="winner-name"></h2>
+            <p id="final-score"></p>
+            <button id="play-again-btn" class="mode-btn">
+                <i class="fas fa-redo"></i> لعب مرة أخرى
+            </button>
+        </div>
     </div>
 
     <script>
@@ -445,95 +644,142 @@
         const questionText = document.getElementById('question-text');
         const answerInput = document.getElementById('answer-input');
         const submitAnswer = document.getElementById('submit-answer');
-        const player1TouchArea = document.getElementById('player1-touch-area'); // تم تغيير الاسم
-        const player2TouchArea = document.getElementById('player2-touch-area'); // تم تغيير الاسم
-        const player1Instruction = document.getElementById('player1-instruction'); // جديد
-        const player2Instruction = document.getElementById('player2-instruction'); // جديد
+        const player1TouchArea = document.getElementById('player1-touch-area');
+        const player2TouchArea = document.getElementById('player2-touch-area');
+        const player1Instruction = document.getElementById('player1-instruction');
+        const player2Instruction = document.getElementById('player2-instruction');
         const startBtn = document.getElementById('start-btn');
         const topPlayerInstruction = document.getElementById('top-player');
         const bottomPlayerInstruction = document.getElementById('bottom-player');
-        
-        // متغيرات اللعبة
+        const computerDifficultyDisplay = document.getElementById('computer-difficulty-display');
+        const speedIndicator = document.getElementById('speed-indicator');
+        const winningMessage = document.getElementById('winning-message');
+        const winnerName = document.getElementById('winner-name');
+        const finalScore = document.getElementById('final-score');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const vsFriendBtn = document.getElementById('vs-friend');
+        const vsComputerBtn = document.getElementById('vs-computer');
+        const difficultySelection = document.getElementById('difficulty-selection');
+        const computerDifficultySelect = document.getElementById('computer-difficulty-select');
+
+        // متغيرات اللعبة الأساسية
         let gameRunning = false;
-        let gameMode = '';
+        let gameMode = ''; // 'friend' or 'computer'
         let topScore = 0;
         let bottomScore = 0;
         let currentQuestion = {};
         let waitingForAnswer = false;
-        let isPlayer1Active = false; // يحدد ما إذا كان اللاعب الأول (المضرب العلوي) يتحكم فيه
-        let isPlayer2Active = false; // يحدد ما إذا كان اللاعب الثاني (المضرب السفلي) يتحكم فيه
-        let lastScorer = '';
-        let questionTriggerPoints = [3, 6, 9];
-        let questionTriggered = false;
-        let computerErrorRate = 0.4; // نسبة خطأ الكمبيوتر 40%
-        let computerReactionTime = 0; // وقت تأخر الكمبيوتر
-        
-        // سرعة المضارب والكرة (ثابتة)
-        const paddleSpeed = 25;
-        let ballSpeedX = 5;
-        let ballSpeedY = 5;
-        
-        // مواضع المضارب
-        let topPaddleX = 50;
-        let bottomPaddleX = 50;
-        
-        // موضع الكرة
-        let ballX = 50;
-        let ballY = 50;
-        
-        // إضافة أحداث الأزرار بعد تحميل الصفحة
+        let isPlayer1Active = false; // لتتبع لمس اللاعب العلوي (في وضع الصديق)
+        let isPlayer2Active = false; // لتتبع لمس اللاعب السفلي
+
+        // نقاط تشغيل السؤال
+        const QUESTION_TRIGGER_POINTS = [3, 6, 9];
+        let questionTriggered = false; // يمنع تشغيل السؤال المتكرر لنفس النقطة
+
+        // إعدادات الكرة
+        const INITIAL_BALL_SPEED = 8;
+        const MAX_BALL_SPEED = 22;
+        const SPEED_INCREMENT_PER_POINT = 1.8;
+        let ballSpeedX = INITIAL_BALL_SPEED;
+        let ballSpeedY = INITIAL_BALL_SPEED;
+        let ballX = 50; // بالمئة
+        let ballY = 50; // بالمئة
+
+        // إعدادات المضارب
+        const PADDLE_HEIGHT_PERCENT = 2; // نسبة مئوية من ارتفاع الحاوية
+        const PADDLE_WIDTH_PERCENT = 25; // نسبة مئوية من عرض الحاوية
+        const PADDLE_MOVE_SPEED = 1; // سرعة تحريك المضرب (وحدة لكل تحديث إطار)
+        let topPaddleX = 50; // بالمئة
+        let bottomPaddleX = 50; // بالمئة
+
+        // إعدادات صعوبة الكمبيوتر
+        const COMPUTER_DIFFICULTY_SETTINGS = {
+            easy: { reactionTime: 0.1, errorRange: 0.4 }, // 40% من عرض الشاشة
+            medium: { reactionTime: 0.06, errorRange: 0.2 }, // 20% من عرض الشاشة
+            hard: { reactionTime: 0.02, errorRange: 0.05 } // 5% من عرض الشاشة
+        };
+        let currentComputerDifficulty = COMPUTER_DIFFICULTY_SETTINGS.medium;
+
+        // لتأثير أثر السرعة
+        const TRAIL_PARTICLE_COUNT = 3; // عدد الجزيئات التي يتم إنشاؤها في كل إطار
+        const TRAIL_PARTICLE_LIFE = 25; // مدة حياة الجزيء
+        const TRAIL_PARTICLE_MAX_SIZE = 12; // أقصى حجم لجزيء الأثر
+        let trailParticles = [];
+
+        // --- أحداث شاشة البدء واختيار الوضع ---
         window.addEventListener('DOMContentLoaded', () => {
-            const vsFriendBtn = document.getElementById('vs-friend');
-            const vsComputerBtn = document.getElementById('vs-computer');
-            
             vsFriendBtn.addEventListener('click', () => {
                 gameMode = 'friend';
                 startScreen.style.display = 'none';
+                difficultySelection.style.display = 'none';
                 startBtn.style.display = 'block';
                 topPlayerInstruction.textContent = "مضرب اللاعب العلوي";
                 bottomPlayerInstruction.textContent = "مضرب اللاعب السفلي";
                 player1Instruction.innerHTML = 'المس فوق المضرب العلوي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
                 player2Instruction.innerHTML = 'المس فوق المضرب السفلي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
+                computerDifficultyDisplay.style.display = 'none';
             });
-            
+
             vsComputerBtn.addEventListener('click', () => {
                 gameMode = 'computer';
                 startScreen.style.display = 'none';
+                difficultySelection.style.display = 'block'; // إظهار اختيار الصعوبة
                 startBtn.style.display = 'block';
                 topPlayerInstruction.textContent = "مضرب الكمبيوتر (الأعلى)";
                 bottomPlayerInstruction.textContent = "مضربك (الأسفل)";
                 player1Instruction.innerHTML = 'مضرب الكمبيوتر يتحرك تلقائياً';
                 player2Instruction.innerHTML = 'المس فوق المضرب السفلي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
+                computerDifficultyDisplay.style.display = 'block';
+                currentComputerDifficulty = COMPUTER_DIFFICULTY_SETTINGS[computerDifficultySelect.value];
+                updateComputerDifficultyDisplay();
             });
-            
+
+            computerDifficultySelect.addEventListener('change', () => {
+                currentComputerDifficulty = COMPUTER_DIFFICULTY_SETTINGS[computerDifficultySelect.value];
+                updateComputerDifficultyDisplay();
+            });
+
             startBtn.addEventListener('click', () => {
                 startBtn.style.display = 'none';
+                difficultySelection.style.display = 'none'; // إخفاء اختيار الصعوبة عند البدء
                 startGame();
             });
-            
+
+            answerInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
             submitAnswer.addEventListener('click', checkAnswer);
+
+            playAgainBtn.addEventListener('click', () => {
+                winningMessage.style.display = 'none';
+                location.reload(); // إعادة تحميل الصفحة للبدء من جديد
+            });
         });
 
-        // دوال التحكم باللمس والماوس
+        // --- دوال التحكم باللمس والماوس ---
         function handleInteractionStart(e, playerNum) {
-            e.preventDefault(); // منع سلوك المتصفح الافتراضي (مثل التمرير)
+            e.preventDefault();
             if (playerNum === 1) {
-                isPlayer1Active = true;
-                player1TouchArea.classList.add('active');
+                if (gameMode === 'friend') { // فقط إذا كان الوضع "مع صديق"
+                    isPlayer1Active = true;
+                    player1TouchArea.classList.add('active');
+                }
             } else {
                 isPlayer2Active = true;
                 player2TouchArea.classList.add('active');
             }
             updatePaddlePosition(e, playerNum);
         }
-        
+
         function handleInteractionMove(e, playerNum) {
             if ((playerNum === 1 && isPlayer1Active) || (playerNum === 2 && isPlayer2Active)) {
                 updatePaddlePosition(e, playerNum);
             }
             e.preventDefault();
         }
-        
+
         function handleInteractionEnd(playerNum) {
             if (playerNum === 1) {
                 isPlayer1Active = false;
@@ -543,140 +789,144 @@
                 player2TouchArea.classList.remove('active');
             }
         }
-        
-        // أحداث اللمس للاعب الأول (المضرب العلوي)
-        player1TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 1), {passive: false});
-        player1TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 1), {passive: false});
+
+        // أحداث التفاعل (اللمس والماوس)
+        player1TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 1), { passive: false });
+        player1TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 1), { passive: false });
         player1TouchArea.addEventListener('touchend', () => handleInteractionEnd(1));
         player1TouchArea.addEventListener('mousedown', (e) => handleInteractionStart(e, 1));
         player1TouchArea.addEventListener('mousemove', (e) => handleInteractionMove(e, 1));
         player1TouchArea.addEventListener('mouseup', () => handleInteractionEnd(1));
-        player1TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(1)); // مهم لضبط الماوس عند خروجه
-        
-        // أحداث اللمس للاعب الثاني (المضرب السفلي)
-        player2TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 2), {passive: false});
-        player2TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 2), {passive: false});
+        player1TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(1));
+
+        player2TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 2), { passive: false });
+        player2TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 2), { passive: false });
         player2TouchArea.addEventListener('touchend', () => handleInteractionEnd(2));
         player2TouchArea.addEventListener('mousedown', (e) => handleInteractionStart(e, 2));
         player2TouchArea.addEventListener('mousemove', (e) => handleInteractionMove(e, 2));
         player2TouchArea.addEventListener('mouseup', () => handleInteractionEnd(2));
-        player2TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(2)); // مهم لضبط الماوس عند خروجه
-        
+        player2TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(2));
+
         function updatePaddlePosition(e, playerNum) {
             const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
-            
             const containerRect = gameContainer.getBoundingClientRect();
-            const containerWidth = containerRect.width;
-            const paddleWidth = paddleTop.offsetWidth; // كلاهما له نفس العرض
-            
-            // حساب موضع اللمس/الماوس بالنسبة للحاوية
-            const touchX = clientX - containerRect.left;
-            
-            // حساب النسبة المئوية للموضع داخل الحاوية
-            let newX = (touchX / containerWidth) * 100;
-            
-            // التأكد من بقاء المضرب ضمن الحدود (0% إلى 100%)
-            newX = Math.max(0, Math.min(newX, 100));
-            
-            // تحريك المضرب فورياً
-            if (playerNum === 1) {
-                if (gameMode === 'friend') { // فقط إذا كان الوضع "صديق" يمكن للاعب الأول التحكم بالمضرب العلوي
-                    topPaddleX = newX;
-                    paddleTop.style.left = `calc(${topPaddleX}% - ${paddleWidth/2}px)`;
-                }
-            } else { // لاعب 2 هو دائماً يتحكم بالمضرب السفلي
-                bottomPaddleX = newX;
-                paddleBottom.style.left = `calc(${bottomPaddleX}% - ${paddleWidth/2}px)`;
+            const touchXInContainer = clientX - containerRect.left;
+
+            // حساب الموضع الجديد كنسبة مئوية من عرض الحاوية
+            let newXPercent = (touchXInContainer / containerRect.width) * 100;
+
+            // التأكد من بقاء المضرب داخل حدود اللعبة
+            // طرح نصف عرض المضرب لجعله يتمركز عند نقطة اللمس
+            const halfPaddleWidthPercent = PADDLE_WIDTH_PERCENT / 2;
+            newXPercent = Math.max(halfPaddleWidthPercent, Math.min(newXPercent, 100 - halfPaddleWidthPercent));
+
+            if (playerNum === 1 && gameMode === 'friend') {
+                topPaddleX = newXPercent;
+                paddleTop.style.left = `${topPaddleX}%`;
+                paddleTop.style.transform = `translateX(-50%)`;
+            } else if (playerNum === 2) {
+                bottomPaddleX = newXPercent;
+                paddleBottom.style.left = `${bottomPaddleX}%`;
+                paddleBottom.style.transform = `translateX(-50%)`;
             }
         }
-        
-        // بدء اللعبة
+
+        // --- دوال اللعبة الأساسية ---
         function startGame() {
             topScore = 0;
             bottomScore = 0;
             updateScore();
+            ballSpeedX = INITIAL_BALL_SPEED;
+            ballSpeedY = INITIAL_BALL_SPEED;
+            updateSpeedIndicator();
+            updateComputerDifficultyDisplay();
+
             gameRunning = true;
             resetBall();
             gameLoop();
         }
-        
-        // إعادة تعيين الكرة
+
         function resetBall() {
-            const containerHeight = gameContainer.offsetHeight;
-            const containerWidth = gameContainer.offsetWidth;
-            
-            ballX = containerWidth / 2;
-            ballY = containerHeight / 2;
-            ballSpeedX = (Math.random() > 0.5 ? 1 : -1) * 5;
-            ballSpeedY = (Math.random() > 0.5 ? 1 : -1) * 5;
-            
-            // تأثير ارتداد الكرة
+            // إعادة تعيين الكرة إلى المنتصف
+            ballX = gameContainer.offsetWidth / 2;
+            ballY = gameContainer.offsetHeight / 2;
+
+            // تحديد اتجاه عشوائي للكرة
+            ballSpeedX = (Math.random() > 0.5 ? 1 : -1) * INITIAL_BALL_SPEED;
+            ballSpeedY = (Math.random() > 0.5 ? 1 : -1) * INITIAL_BALL_SPEED;
+
             ball.classList.add('bounce');
             setTimeout(() => ball.classList.remove('bounce'), 500);
+
+            // إزالة جزيئات الأثر القديمة
+            trailParticles.forEach(p => p.element.remove());
+            trailParticles = [];
         }
-        
-        // إنشاء سؤال رياضيات حول تحويل الأعداد إلى كسور
+
+        // تحديث مؤشر السرعة
+        function updateSpeedIndicator() {
+            const currentSpeed = Math.round(Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY));
+            const speedLevel = Math.min(10, Math.floor((currentSpeed - INITIAL_BALL_SPEED) / (MAX_BALL_SPEED - INITIAL_BALL_SPEED) * 9) + 1);
+            speedIndicator.textContent = `سرعة الكرة: ${currentSpeed} (مستوى ${speedLevel})`;
+
+            // تغيير لون المؤشر بناءً على السرعة
+            const hue = 120 - (currentSpeed - INITIAL_BALL_SPEED) * (120 / (MAX_BALL_SPEED - INITIAL_BALL_SPEED));
+            speedIndicator.style.background = `hsla(${Math.max(0, hue)}, 80%, 50%, 0.8)`;
+            speedIndicator.style.boxShadow = `0 0 10px hsla(${Math.max(0, hue)}, 80%, 50%, 0.8)`;
+        }
+
+        // --- دوال الأسئلة الرياضية ---
         function generateMathQuestion() {
-            // الأسئلة المحددة التي طلبتها
             const specificQuestions = [
-                {
-                    text: "اكتب العدد 0.6 على صورة كسر a/b",
-                    answer: "3/5"
-                },
-                {
-                    text: "اكتب العدد -1.6 على صورة كسر a/b",
-                    answer: "-8/5"
-                },
-                {
-                    text: "اكتب العدد الكسري(- 2/3 1 )على صورة كسر a/b",
-                    answer: "-5/3"
-                },
-                {
-                    text: "اكتب العدد -5 على صورة كسر a/b",
-                    answer: "-5/1"
-                }
+                { text: "اكتب العدد 0.6 على صورة كسر a/b", answer: "3/5" },
+                { text: "اكتب العدد -1.6 على صورة كسر a/b", answer: "-8/5" },
+                { text: "اكتب العدد الكسري (-1 و 2/3) على صورة كسر a/b", answer: "-5/3" },
+                { text: "اكتب العدد -5 على صورة كسر a/b", answer: "-5/1" },
+                { text: "اكتب العدد 1.25 على صورة كسر a/b", answer: "5/4" },
+                { text: "اكتب العدد -0.75 على صورة كسر a/b", answer: "-3/4" },
+                { text: "اكتب العدد 0.125 على صورة كسر a/b", answer: "1/8" },
+                { text: "اكتب العدد 2 على صورة كسر a/b", answer: "2/1" },
+                { text: "اكتب العدد 0.25 على صورة كسر a/b", answer: "1/4" },
+                { text: "اكتب العدد -0.5 على صورة كسر a/b", answer: "-1/2" }
             ];
-            
-            // اختيار سؤال عشوائي من الأسئلة المحددة
+
             currentQuestion = specificQuestions[Math.floor(Math.random() * specificQuestions.length)];
-            
+
             questionText.textContent = currentQuestion.text;
             answerInput.value = '';
             mathQuestion.style.display = 'block';
             waitingForAnswer = true;
             answerInput.focus();
         }
-        
-        // التحقق من الإجابة
+
         function checkAnswer() {
-            const userAnswer = answerInput.value.trim();
-            
-            // التحقق من صيغة الإجابة
-            const fractionPattern = /^(-?\d+)\/(-?\d+)$|^(-?\d+)\/(\d+)$|^(\d+)\/(-?\d+)$/;
-            
-            if (!fractionPattern.test(userAnswer)) {
-                alert('صيغة غير صحيحة! استخدم الصيغة a/b (مثال: 3/4 أو -2/5)');
-                answerInput.value = '';
-                answerInput.focus();
-                return;
-            }
-            
-            // التحقق من الإجابة المعطاة مقابل الإجابة الصحيحة
-            // يجب التعامل مع الكسور المتكافئة (على سبيل المثال، 2/4 هي نفسها 1/2)
-            const simplifyFraction = (fraction) => {
-                const parts = fraction.split('/');
-                let num = parseInt(parts[0]);
-                let den = parseInt(parts[1]);
+            let userAnswer = answerInput.value.trim();
 
-                // التعامل مع السالب
-                const sign = (num * den < 0) ? -1 : 1;
-                num = Math.abs(num);
-                den = Math.abs(den);
+            const simplifyFraction = (fractionStr) => {
+                let num, den;
+                if (fractionStr.includes('/')) {
+                    const parts = fractionStr.split('/');
+                    num = parseInt(parts[0]);
+                    den = parseInt(parts[1]);
+                } else {
+                    num = parseInt(fractionStr);
+                    den = 1;
+                }
 
-                const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+                if (isNaN(num) || isNaN(den) || den === 0) return "Invalid";
+
+                const gcd = (a, b) => b === 0 ? Math.abs(a) : gcd(b, a % b);
                 const commonDivisor = gcd(num, den);
-                
-                return `${sign * (num / commonDivisor)}/${den / commonDivisor}`;
+
+                let simplifiedNum = num / commonDivisor;
+                let simplifiedDen = den / commonDivisor;
+
+                // توحيد الإشارة: إذا كان المقام سالباً، انقل الإشارة للبسط
+                if (simplifiedDen < 0) {
+                    simplifiedNum *= -1;
+                    simplifiedDen *= -1;
+                }
+                return `${simplifiedNum}/${simplifiedDen}`;
             };
 
             const simplifiedUserAnswer = simplifyFraction(userAnswer);
@@ -688,228 +938,303 @@
                 resetBall();
                 gameRunning = true;
                 gameLoop();
+                // يمكن إضافة تأثير صوتي أو بصري للإجابة الصحيحة
             } else {
-                // إظهار تلميح للمستخدم
                 const hints = [
-                    'حاول مرة أخرى!',
-                    'ليس صحيحاً، جرب مجدداً',
-                    'انتبه للإشارات والكسور المختصرة',
-                    `تلميح: الإجابة الصحيحة هي ${currentQuestion.answer} (أو مكافئتها المختصرة)`
+                    'تأكد من تبسيط الكسر!',
+                    'تذكر: -1.5 هي -3/2',
+                    'راجع قواعد تحويل العدد العشري إلى كسر',
+                    'انتبه للإشارة السالبة',
+                    'المقام لا يمكن أن يكون صفراً!',
+                    'تأكد من كتابة الكسر بصيغة a/b'
                 ];
-                
+
                 const randomHint = hints[Math.floor(Math.random() * hints.length)];
-                alert(randomHint);
+                alert(`إجابة خاطئة! ${randomHint}`);
                 answerInput.value = '';
                 answerInput.focus();
             }
         }
-        
-        // تحريك الكمبيوتر للمضرب العلوي (محسّنة)
+
+        // --- حركة الكمبيوتر (AI) ---
         function moveComputerPaddle() {
             const containerWidth = gameContainer.offsetWidth;
             const paddleWidth = paddleTop.offsetWidth;
-            
-            // حساب موضع الكرة بالنسبة للمضرب
-            let targetX = (ballX / containerWidth) * 100;
-            
-            // إضافة خطأ متدرج في تحديد الهدف
-            if (Math.random() < computerErrorRate) {
-                // خطأ في تقدير موقع الكرة (بين 5% إلى 20%)
-                const errorAmount = 5 + Math.random() * 15;
-                const errorDirection = Math.random() > 0.5 ? 1 : -1;
-                targetX += errorAmount * errorDirection;
-                
-                // تغيير وقت رد الفعل بشكل عشوائي
-                computerReactionTime = Math.random() * 0.2;
+            const ballCenter = ballX + ball.offsetWidth / 2;
+
+            let targetXInPixels = ballCenter;
+
+            // إذا كانت الكرة تتجه نحو مضرب الكمبيوتر (العلوي)
+            if (ballSpeedY < 0) {
+                // توقع مكان الكرة عند مستوى المضرب العلوي
+                const distanceY = ballY - (paddleTop.offsetTop + paddleTop.offsetHeight);
+                if (ballSpeedY !== 0) {
+                    const timeToPaddle = distanceY / Math.abs(ballSpeedY);
+                    targetXInPixels = ballX + ballSpeedX * timeToPaddle;
+
+                    // إضافة خطأ عشوائي بناءً على صعوبة الكمبيوتر
+                    const errorPixelRange = currentComputerDifficulty.errorRange * containerWidth;
+                    targetXInPixels += (Math.random() - 0.5) * errorPixelRange * 2; // -error to +error
+                }
+            } else {
+                // إذا كانت الكرة تتجه بعيداً عن مضرب الكمبيوتر، اجعل الكمبيوتر يعود للمنتصف ببطء
+                targetXInPixels = containerWidth / 2;
             }
-            
-            // حساب الفرق بين موقع المضرب والهدف
-            let diff = targetX - topPaddleX;
-            
-            // تطبيق وقت رد الفعل (تأخير)
-            diff *= (1 - computerReactionTime);
-            
-            // حساب الحركة مع إضافة تباين في السرعة
-            const speedVariation = 0.05 + Math.random() * 0.1;
-            let movement = diff * speedVariation;
-            
-            // الحد من الحركة القصوى لتجنب الحركات المفاجئة
-            movement = Math.max(-5, Math.min(5, movement));
-            
-            topPaddleX += movement;
-            
-            // التأكد من بقاء المضرب داخل الشاشة
-            topPaddleX = Math.max(0, Math.min(topPaddleX, 100));
-            
-            paddleTop.style.left = `calc(${topPaddleX}% - ${paddleWidth/2}px)`;
+
+            // تحويل البكسل إلى نسبة مئوية
+            let targetXPercent = (targetXInPixels / containerWidth) * 100;
+
+            // التأكد من بقاء المضرب داخل الحدود
+            const halfPaddleWidthPercent = PADDLE_WIDTH_PERCENT / 2;
+            targetXPercent = Math.max(halfPaddleWidthPercent, Math.min(targetXPercent, 100 - halfPaddleWidthPercent));
+
+            const currentPaddleCenterPercent = topPaddleX;
+            const movement = targetXPercent - currentPaddleCenterPercent;
+
+            // سرعة استجابة الكمبيوتر
+            const maxStep = currentComputerDifficulty.reactionTime * 100; // تحويل لوحدة النسبة المئوية
+
+            // تطبيق الحركة مع تحديد أقصى خطوة
+            if (Math.abs(movement) > maxStep) {
+                topPaddleX += Math.sign(movement) * maxStep;
+            } else {
+                topPaddleX += movement;
+            }
+
+            paddleTop.style.left = `${topPaddleX}%`;
+            paddleTop.style.transform = `translateX(-50%)`;
         }
-        
-        // التحقق من نقاط السؤال
+
+        // --- تحديث صعوبة اللعبة والواجهة ---
+        function updateGameDifficulty() {
+            const currentSpeed = Math.abs(ballSpeedY);
+            if (currentSpeed < MAX_BALL_SPEED) {
+                // زيادة السرعة في كلا الاتجاهين
+                ballSpeedX = ballSpeedX > 0 ?
+                    Math.min(MAX_BALL_SPEED, ballSpeedX + SPEED_INCREMENT_PER_POINT) :
+                    Math.max(-MAX_BALL_SPEED, ballSpeedX - SPEED_INCREMENT_PER_POINT);
+                ballSpeedY = ballSpeedY > 0 ?
+                    Math.min(MAX_BALL_SPEED, ballSpeedY + SPEED_INCREMENT_PER_POINT) :
+                    Math.max(-MAX_BALL_SPEED, ballSpeedY - SPEED_INCREMENT_PER_POINT);
+
+                // تأثير توهج الكرة بناءً على السرعة
+                const glowSize = Math.min(20, 5 + (currentSpeed / MAX_BALL_SPEED) * 15);
+                const glowOpacity = 0.5 + (currentSpeed / MAX_BALL_SPEED) * 0.5;
+                ball.style.boxShadow = `0 0 ${glowSize}px rgba(255, 0, 204, ${glowOpacity})`;
+            }
+            updateSpeedIndicator();
+        }
+
+        function updateComputerDifficultyDisplay() {
+            const difficultyName = {
+                easy: "سهل",
+                medium: "متوسط",
+                hard: "صعب"
+            }[computerDifficultySelect.value];
+            computerDifficultyDisplay.textContent = `مستوى الكمبيوتر: ${difficultyName}`;
+        }
+
+        // --- التحقق من النقاط وتشغيل الأسئلة ---
         function checkQuestionPoints() {
-            // السؤال يظهر فقط إذا أحرز اللاعب السفلي (أو اللاعب الذي يتحكم في المضرب السفلي) نقاط
-            const playerScore = bottomScore;
-            
-            if (questionTriggerPoints.includes(playerScore)) {
+            const playerScore = bottomScore; // السؤال يظهر بناءً على نقاط اللاعب (السفلي)
+
+            if (QUESTION_TRIGGER_POINTS.includes(playerScore)) {
                 if (!questionTriggered) {
-                    questionTriggered = true;
+                    questionTriggered = true; // لمنع التشغيل المتكرر
                     gameRunning = false;
                     generateMathQuestion();
                 }
             } else {
-                questionTriggered = false;
+                questionTriggered = false; // إعادة تعيين عندما تكون النقطة ليست نقطة سؤال
             }
         }
-        
-        // تحديث اللعبة
+
+        // --- الحلقة الرئيسية للعبة ---
         function update() {
             const containerHeight = gameContainer.offsetHeight;
             const containerWidth = gameContainer.offsetWidth;
-            const paddleWidth = paddleTop.offsetWidth;
-            const paddleHeight = paddleTop.offsetHeight;
-            
-            // تحريك المضارب بناءً على وضع اللعب
+
+            // تحويل أبعاد المضارب والكرة إلى بكسل
+            const paddleTopRect = paddleTop.getBoundingClientRect();
+            const paddleBottomRect = paddleBottom.getBoundingClientRect();
+            const ballRect = ball.getBoundingClientRect();
+
             if (gameMode === 'computer') {
                 moveComputerPaddle();
             }
-            // تحكم اللاعبين يتم من خلال دوال handleInteractionMove/Start
-            
-            // تحريك الكرة
+
             if (!waitingForAnswer) {
                 ballX += ballSpeedX;
                 ballY += ballSpeedY;
+
+                // إنشاء أثر للكرة
+                for (let i = 0; i < TRAIL_PARTICLE_COUNT; i++) {
+                    createSpeedTrail(ballX + ballRect.width / 2, ballY + ballRect.height / 2);
+                }
             }
-            
+
             // كشف التصادم مع الجدران الجانبية
-            if (ballX <= 0 || ballX >= containerWidth - ball.offsetWidth) {
+            if (ballX <= 0 || ballX >= containerWidth - ballRect.width) {
                 ballSpeedX *= -1;
+                ball.classList.add('hit-effect');
+                setTimeout(() => ball.classList.remove('hit-effect'), 200);
             }
-            
+
             // كشف التصادم مع المضرب العلوي
             if (
-                ballY <= paddleTop.offsetTop + paddleHeight &&
-                ballY >= paddleTop.offsetTop &&
-                ballX + ball.offsetWidth >= paddleTop.offsetLeft &&
-                ballX <= paddleTop.offsetLeft + paddleWidth
+                ballSpeedY < 0 && // الكرة تتجه نحو الأعلى
+                ballY <= paddleTopRect.bottom &&
+                ballY >= paddleTopRect.top &&
+                ballX + ballRect.width >= paddleTopRect.left &&
+                ballX <= paddleTopRect.right
             ) {
-                ballSpeedY = Math.abs(ballSpeedY);
-                const hitPosition = (ballX - paddleTop.offsetLeft) / paddleWidth;
-                ballSpeedX = (hitPosition - 0.5) * 10;
+                ballSpeedY *= -1; // عكس الاتجاه العمودي
+                ball.classList.add('hit-effect');
+                setTimeout(() => ball.classList.remove('hit-effect'), 200);
+                paddleTop.classList.add('bounce');
+                setTimeout(() => paddleTop.classList.remove('bounce'), 200);
+
+                // تغيير سرعة الكرة الأفقية بناءً على نقطة الاصطدام
+                const hitPosition = (ballX + ballRect.width / 2 - paddleTopRect.left) / paddleTopRect.width; // 0 (يسار) إلى 1 (يمين)
+                ballSpeedX = (hitPosition - 0.5) * (Math.abs(ballSpeedY) + 5); // زيادة السرعة الأفقية عند الزوايا
             }
-            
+
             // كشف التصادم مع المضرب السفلي
             if (
-                ballY + ball.offsetHeight >= paddleBottom.offsetTop &&
-                ballY + ball.offsetHeight <= paddleBottom.offsetTop + paddleHeight &&
-                ballX + ball.offsetWidth >= paddleBottom.offsetLeft &&
-                ballX <= paddleBottom.offsetLeft + paddleWidth
+                ballSpeedY > 0 && // الكرة تتجه نحو الأسفل
+                ballY + ballRect.height >= paddleBottomRect.top &&
+                ballY + ballRect.height <= paddleBottomRect.bottom &&
+                ballX + ballRect.width >= paddleBottomRect.left &&
+                ballX <= paddleBottomRect.right
             ) {
-                ballSpeedY = -Math.abs(ballSpeedY);
-                const hitPosition = (ballX - paddleBottom.offsetLeft) / paddleWidth;
-                ballSpeedX = (hitPosition - 0.5) * 10;
+                ballSpeedY *= -1; // عكس الاتجاه العمودي
+                ball.classList.add('hit-effect');
+                setTimeout(() => ball.classList.remove('hit-effect'), 200);
+                paddleBottom.classList.add('bounce');
+                setTimeout(() => paddleBottom.classList.remove('bounce'), 200);
+
+                // تغيير سرعة الكرة الأفقية بناءً على نقطة الاصطدام
+                const hitPosition = (ballX + ballRect.width / 2 - paddleBottomRect.left) / paddleBottomRect.width;
+                ballSpeedX = (hitPosition - 0.5) * (Math.abs(ballSpeedY) + 5);
             }
-            
+
             // تسجيل النقاط
-            if (ballY < 0) { // الكرة تجاوزت المضرب العلوي
+            let scored = false;
+            if (ballY < -ballRect.height) { // تجاوزت المضرب العلوي بالكامل
                 bottomScore++;
-                lastScorer = 'bottom';
-                updateScore();
-                gameRunning = false;
-                
-                checkQuestionPoints(); // فحص نقاط السؤال للاعب السفلي
-                
-                if (!waitingForAnswer) {
-                    setTimeout(() => {
-                        resetBall();
-                        gameRunning = true;
-                        gameLoop();
-                    }, 1000);
-                }
-            }
-            
-            if (ballY > containerHeight) { // الكرة تجاوزت المضرب السفلي
+                scored = true;
+            } else if (ballY > containerHeight) { // تجاوزت المضرب السفلي بالكامل
                 topScore++;
-                lastScorer = 'top';
+                scored = true;
+            }
+
+            if (scored) {
                 updateScore();
-                gameRunning = false;
-                
-                // في وضع الكمبيوتر، لا يظهر السؤال عند نقطة الكمبيوتر.
-                // في وضع اللاعبين، يظهر السؤال لكلا اللاعبين عند إحراز النقطة
-                if (gameMode === 'friend') {
-                    checkQuestionPoints(); // فحص نقاط السؤال للاعب العلوي أيضاً
-                }
-                
-                if (!waitingForAnswer) {
-                    setTimeout(() => {
-                        resetBall();
-                        gameRunning = true;
-                        gameLoop();
-                    }, 1000);
+                updateGameDifficulty(); // تحديث السرعة بعد تسجيل النقطة
+                gameRunning = false; // إيقاف اللعبة مؤقتاً
+
+                if (bottomScore >= 10 || topScore >= 10) {
+                    showWinningMessage();
+                } else {
+                    checkQuestionPoints();
+                    if (!waitingForAnswer) { // إذا لم يتم تشغيل سؤال
+                        setTimeout(() => {
+                            resetBall();
+                            gameRunning = true;
+                            gameLoop();
+                        }, 1000); // انتظر ثانية قبل إعادة الكرة
+                    }
                 }
             }
-            
+
             // تحديث موضع الكرة
             ball.style.left = ballX + 'px';
             ball.style.top = ballY + 'px';
+
+            // تحديث أثر السرعة
+            updateSpeedTrails();
         }
-        
-        // تحديث النتيجة
-        function updateScore() {
-            scoreElement.textContent = `${topScore} - ${bottomScore}`;
-            
-            // نهاية اللعبة عند الوصول إلى 10 نقاط
-            if (topScore >= 10 || bottomScore >= 10) {
-                gameRunning = false;
-                const winner = topScore >= 10 ? "الفريق العلوي" : "الفريق السفلي";
-                
-                // عرض شاشة النهاية
-                setTimeout(() => {
-                    startScreen.innerHTML = `
-                        <h1 class="game-title">🎉 ${winner} فاز! 🎉</h1>
-                        <p>النتيجة النهائية: ${topScore} - ${bottomScore}</p>
-                        <div id="mode-selection">
-                            <button class="mode-btn" id="play-again">
-                                <i class="fas fa-redo"></i> لعب مرة أخرى
-                            </button>
-                        </div>
-                    `;
-                    startScreen.style.display = 'flex';
-                    
-                    document.getElementById('play-again').addEventListener('click', () => {
-                        location.reload();
-                    });
-                }, 1000);
+
+        // --- تأثيرات بصرية ---
+        function createSpeedTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'speed-trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+
+            const size = Math.max(3, Math.min(TRAIL_PARTICLE_MAX_SIZE, Math.abs(ballSpeedY) / 2));
+            trail.style.width = size + 'px';
+            trail.style.height = size + 'px';
+
+            gameContainer.appendChild(trail);
+            trailParticles.push({
+                element: trail,
+                life: TRAIL_PARTICLE_LIFE,
+                opacity: 0.6
+            });
+        }
+
+        function updateSpeedTrails() {
+            for (let i = trailParticles.length - 1; i >= 0; i--) {
+                const particle = trailParticles[i];
+                particle.life--;
+                particle.opacity -= (0.6 / TRAIL_PARTICLE_LIFE); // يقلل الشفافية ببطء
+
+                if (particle.life <= 0 || particle.opacity <= 0) {
+                    particle.element.remove();
+                    trailParticles.splice(i, 1);
+                } else {
+                    particle.element.style.opacity = particle.opacity;
+                    // يمكن إضافة حركة طفيفة للجزيئات
+                    // particle.element.style.transform = `translate(${Math.random() * 2 - 1}px, ${Math.random() * 2 - 1}px)`;
+                }
             }
         }
-        
-        // حلقة اللعبة الرئيسية
+
+        // --- تحديث النتيجة ورسالة الفوز ---
+        function updateScore() {
+            scoreElement.textContent = `${topScore} - ${bottomScore}`;
+        }
+
+        function showWinningMessage() {
+            gameRunning = false;
+            let winnerText = "";
+            if (topScore >= 10) {
+                winnerText = gameMode === 'computer' ? "فاز الكمبيوتر!" : "فاز اللاعب العلوي!";
+            } else {
+                winnerText = "فاز اللاعب السفلي!";
+            }
+
+            winnerName.textContent = winnerText;
+            finalScore.textContent = `النتيجة النهائية: ${topScore} - ${bottomScore}`;
+            winningMessage.style.display = 'block';
+        }
+
+        // --- حلقة اللعبة ---
         function gameLoop() {
             if (gameRunning && !waitingForAnswer) {
                 update();
                 requestAnimationFrame(gameLoop);
             }
         }
-        
-        // ضبط أحجام العناصر عند تغيير حجم الشاشة
+
+        // --- تهيئة وتعديل الحجم ---
         function resizeGame() {
-            const containerWidth = gameContainer.offsetWidth;
-            // يتم ضبط عرض المضارب بالنسبة المئوية في CSS
-            // paddleTop.style.width = containerWidth * 0.25 + 'px'; 
-            // paddleBottom.style.width = containerWidth * 0.25 + 'px';
-            
-            // إعادة تعيين مواضع المضارب بعد تغيير الحجم
-            const paddleRenderedWidth = paddleTop.offsetWidth; // الحصول على العرض الفعلي بعد تطبيق الـ CSS
-            paddleTop.style.left = `calc(${topPaddleX}% - ${paddleRenderedWidth/2}px)`;
-            paddleBottom.style.left = `calc(${bottomPaddleX}% - ${paddleRenderedWidth/2}px)`;
-            
+            // إعادة ضبط موضع المضارب عند تغيير حجم الشاشة للحفاظ على التوسيط
+            paddleTop.style.left = `${topPaddleX}%`;
+            paddleBottom.style.left = `${bottomPaddleX}%`;
+
+            // في حالة عدم تشغيل اللعبة، أعد تعيين الكرة للحفاظ على تناسق الحجم
             if (!gameRunning) resetBall();
         }
-        
+
         window.addEventListener('resize', resizeGame);
-        
+
         // تهيئة اللعبة عند تحميل الصفحة
         window.onload = function() {
             resizeGame();
             resetBall();
+            computerDifficultyDisplay.style.display = 'none'; // يخفى في البداية
         };
     </script>
 </body>
