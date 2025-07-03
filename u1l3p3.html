@@ -244,6 +244,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Added to center content vertically */
             z-index: 200;
             text-align: center;
             padding: 20px;
@@ -352,16 +353,19 @@
         /* Desktop specific control info */
         @media (min-width: 768px) {
             .control-info.mobile {
-                display: none; /* Hide touch icon on desktop */
+                display: none;
+                /* Hide touch icon on desktop */
             }
             .control-info.desktop {
-                display: flex; /* Show keyboard icon on desktop */
+                display: flex;
+                /* Show keyboard icon on desktop */
             }
         }
         /* Mobile specific control info */
         @media (max-width: 767px) {
             .control-info.desktop {
-                display: none; /* Hide keyboard icon on mobile */
+                display: none;
+                /* Hide keyboard icon on mobile */
             }
         }
         
@@ -680,7 +684,8 @@
             
             <div class="difficulty-indicator">
                 مستوى الصعوبة: 
-                <span class="difficulty-level" id="difficulty-level-0"></span> <span class="difficulty-level" id="difficulty-level-1"></span>
+                <span class="difficulty-level" id="difficulty-level-0"></span>
+                <span class="difficulty-level" id="difficulty-level-1"></span>
                 <span class="difficulty-level" id="difficulty-level-2"></span>
                 <span class="difficulty-level" id="difficulty-level-3"></span>
                 <span class="difficulty-level" id="difficulty-level-4"></span>
@@ -751,7 +756,7 @@
                                 <div>تزداد الصعوبة مع تقدمك</div>
                             </div>
                         </div>
-                        
+            
                         <div class="controls-info">
                             <div class="control-info mobile">
                                 <div class="control-icon">
@@ -816,16 +821,14 @@
         const gameOverSound = document.getElementById('gameOverSound');
         const lifeLostSound = document.getElementById('lifeLostSound');
         const levelUpSound = document.getElementById('levelUpSound');
-
         // elements نظام الصعوبة
         const difficultyLevelElements = [
-            document.getElementById('difficulty-level-0'), // Corrected IDs to match 0-indexed array
+            document.getElementById('difficulty-level-0'),
             document.getElementById('difficulty-level-1'),
             document.getElementById('difficulty-level-2'),
             document.getElementById('difficulty-level-3'),
             document.getElementById('difficulty-level-4')
         ];
-        
         let scene, camera, renderer, car, numbers = [], obstacles = [];
         let road, roadWidth = 20, roadSegments = 200;
         let score = 0, gameActive = false;
@@ -833,7 +836,6 @@
         let touchStartX = 0;
         let correctCount = 0, wrongCount = 0;
         let lives = 3;
-        
         // إعدادات نظام الصعوبة
         let baseCarSpeed = 0.4;
         let currentDifficulty = 0;
@@ -848,81 +850,61 @@
             { speed: 0.7, obstacleInterval: 120, closeNumbers: 0.4, negativeRatio: 0.8 },
             { speed: 0.8, obstacleInterval: 100, closeNumbers: 0.5, negativeRatio: 0.9 }
         ];
-        
         // العقبات الإضافية
         const EXTRA_OBSTACLES = [
             { 
                 type: 'spike', 
-                create: function() {
+                create: function() { 
                     const obstacle = new THREE.ConeGeometry(1.5, 3, 4);
                     const material = new THREE.MeshPhongMaterial({ color: 0xaa0000 });
                     const mesh = new THREE.Mesh(obstacle, material);
-                    
                     const circleGeometry = new THREE.RingGeometry(1.8, 2.0, 32);
-                    const circleMaterial = new THREE.MeshBasicMaterial({ 
-                        color: 0xff0000, 
-                        side: THREE.DoubleSide,
-                        transparent: true,
-                        opacity: 0.6
-                    });
+                    const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
                     const circle = new THREE.Mesh(circleGeometry, circleMaterial);
                     circle.rotation.x = Math.PI / 2;
                     circle.position.y = 0.1;
                     mesh.add(circle);
-                    
                     return mesh;
-                }
+                } 
             },
             { 
                 type: 'barrier', 
-                create: function() {
+                create: function() { 
                     const obstacle = new THREE.BoxGeometry(1.5, 3, 0.5);
                     const material = new THREE.MeshPhongMaterial({ color: 0xaa0000 });
                     const mesh = new THREE.Mesh(obstacle, material);
-                    
                     for (let i = 0; i < 3; i++) {
                         const barrier = mesh.clone();
                         barrier.position.x = i * 1.8 - 1.8;
                         mesh.add(barrier);
                     }
-                    
                     const circleGeometry = new THREE.RingGeometry(3.5, 3.8, 32);
-                    const circleMaterial = new THREE.MeshBasicMaterial({ 
-                        color: 0xff0000, 
-                        side: THREE.DoubleSide,
-                        transparent: true,
-                        opacity: 0.6
-                    });
+                    const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
                     const circle = new THREE.Mesh(circleGeometry, circleMaterial);
                     circle.rotation.x = Math.PI / 2;
                     circle.position.y = 0.1;
                     mesh.add(circle);
-                    
                     return mesh;
-                }
+                } 
             }
         ];
-        
+
         function init() {
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x87CEEB);
             scene.fog = new THREE.Fog(0x87CEEB, 100, 300);
-            
-            const aspectRatio = document.getElementById('game-container').offsetWidth / 
-                              document.getElementById('game-container').offsetHeight;
+            const container = document.getElementById('game-container');
+            const aspectRatio = container.offsetWidth / container.offsetHeight;
             camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
             camera.position.set(0, 10, 15);
             camera.lookAt(0, 0, -30);
-            
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(document.getElementById('game-container').offsetWidth, 
-                             document.getElementById('game-container').offsetHeight);
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
             renderer.shadowMap.enabled = true;
-            document.getElementById('game-container').appendChild(renderer.domElement);
+            container.appendChild(renderer.domElement);
             
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
-            
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
             directionalLight.position.set(20, 30, 20);
             directionalLight.castShadow = true;
@@ -932,17 +914,15 @@
             createCar();
             createNumbersAndObstacles();
             addEnvironment();
-            
+
             window.addEventListener('resize', onWindowResize);
-            
+
             // Touch controls for mobile
             document.addEventListener('touchstart', handleTouchStart, { passive: false });
             document.addEventListener('touchmove', handleTouchMove, { passive: false });
-            
             leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveCar('left'); });
             leftBtn.addEventListener('touchend', () => stopMove());
             leftBtn.addEventListener('touchcancel', () => stopMove());
-            
             rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveCar('right'); });
             rightBtn.addEventListener('touchend', () => stopMove());
             rightBtn.addEventListener('touchcancel', () => stopMove());
@@ -950,35 +930,24 @@
             // Keyboard controls for desktop
             document.addEventListener('keydown', handleKeyDown);
             document.addEventListener('keyup', handleKeyUp);
-            
+
             startBtn.addEventListener('click', startGame);
             restartBtn.addEventListener('click', restartGame);
-            
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-                startScreen.style.display = 'flex';
-            }, 800);
         }
-        
+
         function createRoad() {
             const roadGeometry = new THREE.PlaneGeometry(roadWidth, roadSegments);
-            const roadMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x333333,
-                roughness: 0.9,
-                metalness: 0.1
-            });
-            
+            const roadMaterial = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.9, metalness: 0.1 });
             road = new THREE.Mesh(roadGeometry, roadMaterial);
             road.rotation.x = -Math.PI / 2;
             road.position.y = 0;
             road.position.z = -roadSegments / 2;
             road.receiveShadow = true;
             scene.add(road);
-            
+
             for (let i = 0; i < roadSegments / 5; i++) {
                 const lineGeometry = new THREE.PlaneGeometry(1, 3);
                 const lineMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 });
-                
                 const line = new THREE.Mesh(lineGeometry, lineMaterial);
                 line.rotation.x = -Math.PI / 2;
                 line.position.y = 0.1;
@@ -987,17 +956,16 @@
                 scene.add(line);
             }
         }
-        
+
         function createCar() {
             const carGroup = new THREE.Group();
-            
             const carBodyGeometry = new THREE.BoxGeometry(3, 1.5, 5);
             const carBodyMaterial = new THREE.MeshPhongMaterial({ color: 0xff3366 });
             const carBody = new THREE.Mesh(carBodyGeometry, carBodyMaterial);
             carBody.position.y = 1;
             carBody.castShadow = true;
             carGroup.add(carBody);
-            
+
             const carTopGeometry = new THREE.BoxGeometry(2, 1, 3);
             const carTopMaterial = new THREE.MeshPhongMaterial({ color: 0x44aaff });
             const carTop = new THREE.Mesh(carTopGeometry, carTopMaterial);
@@ -1005,11 +973,10 @@
             carTop.position.z = -0.5;
             carTop.castShadow = true;
             carGroup.add(carTop);
-            
+
             const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 16);
             wheelGeometry.rotateZ(Math.PI / 2);
             const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x222222 });
-            
             for (let i = -1; i <= 1; i += 2) {
                 for (let j = -1; j <= 1; j += 2) {
                     const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
@@ -1020,19 +987,17 @@
                     carGroup.add(wheel);
                 }
             }
-            
             carGroup.position.set(0, 1.5, 0);
             scene.add(carGroup);
             car = carGroup;
         }
-        
+
         function generateNumberValue() {
             const difficulty = DIFFICULTY_LEVELS[currentDifficulty];
             const isNegative = Math.random() > (1 - difficulty.negativeRatio);
             const isCloseToThreshold = Math.random() < difficulty.closeNumbers;
-            
             let numberValue;
-            
+
             if (isCloseToThreshold) {
                 if (isNegative) {
                     numberValue = parseFloat((-0.7 + Math.random() * 0.15).toFixed(2));
@@ -1042,35 +1007,415 @@
             } else {
                 numberValue = parseFloat((isNegative ? -1 : 1) * (Math.random() * 0.99).toFixed(2));
             }
-            
+
             const isCorrect = numberValue < 0.7;
             return { value: numberValue, isCorrect };
         }
-        
+
         function createNumbersAndObstacles() {
-            for (let i = 0; i < 6; i++) {
-                const { value: numberValue, isCorrect } = generateNumberValue();
+            for (let i = 0; i < 20; i++) {
+                spawnNumber();
+                spawnObstacle();
+            }
+        }
+
+        function spawnNumber() {
+            const numberData = generateNumberValue();
+            const value = numberData.value;
+            const isCorrect = numberData.isCorrect;
+            
+            const color = isCorrect ? 'coin-gold' : 'coin-silver';
+            const geometry = new THREE.CylinderGeometry(1.5, 1.5, 0.3, 32);
+            const material = new THREE.MeshPhongMaterial({ color: isCorrect ? 0xffd700 : 0xc0c0c0 });
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.rotation.x = Math.PI / 2;
+            mesh.position.y = 0.5;
+            mesh.position.z = -Math.random() * roadSegments - 50;
+            mesh.position.x = (Math.random() * roadWidth - roadWidth / 2) * 0.8;
+            mesh.castShadow = true;
+            mesh.userData = { value: value, isCorrect: isCorrect, type: 'number' }; // Store data in userData
+
+            const textCanvas = document.createElement('canvas');
+            const context = textCanvas.getContext('2d');
+            const fontSize = 100;
+            const font = `${fontSize}px Tajawal`;
+            context.font = font;
+            const textWidth = context.measureText(value.toString()).width;
+            const canvasWidth = textWidth + 20;
+            const canvasHeight = fontSize + 20;
+            textCanvas.width = canvasWidth;
+            textCanvas.height = canvasHeight;
+            context.font = font;
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillStyle = '#000000';
+            context.fillText(value.toString(), canvasWidth / 2, canvasHeight / 2);
+
+            const textTexture = new THREE.CanvasTexture(textCanvas);
+            const textMaterial = new THREE.MeshBasicMaterial({ map: textTexture, transparent: true });
+            const textPlane = new THREE.Mesh(new THREE.PlaneGeometry(canvasWidth / fontSize * 1.5, canvasHeight / fontSize * 1.5), textMaterial);
+            textPlane.position.z = 0.2; // Slightly above the coin
+            mesh.add(textPlane);
+
+            scene.add(mesh);
+            numbers.push(mesh);
+        }
+
+        function spawnObstacle() {
+            const difficulty = DIFFICULTY_LEVELS[currentDifficulty];
+            const isExtraObstacle = Math.random() < difficulty.extraObstacleRatio && EXTRA_OBSTACLES.length > 0;
+            
+            let obstacleMesh;
+            let obstacleType = 'default';
+
+            if (isExtraObstacle) {
+                const randomExtra = EXTRA_OBSTACLES[Math.floor(Math.random() * EXTRA_OBSTACLES.length)];
+                obstacleMesh = randomExtra.create();
+                obstacleType = randomExtra.type;
+            } else {
+                const geometry = new THREE.BoxGeometry(2, 2, 2);
+                const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+                obstacleMesh = new THREE.Mesh(geometry, material);
+            }
+
+            obstacleMesh.position.y = 1;
+            obstacleMesh.position.z = -Math.random() * roadSegments - 50;
+            obstacleMesh.position.x = (Math.random() * roadWidth - roadWidth / 2) * 0.8;
+            obstacleMesh.castShadow = true;
+            obstacleMesh.userData = { type: 'obstacle', obstacleType: obstacleType }; // Store data
+            scene.add(obstacleMesh);
+            obstacles.push(obstacleMesh);
+        }
+
+        function addEnvironment() {
+            const treeGeometry = new THREE.ConeGeometry(2, 8, 8);
+            const treeMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 });
+            const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.5, 3, 8);
+            const trunkMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
+
+            for (let i = 0; i < 50; i++) {
+                const tree = new THREE.Mesh(treeGeometry, treeMaterial);
+                const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
                 
-                const coinGeometry = new THREE.CylinderGeometry(2.0, 2.0, 0.4, 32);
-                const coinMaterial = new THREE.MeshPhongMaterial({ 
-                    color: isCorrect ? 0x4dabf7 : 0xda1b60,
-                    emissive: isCorrect ? 0x1a3f7a : 0x5c0a1f,
-                    shininess: 100
-                });
+                tree.position.y = 6;
+                trunk.position.y = 1.5;
+                tree.add(trunk); // Trunk is part of the tree mesh
                 
-                const coinMesh = new THREE.Mesh(coinGeometry, coinMaterial);
-                coinMesh.rotation.x = Math.PI / 2;
-                coinMesh.position.y = 2;
-                coinMesh.position.x = (Math.random() - 0.5) * (roadWidth - 4);
-                coinMesh.position.z = -Math.random() * roadSegments - 20;
-                coinMesh.castShadow = true;
-                
-                coinMesh.userData = { 
-                    value: numberValue, 
-                    isCorrect: isCorrect,
-                    text: numberValue.toString() 
-                };
-                
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                can
+                tree.position.x = (Math.random() > 0.5 ? 1 : -1) * (roadWidth / 2 + 3 + Math.random() * 5);
+                tree.position.z = -Math.random() * roadSegments * 2;
+                tree.castShadow = true;
+                scene.add(tree);
+            }
+        }
+
+        let moveInterval = null;
+        function moveCar(direction) {
+            const speed = 0.3; // Increased car movement speed for better responsiveness
+            if (moveInterval) clearInterval(moveInterval);
+            moveInterval = setInterval(() => {
+                if (direction === 'left') {
+                    carPosition = Math.max(-maxCarPosition, carPosition - speed);
+                } else {
+                    carPosition = Math.min(maxCarPosition, carPosition + speed);
+                }
+                car.position.x = carPosition;
+            }, 20); // More frequent updates for smoother movement
+        }
+
+        function stopMove() {
+            if (moveInterval) {
+                clearInterval(moveInterval);
+                moveInterval = null;
+            }
+        }
+        
+        function handleTouchStart(event) {
+            event.preventDefault(); // Prevent scrolling and zooming
+            touchStartX = event.touches[0].clientX;
+        }
+
+        function handleTouchMove(event) {
+            event.preventDefault(); // Prevent scrolling and zooming
+            const touchX = event.touches[0].clientX;
+            const deltaX = touchX - touchStartX;
+            const sensitivity = 0.2;
+            carPosition += deltaX * sensitivity;
+            carPosition = Math.max(-maxCarPosition, Math.min(maxCarPosition, carPosition));
+            car.position.x = carPosition;
+            touchStartX = touchX;
+        }
+
+        let keyState = {};
+        function handleKeyDown(event) {
+            if (gameActive) {
+                if (event.key === 'ArrowLeft' && !keyState['ArrowLeft']) {
+                    moveCar('left');
+                    keyState['ArrowLeft'] = true;
+                } else if (event.key === 'ArrowRight' && !keyState['ArrowRight']) {
+                    moveCar('right');
+                    keyState['ArrowRight'] = true;
+                }
+            }
+        }
+
+        function handleKeyUp(event) {
+            if (gameActive) {
+                if (event.key === 'ArrowLeft') {
+                    stopMove();
+                    keyState['ArrowLeft'] = false;
+                } else if (event.key === 'ArrowRight') {
+                    stopMove();
+                    keyState['ArrowRight'] = false;
+                }
+            }
+        }
+
+        function update() {
+            if (!gameActive) return;
+
+            const currentDifficultySettings = DIFFICULTY_LEVELS[currentDifficulty];
+            const speed = currentDifficultySettings.speed;
+            const obstacleInterval = currentDifficultySettings.obstacleInterval;
+
+            // Move road to simulate car movement
+            road.position.z += speed;
+            if (road.position.z > roadSegments / 2) {
+                road.position.z = -roadSegments / 2;
+            }
+
+            // Move numbers and obstacles
+            numbers.forEach(number => {
+                number.position.z += speed;
+                if (number.position.z > camera.position.z + 5) {
+                    resetNumber(number);
+                }
+                checkCollision(number);
+            });
+
+            obstacles.forEach(obstacle => {
+                obstacle.position.z += speed;
+                if (obstacle.position.z > camera.position.z + 5) {
+                    resetObstacle(obstacle);
+                }
+                checkCollision(obstacle);
+            });
+            
+            // Periodically spawn new obstacles based on difficulty
+            if (Date.now() - lastDifficultyUpdate > obstacleInterval) {
+                spawnObstacle(); // Spawn additional obstacles
+                lastDifficultyUpdate = Date.now();
+            }
+
+            updateProgress();
+            updateDifficulty();
+        }
+
+        function checkCollision(object) {
+            const carBox = new THREE.Box3().setFromObject(car);
+            const objectBox = new THREE.Box3().setFromObject(object);
+
+            if (carBox.intersectsBox(objectBox)) {
+                if (object.userData.type === 'number') {
+                    if (object.userData.isCorrect) {
+                        score += 10;
+                        correctCount++;
+                        correctSound.play();
+                        showEducationalMessage("إجابة صحيحة!", 'correct');
+                    } else {
+                        score = Math.max(0, score - 5);
+                        wrongCount++;
+                        wrongSound.play();
+                        loseLife();
+                        showEducationalMessage("إجابة خاطئة! تجنب هذا العدد.", 'wrong');
+                    }
+                    scoreElement.textContent = score;
+                    resetNumber(object);
+                } else if (object.userData.type === 'obstacle') {
+                    collisionSound.play();
+                    loseLife();
+                    showEducationalMessage("اصطدمت بعقبة!", 'wrong');
+                    resetObstacle(object);
+                }
+            }
+        }
+
+        function resetNumber(number) {
+            const numberData = generateNumberValue();
+            number.userData.value = numberData.value;
+            number.userData.isCorrect = numberData.isCorrect;
+            
+            // Update visual properties based on new correctness
+            const newMaterialColor = numberData.isCorrect ? 0xffd700 : 0xc0c0c0;
+            if (number.material.color) {
+                number.material.color.set(newMaterialColor);
+            }
+            
+            // Update the text on the number
+            const textMesh = number.children.find(child => child.material.map instanceof THREE.CanvasTexture);
+            if (textMesh) {
+                const textCanvas = textMesh.material.map.image;
+                const context = textCanvas.getContext('2d');
+                const fontSize = 100;
+                const font = `${fontSize}px Tajawal`;
+
+                // Clear previous text
+                context.clearRect(0, 0, textCanvas.width, textCanvas.height);
+
+                // Draw new text
+                context.font = font;
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillStyle = '#000000';
+                context.fillText(numberData.value.toString(), textCanvas.width / 2, textCanvas.height / 2);
+                textMesh.material.map.needsUpdate = true; // Important to update texture
+            }
+
+            number.position.z = -Math.random() * roadSegments - 50;
+            number.position.x = (Math.random() * roadWidth - roadWidth / 2) * 0.8;
+        }
+
+        function resetObstacle(obstacle) {
+            obstacle.position.z = -Math.random() * roadSegments - 50;
+            obstacle.position.x = (Math.random() * roadWidth - roadWidth / 2) * 0.8;
+        }
+
+        function loseLife() {
+            lives--;
+            lifeLostSound.play();
+            if (lives === 2) {
+                life3.classList.add('lost');
+                life3.classList.add('life-shake');
+            } else if (lives === 1) {
+                life2.classList.add('lost');
+                life2.classList.add('life-shake');
+            } else if (lives === 0) {
+                life1.classList.add('lost');
+                life1.classList.add('life-shake');
+                gameOver();
+            }
+        }
+
+        function startGame() {
+            gameActive = true;
+            startScreen.style.display = 'none';
+            gameOverPanel.style.display = 'none';
+            resetGame();
+            animate();
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        function resetGame() {
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            lives = 3;
+            currentDifficulty = 0;
+            baseCarSpeed = DIFFICULTY_LEVELS[0].speed; // Reset speed
+            lastDifficultyUpdate = Date.now();
+
+            scoreElement.textContent = score;
+            correctCountElement.textContent = correctCount;
+            wrongCountElement.textContent = wrongCount;
+            accuracyElement.textContent = `0%`;
+
+            life1.classList.remove('lost', 'life-shake');
+            life2.classList.remove('lost', 'life-shake');
+            life3.classList.remove('lost', 'life-shake');
+
+            progressFill.style.width = '0%';
+            updateDifficultyIndicators();
+
+            // Reset positions of existing numbers and obstacles
+            numbers.forEach(resetNumber);
+            obstacles.forEach(resetObstacle);
+            
+            // Clear any active movement intervals (for keyboard)
+            clearInterval(moveInterval);
+            moveInterval = null;
+        }
+
+        function updateProgress() {
+            const maxScoreForLevel = 200; // Example: increase difficulty every 200 points
+            const progress = (score % maxScoreForLevel) / maxScoreForLevel * 100;
+            progressFill.style.width = `${progress}%`;
+
+            if (score > 0 && score % maxScoreForLevel === 0 && currentDifficulty < DIFFICULTY_LEVELS.length - 1) {
+                currentDifficulty++;
+                levelUpSound.play();
+                showEducationalMessage(`المستوى ${currentDifficulty + 1}!`, 'correct');
+                updateDifficultyIndicators();
+            }
+        }
+
+        function updateDifficultyIndicators() {
+            difficultyLevelElements.forEach((el, index) => {
+                if (index <= currentDifficulty) {
+                    el.style.backgroundColor = DIFFICULTY_LEVELS[currentDifficulty].speed === 0.4 ? '#00c853' :
+                                               DIFFICULTY_LEVELS[currentDifficulty].speed === 0.5 ? '#ffd700' :
+                                               DIFFICULTY_LEVELS[currentDifficulty].speed === 0.6 ? '#ff9800' :
+                                               DIFFICULTY_LEVELS[currentDifficulty].speed === 0.7 ? '#ff5722' :
+                                               '#f44336';
+                    el.classList.add(`level-${currentDifficulty + 1}`); // Add specific class
+                } else {
+                    el.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                    el.classList.remove(`level-${index + 1}`);
+                }
+            });
+        }
+        
+        function showEducationalMessage(message, type) {
+            educationalMessage.textContent = message;
+            educationalMessage.className = 'educational-message'; // Reset classes
+            educationalMessage.classList.add(`${type}-message`);
+            educationalMessage.style.display = 'block';
+            setTimeout(() => {
+                educationalMessage.style.display = "none";
+            }, 1500);
+        }
+        
+        function gameOver() {
+            gameActive = false;
+            gameOverSound.play(); // Play game over sound
+            // Clear any active movement intervals (for keyboard)
+            clearInterval(moveInterval);
+            moveInterval = null;
+
+            finalScoreElement.textContent = score;
+            
+            const totalAttempts = correctCount + wrongCount;
+            const accuracy = totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0;
+            
+            finalCorrectElement.textContent = correctCount;
+            finalWrongElement.textContent = wrongCount;
+            finalAccuracyElement.textContent = `${accuracy}%`;
+            
+            gameOverPanel.style.display = 'flex';
+        }
+        
+        function animate() {
+            if (!gameActive) return;
+            
+            requestAnimationFrame(animate);
+            update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('game-container');
+            camera.aspect = container.offsetWidth / container.offsetHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+        }
+        
+        window.onload = function() {
+            init(); // Initialize the game components
+            // Once all resources are loaded and init() is done, hide loading screen and show start screen
+            loadingScreen.style.display = 'none';
+            startScreen.style.display = 'flex';
+        };
+    </script>
+</body>
+</html>
