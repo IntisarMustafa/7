@@ -518,7 +518,7 @@
                 this.radius = 25;
                 this.color = '#FFD700';
                 this.velocity = { x: 0, y: 0 };
-                this.gravity = 0.4;
+                this.gravity = 0.25; // تم تقليل الجاذبية للسماح بالرمي عالياً أكثر
                 this.friction = 0.97;
                 this.launched = false;
                 this.initialX = x;
@@ -744,7 +744,7 @@
             questionText.textContent = `ما هي الصورة العشرية للعدد ${question.num}/${question.den}؟`;
         }
         
-        // إنشاء الأهداف التعليمية - تم تكبير الأبعاد هنا
+        // إنشاء الأهداف التعليمية - تم تكبير الأبعاد هنا وتعديل التباعد والموضع
         function createTargets() {
             targets = [];
             
@@ -761,6 +761,7 @@
             const selectedIncorrect = [];
             while (selectedIncorrect.length < 2) {
                 const rand = incorrectAnswers[Math.floor(Math.random() * incorrectAnswers.length)];
+                // تأكد أن الإجابة الخاطئة ليست هي الإجابة الصحيحة
                 if (!selectedIncorrect.includes(rand) && rand !== currentQuestion.answer) {
                     selectedIncorrect.push(rand);
                 }
@@ -769,19 +770,19 @@
             // جميع الإجابات (صحيحة + خاطئتين)
             const allAnswers = [currentQuestion.answer, ...selectedIncorrect];
             
-            // خلط الإجابات
+            // خلط الإجابات لترتيب عشوائي للأهداف
             for (let i = allAnswers.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [allAnswers[i], allAnswers[j]] = [allAnswers[j], allAnswers[i]];
             }
             
-            // إنشاء الأهداف - تم تكبير الأبعاد هنا
-            const targetWidth = 100; // تم التكبير من 60px
-            const targetHeight = 70; // تم التكبير من 40px
-            const spacing = 40;
+            // إنشاء الأهداف - أبعاد جديدة لتعكس التكبير في CSS
+            const targetWidth = 100; 
+            const targetHeight = 70; 
+            const spacing = 60; // زيادة التباعد بين الأهداف
             const totalWidth = targetWidth * 3 + spacing * 2;
             const startX = (canvas.width - totalWidth) / 2;
-            const startY = canvas.height * 0.3; // وضع الأهداف في مكان بارز
+            const startY = canvas.height * 0.25; // وضع الأهداف أعلى قليلاً
             
             for (let i = 0; i < 3; i++) {
                 const isCorrect = allAnswers[i] === currentQuestion.answer;
@@ -853,10 +854,12 @@
         function updatePowerBar() {
             if (!isDragging || !currentBall) return;
             
+            // تم زيادة الحد الأقصى للمسافة المسموح بسحب الكرة بها
+            const maxDragDistance = 300; 
             const dx = dragStartX - currentBall.x;
             const dy = dragStartY - currentBall.y;
-            const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 150);
-            power = distance / 150 * 100;
+            const distance = Math.min(Math.sqrt(dx*dx + dy*dy), maxDragDistance);
+            power = (distance / maxDragDistance) * 100; // نسبة القوة
             powerBar.style.width = power + '%';
             
             statusPanel.textContent = `قوة الرمي: ${Math.round(power)}%`;
@@ -927,10 +930,11 @@
         function handleMove(x, y) {
             if (!isDragging || !currentBall) return;
             
-            // تحديد موقع الكرة أثناء السحب
+            // تحديد موقع الكرة أثناء السحب (مقيد بحد أقصى للمسافة)
+            const maxDragDistance = 300; // تم زيادة نطاق السحب
             const dx = x - dragStartX;
             const dy = y - dragStartY;
-            const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 150);
+            const distance = Math.min(Math.sqrt(dx*dx + dy*dy), maxDragDistance);
             const angle = Math.atan2(dy, dx);
             
             currentBall.x = dragStartX + Math.cos(angle) * distance;
@@ -951,8 +955,8 @@
             const distance = Math.sqrt(dx*dx + dy*dy);
             
             if (distance > 10) {
-                // زيادة قوة الدفع للهواتف
-                const forceMultiplier = isMobile ? 0.4 : 0.25;
+                // زيادة قوة الدفع للهواتف والكمبيوتر
+                const forceMultiplier = isMobile ? 0.5 : 0.35; // تم زيادة مضاعف القوة
                 currentBall.velocity.x = dx * forceMultiplier;
                 currentBall.velocity.y = dy * forceMultiplier;
                 currentBall.launched = true;
@@ -963,7 +967,7 @@
                 powerBar.style.width = '0%';
                 statusPanel.textContent = `تم الإطلاق! الكرات المتبقية: ${balls}`;
             } else {
-                // إرجاع الكرة إذا كانت المسافة صغيرة
+                // إرجاع الكرة إذا كانت المسافة صغيرة جدًا
                 currentBall.x = dragStartX;
                 currentBall.y = dragStartY;
                 powerBar.style.width = '0%';
