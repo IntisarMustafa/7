@@ -6,11 +6,12 @@
     <title>لعبة PONG مع العدد النسبي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* CSS الأصلي بدون تغييرات كبيرة، لأنه جيد الاستجابة */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            touch-action: manipulation;
+            /* touch-action: manipulation; */ /* هذه الخاصية يمكن أن تكون مفيدة، لكن أحياناً تسبب مشاكل، يمكن إزالتها */
         }
         
         body {
@@ -230,7 +231,7 @@
             z-index: 2;
         }
         
-        .top-area, .bottom-area {
+        .player-touch-area { /* تغيير الاسم ليكون أكثر عمومية */
             width: 100%;
             height: 40%;
             opacity: 0.1;
@@ -240,15 +241,15 @@
             align-items: center;
         }
         
-        .top-area {
+        #player1-touch-area {
             background: linear-gradient(to bottom, #ff6b6b, transparent);
         }
         
-        .bottom-area {
+        #player2-touch-area {
             background: linear-gradient(to top, #00c6ff, transparent);
         }
         
-        .top-area.active, .bottom-area.active {
+        .player-touch-area.active {
             opacity: 0.3;
         }
         
@@ -351,7 +352,7 @@
             border-radius: 10px;
             width: 80%;
             max-width: 250px;
-            pointer-events: none;
+            pointer-events: none; /* لتسمح بمرور أحداث اللمس/الماوس عبرها */
         }
         
         .touch-instruction i {
@@ -392,21 +393,21 @@
         <div class="question-points">الأسئلة عند: 3, 6, 9 نقاط</div>
         <div class="computer-difficulty">مستوى الكمبيوتر: سهل</div>
         
-        <div class="player-instruction" id="top-player">مضرب الكمبيوتر (الأعلى)</div>
-        <div class="player-instruction" id="bottom-player">مضربك (الأسفل)</div>
+        <div class="player-instruction" id="top-player"></div>
+        <div class="player-instruction" id="bottom-player"></div>
         
         <div class="touch-areas">
-            <div class="top-area" id="top-touch">
-                <div class="touch-instruction">المس فوق المضرب لتحريك المضرب العلوي <i class="fas fa-hand-point-up"></i></div>
+            <div class="player-touch-area" id="player1-touch-area">
+                <div class="touch-instruction" id="player1-instruction"></div>
             </div>
-            <div class="bottom-area" id="bottom-touch">
-                <div class="touch-instruction">المس تحت المضرب لتحريك المضرب السفلي <i class="fas fa-hand-point-up"></i></div>
+            <div class="player-touch-area" id="player2-touch-area">
+                <div class="touch-instruction" id="player2-instruction"></div>
             </div>
         </div>
         
         <div id="start-screen">
             <h1 class="game-title">PONG مع تحويل الأعداد</h1>
-            <p>لعبة طاولة المضرب للهاتف</p>
+            <p>لعبة طاولة المضرب للهاتف والكمبيوتر</p>
             <div id="mode-selection">
                 <button class="mode-btn" id="vs-friend">
                     <i class="fas fa-user-friends"></i> لعب مع صديق
@@ -444,8 +445,10 @@
         const questionText = document.getElementById('question-text');
         const answerInput = document.getElementById('answer-input');
         const submitAnswer = document.getElementById('submit-answer');
-        const topTouch = document.getElementById('top-touch');
-        const bottomTouch = document.getElementById('bottom-touch');
+        const player1TouchArea = document.getElementById('player1-touch-area'); // تم تغيير الاسم
+        const player2TouchArea = document.getElementById('player2-touch-area'); // تم تغيير الاسم
+        const player1Instruction = document.getElementById('player1-instruction'); // جديد
+        const player2Instruction = document.getElementById('player2-instruction'); // جديد
         const startBtn = document.getElementById('start-btn');
         const topPlayerInstruction = document.getElementById('top-player');
         const bottomPlayerInstruction = document.getElementById('bottom-player');
@@ -457,8 +460,8 @@
         let bottomScore = 0;
         let currentQuestion = {};
         let waitingForAnswer = false;
-        let isTopTouched = false;
-        let isBottomTouched = false;
+        let isPlayer1Active = false; // يحدد ما إذا كان اللاعب الأول (المضرب العلوي) يتحكم فيه
+        let isPlayer2Active = false; // يحدد ما إذا كان اللاعب الثاني (المضرب السفلي) يتحكم فيه
         let lastScorer = '';
         let questionTriggerPoints = [3, 6, 9];
         let questionTriggered = false;
@@ -489,6 +492,8 @@
                 startBtn.style.display = 'block';
                 topPlayerInstruction.textContent = "مضرب اللاعب العلوي";
                 bottomPlayerInstruction.textContent = "مضرب اللاعب السفلي";
+                player1Instruction.innerHTML = 'المس فوق المضرب العلوي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
+                player2Instruction.innerHTML = 'المس فوق المضرب السفلي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
             });
             
             vsComputerBtn.addEventListener('click', () => {
@@ -497,6 +502,8 @@
                 startBtn.style.display = 'block';
                 topPlayerInstruction.textContent = "مضرب الكمبيوتر (الأعلى)";
                 bottomPlayerInstruction.textContent = "مضربك (الأسفل)";
+                player1Instruction.innerHTML = 'مضرب الكمبيوتر يتحرك تلقائياً';
+                player2Instruction.innerHTML = 'المس فوق المضرب السفلي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
             });
             
             startBtn.addEventListener('click', () => {
@@ -507,64 +514,77 @@
             submitAnswer.addEventListener('click', checkAnswer);
         });
 
-        // التحكم بالمضارب باللمس
-        function handleTouchStart(e, paddle) {
-            if (paddle === 'top') {
-                isTopTouched = true;
-                topTouch.classList.add('active');
+        // دوال التحكم باللمس والماوس
+        function handleInteractionStart(e, playerNum) {
+            e.preventDefault(); // منع سلوك المتصفح الافتراضي (مثل التمرير)
+            if (playerNum === 1) {
+                isPlayer1Active = true;
+                player1TouchArea.classList.add('active');
             } else {
-                isBottomTouched = true;
-                bottomTouch.classList.add('active');
+                isPlayer2Active = true;
+                player2TouchArea.classList.add('active');
             }
-            updatePaddlePosition(e, paddle);
+            updatePaddlePosition(e, playerNum);
+        }
+        
+        function handleInteractionMove(e, playerNum) {
+            if ((playerNum === 1 && isPlayer1Active) || (playerNum === 2 && isPlayer2Active)) {
+                updatePaddlePosition(e, playerNum);
+            }
             e.preventDefault();
         }
         
-        function handleTouchMove(e, paddle) {
-            if ((paddle === 'top' && isTopTouched) || (paddle === 'bottom' && isBottomTouched)) {
-                updatePaddlePosition(e, paddle);
-            }
-            e.preventDefault();
-        }
-        
-        function handleTouchEnd(paddle) {
-            if (paddle === 'top') {
-                isTopTouched = false;
-                topTouch.classList.remove('active');
+        function handleInteractionEnd(playerNum) {
+            if (playerNum === 1) {
+                isPlayer1Active = false;
+                player1TouchArea.classList.remove('active');
             } else {
-                isBottomTouched = false;
-                bottomTouch.classList.remove('active');
+                isPlayer2Active = false;
+                player2TouchArea.classList.remove('active');
             }
         }
         
-        topTouch.addEventListener('touchstart', (e) => handleTouchStart(e, 'top'), {passive: false});
-        topTouch.addEventListener('touchmove', (e) => handleTouchMove(e, 'top'), {passive: false});
-        topTouch.addEventListener('touchend', () => handleTouchEnd('top'));
+        // أحداث اللمس للاعب الأول (المضرب العلوي)
+        player1TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 1), {passive: false});
+        player1TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 1), {passive: false});
+        player1TouchArea.addEventListener('touchend', () => handleInteractionEnd(1));
+        player1TouchArea.addEventListener('mousedown', (e) => handleInteractionStart(e, 1));
+        player1TouchArea.addEventListener('mousemove', (e) => handleInteractionMove(e, 1));
+        player1TouchArea.addEventListener('mouseup', () => handleInteractionEnd(1));
+        player1TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(1)); // مهم لضبط الماوس عند خروجه
         
-        bottomTouch.addEventListener('touchstart', (e) => handleTouchStart(e, 'bottom'), {passive: false});
-        bottomTouch.addEventListener('touchmove', (e) => handleTouchMove(e, 'bottom'), {passive: false});
-        bottomTouch.addEventListener('touchend', () => handleTouchEnd('bottom'));
+        // أحداث اللمس للاعب الثاني (المضرب السفلي)
+        player2TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 2), {passive: false});
+        player2TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 2), {passive: false});
+        player2TouchArea.addEventListener('touchend', () => handleInteractionEnd(2));
+        player2TouchArea.addEventListener('mousedown', (e) => handleInteractionStart(e, 2));
+        player2TouchArea.addEventListener('mousemove', (e) => handleInteractionMove(e, 2));
+        player2TouchArea.addEventListener('mouseup', () => handleInteractionEnd(2));
+        player2TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(2)); // مهم لضبط الماوس عند خروجه
         
-        function updatePaddlePosition(e, paddle) {
-            const touch = e.touches[0];
+        function updatePaddlePosition(e, playerNum) {
+            const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+            
             const containerRect = gameContainer.getBoundingClientRect();
             const containerWidth = containerRect.width;
-            const paddleWidth = paddleTop.offsetWidth;
+            const paddleWidth = paddleTop.offsetWidth; // كلاهما له نفس العرض
             
-            // حساب موضع اللمس بالنسبة للحاوية
-            const touchX = touch.clientX - containerRect.left;
+            // حساب موضع اللمس/الماوس بالنسبة للحاوية
+            const touchX = clientX - containerRect.left;
             
             // حساب النسبة المئوية للموضع داخل الحاوية
             let newX = (touchX / containerWidth) * 100;
             
-            // توسيع نطاق الحركة إلى أقصى حد ممكن
+            // التأكد من بقاء المضرب ضمن الحدود (0% إلى 100%)
             newX = Math.max(0, Math.min(newX, 100));
             
             // تحريك المضرب فورياً
-            if (paddle === 'top') {
-                topPaddleX = newX;
-                paddleTop.style.left = `calc(${topPaddleX}% - ${paddleWidth/2}px)`;
-            } else {
+            if (playerNum === 1) {
+                if (gameMode === 'friend') { // فقط إذا كان الوضع "صديق" يمكن للاعب الأول التحكم بالمضرب العلوي
+                    topPaddleX = newX;
+                    paddleTop.style.left = `calc(${topPaddleX}% - ${paddleWidth/2}px)`;
+                }
+            } else { // لاعب 2 هو دائماً يتحكم بالمضرب السفلي
                 bottomPaddleX = newX;
                 paddleBottom.style.left = `calc(${bottomPaddleX}% - ${paddleWidth/2}px)`;
             }
@@ -641,43 +661,46 @@
                 return;
             }
             
-            if (userAnswer === currentQuestion.answer) {
+            // التحقق من الإجابة المعطاة مقابل الإجابة الصحيحة
+            // يجب التعامل مع الكسور المتكافئة (على سبيل المثال، 2/4 هي نفسها 1/2)
+            const simplifyFraction = (fraction) => {
+                const parts = fraction.split('/');
+                let num = parseInt(parts[0]);
+                let den = parseInt(parts[1]);
+
+                // التعامل مع السالب
+                const sign = (num * den < 0) ? -1 : 1;
+                num = Math.abs(num);
+                den = Math.abs(den);
+
+                const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+                const commonDivisor = gcd(num, den);
+                
+                return `${sign * (num / commonDivisor)}/${den / commonDivisor}`;
+            };
+
+            const simplifiedUserAnswer = simplifyFraction(userAnswer);
+            const simplifiedCorrectAnswer = simplifyFraction(currentQuestion.answer);
+
+            if (simplifiedUserAnswer === simplifiedCorrectAnswer) {
                 mathQuestion.style.display = 'none';
                 waitingForAnswer = false;
                 resetBall();
                 gameRunning = true;
                 gameLoop();
             } else {
-                // التحقق إذا كانت الإجابة صحيحة ولكن غير مختصرة
-                const [userNum, userDen] = userAnswer.split('/').map(Number);
-                const [correctNum, correctDen] = currentQuestion.answer.split('/').map(Number);
+                // إظهار تلميح للمستخدم
+                const hints = [
+                    'حاول مرة أخرى!',
+                    'ليس صحيحاً، جرب مجدداً',
+                    'انتبه للإشارات والكسور المختصرة',
+                    `تلميح: الإجابة الصحيحة هي ${currentQuestion.answer} (أو مكافئتها المختصرة)`
+                ];
                 
-                // حساب القاسم المشترك الأكبر
-                const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
-                const divisor = gcd(Math.abs(userNum), Math.abs(userDen));
-                const simplifiedUserNum = userNum / divisor;
-                const simplifiedUserDen = userDen / divisor;
-                
-                if (simplifiedUserNum === correctNum && simplifiedUserDen === correctDen) {
-                    mathQuestion.style.display = 'none';
-                    waitingForAnswer = false;
-                    resetBall();
-                    gameRunning = true;
-                    gameLoop();
-                } else {
-                    // إظهار تلميح للمستخدم
-                    const hints = [
-                        'حاول مرة أخرى!',
-                        'ليس صحيحاً، جرب مجدداً',
-                        'انتبه للإشارات والكسور المختصرة',
-                        `تلميح: الإجابة الصحيحة هي ${currentQuestion.answer}`
-                    ];
-                    
-                    const randomHint = hints[Math.floor(Math.random() * hints.length)];
-                    alert(randomHint);
-                    answerInput.value = '';
-                    answerInput.focus();
-                }
+                const randomHint = hints[Math.floor(Math.random() * hints.length)];
+                alert(randomHint);
+                answerInput.value = '';
+                answerInput.focus();
             }
         }
         
@@ -723,7 +746,8 @@
         
         // التحقق من نقاط السؤال
         function checkQuestionPoints() {
-            const playerScore = gameMode === 'computer' ? bottomScore : topScore;
+            // السؤال يظهر فقط إذا أحرز اللاعب السفلي (أو اللاعب الذي يتحكم في المضرب السفلي) نقاط
+            const playerScore = bottomScore;
             
             if (questionTriggerPoints.includes(playerScore)) {
                 if (!questionTriggered) {
@@ -743,17 +767,11 @@
             const paddleWidth = paddleTop.offsetWidth;
             const paddleHeight = paddleTop.offsetHeight;
             
-            // تحريك المضرب السفلي (اللاعب)
-            if (isBottomTouched) {
-                // يتم التحكم به عن طريق اللمس
-            }
-            
-            // تحريك المضرب العلوي (الكمبيوتر أو اللاعب الثاني)
+            // تحريك المضارب بناءً على وضع اللعب
             if (gameMode === 'computer') {
                 moveComputerPaddle();
-            } else if (isTopTouched) {
-                // يتم التحكم به عن طريق اللمس
             }
+            // تحكم اللاعبين يتم من خلال دوال handleInteractionMove/Start
             
             // تحريك الكرة
             if (!waitingForAnswer) {
@@ -762,10 +780,8 @@
             }
             
             // كشف التصادم مع الجدران الجانبية
-            if (ballX <= 0) {
-                ballSpeedX = Math.abs(ballSpeedX);
-            } else if (ballX >= containerWidth - ball.offsetWidth) {
-                ballSpeedX = -Math.abs(ballSpeedX);
+            if (ballX <= 0 || ballX >= containerWidth - ball.offsetWidth) {
+                ballSpeedX *= -1;
             }
             
             // كشف التصادم مع المضرب العلوي
@@ -793,14 +809,13 @@
             }
             
             // تسجيل النقاط
-            if (ballY < 0) {
+            if (ballY < 0) { // الكرة تجاوزت المضرب العلوي
                 bottomScore++;
                 lastScorer = 'bottom';
                 updateScore();
                 gameRunning = false;
                 
-                // التحقق من نقاط السؤال
-                checkQuestionPoints();
+                checkQuestionPoints(); // فحص نقاط السؤال للاعب السفلي
                 
                 if (!waitingForAnswer) {
                     setTimeout(() => {
@@ -811,14 +826,17 @@
                 }
             }
             
-            if (ballY > containerHeight) {
+            if (ballY > containerHeight) { // الكرة تجاوزت المضرب السفلي
                 topScore++;
                 lastScorer = 'top';
                 updateScore();
                 gameRunning = false;
                 
-                // التحقق من نقاط السؤال
-                checkQuestionPoints();
+                // في وضع الكمبيوتر، لا يظهر السؤال عند نقطة الكمبيوتر.
+                // في وضع اللاعبين، يظهر السؤال لكلا اللاعبين عند إحراز النقطة
+                if (gameMode === 'friend') {
+                    checkQuestionPoints(); // فحص نقاط السؤال للاعب العلوي أيضاً
+                }
                 
                 if (!waitingForAnswer) {
                     setTimeout(() => {
@@ -874,12 +892,14 @@
         // ضبط أحجام العناصر عند تغيير حجم الشاشة
         function resizeGame() {
             const containerWidth = gameContainer.offsetWidth;
-            paddleTop.style.width = containerWidth * 0.25 + 'px';
-            paddleBottom.style.width = containerWidth * 0.25 + 'px';
+            // يتم ضبط عرض المضارب بالنسبة المئوية في CSS
+            // paddleTop.style.width = containerWidth * 0.25 + 'px'; 
+            // paddleBottom.style.width = containerWidth * 0.25 + 'px';
             
             // إعادة تعيين مواضع المضارب بعد تغيير الحجم
-            paddleTop.style.left = `calc(${topPaddleX}% - ${containerWidth * 0.125}px)`;
-            paddleBottom.style.left = `calc(${bottomPaddleX}% - ${containerWidth * 0.125}px)`;
+            const paddleRenderedWidth = paddleTop.offsetWidth; // الحصول على العرض الفعلي بعد تطبيق الـ CSS
+            paddleTop.style.left = `calc(${topPaddleX}% - ${paddleRenderedWidth/2}px)`;
+            paddleBottom.style.left = `calc(${bottomPaddleX}% - ${paddleRenderedWidth/2}px)`;
             
             if (!gameRunning) resetBall();
         }
