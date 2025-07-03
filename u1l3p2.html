@@ -7,6 +7,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          scale: 1.8  // زيادة حجم الرياضيات بنسبة 80%
+        },
+        chtml: {
+          scale: 1.8  // نفس الشيء لـ CommonHTML
+        },
+        svg: {
+          scale: 1.8  // ولـ SVG
+        }
+      };
+    </script>
     <style>
         * {
             box-sizing: border-box;
@@ -20,21 +36,21 @@
             color: #333;
             line-height: 1.8;
             padding: 15px;
-            font-size: 22px; /* زيادة كبيرة في حجم الخط الأساسي */
+            font-size: 22px;
         }
         
         .container {
-            max-width: 1400px; /* زيادة عرض الحاوية */
+            max-width: 1400px;
             margin: 0 auto;
             padding: 15px;
         }
         
         header {
             text-align: center;
-            padding: 30px; /* زيادة كبيرة في الحشو */
+            padding: 30px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* زيادة الظل */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             margin-bottom: 30px;
             animation: fadeIn 1s ease-out;
             position: relative;
@@ -47,13 +63,13 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 8px; /* زيادة كبيرة في سمك الخط */
+            height: 8px;
             background: linear-gradient(90deg, #1a2a6c, #b21f1f, #1a2a6c);
         }
         
         h1 {
             color: #1a2a6c;
-            font-size: 3rem; /* حجم خط كبير جدًا */
+            font-size: 3rem;
             margin-bottom: 20px;
             position: relative;
             display: inline-block;
@@ -73,7 +89,7 @@
         
         .subtitle {
             color: #b21f1f;
-            font-size: 1.8rem; /* حجم خط كبير */
+            font-size: 1.8rem;
             margin-bottom: 30px;
             font-weight: 700;
         }
@@ -87,7 +103,7 @@
         
         .info-box {
             background: #f0f8ff;
-            padding: 30px; /* زيادة كبيرة في الحشو */
+            padding: 30px;
             border-radius: 15px;
             width: 100%;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
@@ -96,10 +112,10 @@
         
         .info-box h3 {
             color: #1a2a6c;
-            border-bottom: 4px solid #b21f1f; /* زيادة كبيرة في السمك */
+            border-bottom: 4px solid #b21f1f;
             padding-bottom: 15px;
             margin-bottom: 30px;
-            font-size: 2rem; /* حجم خط كبير جدًا */
+            font-size: 2rem;
             display: flex;
             align-items: center;
             gap: 15px;
@@ -113,13 +129,13 @@
             margin-bottom: 20px;
             position: relative;
             padding-right: 35px;
-            font-size: 1.5rem; /* حجم خط كبير */
+            font-size: 1.5rem;
         }
         
         .info-box li::before {
             content: "•";
             color: #b21f1f;
-            font-size: 2.5rem; /* حجم كبير جدًا للنقطة */
+            font-size: 2.5rem;
             position: absolute;
             right: 0;
             top: -5px;
@@ -135,24 +151,24 @@
         .section {
             background: rgba(255, 255, 255, 0.97);
             border-radius: 15px;
-            padding: 35px 30px; /* زيادة كبيرة في الحشو */
+            padding: 35px 30px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            border: 4px solid #1a2a6c; /* زيادة كبيرة في سمك الحدود */
+            border: 4px solid #1a2a6c;
         }
         
         .section h2 {
             color: #b21f1f;
             margin-bottom: 35px;
             padding-bottom: 20px;
-            border-bottom: 4px dashed #1a2a6c; /* زيادة كبيرة في السمك */
+            border-bottom: 4px dashed #1a2a6c;
             display: flex;
             align-items: center;
-            font-size: 2.2rem; /* حجم خط كبير جدًا */
+            font-size: 2.2rem;
             gap: 20px;
         }
         
         .section p {
-            font-size: 1.6rem; /* حجم خط كبير */
+            font-size: 1.6rem;
             margin-bottom: 30px;
             line-height: 1.9;
         }
@@ -176,10 +192,10 @@
         .exercise {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
-            padding: 30px; /* زيادة كبيرة في الحشو */
-            margin: 30px 0; /* زيادة كبيرة في الهوامش */
+            padding: 30px;
+            margin: 30px 0;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-            border: 4px solid #1a2a6c; /* زيادة كبيرة في سمك الحدود */
+            border: 4px solid #1a2a6c;
         }
         
         .exercise-title {
@@ -187,31 +203,31 @@
             margin-bottom: 30px;
             display: flex;
             align-items: center;
-            font-size: 1.8rem; /* حجم خط كبير */
+            font-size: 1.8rem;
             gap: 20px;
-            border-bottom: 4px solid #b21f1f; /* زيادة كبيرة في السمك */
+            border-bottom: 4px solid #b21f1f;
             padding-bottom: 20px;
         }
         
         .comparison-options {
             display: flex;
-            gap: 20px; /* زيادة كبيرة في المسافة بين الأزرار */
-            margin: 30px 0; /* زيادة كبيرة في الهوامش */
+            gap: 20px;
+            margin: 30px 0;
             justify-content: center;
             flex-wrap: wrap;
         }
         
         .comp-option {
-            padding: 20px 30px; /* زيادة كبيرة في الحشو */
+            padding: 20px 30px;
             background: #e0e0e0;
-            border-radius: 40px; /* زيادة كبيرة في التدوير */
+            border-radius: 40px;
             cursor: pointer;
-            font-size: 2rem; /* حجم خط كبير جدًا */
+            font-size: 2rem;
             font-weight: bold;
-            min-width: 80px; /* زيادة كبيرة في العرض */
+            min-width: 80px;
             text-align: center;
             flex: 1;
-            max-width: 120px; /* زيادة كبيرة في العرض الأقصى */
+            max-width: 120px;
             transition: all 0.3s ease;
         }
         
@@ -230,16 +246,16 @@
             background: linear-gradient(to right, #1a2a6c, #0d1a4d);
             color: white;
             border: none;
-            padding: 20px 35px; /* زيادة كبيرة في الحشو */
+            padding: 20px 35px;
             border-radius: 40px;
             cursor: pointer;
-            font-size: 1.6rem; /* حجم خط كبير */
+            font-size: 1.6rem;
             margin-top: 20px;
             font-weight: 700;
             display: block;
-            margin: 30px auto; /* زيادة كبيرة في الهوامش */
+            margin: 30px auto;
             width: 100%;
-            max-width: 300px; /* زيادة كبيرة في العرض الأقصى */
+            max-width: 300px;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
@@ -251,10 +267,10 @@
         
         .feedback {
             margin-top: 30px;
-            padding: 20px; /* زيادة كبيرة في الحشو */
+            padding: 20px;
             border-radius: 15px;
             display: none;
-            font-size: 1.6rem; /* حجم خط كبير */
+            font-size: 1.6rem;
             text-align: center;
             font-weight: 700;
         }
@@ -262,34 +278,34 @@
         .feedback.correct {
             background: linear-gradient(to right, #d4edda, #c3e6cb);
             color: #155724;
-            border: 4px solid #28a745; /* زيادة كبيرة في السمك */
+            border: 4px solid #28a745;
             display: block;
         }
         
         .feedback.incorrect {
             background: linear-gradient(to right, #f8d7da, #f5c6cb);
             color: #721c24;
-            border: 4px solid #dc3545; /* زيادة كبيرة في السمك */
+            border: 4px solid #dc3545;
             display: block;
         }
         
         .ordering-exercise {
             display: flex;
             flex-direction: column;
-            gap: 25px; /* زيادة كبيرة في المسافة بين العناصر */
-            margin: 35px 0; /* زيادة كبيرة في الهوامش */
+            gap: 25px;
+            margin: 35px 0;
         }
         
         .number-item {
             background: linear-gradient(to right, #e6f7ff, #d1f0ff);
-            padding: 30px; /* زيادة كبيرة في الحشو */
-            border-radius: 20px; /* زيادة كبيرة في التدوير */
+            padding: 30px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             cursor: move;
-            font-size: 1.8rem; /* حجم خط كبير */
+            font-size: 1.8rem;
             font-weight: bold;
-            border: 4px solid #1a2a6c; /* زيادة كبيرة في السمك */
+            border: 4px solid #1a2a6c;
             transition: all 0.3s ease;
         }
         
@@ -299,24 +315,24 @@
         }
         
         .number-item i {
-            margin-left: 25px; /* زيادة كبيرة في المسافة */
+            margin-left: 25px;
             color: #1a2a6c;
-            font-size: 2.2rem; /* حجم أيقونة كبير جدًا */
+            font-size: 2.2rem;
         }
         
         .footer {
             text-align: center;
-            padding: 30px; /* زيادة كبيرة في الحشو */
+            padding: 30px;
             background: rgba(0, 0, 0, 0.8);
             color: white;
-            border-radius: 20px; /* زيادة كبيرة في التدوير */
+            border-radius: 20px;
             margin-top: 40px;
-            border: 4px solid #b21f1f; /* زيادة كبيرة في السمك */
-            font-size: 1.4rem; /* حجم خط كبير */
+            border: 4px solid #b21f1f;
+            font-size: 1.4rem;
         }
         
         .footer h3 {
-            font-size: 1.8rem; /* حجم خط كبير */
+            font-size: 1.8rem;
             margin-bottom: 25px;
             color: #ff9999;
         }
@@ -330,13 +346,13 @@
             animation: pulse 1.5s infinite;
             font-weight: bold;
             color: #b21f1f;
-            font-size: 1.5rem; /* حجم خط كبير */
+            font-size: 1.5rem;
             text-align: center;
-            padding: 15px; /* زيادة كبيرة في الحشو */
+            padding: 15px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
             display: inline-block;
-            margin: 20px 0; /* زيادة كبيرة في الهوامش */
+            margin: 20px 0;
         }
         
         @keyframes pulse {
@@ -346,159 +362,171 @@
         }
         
         .steps {
-            margin: 30px 0; /* زيادة كبيرة في الهوامش */
-            padding-right: 30px; /* زيادة كبيرة في الحشو */
+            margin: 30px 0;
+            padding-right: 30px;
         }
         
         .step {
-            margin-bottom: 30px; /* زيادة كبيرة في الهوامش */
-            padding: 25px; /* زيادة كبيرة في الحشو */
+            margin-bottom: 30px;
+            padding: 25px;
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px; /* زيادة كبيرة في التدوير */
-            border-right: 6px solid #1a2a6c; /* زيادة كبيرة في السمك */
-            font-size: 1.5rem; /* حجم خط كبير */
+            border-radius: 15px;
+            border-right: 6px solid #1a2a6c;
+            font-size: 1.5rem;
         }
         
         .step-number {
             display: inline-block;
-            width: 45px; /* زيادة كبيرة في الحجم */
-            height: 45px; /* زيادة كبيرة في الحجم */
+            width: 45px;
+            height: 45px;
             background: linear-gradient(to bottom, #b21f1f, #8a1818);
             color: white;
             border-radius: 50%;
             text-align: center;
-            line-height: 45px; /* تعديل الارتفاع */
-            margin-left: 20px; /* زيادة كبيرة في المسافة */
+            line-height: 45px;
+            margin-left: 20px;
             font-weight: bold;
-            font-size: 1.5rem; /* حجم خط كبير */
+            font-size: 1.5rem;
         }
         
         .math-expression {
-            font-size: 1.8rem; /* حجم خط كبير */
+            font-size: 1.8rem;
             font-weight: bold;
             text-align: center;
-            margin: 25px 0; /* زيادة كبيرة في الهوامش */
-            padding: 25px; /* زيادة كبيرة في الحشو */
+            margin: 25px 0;
+            padding: 25px;
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px; /* زيادة كبيرة في التدوير */
-            border: 4px solid #1a2a6c; /* زيادة كبيرة في السمك */
+            border-radius: 15px;
+            border: 4px solid #1a2a6c;
             overflow-x: auto;
+        }
+        
+        /* زيادة حجم الكسور في الرياضيات بشكل خاص */
+        .math-expression .MathJax {
+            font-size: 2rem !important;
+            transform: scale(1.5);
+            transform-origin: center center;
         }
         
         .number-line-labels {
             display: flex;
             justify-content: space-between;
-            padding: 0 15px; /* زيادة كبيرة في الحشو */
+            padding: 0 15px;
             font-weight: bold;
-            margin-top: 15px; /* زيادة كبيرة في الهوامش */
+            margin-top: 15px;
             color: #1a2a6c;
-            font-size: 1.4rem; /* حجم خط كبير */
+            font-size: 1.4rem;
         }
         
         .highlight {
             background: linear-gradient(to right, rgba(178, 31, 31, 0.2), rgba(26, 42, 108, 0.2));
-            padding: 8px 15px; /* زيادة كبيرة في الحشو */
+            padding: 8px 15px;
             border-radius: 8px;
             font-weight: bold;
             display: inline-block;
-            margin-top: 15px; /* زيادة كبيرة في الهوامش */
-            font-size: 1.5rem; /* حجم خط كبير */
+            margin-top: 15px;
+            font-size: 1.5rem;
         }
         
         .question-container {
-            margin: 35px 0; /* زيادة كبيرة في الهوامش */
-            padding: 30px; /* زيادة كبيرة في الحشو */
+            margin: 35px 0;
+            padding: 30px;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px; /* زيادة كبيرة في التدوير */
+            border-radius: 20px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-            border-left: 6px solid #1a2a6c; /* زيادة كبيرة في السمك */
+            border-left: 6px solid #1a2a6c;
         }
         
         .question-title {
             display: flex;
             align-items: center;
-            gap: 20px; /* زيادة كبيرة في المسافة بين العناصر */
-            margin-bottom: 30px; /* زيادة كبيرة في الهوامش */
+            gap: 20px;
+            margin-bottom: 30px;
             color: #1a2a6c;
-            font-size: 1.7rem; /* حجم خط كبير */
+            font-size: 1.7rem;
         }
         
         .question-title .number {
             background: linear-gradient(to bottom, #b21f1f, #8a1818);
             color: white;
-            width: 50px; /* زيادة كبيرة في الحجم */
-            height: 50px; /* زيادة كبيرة في الحجم */
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.7rem; /* حجم خط كبير */
+            font-size: 1.7rem;
         }
         
         .question-content {
-            padding: 20px; /* زيادة كبيرة في الحشو */
-            font-size: 1.6rem; /* حجم خط كبير */
+            padding: 20px;
+            font-size: 1.6rem;
+        }
+        
+        /* زيادة حجم الكسور في عناوين الأسئلة */
+        .question-title .text {
+            font-size: 2rem;
         }
         
         .answer-input {
             width: 100%;
-            padding: 20px; /* زيادة كبيرة في الحشو */
-            border: 4px solid #1a2a6c; /* زيادة كبيرة في السمك */
-            border-radius: 15px; /* زيادة كبيرة في التدوير */
-            font-size: 1.8rem; /* حجم خط كبير */
-            margin-top: 20px; /* زيادة كبيرة في الهوامش */
+            padding: 20px;
+            border: 4px solid #1a2a6c;
+            border-radius: 15px;
+            font-size: 1.8rem;
+            margin-top: 20px;
             text-align: center;
         }
         
         .answer-input:focus {
             outline: none;
             border-color: #b21f1f;
-            box-shadow: 0 0 0 6px rgba(178, 31, 31, 0.2); /* زيادة كبيرة في الظل */
+            box-shadow: 0 0 0 6px rgba(178, 31, 31, 0.2);
         }
         
         .application-box {
             background: linear-gradient(to bottom right, #fff9e6, #ffedb3);
-            border-radius: 20px; /* زيادة كبيرة في التدوير */
-            padding: 30px; /* زيادة كبيرة في الحشو */
-            margin: 30px 0; /* زيادة كبيرة في الهوامش */
-            border: 4px solid #1a2a6c; /* زيادة كبيرة في السمك */
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 4px solid #1a2a6c;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
         
         .application-title {
             color: #1a2a6c;
-            border-bottom: 4px solid #b21f1f; /* زيادة كبيرة في السمك */
-            padding-bottom: 20px; /* زيادة كبيرة في الحشو */
-            margin-bottom: 30px; /* زيادة كبيرة في الهوامش */
-            font-size: 1.9rem; /* حجم خط كبير */
+            border-bottom: 4px solid #b21f1f;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            font-size: 1.9rem;
             display: flex;
             align-items: center;
-            gap: 20px; /* زيادة كبيرة في المسافة بين العناصر */
+            gap: 20px;
         }
         
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 30px 0; /* زيادة كبيرة في الهوامش */
+            margin: 30px 0;
             background: white;
-            border-radius: 15px; /* زيادة كبيرة في التدوير */
+            border-radius: 15px;
             overflow: hidden;
         }
         
         .data-table th {
             background: linear-gradient(to right, #1a2a6c, #0d1a4d);
             color: white;
-            padding: 20px; /* زيادة كبيرة في الحشو */
+            padding: 20px;
             text-align: center;
-            font-size: 1.5rem; /* حجم خط كبير */
+            font-size: 1.5rem;
         }
         
         .data-table td {
-            padding: 20px; /* زيادة كبيرة في الحشو */
+            padding: 20px;
             text-align: center;
-            border-bottom: 3px solid #ddd; /* زيادة كبيرة في السمك */
-            font-size: 1.4rem; /* حجم خط كبير */
+            border-bottom: 3px solid #ddd;
+            font-size: 1.4rem;
         }
         
         .data-table tr:last-child td {
@@ -512,63 +540,68 @@
         /* تحسينات للشاشات الصغيرة جدًا */
         @media (max-width: 480px) {
             body {
-                font-size: 20px; /* حجم خط كبير على الجوال */
+                font-size: 20px;
                 padding: 10px;
             }
             
             h1 {
-                font-size: 2.2rem; /* حجم خط كبير على الجوال */
+                font-size: 2.2rem;
             }
             
             .subtitle {
-                font-size: 1.5rem; /* حجم خط كبير على الجوال */
+                font-size: 1.5rem;
             }
             
             .section h2 {
-                font-size: 1.8rem; /* حجم خط كبير على الجوال */
+                font-size: 1.8rem;
             }
             
             .math-expression {
-                font-size: 1.5rem; /* حجم خط كبير على الجوال */
-                padding: 20px; /* زيادة كبيرة في الحشو */
+                font-size: 1.5rem;
+                padding: 20px;
             }
             
             .number-item {
-                padding: 20px; /* زيادة كبيرة في الحشو */
-                font-size: 1.5rem; /* حجم خط كبير على الجوال */
+                padding: 20px;
+                font-size: 1.5rem;
             }
             
             .question-container {
-                padding: 20px; /* زيادة كبيرة في الحشو */
+                padding: 20px;
             }
             
             .comp-option {
-                font-size: 1.8rem; /* حجم خط كبير على الجوال */
-                padding: 15px 25px; /* زيادة كبيرة في الحشو */
+                font-size: 1.8rem;
+                padding: 15px 25px;
+            }
+            
+            /* تكبير الكسور على الجوال */
+            .question-title .text {
+                font-size: 1.8rem;
             }
         }
         
         /* تحسينات للوضع الأفقي للهاتف */
         @media (max-height: 500px) and (orientation: landscape) {
             body {
-                padding: 12px; /* زيادة كبيرة في الحشو */
-                font-size: 20px; /* حجم خط كبير */
+                padding: 12px;
+                font-size: 20px;
             }
             
             .container {
-                padding: 8px; /* زيادة كبيرة في الحشو */
+                padding: 8px;
             }
             
             header {
-                padding: 20px; /* زيادة كبيرة في الحشو */
+                padding: 20px;
             }
             
             h1 {
-                font-size: 2rem; /* حجم خط كبير */
+                font-size: 2rem;
             }
             
             .section {
-                padding: 20px 15px; /* زيادة كبيرة في الحشو */
+                padding: 20px 15px;
             }
         }
         
@@ -576,26 +609,26 @@
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
-            margin: 40px 0; /* زيادة كبيرة في الهوامش */
-            padding: 0 20px; /* زيادة كبيرة في الحشو */
-            gap: 25px; /* زيادة كبيرة في المسافة بين الأزرار */
+            margin: 40px 0;
+            padding: 0 20px;
+            gap: 25px;
         }
         
         .nav-btn {
             background: linear-gradient(to right, #1a2a6c, #b21f1f);
             color: white;
             border: none;
-            padding: 20px 35px; /* زيادة كبيرة في الحشو */
-            border-radius: 45px; /* زيادة كبيرة في التدوير */
+            padding: 20px 35px;
+            border-radius: 45px;
             cursor: pointer;
-            font-size: 1.8rem; /* حجم خط كبير جدًا */
+            font-size: 1.8rem;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 20px; /* زيادة كبيرة في المسافة بين العناصر */
+            gap: 20px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
             transition: all 0.3s ease;
-            border: 4px solid rgba(255, 255, 255, 0.3); /* زيادة كبيرة في السمك */
+            border: 4px solid rgba(255, 255, 255, 0.3);
             text-decoration: none;
             flex: 1;
             text-align: center;
@@ -614,18 +647,18 @@
         }
         
         .nav-btn i {
-            font-size: 2rem; /* حجم أيقونة كبير جدًا */
+            font-size: 2rem;
         }
         
         @media (max-width: 600px) {
             .navigation-buttons {
                 flex-direction: column;
-                gap: 20px; /* زيادة كبيرة في المسافة بين الأزرار */
+                gap: 20px;
             }
             
             .nav-btn {
                 width: 100%;
-                font-size: 1.6rem; /* حجم خط كبير على الجوال */
+                font-size: 1.6rem;
             }
         }
     </style>
