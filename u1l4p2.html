@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خط الأعداد المدرج التفاعلي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #f39c12;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .content {
+            padding: 25px;
+        }
+
+        .instructions {
+            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid #64b5f6;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .instructions h2 {
+            color: #0d47a1;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.5rem;
+        }
+
+        .steps {
+            margin: 20px 0;
+            padding-right: 25px;
+        }
+
+        .steps li {
+            margin-bottom: 15px;
+            line-height: 1.7;
+            font-size: 1.1rem;
+            position: relative;
+            padding-right: 30px;
+        }
+
+        .steps li::before {
+            content: "•";
+            color: #0d47a1;
+            font-size: 1.8rem;
+            position: absolute;
+            right: 0;
+            top: -5px;
+        }
+
+        .exercises {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .exercise {
+            background: linear-gradient(to bottom, #e8f5e9, #c8e6c9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 2px solid #66bb6a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exercise::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+        }
+
+        .exercise h3 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .math-expression {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.8rem;
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            margin: 20px 0;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .number-line-container {
+            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+            border: 4px solid #1976d2;
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            direction: ltr;
+            height: 160px;
+            position: relative;
+            touch-action: none;
+        }
+
+        .line {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            width: 90%;
+            height: 4px;
+            background-color: #0d47a1;
+            transform: translateY(-50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tick {
+            position: absolute;
+            top: 45%;
+            width: 2px;
+            height: 15px;
+            background-color: #5c6bc0;
+            transform: translateY(-50%);
+        }
+
+        .major-tick {
+            height: 25px;
+            background-color: #0d47a1;
+            width: 3px;
+        }
+
+        .tick-label {
+            position: absolute;
+            top: 25%;
+            font-size: 14px;
+            color: #0d47a1;
+            transform: translateX(-50%);
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+
+        .point {
+            position: absolute;
+            top: 50%;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 12px rgba(0,0,0,0.8);
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            touch-action: none;
+        }
+
+        .point.zero {
+            background-color: #9c27b0;
+            box-shadow: 0 0 12px rgba(156, 39, 176, 0.8);
+        }
+
+        .point.first {
+            background-color: #2196F3;
+            box-shadow: 0 0 12px rgba(33, 150, 243, 0.8);
+        }
+
+        .point.second {
+            background-color: #4CAF50;
+            box-shadow: 0 0 12px rgba(76, 175, 80, 0.8);
+        }
+
+        .point.dragging {
+            transform: translate(-50%, -50%) scale(1.3);
+            z-index: 15;
+        }
+
+        .point-label {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            font-size: 15px;
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4px 12px;
+            border-radius: 18px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            z-index: 20;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .zero-label {
+            color: #7b1fa2;
+            border: 2px solid #7b1fa2;
+        }
+
+        .first-label {
+            color: #1976d2;
+            border: 2px solid #1976d2;
+        }
+
+        .second-label {
+            color: #2e7d32;
+            border: 2px solid #2e7d32;
+        }
+
+        .arrow {
+            position: absolute;
+            height: 7px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            border-radius: 4px;
+        }
+
+        .first-arrow {
+            background-color: #2196F3;
+        }
+
+        .second-arrow {
+            background-color: #4CAF50;
+        }
+
+        .arrow-head {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-top: 9px solid transparent;
+            border-bottom: 9px solid transparent;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .first-arrow-head {
+            border-left: 12px solid #2196F3;
+        }
+
+        .second-arrow-head {
+            border-left: 12px solid #4CAF50;
+        }
+
+        .arrow-label {
+            position: absolute;
+            padding: 5px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            top: 30%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            z-index: 20;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            font-weight: bold;
+        }
+
+        .first-arrow-label {
+            background: linear-gradient(to bottom, #2196F3, #0d47a1);
+            color: white;
+        }
+
+        .second-arrow-label {
+            background: linear-gradient(to bottom, #4CAF50, #2e7d32);
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 12px 22px;
+            font-size: 1.1rem;
+            background: linear-gradient(to bottom, #2196f3, #1976d2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 12px rgba(0,0,0,0.25);
+        }
+
+        .control-btn.secondary {
+            background: linear-gradient(to bottom, #4CAF50, #2e7d32);
+        }
+        
+        .control-btn.tertiary {
+            background: linear-gradient(to bottom, #FF9800, #F57C00);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .answer-section {
+            background: linear-gradient(to bottom, #e1f5fe, #b3e5fc);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 3px dashed #0288d1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .answer-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #01579b;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .answer-input {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .answer-input input {
+            padding: 14px 18px;
+            font-size: 1.2rem;
+            border: 2px solid #0288d1;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            width: 100%;
+        }
+
+        .answer-input input:focus {
+            outline: none;
+            border-color: #0d47a1;
+            box-shadow: 0 0 10px rgba(13, 71, 161, 0.5);
+        }
+
+        .check-btn {
+            padding: 14px 25px;
+            background: linear-gradient(to bottom, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 12px rgba(0,0,0,0.25);
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            min-height: 45px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .correct {
+            background: linear-gradient(to bottom, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+            border: 3px solid #4caf50;
+        }
+
+        .incorrect {
+            background: linear-gradient(to bottom, #ffebee, #ffcdd2);
+            color: #c62828;
+            border: 3px solid #f44336;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(to right, #2c3e50, #1a237e);
+            color: #e3f2fd;
+            font-size: 1rem;
+            border-top: 1px solid #455a64;
+        }
+
+        .point-info {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .point-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .point-info-item.zero {
+            background: rgba(156, 39, 176, 0.1);
+            color: #7b1fa2;
+            border: 2px solid #7b1fa2;
+        }
+
+        .point-info-item.first {
+            background: rgba(33, 150, 243, 0.1);
+            color: #1976d2;
+            border: 2px solid #1976d2;
+        }
+
+        .point-info-item.second {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+            border: 2px solid #2e7d32;
+        }
+
+        @media (min-width: 768px) {
+            .exercises {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .answer-input {
+                flex-direction: row;
+            }
+            
+            .answer-input input {
+                flex: 1;
+            }
+            
+            .check-btn {
+                width: auto;
+            }
+        }
+        
+        .format-hint {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+
+        /* أزرار التصفح بين الصفحات */
+        .page-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 0 10px;
+        }
+
+        .nav-btn {
+            padding: 14px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: none;
+            font-weight: bold;
+        }
+
+        .prev-btn {
+            background: linear-gradient(to right, #ff9800, #f57c00);
+            color: white;
+        }
+
+        .next-btn {
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+            color: white;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn i {
+            font-size: 1.4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-ruler-combined"></i> أتحقق من فهمي</h1>
+        </header>
+
+        <div class="content">
+            <div class="instructions">
+                <h2><i class="fas fa-info-circle"></i> التعليمات</h2>
+                <ol class="steps">
+                    <li>انقر على "إضافة النقطة الأولى" لإنشاء النقطة الزرقاء</li>
+                    <li>اسحب النقطة الزرقاء لتمثيل العدد الأول (الخط الأول من الصفر للنقطة الزرقاء)</li>
+                    <li>انقر على "إضافة النقطة الثانية" لإنشاء النقطة الخضراء</li>
+                    <li>اسحب النقطة الخضراء لتمثيل العدد الثاني (الخط الثاني من النقطة الزرقاء للنقطة الخضراء)</li>
+                    <li>النقطة البنفسجية: نقطة الصفر الثابتة</li>
+                    <li>الخط الأول: <span style="color: #2196F3;">أزرق</span> (من الصفر للنقطة الأولى)</li>
+                    <li>الخط الثاني: <span style="color: #4CAF50;">أخضر</span> (من النقطة الأولى للثانية)</li>
+                    <li>اكتب الإجابة في الحقل المخصص ثم اضغط على "تحقق"</li>
+                    <li>يمكنك استخدام زر "إعادة تعيين" لإعادة المحاولة</li>
+                </ol>
+                
+                <div class="point-info">
+                    <div class="point-info-item zero">
+                        <div class="point" style="background-color: #9c27b0; width: 20px; height: 20px; border-radius: 50%;"></div>
+                        <span>نقطة الصفر</span>
+                    </div>
+                    <div class="point-info-item first">
+                        <div class="point" style="background-color: #2196F3; width: 20px; height: 20px; border-radius: 50%;"></div>
+                        <span>النقطة الأولى (العدد الأول)</span>
+                    </div>
+                    <div class="point-info-item second">
+                        <div class="point" style="background-color: #4CAF50; width: 20px; height: 20px; border-radius: 50%;"></div>
+                        <span>النقطة الثانية (العدد الثاني)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercises">
+                <!-- التمرين 1: جمع عدد موجب -->
+                <div class="exercise">
+                    <h3><i class="fas fa-1"></i> التمرين الأول (جمع عدد موجب)</h3>
+                    <div class="math-expression">\( -2 \frac{1}{3} + 4 \frac{5}{12} = \boxed{\text{?}} \)</div>
+                    
+                    <div class="number-line-container" id="numberLine1">
+                        <div class="line"></div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="control-btn reset-btn" data-exercise="1">
+                            <i class="fas fa-sync-alt"></i> إعادة تعيين
+                        </button>
+                        <button class="control-btn first-btn" data-exercise="1">
+                            <i class="fas fa-plus-circle"></i> إضافة النقطة الأولى
+                        </button>
+                        <button class="control-btn secondary second-btn" data-exercise="1" disabled>
+                            <i class="fas fa-plus-circle"></i> إضافة النقطة الثانية
+                        </button>
+                    </div>
+                    
+                    <div class="answer-section">
+                        <label for="answer1">اكتب الإجابة الصحيحة:</label>
+                        <div class="format-hint">(يمكن استخدام كسور أو أعداد عشرية)</div>
+                        <div class="answer-input">
+                            <input type="text" id="answer1" placeholder="اكتب النتيجة هنا">
+                            <button class="check-btn" data-exercise="1">
+                                <i class="fas fa-check"></i> تحقق
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback1"></div>
+                    </div>
+                </div>
+                
+                <!-- التمرين 2: طرح عدد موجب -->
+                <div class="exercise">
+                    <h3><i class="fas fa-2"></i> التمرين الثاني (طرح عدد موجب)</h3>
+                    <div class="math-expression">\( -3 \frac{1}{4} - 1 \frac{3}{5} = \boxed{\text{?}} \)</div>
+                    
+                    <div class="number-line-container" id="numberLine2">
+                        <div class="line"></div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="control-btn reset-btn" data-exercise="2">
+                            <i class="fas fa-sync-alt"></i> إعادة تعيين
+                        </button>
+                        <button class="control-btn first-btn" data-exercise="2">
+                            <i class="fas fa-plus-circle"></i> إضافة النقطة الأولى
+                        </button>
+                        <button class="control-btn secondary second-btn" data-exercise="2" disabled>
+                            <i class="fas fa-plus-circle"></i> إضافة النقطة الثانية
+                        </button>
+                    </div>
+                    
+                    <div class="answer-section">
+                        <label for="answer2">اكتب الإجابة الصحيحة:</label>
+                        <div class="format-hint">(يمكن استخدام كسور أو أعداد عشرية)</div>
+                        <div class="answer-input">
+                            <input type="text" id="answer2" placeholder="اكتب النتيجة هنا">
+                            <button class="check-btn" data-exercise="2">
+                                <i class="fas fa-check"></i> تحقق
+                            </button>
+                        </div>
+                        <div class="feedback" id="feedback2"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- أزرار التصفح بين الصفحات -->
+            <div class="page-navigation">
+                <button class="nav-btn prev-btn" onclick="navigateTo('u1l4p1.html')">
+                    <i class="fas fa-arrow-right"></i> الصفحة السابقة
+                </button>
+                <button class="nav-btn next-btn" onclick="navigateTo('u1l4p3.html')">
+                    الصفحة التالية <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>الصف السابع</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // تعريف التمارين
+            const exercises = {
+                1: {
+                    expression: "-2 1/3 + 4 5/12",
+                    min: -3,
+                    max: 5,
+                    step: 0.25,
+                    correctAnswer: "2 1/12",
+                    correctAnswerText: "2 1/12",
+                    correctAnswerValue: 25/12 // 2.0833
+                },
+                2: {
+                    expression: "-3 1/4 - 1 3/5",
+                    min: -5,
+                    max: 1,
+                    step: 0.25,
+                    correctAnswer: "-4 17/20",
+                    correctAnswerText: "-4 17/20",
+                    correctAnswerValue: -97/20 // -4.85
+                }
+            };
+
+            // وظيفة للتنقل بين الصفحات
+            window.navigateTo = function(page) {
+                window.location.href = page;
+            };
+
+            // إنشاء خطوط الأعداد لكل تمرين
+            for (let i = 1; i <= 2; i++) {
+                createNumberLine(i, exercises[i].min, exercises[i].max, exercises[i].step);
+            }
+
+            // إضافة نقطة الصفر الثابتة
+            document.querySelectorAll('.number-line-container').forEach((container, index) => {
+                const exerciseNum = index + 1;
+                const min = exercises[exerciseNum].min;
+                const max = exercises[exerciseNum].max;
+                const width = container.offsetWidth;
+                
+                // نقطة الصفر الثابتة
+                const zeroPosition = ((0 - min) / (max - min)) * (width * 0.9) + (width * 0.05);
+                
+                const point = document.createElement('div');
+                point.className = 'point zero';
+                point.style.left = `${zeroPosition}px`;
+                point.dataset.exercise = exerciseNum;
+                point.dataset.value = "0";
+                point.dataset.pointType = "zero";
+                
+                const pointLabel = document.createElement('div');
+                pointLabel.className = 'point-label zero-label';
+                pointLabel.textContent = "0 (صفر)";
+                point.appendChild(pointLabel);
+                
+                container.appendChild(point);
+            });
+
+            // أحداث الأزرار
+            document.querySelectorAll('.reset-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const exerciseNum = this.dataset.exercise;
+                    resetExercise(exerciseNum);
+                });
+            });
+
+            document.querySelectorAll('.first-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const exerciseNum = this.dataset.exercise;
+                    addFirstPoint(exerciseNum);
+                });
+            });
+
+            document.querySelectorAll('.second-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const exerciseNum = this.dataset.exercise;
+                    addSecondPoint(exerciseNum);
+                });
+            });
+
+            document.querySelectorAll('.check-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const exerciseNum = this.dataset.exercise;
+                    checkAnswer(exerciseNum);
+                });
+            });
+
+            // إنشاء خط الأعداد المدرج
+            function createNumberLine(exerciseNum, min, max, step) {
+                const container = document.getElementById(`numberLine${exerciseNum}`);
+                const width = container.offsetWidth;
+                const range = max - min;
+
+                // إضافة التقسيمات والتسميات
+                for (let i = min; i <= max; i += step) {
+                    const position = ((i - min) / range) * (width * 0.9) + (width * 0.05);
+
+                    const tick = document.createElement('div');
+                    tick.className = 'tick';
+                    
+                    // تحديد إذا كانت علامة رئيسية (عدد صحيح)
+                    if (Math.abs(i - Math.round(i)) < 0.001) {
+                        tick.classList.add('major-tick');
+                        
+                        // إضافة تسمية للأعداد الصحيحة
+                        const tickLabel = document.createElement('div');
+                        tickLabel.className = 'tick-label';
+                        tickLabel.style.left = `${position}px`;
+                        tickLabel.textContent = Math.round(i).toString();
+                        container.appendChild(tickLabel);
+                    } else {
+                        // علامات ثانوية للكسور
+                        tick.style.height = '10px';
+                        tick.style.top = '48%';
+                    }
+                    
+                    tick.style.left = `${position}px`;
+                    container.appendChild(tick);
+                }
+            }
+
+            // تنسيق الأرقام للعرض
+            function formatNumber(num) {
+                if (Math.abs(num) < 0.0001) return "0";
+                
+                // تحديد الكسور الشائعة
+                const fractions = {
+                    0.125: "⅛",
+                    0.25: "¼",
+                    0.333333: "⅓",
+                    0.375: "⅜",
+                    0.5: "½",
+                    0.625: "⅝",
+                    0.666667: "⅔",
+                    0.75: "¾",
+                    0.875: "⅞",
+                    [-0.125]: "-⅛",
+                    [-0.25]: "-¼",
+                    [-0.333333]: "-⅓",
+                    [-0.375]: "-⅜",
+                    [-0.5]: "-½",
+                    [-0.625]: "-⅝",
+                    [-0.666667]: "-⅔",
+                    [-0.75]: "-¾",
+                    [-0.875]: "-⅞"
+                };
+
+                // البحث في الكسور الشائعة
+                for (const [decimalStr, fraction] of Object.entries(fractions)) {
+                    const decimal = parseFloat(decimalStr);
+                    if (Math.abs(num - decimal) < 0.001) {
+                        return fraction;
+                    }
+                }
+
+                // إذا كان عدد صحيح
+                if (Math.abs(num - Math.round(num)) < 0.001) {
+                    return Math.round(num).toString();
+                }
+
+                // إذا لم يكن كسراً معروفاً، عرضه كرقم عشري
+                return num.toFixed(3).replace('.000', '');
+            }
+
+            // إعادة تعيين التمرين
+            function resetExercise(exerciseNum) {
+                const container = document.getElementById(`numberLine${exerciseNum}`);
+                
+                // مسح جميع النقاط ما عدا الصفر
+                document.querySelectorAll(`#numberLine${exerciseNum} .point`).forEach(point => {
+                    if (point.dataset.pointType !== "zero") {
+                        container.removeChild(point);
+                    }
+                });
+                
+                // مسح جميع الأسهم
+                document.querySelectorAll(`#numberLine${exerciseNum} .arrow, #numberLine${exerciseNum} .arrow-head, #numberLine${exerciseNum} .arrow-label`).forEach(el => {
+                    container.removeChild(el);
+                });
+                
+                // مسح الحقل والإفادة
+                document.getElementById(`answer${exerciseNum}`).value = "";
+                const feedback = document.getElementById(`feedback${exerciseNum}`);
+                feedback.textContent = "";
+                feedback.className = "feedback";
+                
+                // إعادة تمكين أزرار إضافة النقاط
+                document.querySelector(`.first-btn[data-exercise="${exerciseNum}"]`).disabled = false;
+                document.querySelector(`.second-btn[data-exercise="${exerciseNum}"]`).disabled = true;
+            }
+
+            // إضافة النقطة الأولى
+            function addFirstPoint(exerciseNum) {
+                const container = document.getElementById(`numberLine${exerciseNum}`);
+                
+                // إذا كانت النقطة الأولى موجودة، لا نضيف
+                if (container.querySelector('.point[data-point-type="first"]')) {
+                    return;
+                }
+                
+                const min = exercises[exerciseNum].min;
+                const max = exercises[exerciseNum].max;
+                const width = container.offsetWidth;
+                
+                // نقطة الصفر
+                const zeroPoint = container.querySelector('.point[data-point-type="zero"]');
+                if (!zeroPoint) return;
+                const zeroPosition = parseFloat(zeroPoint.style.left);
+                
+                // إنشاء النقطة الأولى (الخط الأول)
+                const firstPoint = document.createElement('div');
+                firstPoint.className = 'point first';
+                firstPoint.dataset.exercise = exerciseNum;
+                firstPoint.dataset.pointType = "first";
+                firstPoint.style.left = `${zeroPosition}px`;
+                firstPoint.dataset.value = "0";
+                
+                const firstPointLabel = document.createElement('div');
+                firstPointLabel.className = 'point-label first-label';
+                firstPointLabel.textContent = "0";
+                firstPoint.appendChild(firstPointLabel);
+                
+                container.appendChild(firstPoint);
+                
+                // جعل النقطة الأولى قابلة للسحب
+                makePointDraggable(firstPoint, exerciseNum);
+                
+                // تمكين زر إضافة النقطة الثانية
+                document.querySelector(`.second-btn[data-exercise="${exerciseNum}"]`).disabled = false;
+                
+                // تعطيل زر إضافة النقطة الأولى
+                document.querySelector(`.first-btn[data-exercise="${exerciseNum}"]`).disabled = true;
+            }
+
+            // إضافة النقطة الثانية
+            function addSecondPoint(exerciseNum) {
+                const container = document.getElementById(`numberLine${exerciseNum}`);
+                
+                // إذا كانت النقطة الثانية موجودة، لا نضيف
+                if (container.querySelector('.point[data-point-type="second"]')) {
+                    return;
+                }
+                
+                // الحصول على النقطة الأولى
+                const firstPoint = container.querySelector('.point[data-point-type="first"]');
+                if (!firstPoint) return;
+                
+                // إنشاء النقطة الثانية (الخط الثاني) - تبدأ من النقطة الأولى
+                const secondPoint = document.createElement('div');
+                secondPoint.className = 'point second';
+                secondPoint.dataset.exercise = exerciseNum;
+                secondPoint.dataset.pointType = "second";
+                secondPoint.style.left = firstPoint.style.left; // تبدأ من نفس موقع النقطة الأولى
+                secondPoint.dataset.value = "0";
+                
+                const secondPointLabel = document.createElement('div');
+                secondPointLabel.className = 'point-label second-label';
+                secondPointLabel.textContent = "0";
+                secondPoint.appendChild(secondPointLabel);
+                
+                container.appendChild(secondPoint);
+                
+                // جعل النقطة الثانية قابلة للسحب
+                makePointDraggable(secondPoint, exerciseNum);
+                
+                // إنشاء الأسهم
+                createArrows(container, exerciseNum);
+                
+                // تعطيل زر إضافة النقطة الثانية
+                document.querySelector(`.second-btn[data-exercise="${exerciseNum}"]`).disabled = true;
+            }
+
+            // إنشاء الأسهم
+            function createArrows(container, exerciseNum) {
+                const zeroPoint = container.querySelector('.point[data-point-type="zero"]');
+                const firstPoint = container.querySelector('.point[data-point-type="first"]');
+                const secondPoint = container.querySelector('.point[data-point-type="second"]');
+                
+                if (!zeroPoint || !firstPoint || !secondPoint) return;
+                
+                // إحداثيات النقاط
+                const zeroLeft = parseFloat(zeroPoint.style.left);
+                const firstLeft = parseFloat(firstPoint.style.left);
+                const secondLeft = parseFloat(secondPoint.style.left);
+                
+                // إنشاء السهم الأول (من الصفر إلى النقطة الأولى)
+                const firstArrow = document.createElement('div');
+                firstArrow.className = 'arrow first-arrow';
+                firstArrow.style.left = `${Math.min(zeroLeft, firstLeft)}px`;
+                firstArrow.style.width = `${Math.abs(firstLeft - zeroLeft)}px`;
+                container.appendChild(firstArrow);
+                
+                // رأس السهم الأول
+                const firstArrowHead = document.createElement('div');
+                firstArrowHead.className = 'arrow-head first-arrow-head';
+                firstArrowHead.style.left = `${firstLeft}px`;
+                container.appendChild(firstArrowHead);
+                
+                // تسمية السهم الأول
+                const firstArrowLabel = document.createElement('div');
+                firstArrowLabel.className = 'arrow-label first-arrow-label';
+                firstArrowLabel.textContent = formatNumber(parseFloat(firstPoint.dataset.value));
+                firstArrowLabel.style.left = `${(zeroLeft + firstLeft) / 2}px`;
+                container.appendChild(firstArrowLabel);
+                
+                // إنشاء السهم الثاني (من النقطة الأولى إلى النقطة الثانية)
+                const secondArrow = document.createElement('div');
+                secondArrow.className = 'arrow second-arrow';
+                secondArrow.style.left = `${Math.min(firstLeft, secondLeft)}px`;
+                secondArrow.style.width = `${Math.abs(secondLeft - firstLeft)}px`;
+                container.appendChild(secondArrow);
+                
+                // رأس السهم الثاني
+                const secondArrowHead = document.createElement('div');
+                secondArrowHead.className = 'arrow-head second-arrow-head';
+                secondArrowHead.style.left = `${secondLeft}px`;
+                container.appendChild(secondArrowHead);
+                
+                // تسمية السهم الثاني
+                const secondArrowLabel = document.createElement('div');
+                secondArrowLabel.className = 'arrow-label second-arrow-label';
+                const secondValue = parseFloat(secondPoint.dataset.value) - parseFloat(firstPoint.dataset.value);
+                secondArrowLabel.textContent = formatNumber(secondValue);
+                secondArrowLabel.style.left = `${(firstLeft + secondLeft) / 2}px`;
+                container.appendChild(secondArrowLabel);
+            }
+
+            // تحديث الأسهم
+            function updateArrows(container, exerciseNum) {
+                // مسح الأسهم القديمة
+                document.querySelectorAll(`#${container.id} .arrow, #${container.id} .arrow-head, #${container.id} .arrow-label`).forEach(el => {
+                    if (el.parentNode === container) {
+                        container.removeChild(el);
+                    }
+                });
+                
+                // إنشاء الأسهم الجديدة
+                createArrows(container, exerciseNum);
+            }
+
+            // جعل النقطة قابلة للسحب (مع دعم اللمس)
+            function makePointDraggable(point, exerciseNum) {
+                let isDragging = false;
+                let offsetX = 0;
+                
+                // دالة بدء السحب
+                const startDrag = (e) => {
+                    isDragging = true;
+                    point.classList.add('dragging');
+                    
+                    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                    if (clientX) {
+                        const rect = point.getBoundingClientRect();
+                        offsetX = clientX - rect.left;
+                    }
+                };
+                
+                // دالة السحب
+                const dragMove = (e) => {
+                    if (!isDragging) return;
+                    
+                    const container = document.getElementById(`numberLine${exerciseNum}`);
+                    const containerRect = container.getBoundingClientRect();
+                    const min = exercises[exerciseNum].min;
+                    const max = exercises[exerciseNum].max;
+                    
+                    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                    if (!clientX) return;
+                    
+                    let newLeft = clientX - containerRect.left - offsetX;
+                    newLeft = Math.max(containerRect.width * 0.05, Math.min(containerRect.width * 0.95, newLeft));
+                    
+                    // حساب القيمة العددية
+                    const positionRatio = (newLeft - containerRect.width * 0.05) / (containerRect.width * 0.9);
+                    const value = min + positionRatio * (max - min);
+                    
+                    point.style.left = `${newLeft}px`;
+                    point.dataset.value = value;
+                    
+                    // تحديث التسمية
+                    const pointLabel = point.querySelector('.point-label');
+                    pointLabel.textContent = formatNumber(value);
+                    
+                    // تحديث الأسهم
+                    updateArrows(container, exerciseNum);
+                };
+                
+                // دالة نهاية السحب
+                const endDrag = () => {
+                    isDragging = false;
+                    point.classList.remove('dragging');
+                };
+                
+                // إضافة مستمعات الأحداث للماوس
+                point.addEventListener('mousedown', startDrag);
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('mouseup', endDrag);
+                
+                // إضافة مستمعات الأحداث لللمس
+                point.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    startDrag(e.touches[0]);
+                }, { passive: false });
+                
+                document.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    dragMove(e.touches[0]);
+                }, { passive: false });
+                
+                document.addEventListener('touchend', endDrag);
+                document.addEventListener('touchcancel', endDrag);
+            }
+
+            // تحويل الإدخال النصي إلى قيمة رقمية
+            function parseUserInput(input) {
+                // إزالة المسافات
+                input = input.trim();
+                
+                // التحقق إذا كان كسرًا
+                if (input.includes('/')) {
+                    const parts = input.split('/');
+                    if (parts.length === 2) {
+                        const numerator = parseFloat(parts[0]);
+                        const denominator = parseFloat(parts[1]);
+                        if (!isNaN(numerator) && !isNaN(denominator) && denominator !== 0) {
+                            return numerator / denominator;
+                        }
+                    }
+                }
+                
+                // التحقق إذا كان عددًا كسريًا (مثل 2 1/12)
+                const mixedMatch = input.match(/(-?\d+)\s+(-?\d+)\/(-?\d+)/);
+                if (mixedMatch) {
+                    const whole = parseFloat(mixedMatch[1]);
+                    const numerator = parseFloat(mixedMatch[2]);
+                    const denominator = parseFloat(mixedMatch[3]);
+                    if (!isNaN(whole) && !isNaN(numerator) && !isNaN(denominator) && denominator !== 0) {
+                        return whole + (numerator / denominator);
+                    }
+                }
+                
+                // التحقق إذا كان رقمًا عشريًا
+                const decimal = parseFloat(input);
+                if (!isNaN(decimal)) {
+                    return decimal;
+                }
+                
+                return null;
+            }
+
+            // التحقق من الإجابة
+            function checkAnswer(exerciseNum) {
+                const container = document.getElementById(`numberLine${exerciseNum}`);
+                const secondPoint = container.querySelector('.point[data-point-type="second"]');
+                if (!secondPoint) {
+                    const feedback = document.getElementById(`feedback${exerciseNum}`);
+                    feedback.textContent = "الرجاء إضافة النقطتين أولاً!";
+                    feedback.className = "feedback incorrect";
+                    return;
+                }
+                
+                const userInput = document.getElementById(`answer${exerciseNum}`).value.trim();
+                const feedback = document.getElementById(`feedback${exerciseNum}`);
+                
+                // تحليل إدخال المستخدم إلى قيمة رقمية
+                const userValue = parseUserInput(userInput);
+                const correctValue = exercises[exerciseNum].correctAnswerValue;
+                
+                if (userValue === null) {
+                    feedback.textContent = "صيغة غير صحيحة! استخدم صيغة مثل 2.083 أو 2 1/12";
+                    feedback.className = "feedback incorrect";
+                    return;
+                }
+                
+                // التحقق من الإجابة مع هامش خطأ صغير (0.01)
+                const isCorrect = Math.abs(userValue - correctValue) < 0.01;
+                
+                if (isCorrect) {
+                    feedback.textContent = "إجابة صحيحة! أحسنت!";
+                    feedback.className = "feedback correct";
+                } else {
+                    feedback.textContent = `إجابة خاطئة. الإجابة الصحيحة هي: ${exercises[exerciseNum].correctAnswer} أو ${correctValue.toFixed(3)}`;
+                    feedback.className = "feedback incorrect";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
