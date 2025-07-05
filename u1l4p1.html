@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جمع الأعداد النسبية وطرحها</title>
+    <title>جمع الأعداد النسبية مع مشهد القناة المائية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- MathJax Library -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
@@ -55,7 +54,7 @@
             margin: 0 auto;
         }
 
-        /* مشهد القناة المائية */
+        /* مشهد القناة المائية العميقة */
         .canal-scene-section {
             padding: 30px;
             background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
@@ -64,26 +63,25 @@
 
         .scene-container {
             position: relative;
-            height: 500px;
+            height: 600px;
             margin: 0 auto;
             max-width: 900px;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            perspective: 1000px;
         }
 
-        /* السماء */
         .sky {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 60%;
-            background: linear-gradient(to bottom, #87CEEB, #B0E2FF);
+            height: 40%;
+            background: linear-gradient(to bottom, #4a8fe7, #87CEEB, #B0E2FF);
             z-index: 1;
         }
 
-        /* الشمس */
         .sun {
             position: absolute;
             top: 50px;
@@ -92,46 +90,47 @@
             height: 80px;
             background: radial-gradient(circle, #FFD700, #FFA500);
             border-radius: 50%;
-            box-shadow: 0 0 40px #FFD700;
-            animation: sunGlow 4s infinite alternate;
+            box-shadow: 0 0 60px #FFD700, 0 0 100px rgba(255, 165, 0, 0.5);
+            animation: sunGlow 6s infinite alternate;
             z-index: 2;
         }
 
         @keyframes sunGlow {
-            0% { box-shadow: 0 0 30px #FFD700; }
-            100% { box-shadow: 0 0 60px #FFA500; }
+            0% { box-shadow: 0 0 50px #FFD700, 0 0 90px rgba(255, 165, 0, 0.5); }
+            50% { box-shadow: 0 0 70px #FFD700, 0 0 120px rgba(255, 165, 0, 0.6); }
+            100% { box-shadow: 0 0 50px #FFD700, 0 0 90px rgba(255, 165, 0, 0.5); }
         }
 
-        /* السحاب */
         .cloud {
             position: absolute;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.9);
             z-index: 3;
+            filter: blur(1px);
         }
 
         .cloud-1 {
             top: 80px;
             left: 10%;
-            width: 120px;
-            height: 60px;
+            width: 150px;
+            height: 70px;
             animation: cloudMove 25s infinite linear;
         }
 
         .cloud-2 {
             top: 120px;
             left: 40%;
-            width: 100px;
-            height: 50px;
+            width: 120px;
+            height: 60px;
             animation: cloudMove 30s infinite linear;
         }
 
         .cloud-3 {
             top: 50px;
             left: 70%;
-            width: 150px;
-            height: 70px;
+            width: 180px;
+            height: 80px;
             animation: cloudMove 20s infinite linear;
         }
 
@@ -140,58 +139,62 @@
             100% { transform: translateX(1000px); }
         }
 
-        /* الأرض */
         .ground {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 40%;
-            background: linear-gradient(to top, #8B4513, #A0522D);
+            height: 60%;
+            background: 
+                linear-gradient(to top, #556B2F, #6B8E23),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><rect width="100" height="100" fill="%234f6d36" /><circle cx="20" cy="20" r="5" fill="%236B8E23" /><circle cx="60" cy="40" r="8" fill="%236B8E23" /><circle cx="80" cy="70" r="6" fill="%236B8E23" /></svg>');
+            background-size: auto, 100px 100px;
             z-index: 4;
+            border-top: 5px solid #4f6d36;
         }
 
-        /* النباتات */
-        .plant {
+        .terrain {
             position: absolute;
-            bottom: 40%;
-            background: #3c8d41;
+            bottom: 60%;
+            background: #4f6d36;
             border-radius: 50% 50% 0 0;
             z-index: 5;
+            box-shadow: 0 -5px 10px rgba(0,0,0,0.2);
         }
 
-        .plant-1 {
+        .hill-1 {
             left: 10%;
-            width: 30px;
-            height: 60px;
+            width: 200px;
+            height: 100px;
+            border-radius: 50% 50% 0 0;
         }
 
-        .plant-2 {
-            left: 20%;
-            width: 40px;
+        .hill-2 {
+            left: 60%;
+            width: 150px;
             height: 80px;
+            border-radius: 50% 50% 0 0;
         }
 
-        .plant-3 {
-            left: 85%;
-            width: 35px;
-            height: 70px;
+        .bush {
+            position: absolute;
+            bottom: 60%;
+            width: 30px;
+            height: 20px;
+            background: #3c8d41;
+            border-radius: 50%;
+            z-index: 6;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        .plant-4 {
-            left: 75%;
-            width: 25px;
-            height: 50px;
-        }
-
-        /* القناة المائية */
+        /* تعديل موقع القناة - رفع 20 بكسل إضافية للأعلى (75px بدلاً من 95px) */
         .canal-container {
             position: absolute;
-            bottom: 40%;
+            bottom: 15%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 200px;
+            transform: translateX(-50%) translateY(75px); /* تم تعديل هذه القيمة */
+            width: 85%;
+            height: 350px;
             z-index: 6;
         }
 
@@ -199,61 +202,171 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 180px;
-            background: #5D8AA8;
-            border-radius: 0 0 20px 20px;
+            height: 100%;
+            /* تم تغيير لون الخلفية ليطابق لون السماء */
+            background: #B0E2FF; /* تم التغيير من تدرج لوني إلى لون ثابت */
+            border-radius: 20px;
             overflow: hidden;
         }
 
         .canal-bank {
             position: absolute;
-            background: #8B4513;
-            height: 30px;
-            border-radius: 10px;
+            background: linear-gradient(to bottom, #8B4513, #A0522D);
+            height: 70px;
+            z-index: 7;
+            box-shadow: 0 -10px 20px rgba(0,0,0,0.3);
         }
 
         .bank-left {
-            top: 0;
+            top: -70px;
             left: 0;
-            width: 20px;
-            height: 100%;
+            width: 100%;
+            border-radius: 15px 15px 0 0;
         }
 
         .bank-right {
-            top: 0;
-            right: 0;
-            width: 20px;
-            height: 100%;
+            bottom: -70px;
+            left: 0;
+            width: 100%;
+            border-radius: 0 0 15px 15px;
         }
 
-        .bank-top {
-            top: 0;
-            left: 20px;
-            width: calc(100% - 40px);
-            height: 30px;
+        .bank-grass {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: 
+                linear-gradient(to bottom, transparent 60%, #2e7d32 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M10,0 Q12,5 8,10 T10,20" fill="%232e7d32" /></svg>');
+            background-size: 20px 35px;
+            background-repeat: repeat-x;
+            z-index: 8;
         }
 
-        /* الماء المتحرك */
-        .water {
+        .bank-grass.bottom {
+            bottom: auto;
+            top: 100%;
+        }
+        
+        /* نباتات مائية */
+        .water-plant {
             position: absolute;
             bottom: 0;
-            left: 20px;
-            width: calc(100% - 40px);
-            height: 80%;
-            background: linear-gradient(to top, #1e90ff, #00bfff);
-            border-radius: 0 0 15px 15px;
+            z-index: 9;
+            width: 8px;
+            background: linear-gradient(to top, #2e7d32, #1b5e20, #4caf50);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 -3px 5px rgba(0,0,0,0.2);
+            transform-origin: bottom;
+            animation: plantSway 5s infinite alternate ease-in-out;
+        }
+        
+        .water-plant::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -5px;
+            width: 18px;
+            height: 15px;
+            background: #4caf50;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes plantSway {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+        
+        /* طحالب مائية */
+        .algae {
+            position: absolute;
+            bottom: 0;
+            z-index: 8;
+            height: 15px;
+            background: linear-gradient(to top, #2e7d32, #1b5e20);
+            border-radius: 5px 5px 0 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .rock {
+            position: absolute;
+            background: #6a5a42;
+            border-radius: 50%;
+            z-index: 8;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+
+        .rock-1 {
+            bottom: 25%;
+            left: 10%;
+            width: 30px;
+            height: 25px;
+            transform: rotate(20deg);
+        }
+
+        .rock-2 {
+            bottom: 15%;
+            left: 15%;
+            width: 35px;
+            height: 30px;
+            transform: rotate(-15deg);
+        }
+
+        .rock-3 {
+            bottom: 20%;
+            right: 12%;
+            width: 40px;
+            height: 35px;
+            transform: rotate(10deg);
+        }
+
+        .rock-4 {
+            bottom: 10%;
+            right: 17%;
+            width: 25px;
+            height: 20px;
+            transform: rotate(-20deg);
+        }
+
+        /* تعديل موقع الماء - إزاحة 80 بكسل إضافية لأسفل */
+        .water {
+            position: absolute;
+            bottom: -80px; /* تم التغيير من -75px إلى -80px (إزاحة إضافية 5px لأسفل) */
+            left: 0;
+            width: 100%;
+            height: var(--water-level, 160%); /* استخدام متغير CSS لارتفاع الماء */
+            background: linear-gradient(to top, #0d47a1, #1e88e5, #0d47a1);
+            border-radius: 0 0 20px 20px;
             transition: height 2s ease-in-out;
+            z-index: 6;
+            overflow: hidden;
         }
 
         .water-wave {
             position: absolute;
-            top: -5px;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 20px;
+            height: 35px;
             background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="rgba(30, 144, 255, 0.7)" d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path><path fill="rgba(30, 144, 255, 0.5)" d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path><path fill="rgba(30, 144, 255, 0.3)" d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path></svg>');
-            background-size: 1200px 100px;
+            background-size: 1200px 180px;
             animation: wave 8s linear infinite;
+        }
+
+        .water-reflection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                transparent 100%);
+            animation: waterReflect 5s infinite linear;
         }
 
         @keyframes wave {
@@ -261,12 +374,16 @@
             100% { background-position-x: 1200px; }
         }
 
-        /* مؤشرات مستوى الماء الثابتة */
+        @keyframes waterReflect {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
         .water-markers {
             position: absolute;
-            top: 20px;
+            top: -10px; /* تم تعديل هذه القيمة لرفعها 20 بكسل إضافية */
             right: 10px;
-            height: calc(100% - 40px);
+            height: calc(100% - 80px);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -275,37 +392,37 @@
         }
 
         .water-marker {
-            width: 50px;
-            height: 2px;
-            background-color: rgba(255, 255, 255, 0.7);
+            width: 60px;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.8);
             position: relative;
         }
 
         .water-marker::after {
             content: attr(data-value);
             position: absolute;
-            left: -40px;
+            left: -50px;
             top: 50%;
             transform: translateY(-50%);
             color: white;
             font-weight: bold;
-            font-size: 16px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-            background: rgba(44, 62, 80, 0.7);
-            padding: 3px 8px;
-            border-radius: 5px;
-            min-width: 50px;
+            font-size: 18px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+            background: rgba(44, 62, 80, 0.8);
+            padding: 5px 12px;
+            border-radius: 8px;
+            min-width: 60px;
             text-align: center;
         }
 
-        /* الحيوانات الكرتونية - مع حركة معكوسة حول المحور Y */
         .bird {
             position: absolute;
             color: #333;
             font-size: 24px;
             z-index: 7;
             animation: birdFly 15s infinite linear;
-            transform: scaleX(-1); /* عكس الطيور حول المحور Y */
+            transform: scaleX(-1);
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
         }
 
         .bird-1 {
@@ -334,30 +451,30 @@
             font-size: 24px;
             z-index: 8;
             animation: fishSwim 10s infinite linear;
-            transform: scaleX(-1); /* عكس الأسماك حول المحور Y */
+            transform: scaleX(-1);
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
         }
 
         .fish-1 {
-            bottom: 60px;
-            left: 10%;
+            bottom: 150px;
+            left: 15%;
             animation-delay: 0s;
         }
 
         .fish-2 {
-            bottom: 100px;
-            left: 30%;
+            bottom: 200px;
+            left: 35%;
             animation-delay: 3s;
         }
 
         @keyframes fishSwim {
             0% { transform: translateX(0) scaleX(-1); }
             49% { transform: translateX(200px) scaleX(-1); }
-            50% { transform: translateX(200px) scaleX(1); } /* عكس الاتجاه */
+            50% { transform: translateX(200px) scaleX(1); }
             99% { transform: translateX(0) scaleX(1); }
             100% { transform: translateX(0) scaleX(-1); }
         }
 
-        /* الأزرار والتحكم */
         .canal-controls {
             display: flex;
             justify-content: center;
@@ -519,7 +636,7 @@
             margin: 30px 0;
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            direction: ltr; /* اتجاه ثابت لخط الأعداد */
+            direction: ltr;
         }
 
         .line {
@@ -584,6 +701,16 @@
             transform: translateY(-50%);
             z-index: 5;
             border-radius: 4px;
+        }
+
+        .arrow-head {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .arrow-head {
@@ -728,14 +855,15 @@
             background: #f0f7ff;
             border-radius: 5px;
             font-family: 'Courier New', monospace;
-            color: #1a237e; /* لون داكن لتحسين الوضوح */
+            color: #1a237e;
             font-weight: bold;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 1.6rem;
+            padding: 8px 15px;
         }
 
-        /* تحسين لون النص في الأمثلة */
         .example-btn .ltr-example {
-            color: #1a237e; /* لون داكن لتحسين الوضوح */
+            color: #1a237e;
             font-weight: bold;
             text-shadow: 0 1px 2px rgba(255,255,255,0.5);
         }
@@ -744,9 +872,8 @@
             color: #0d47a1;
         }
 
-        /* التعديل الرئيسي: تغيير لون النص في الأزرار النشطة إلى الأحمر الداكن */
         .example-btn.active .ltr-example {
-            color: #b71c1c; /* أحمر داكن */
+            color: #b71c1c;
             font-weight: bold;
             text-shadow: 0 1px 2px rgba(255,255,255,0.5);
         }
@@ -765,7 +892,7 @@
             }
 
             .scene-container {
-                height: 400px;
+                height: 550px;
             }
 
             .canal-btn {
@@ -791,8 +918,8 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-calculator"></i> جمع الأعداد النسبية وطرحها</h1>
-            <p>أجمع الأعداد النسبية وأطرحها باستخدام خط الأعداد التفاعلي</p>
+            <h1><i class="fas fa-water"></i> جمع الأعداد النسبية مع مشهد القناة المائية</h1>
+            <p>تمثيل رياضي وبصري دقيق لحساب انخفاض مستوى الماء</p>
         </header>
 
         <div class="canal-scene-section">
@@ -807,27 +934,51 @@
                 </div>
 
                 <div class="ground">
-                    <div class="plant plant-1"></div>
-                    <div class="plant plant-2"></div>
-                    <div class="plant plant-3"></div>
-                    <div class="plant plant-4"></div>
+                    <div class="terrain hill-1"></div>
+                    <div class="terrain hill-2"></div>
+                    
+                    <div class="bush bush-1" style="left: 20%; bottom: 60%; width: 40px; height: 25px;"></div>
+                    <div class="bush bush-2" style="left: 35%; bottom: 60%; width: 35px; height: 20px;"></div>
+                    <div class="bush bush-3" style="left: 65%; bottom: 60%; width: 45px; height: 30px;"></div>
+                    <div class="bush bush-4" style="left: 80%; bottom: 60%; width: 30px; height: 22px;"></div>
                 </div>
 
                 <div class="canal-container">
                     <div class="water-markers">
-                        <div class="water-marker" data-value="0m"></div>
-                        <div class="water-marker" data-value="-⅓m"></div>
-                        <div class="water-marker" data-value="-⅔m"></div>
-                        <div class="water-marker" data-value="-1m"></div>
+                        <div class="water-marker" data-value="0"></div>
+                        <div class="water-marker" data-value="⅓-"></div>
+                        <div class="water-marker" data-value="⅔-"></div>
+                        <div class="water-marker" data-value="1-"></div>
+                        <div class="water-marker" data-value="⅓1-"></div>
+                        <div class="water-marker" data-value="⅔1-"></div>
+                        <div class="water-marker" data-value="2-"></div>
                     </div>
 
                     <div class="canal">
                         <div class="canal-bank bank-left"></div>
                         <div class="canal-bank bank-right"></div>
-                        <div class="canal-bank bank-top"></div>
+                        
+                        <div class="bank-grass"></div>
+                        <div class="bank-grass bottom"></div>
+                        
+                        <div class="water-plant" style="left: 20%; height: 80px; animation-delay: 0s;"></div>
+                        <div class="water-plant" style="left: 35%; height: 60px; animation-delay: 1s;"></div>
+                        <div class="water-plant" style="left: 50%; height: 100px; animation-delay: 2s;"></div>
+                        <div class="water-plant" style="left: 65%; height: 70px; animation-delay: 3s;"></div>
+                        <div class="water-plant" style="left: 80%; height: 90px; animation-delay: 4s;"></div>
+                        
+                        <div class="algae" style="left: 25%; width: 30px;"></div>
+                        <div class="algae" style="left: 45%; width: 50px;"></div>
+                        <div class="algae" style="left: 70%; width: 40px;"></div>
+                        
+                        <div class="rock rock-1"></div>
+                        <div class="rock rock-2"></div>
+                        <div class="rock rock-3"></div>
+                        <div class="rock rock-4"></div>
 
                         <div class="water" id="waterLevel">
                             <div class="water-wave"></div>
+                            <div class="water-reflection"></div>
                             <div class="fish fish-1">🐠</div>
                             <div class="fish fish-2">🐟</div>
                         </div>
@@ -837,26 +988,26 @@
 
             <div class="canal-controls">
                 <button class="canal-btn" id="showNormal">
-                    <i class="fas fa-sun"></i> مستوى الماء الطبيعي
+                    <i class="fas fa-sun"></i> مستوى الماء الطبيعي (0 متر)
                 </button>
                 <button class="canal-btn" id="showDrop1">
-                    <i class="fas fa-arrow-down"></i> الانخفاض الأسبوع الأول (⅔ متر)
+                    <i class="fas fa-arrow-down"></i> الانخفاض الأول (-⅔ متر)
                 </button>
                 <button class="canal-btn" id="showDrop2">
-                    <i class="fas fa-arrow-down"></i> الانخفاض الأسبوع الثاني (⅑ متر)
+                    <i class="fas fa-arrow-down"></i> الانخفاض الكلي (-⅞ متر)
                 </button>
             </div>
 
             <div class="math-info-box">
                 <h3><i class="fas fa-info-circle"></i> استكشف: مشكلة القناة المائية</h3>
-                <p>في أحد أسابيع الصيف الحارة، انخفض مستوى الماء في قناة الملك عبد الله بمقدار <span class="highlight">\( \frac{2}{3} \) متر</span>.</p>
+                <p>في أحد أسابيع الصيف الحارة، انخفض مستوى الماء في قناة الملك عبد الله من المستوى الطبيعي (0 متر) بمقدار <span class="highlight">\( \frac{2}{3} \) متر</span> في الأسبوع الأول.</p>
                 <p>وفي الأسبوع الذي يليه انخفض مستوى الماء مرة أخرى بمقدار <span class="highlight">\( \frac{1}{9} \) متر</span>.</p>
                 <p>ما مقدار الانخفاض الكلي في الأسبوعين؟</p>
-                <div class="math-expression">\[ \frac{2}{3} + \frac{1}{9} = ? \]</div>
+                <div class="math-expression">\[ -\frac{2}{3} + (-\frac{1}{9}) = ? \]</div>
                 <p>لحل هذه المسألة، نحتاج إلى توحيد المقامات:</p>
-                <div class="math-expression">\[ \frac{2}{3} = \frac{6}{9} \]</div>
-                <div class="math-expression">\[ \frac{6}{9} + \frac{1}{9} = \frac{7}{9} \]</div>
-                <p>إذن الانخفاض الكلي هو <span class="highlight">\( \frac{7}{9} \) متر</span>.</p>
+                <div class="math-expression">\[ -\frac{2}{3} = -\frac{6}{9} \]</div>
+                <div class="math-expression">\[ -\frac{6}{9} + (-\frac{1}{9}) = -\frac{7}{9} \]</div>
+                <p>إذن مستوى الماء أصبح عند <span class="highlight">\( -\frac{7}{9} \) متر</span> تحت المستوى الطبيعي.</p>
             </div>
         </div>
 
@@ -867,16 +1018,16 @@
                         <h3><i class="fas fa-book-open"></i> أمثلة تفاعلية</h3>
                         <div class="examples">
                             <button class="example-btn active" data-example="1">
-                                <i class="fas fa-calculator"></i> <span class="ltr-example">-0.4 + 1.2</span>
+                                <span class="ltr-example">-0.4 + 1.2</span>
                             </button>
                             <button class="example-btn" data-example="2">
-                                <i class="fas fa-fraction"></i> <span class="ltr-example">\( -\frac{5}{8} + (-\frac{3}{8}) \)</span>
+                                <span class="ltr-example">\( -\frac{5}{8} + (-\frac{3}{8}) \)</span>
                             </button>
                             <button class="example-btn" data-example="3">
-                                <i class="fas fa-divide"></i> <span class="ltr-example">\( 1\frac{1}{4} - \frac{3}{4} \)</span>
+                                <span class="ltr-example">\( 1\frac{1}{4} - \frac{3}{4} \)</span>
                             </button>
                             <button class="example-btn" data-example="4">
-                                <i class="fas fa-minus-circle"></i> <span class="ltr-example">\( -\frac{1}{2} - \frac{1}{8} \)</span>
+                                <span class="ltr-example">\( -\frac{1}{2} - \frac{1}{8} \)</span>
                             </button>
                         </div>
                     </div>
@@ -910,7 +1061,7 @@
 
                     <div class="number-line" id="numberLine">
                         <div class="line"></div>
-                        </div>
+                    </div>
 
                     <div class="controls">
                         <button class="control-btn" id="prevStep">
@@ -932,8 +1083,8 @@
         </div>
 
         <footer>
-            <p>تم تصميم هذا الدرس التفاعلي لمساعدة الطلاب على فهم جمع وطرح الأعداد النسبية باستخدام خط الأعداد</p>
-            <p>الوحدة 1 - جمع الأعداد النسبية وطرحها | رياضيات الصف الأول المتوسط</p>
+            
+            <p>الوحدة 1 - جمع الأعداد النسبية وطرحها | الصفحة 1</p>
         </footer>
     </div>
 
@@ -945,11 +1096,11 @@
             const showDrop1Btn = document.getElementById('showDrop1');
             const showDrop2Btn = document.getElementById('showDrop2');
 
-            // المستويات المختلفة للماء
+            // المستويات المختلفة للماء (تم تعديلها لتناسب الإزاحة الإضافية)
             const levels = {
-                normal: '80%',
-                drop1: '50%',
-                drop2: '30%'
+                normal: '160%',     // 0 متر
+                drop1: '100%',      // -2/3 متر (قيمة جديدة)
+                drop2: '90%'        // -7/9 متر (قيمة جديدة)
             };
 
             // تعيين مستوى الماء الطبيعي
@@ -958,29 +1109,40 @@
             // أحداث أزرار مشهد القناة
             showNormalBtn.addEventListener('click', function() {
                 waterLevel.style.height = levels.normal;
+                animateWater();
             });
 
             showDrop1Btn.addEventListener('click', function() {
                 waterLevel.style.height = levels.drop1;
+                animateWater();
             });
 
             showDrop2Btn.addEventListener('click', function() {
                 waterLevel.style.height = levels.drop2;
+                animateWater();
             });
+
+            // تحريك الماء بشكل طبيعي
+            function animateWater() {
+                const waterWave = document.querySelector('.water-wave');
+                waterWave.style.animation = 'none';
+                setTimeout(() => {
+                    waterWave.style.animation = 'wave 8s linear infinite';
+                }, 10);
+            }
 
             // متغيرات خط الأعداد
             const numberLine = document.getElementById('numberLine');
             const prevBtn = document.getElementById('prevStep');
             const nextBtn = document.getElementById('nextStep');
             const resetBtn = document.getElementById('reset');
-            const resultDiv = document.getElementById('result');
             const exampleBtns = document.querySelectorAll('.example-btn');
 
             // حالة التطبيق
             let currentExample = 1;
             let currentStep = 0;
 
-            // أمثلة معدلة حسب التعليمات
+            // أمثلة
             const examples = {
                 1: {
                     title: "-0.4 + 1.2",
@@ -998,9 +1160,9 @@
                     title: "-5/8 + (-3/8)",
                     steps: [
                         {desc: "الخطوة ١: نبدأ من الصفر (0)"},
-                        {desc: "الخطوة ٢: نعين العدد الأول (-⅝) على يسار الصفر", move: -5/8, label: "\( -\frac{5}{8} \)"},
-                        {desc: "الخطوة ٣: من \( -\frac{5}{8} \) نتحرك بمقدار \( -\frac{3}{8} \) إلى اليسار", move: -3/8, label: "\( -\frac{3}{8} \)"},
-                        {desc: "النتيجة: \( -\frac{5}{8} + (-\frac{3}{8}) = -1 \)", final: -1}
+                        {desc: "الخطوة ٢: نعين العدد الأول (-⅝) على يسار الصفر", move: -5/8, label: "\( -\\frac{5}{8} \)"},
+                        {desc: "الخطوة ٣: من \( -\\frac{5}{8} \) نتحرك بمقدار \( -\\frac{3}{8} \) إلى اليسار", move: -3/8, label: "\( -\\frac{3}{8} \)"},
+                        {desc: "النتيجة: \( -\\frac{5}{8} + (- \\frac{3}{8}) = -1 \)", final: -1}
                     ],
                     min: -1.2,
                     max: 0.2,
@@ -1010,9 +1172,9 @@
                     title: "1¼ - ¾",
                     steps: [
                         {desc: "الخطوة ١: نبدأ من الصفر (0)"},
-                        {desc: "الخطوة ٢: نعين العدد الأول (1¼) على يمين الصفر", move: 1.25, label: "\( 1\frac{1}{4} \)"},
-                        {desc: "الخطوة ٣: من \( 1\frac{1}{4} \) نتحرك بمقدار -¾ إلى اليسار", move: -0.75, label: "\( -\frac{3}{4} \)"},
-                        {desc: "النتيجة: \( 1\frac{1}{4} - \frac{3}{4} = \frac{1}{2} = 0.5 \)", final: 0.5}
+                        {desc: "الخطوة ٢: نعين العدد الأول (1¼) على يمين الصفر", move: 1.25, label: "\( 1\\frac{1}{4} \)"},
+                        {desc: "الخطوة ٣: من \( 1\\frac{1}{4} \) نتحرك بمقدار -¾ إلى اليسار", move: -0.75, label: "\( -\\frac{3}{4} \)"},
+                        {desc: "النتيجة: \( 1\\frac{1}{4} - \\frac{3}{4} = \\frac{1}{2} = 0.5 \)", final: 0.5}
                     ],
                     min: 0,
                     max: 1.5,
@@ -1022,9 +1184,9 @@
                     title: "-1/2 - 1/8",
                     steps: [
                         {desc: "الخطوة ١: نبدأ من الصفر (0)"},
-                        {desc: "الخطوة ٢: نعين العدد الأول (-½) على يسار الصفر", move: -0.5, label: "\( -\frac{1}{2} \)"},
-                        {desc: "الخطوة ٣: من \( -\frac{1}{2} \) نتحرك بمقدار -⅛ إلى اليسار", move: -1/8, label: "\( -\frac{1}{8} \)"},
-                        {desc: "النتيجة: \( -\frac{1}{2} - \frac{1}{8} = -\frac{5}{8} = -0.625 \)", final: -5/8}
+                        {desc: "الخطوة ٢: نعين العدد الأول (-½) على يسار الصفر", move: -0.5, label: "\( -\\frac{1}{2} \)"},
+                        {desc: "الخطوة ٣: من \( -\\frac{1}{2} \) نتحرك بمقدار -⅛ إلى اليسار", move: -1/8, label: "\( -\\frac{1}{8} \)"},
+                        {desc: "النتيجة: \( -\\frac{1}{2} - \\frac{1}{8} = -\\frac{5}{8} = -0.625 \)", final: -5/8}
                     ],
                     min: -0.7,
                     max: 0.1,
@@ -1057,9 +1219,9 @@
                     if (Math.abs(i - Math.round(i)) < 0.01 ||
                         (currentExample === 2 && Math.abs(i % 0.125) < 0.001) ||
                         (currentExample === 4 && Math.abs(i % 0.125) < 0.001) ||
-                        (currentExample === 3 && Math.abs(i - (1.25)) < 0.01) || // For 1 1/4
-                        (currentExample === 3 && Math.abs(i - (0.75)) < 0.01) ||  // For 3/4
-                        (currentExample === 3 && Math.abs(i - (0.5)) < 0.01)     // For 1/2
+                        (currentExample === 3 && Math.abs(i - (1.25)) < 0.01) ||
+                        (currentExample === 3 && Math.abs(i - (0.75)) < 0.01) ||
+                        (currentExample === 3 && Math.abs(i - (0.5)) < 0.01)
                         ) {
 
                         const tickLabel = document.createElement('div');
@@ -1085,14 +1247,14 @@
                 const fractions = {
                     0.125: "⅛",
                     0.25: "¼",
-                    0.333333: "⅓", // دقة أعلى للثلث
+                    0.333333: "⅓",
                     0.375: "⅜",
                     0.5: "½",
                     0.625: "⅝",
-                    0.666667: "⅔", // دقة أعلى للثلثين
+                    0.666667: "⅔",
                     0.75: "¾",
                     0.875: "⅞",
-                    1.25: "1¼", // 1 1/4
+                    1.25: "1¼",
                     [-0.125]: "-⅛",
                     [-0.25]: "-¼",
                     [-0.333333]: "-⅓",
@@ -1102,13 +1264,13 @@
                     [-0.666667]: "-⅔",
                     [-0.75]: "-¾",
                     [-0.875]: "-⅞",
-                    [-0.083333]: "-¹⁄₁₂" // -1/12
+                    [-0.083333]: "-¹⁄₁₂"
                 };
 
-                // البحث في الكسور الشائعة مع تسامح صغير للخطأ العشري
+                // البحث في الكسور الشائعة
                 for (const [decimalStr, fraction] of Object.entries(fractions)) {
                     const decimal = parseFloat(decimalStr);
-                    if (Math.abs(num - decimal) < 0.001) { // تسامح 0.001
+                    if (Math.abs(num - decimal) < 0.001) {
                         return fraction;
                     }
                 }
@@ -1119,7 +1281,7 @@
 
             // عرض الخطوة الحالية
             function renderStep() {
-                // مسح العناصر السابقة (النقاط، الأسهم، رؤوس الأسهم، تسميات الأسهم)
+                // مسح العناصر السابقة
                 document.querySelectorAll('.point, .arrow, .arrow-head, .arrow-label').forEach(el => {
                     if (el.parentNode === numberLine) {
                         numberLine.removeChild(el);
@@ -1131,42 +1293,42 @@
                 const max = example.max;
                 const width = numberLine.offsetWidth;
 
-                let currentCumulativeValue = 0; // القيمة التراكمية الحالية التي يمثلها السهم
-                let previousPosition = ((0 - min) / (max - min)) * (width * 0.9) + (width * 0.05); // موضع الصفر
+                let currentCumulativeValue = 0;
+                let previousPosition = ((0 - min) / (max - min)) * (width * 0.9) + (width * 0.05);
 
                 // إضافة نقطة البداية (الصفر)
                 const zeroPoint = document.createElement('div');
                 zeroPoint.className = 'point';
-                zeroPoint.style.left = `${previousPosition}px`; // موضع الصفر
+                zeroPoint.style.left = `${previousPosition}px`;
                 const zeroLabel = document.createElement('div');
                 zeroLabel.className = 'point-label';
                 zeroLabel.textContent = "0";
                 zeroPoint.appendChild(zeroLabel);
                 numberLine.appendChild(zeroPoint);
 
-                // عرض جميع الخطوات حتى الخطوة الحالية (currentStep)
+                // عرض جميع الخطوات حتى الخطوة الحالية
                 for (let i = 0; i <= currentStep; i++) {
                     const step = example.steps[i];
 
                     // إذا كانت هذه هي الخطوة الأولى (بعد الصفر) أو الخطوات اللاحقة
                     if (i > 0 && step.move !== undefined) {
-                        const startValue = currentCumulativeValue; // القيمة التي بدأنا منها هذا السهم
-                        currentCumulativeValue += step.move; // القيمة الجديدة بعد الحركة
+                        const startValue = currentCumulativeValue;
+                        currentCumulativeValue += step.move;
 
                         const startPixelPosition = ((startValue - min) / (max - min)) * (width * 0.9) + (width * 0.05);
-                        const endPixelPosition = ((currentCumulativeValue - min) / (max - min)) * (width * 0.9) + (width * 0.05);
+                        const endPixelPosition = ((currentCumulativeValue - min) / (max - min)) * (width * 0.9) + (width * 0.05); // Fixed calculation
 
                         // إضافة السهم
                         const arrow = document.createElement('div');
                         arrow.className = 'arrow';
-                        arrow.style.backgroundColor = step.move > 0 ? '#388e3c' : '#d32f2f'; // أخضر لليمين، أحمر لليسار
+                        arrow.style.backgroundColor = step.move > 0 ? '#388e3c' : '#d32f2f';
 
-                        if (step.move > 0) { // التحرك لليمين
+                        if (step.move > 0) {
                             arrow.style.left = `${startPixelPosition}px`;
                             arrow.style.width = `${endPixelPosition - startPixelPosition}px`;
-                        } else { // التحرك لليسار
-                            arrow.style.left = `${endPixelPosition}px`; // يبدأ من نهاية السهم (الأصغر)
-                            arrow.style.width = `${startPixelPosition - endPixelPosition}px`; // طول السهم
+                        } else {
+                            arrow.style.left = `${endPixelPosition}px`;
+                            arrow.style.width = `${startPixelPosition - endPixelPosition}px`;
                         }
                         numberLine.appendChild(arrow);
 
@@ -1174,9 +1336,9 @@
                         const arrowHead = document.createElement('div');
                         arrowHead.className = 'arrow-head';
                         arrowHead.style.left = `${endPixelPosition}px`;
-                        if (step.move > 0) { // رأس السهم لليمين
+                        if (step.move > 0) {
                             arrowHead.style.borderLeft = '10px solid #388e3c';
-                        } else { // رأس السهم لليسار
+                        } else {
                             arrowHead.style.borderRight = '10px solid #d32f2f';
                         }
                         numberLine.appendChild(arrowHead);
@@ -1185,7 +1347,6 @@
                         const arrowLabel = document.createElement('div');
                         arrowLabel.className = 'arrow-label';
                         arrowLabel.textContent = step.label;
-                        // وضع تسمية السهم في المنتصف
                         arrowLabel.style.left = `${(startPixelPosition + endPixelPosition) / 2}px`;
                         arrowLabel.style.background = step.move > 0 ?
                             'linear-gradient(to bottom, #388e3c, #1b5e20)' :
@@ -1202,13 +1363,11 @@
                         point.appendChild(label);
                         numberLine.appendChild(point);
 
-                    } else if (i === 0) {
-                        // في الخطوة الأولى، صفر هو نقطة البداية، ولا يوجد سهم حركة بعد.
-                        // (هذه الحالة تم التعامل معها بالفعل بإضافة zeroPoint في بداية الدالة)
                     }
                 }
 
-                // تحديث وصف النتيجة بناءً على الخطوة الحالية
+                // تحديث وصف النتيجة
+                const resultDiv = document.getElementById('result');
                 if (currentStep < example.steps.length) {
                     resultDiv.innerHTML = example.steps[currentStep].desc;
                 }
@@ -1233,11 +1392,8 @@
             // تبديل الأمثلة
             exampleBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // إزالة النشط من جميع الأزرار
                     exampleBtns.forEach(b => b.classList.remove('active'));
-                    // إضافة النشط للزر المحدد
                     this.classList.add('active');
-                    // تحديث المثال الحالي
                     currentExample = parseInt(this.dataset.example);
                     currentStep = 0;
                     createNumberLine();
