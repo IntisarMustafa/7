@@ -421,14 +421,7 @@
             transform: translateY(-3px);
             box-shadow: 0 7px 12px rgba(0,0,0,0.25);
         }
-<div class="page-navigation">
-                <button class="nav-btn prev-btn" onclick="navigateTo('u1l4p1.html')">
-                    <i class="fas fa-arrow-right"></i> الصفحة السابقة
-                </button>
-                <button class="nav-btn next-btn" onclick="navigateTo('u1l4p3.html')">
-                    الصفحة التالية <i class="fas fa-arrow-left"></i>
-                </button>
-            </div>
+
         .feedback {
             text-align: center;
             font-size: 1.3rem;
@@ -580,7 +573,7 @@
                     <li>اسحب النقطة الخضراء لتمثيل العدد الثاني (الخط الثاني من النقطة الزرقاء للنقطة الخضراء)</li>
                     <li>النقطة البنفسجية: نقطة الصفر الثابتة</li>
                     <li>الخط الأول: <span style="color: #2196F3;">أزرق</span> (من الصفر للنقطة الأولى)</li>
-                    <li>الخط الثاني: <span style="color: #4CAF50;">أخضر</span> (من النقطة الأولى نتحرك بمقدار العدد الثاني)</li>
+                    <li>الخط الثاني: <span style="color: #4CAF50;">أخضر</span> (من النقطة الأولى للثانية)</li>
                     <li>اكتب الإجابة في الحقل المخصص ثم اضغط على "تحقق"</li>
                     <li>يمكنك استخدام زر "إعادة تعيين" لإعادة المحاولة</li>
                 </ol>
@@ -683,7 +676,7 @@
         </div>
 
         <footer>
-            <p>جمع الأعداد النسبية وطرحها _ الصفحة 2 </p>
+            <p>الصف السابع</p>
         </footer>
     </div>
 
@@ -1162,11 +1155,7 @@
                     feedback.className = "feedback incorrect";
                     return;
                 }
-                <div class="page-navigation">
-                <button class="nav-btn" style="background: linear-gradient(to right, #9c27b0, #7b1fa2);" onclick="navigateTo('u1l4p2.html')">
-                    <i class="fas fa-flag-checkered"></i> زر نهاية الصفحة
-                </button>
-            </div>
+                
                 // التحقق من الإجابة مع هامش خطأ صغير (0.01)
                 const isCorrect = Math.abs(userValue - correctValue) < 0.01;
                 
