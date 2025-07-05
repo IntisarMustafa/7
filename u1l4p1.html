@@ -54,7 +54,6 @@
             margin: 0 auto;
         }
 
-        /* مشهد القناة المائية العميقة */
         .canal-scene-section {
             padding: 30px;
             background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
@@ -187,12 +186,11 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        /* تعديل موقع القناة - رفع 20 بكسل إضافية للأعلى (75px بدلاً من 95px) */
         .canal-container {
             position: absolute;
             bottom: 15%;
             left: 50%;
-            transform: translateX(-50%) translateY(75px); /* تم تعديل هذه القيمة */
+            transform: translateX(-50%) translateY(75px);
             width: 85%;
             height: 350px;
             z-index: 6;
@@ -203,8 +201,7 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            /* تم تغيير لون الخلفية ليطابق لون السماء */
-            background: #B0E2FF; /* تم التغيير من تدرج لوني إلى لون ثابت */
+            background: #B0E2FF;
             border-radius: 20px;
             overflow: hidden;
         }
@@ -250,7 +247,6 @@
             top: 100%;
         }
         
-        /* نباتات مائية */
         .water-plant {
             position: absolute;
             bottom: 0;
@@ -280,7 +276,6 @@
             100% { transform: rotate(5deg); }
         }
         
-        /* طحالب مائية */
         .algae {
             position: absolute;
             bottom: 0;
@@ -331,13 +326,12 @@
             transform: rotate(-20deg);
         }
 
-        /* تعديل موقع الماء - إزاحة 80 بكسل إضافية لأسفل */
         .water {
             position: absolute;
-            bottom: -80px; /* تم التغيير من -75px إلى -80px (إزاحة إضافية 5px لأسفل) */
+            bottom: -80px;
             left: 0;
             width: 100%;
-            height: var(--water-level, 160%); /* استخدام متغير CSS لارتفاع الماء */
+            height: var(--water-level, 160%);
             background: linear-gradient(to top, #0d47a1, #1e88e5, #0d47a1);
             border-radius: 0 0 20px 20px;
             transition: height 2s ease-in-out;
@@ -381,7 +375,7 @@
 
         .water-markers {
             position: absolute;
-            top: -10px; /* تم تعديل هذه القيمة لرفعها 20 بكسل إضافية */
+            top: -10px;
             right: 10px;
             height: calc(100% - 80px);
             display: flex;
@@ -545,7 +539,6 @@
             font-family: 'Times New Roman', Times, serif;
         }
 
-        /* قسم الدرس التفاعلي */
         .lesson-section {
             padding: 30px;
             background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
@@ -713,16 +706,6 @@
             transform: translateY(-50%);
         }
 
-        .arrow-head {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
         .arrow-label {
             position: absolute;
             background: linear-gradient(to bottom, #1976d2, #0d47a1);
@@ -835,7 +818,6 @@
             border-top: 1px solid #455a64;
         }
 
-        /* تنسيقات MathJax */
         .math-expression {
             font-family: 'Times New Roman', Times, serif;
             font-size: 1.8rem;
@@ -847,7 +829,6 @@
             text-align: center;
         }
         
-        /* تنسيقات للأمثلة من اليسار إلى اليمين */
         .ltr-example {
             direction: ltr;
             display: inline-block;
@@ -1083,7 +1064,6 @@
         </div>
 
         <footer>
-            
             <p>الوحدة 1 - جمع الأعداد النسبية وطرحها | الصفحة 1</p>
         </footer>
     </div>
@@ -1096,11 +1076,11 @@
             const showDrop1Btn = document.getElementById('showDrop1');
             const showDrop2Btn = document.getElementById('showDrop2');
 
-            // المستويات المختلفة للماء (تم تعديلها لتناسب الإزاحة الإضافية)
+            // المستويات المختلفة للماء
             const levels = {
                 normal: '160%',     // 0 متر
-                drop1: '100%',      // -2/3 متر (قيمة جديدة)
-                drop2: '90%'        // -7/9 متر (قيمة جديدة)
+                drop1: '100%',      // -2/3 متر
+                drop2: '90%'        // -7/9 متر
             };
 
             // تعيين مستوى الماء الطبيعي
@@ -1142,7 +1122,7 @@
             let currentExample = 1;
             let currentStep = 0;
 
-            // أمثلة
+            // أمثلة محدثة بدعم للرموز الرياضية
             const examples = {
                 1: {
                     title: "-0.4 + 1.2",
@@ -1157,36 +1137,36 @@
                     step: 0.2
                 },
                 2: {
-                    title: "-5/8 + (-3/8)",
+                    title: "-\\(\\frac{5}{8}\\) + \\(-\\frac{3}{8}\\)",
                     steps: [
                         {desc: "الخطوة ١: نبدأ من الصفر (0)"},
-                        {desc: "الخطوة ٢: نعين العدد الأول (-⅝) على يسار الصفر", move: -5/8, label: "\( -\\frac{5}{8} \)"},
-                        {desc: "الخطوة ٣: من \( -\\frac{5}{8} \) نتحرك بمقدار \( -\\frac{3}{8} \) إلى اليسار", move: -3/8, label: "\( -\\frac{3}{8} \)"},
-                        {desc: "النتيجة: \( -\\frac{5}{8} + (- \\frac{3}{8}) = -1 \)", final: -1}
+                        {desc: "الخطوة ٢: نعين العدد الأول \\(-\\frac{5}{8}\\) على يسار الصفر", move: -5/8, label: "\\(-\\frac{5}{8}\\)"},
+                        {desc: "الخطوة ٣: من \\(-\\frac{5}{8}\\) نتحرك بمقدار \\(-\\frac{3}{8}\\) إلى اليسار", move: -3/8, label: "\\(-\\frac{3}{8}\\)"},
+                        {desc: "النتيجة: \\(-\\frac{5}{8} + (-\\frac{3}{8}) = -1\\)", final: -1}
                     ],
                     min: -1.2,
                     max: 0.2,
                     step: 0.125
                 },
                 3: {
-                    title: "1¼ - ¾",
+                    title: "\\(1\\frac{1}{4} - \\frac{3}{4}\\)",
                     steps: [
                         {desc: "الخطوة ١: نبدأ من الصفر (0)"},
-                        {desc: "الخطوة ٢: نعين العدد الأول (1¼) على يمين الصفر", move: 1.25, label: "\( 1\\frac{1}{4} \)"},
-                        {desc: "الخطوة ٣: من \( 1\\frac{1}{4} \) نتحرك بمقدار -¾ إلى اليسار", move: -0.75, label: "\( -\\frac{3}{4} \)"},
-                        {desc: "النتيجة: \( 1\\frac{1}{4} - \\frac{3}{4} = \\frac{1}{2} = 0.5 \)", final: 0.5}
+                        {desc: "الخطوة ٢: نعين العدد الأول \\(1\\frac{1}{4}\\) على يمين الصفر", move: 1.25, label: "\\(1\\frac{1}{4}\\)"},
+                        {desc: "الخطوة ٣: من \\(1\\frac{1}{4}\\) نتحرك بمقدار \\(-\\frac{3}{4}\\) إلى اليسار", move: -0.75, label: "\\(-\\frac{3}{4}\\)"},
+                        {desc: "النتيجة: \\(1\\frac{1}{4} - \\frac{3}{4} = \\frac{1}{2} = 0.5\\)", final: 0.5}
                     ],
                     min: 0,
                     max: 1.5,
                     step: 0.25
                 },
                 4: {
-                    title: "-1/2 - 1/8",
+                    title: "\\(-\\frac{1}{2} - \\frac{1}{8}\\)",
                     steps: [
                         {desc: "الخطوة ١: نبدأ من الصفر (0)"},
-                        {desc: "الخطوة ٢: نعين العدد الأول (-½) على يسار الصفر", move: -0.5, label: "\( -\\frac{1}{2} \)"},
-                        {desc: "الخطوة ٣: من \( -\\frac{1}{2} \) نتحرك بمقدار -⅛ إلى اليسار", move: -1/8, label: "\( -\\frac{1}{8} \)"},
-                        {desc: "النتيجة: \( -\\frac{1}{2} - \\frac{1}{8} = -\\frac{5}{8} = -0.625 \)", final: -5/8}
+                        {desc: "الخطوة ٢: نعين العدد الأول \\(-\\frac{1}{2}\\) على يسار الصفر", move: -0.5, label: "\\(-\\frac{1}{2}\\)"},
+                        {desc: "الخطوة ٣: من \\(-\\frac{1}{2}\\) نتحرك بمقدار \\(-\\frac{1}{8}\\) إلى اليسار", move: -1/8, label: "\\(-\\frac{1}{8}\\)"},
+                        {desc: "النتيجة: \\(-\\frac{1}{2} - \\frac{1}{8} = -\\frac{5}{8} = -0.625\\)", final: -5/8}
                     ],
                     min: -0.7,
                     max: 0.1,
@@ -1227,7 +1207,7 @@
                         const tickLabel = document.createElement('div');
                         tickLabel.className = 'tick-label';
                         tickLabel.style.left = `${position}px`;
-                        tickLabel.textContent = formatNumber(i);
+                        tickLabel.innerHTML = `\\(${formatNumber(i)}\\)`; // استخدام innerHTML لرموز الرياضيات
                         numberLine.appendChild(tickLabel);
 
                         // جعل التقسيم أطول قليلاً
@@ -1239,32 +1219,32 @@
                 }
             }
 
-            // تنسيق الأرقام للعرض
+            // تنسيق الأرقام للعرض بصيغة رياضية
             function formatNumber(num) {
                 if (Math.abs(num) < 0.0001) return "0";
-
-                // تحديد إذا كان الرقم كسراً بسيطاً
+                
+                // تحديد الكسور الشائعة
                 const fractions = {
-                    0.125: "⅛",
-                    0.25: "¼",
-                    0.333333: "⅓",
-                    0.375: "⅜",
-                    0.5: "½",
-                    0.625: "⅝",
-                    0.666667: "⅔",
-                    0.75: "¾",
-                    0.875: "⅞",
-                    1.25: "1¼",
-                    [-0.125]: "-⅛",
-                    [-0.25]: "-¼",
-                    [-0.333333]: "-⅓",
-                    [-0.375]: "-⅜",
-                    [-0.5]: "-½",
-                    [-0.625]: "-⅝",
-                    [-0.666667]: "-⅔",
-                    [-0.75]: "-¾",
-                    [-0.875]: "-⅞",
-                    [-0.083333]: "-¹⁄₁₂"
+                    0.125: "\\frac{1}{8}",
+                    0.25: "\\frac{1}{4}",
+                    0.333333: "\\frac{1}{3}",
+                    0.375: "\\frac{3}{8}",
+                    0.5: "\\frac{1}{2}",
+                    0.625: "\\frac{5}{8}",
+                    0.666667: "\\frac{2}{3}",
+                    0.75: "\\frac{3}{4}",
+                    0.875: "\\frac{7}{8}",
+                    1.25: "1\\frac{1}{4}",
+                    [-0.125]: "-\\frac{1}{8}",
+                    [-0.25]: "-\\frac{1}{4}",
+                    [-0.333333]: "-\\frac{1}{3}",
+                    [-0.375]: "-\\frac{3}{8}",
+                    [-0.5]: "-\\frac{1}{2}",
+                    [-0.625]: "-\\frac{5}{8}",
+                    [-0.666667]: "-\\frac{2}{3}",
+                    [-0.75]: "-\\frac{3}{4}",
+                    [-0.875]: "-\\frac{7}{8}",
+                    [-0.083333]: "-\\frac{1}{12}"
                 };
 
                 // البحث في الكسور الشائعة
@@ -1302,7 +1282,7 @@
                 zeroPoint.style.left = `${previousPosition}px`;
                 const zeroLabel = document.createElement('div');
                 zeroLabel.className = 'point-label';
-                zeroLabel.textContent = "0";
+                zeroLabel.innerHTML = "0";
                 zeroPoint.appendChild(zeroLabel);
                 numberLine.appendChild(zeroPoint);
 
@@ -1316,7 +1296,7 @@
                         currentCumulativeValue += step.move;
 
                         const startPixelPosition = ((startValue - min) / (max - min)) * (width * 0.9) + (width * 0.05);
-                        const endPixelPosition = ((currentCumulativeValue - min) / (max - min)) * (width * 0.9) + (width * 0.05); // Fixed calculation
+                        const endPixelPosition = ((currentCumulativeValue - min) / (max - min)) * (width * 0.9) + (width * 0.05);
 
                         // إضافة السهم
                         const arrow = document.createElement('div');
@@ -1343,10 +1323,10 @@
                         }
                         numberLine.appendChild(arrowHead);
 
-                        // إضافة تسمية السهم
+                        // إضافة تسمية السهم بصيغة رياضية
                         const arrowLabel = document.createElement('div');
                         arrowLabel.className = 'arrow-label';
-                        arrowLabel.textContent = step.label;
+                        arrowLabel.innerHTML = step.label;
                         arrowLabel.style.left = `${(startPixelPosition + endPixelPosition) / 2}px`;
                         arrowLabel.style.background = step.move > 0 ?
                             'linear-gradient(to bottom, #388e3c, #1b5e20)' :
@@ -1359,10 +1339,9 @@
                         point.style.left = `${endPixelPosition}px`;
                         const label = document.createElement('div');
                         label.className = 'point-label';
-                        label.textContent = formatNumber(currentCumulativeValue);
+                        label.innerHTML = `\\(${formatNumber(currentCumulativeValue)}\\)`;
                         point.appendChild(label);
                         numberLine.appendChild(point);
-
                     }
                 }
 
@@ -1387,6 +1366,9 @@
                         </div>
                     `;
                 }
+                
+                // تحديث MathJax بعد إضافة العناصر الرياضية
+                MathJax.typesetPromise();
             }
 
             // تبديل الأمثلة
