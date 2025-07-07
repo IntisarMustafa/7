@@ -45,7 +45,7 @@
             background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ee 100%);
             padding: 20px;
             min-height: 100vh;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
         }
         
         .container {
@@ -65,7 +65,7 @@
         }
         
         h1 {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
@@ -77,7 +77,7 @@
         
         .page-title {
             color: #1a5d38;
-            font-size: 2.2rem;
+            font-size: 2rem;
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 3px solid #e0f0e0;
@@ -89,7 +89,7 @@
         
         .page-title i {
             margin-left: 15px;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
         }
         
         .explore-box {
@@ -120,7 +120,7 @@
             margin-top: 20px;
             font-style: italic;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             border: 2px dashed #4caf50;
         }
         
@@ -145,7 +145,7 @@
         .term {
             font-weight: bold;
             color: #e65100;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
         }
         
         .example-box {
@@ -194,7 +194,7 @@
             width: 180px;
             font-weight: bold;
             color: #0d47a1;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
         }
         
         /* تصميم مربعات إدخال الكسر */
@@ -218,7 +218,7 @@
             padding: 12px;
             border: 2px solid #bbdefb;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 1.1rem;
             text-align: center;
             transition: all 0.3s;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -288,7 +288,7 @@
             padding: 14px 30px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 1.1rem;
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -321,7 +321,7 @@
             margin: 20px 0;
             border-radius: 12px;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 1.15rem;
             text-align: center;
         }
         
@@ -362,7 +362,7 @@
             text-decoration: none;
             border-radius: 10px;
             transition: all 0.3s;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             display: flex;
@@ -375,16 +375,39 @@
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
         
-        /* تحسين حجم الكسور الرياضية بشكل أكبر */
+        /* تحسين حجم الكسور الرياضية بشكل متناسق */
         .math-text {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             vertical-align: middle;
             margin: 0 8px;
         }
         
+        /* تحسين النصوص المظللة باللون الأصفر - تم التعديل هنا */
+        .highlight {
+            background-color: #fffde7;
+            padding: 4px 8px; /* تقليل المساحة الداخلية */
+            border-radius: 6px; /* تعديل الزوايا */
+            display: inline-block;
+            margin: 5px 0;
+            border: 2px solid #ffd54f; /* تقليل سماكة الحدود */
+            box-shadow: 0 2px 5px rgba(255, 213, 79, 0.2); /* تعديل الظل */
+            font-weight: 600;
+            color: #333;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+        }
+        
+        .highlight:hover {
+            background-color: #fff9c4;
+            box-shadow: 0 3px 8px rgba(255, 213, 79, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        /* تعديل حجم الكسور الرياضية في النصوص المظللة */
         .large-fraction {
-            font-size: 2.2rem;
-            margin: 0 10px;
+            font-size: 1.25rem; /* تقليل حجم الكسور الرياضية */
+            vertical-align: middle;
+            padding: 2px 4px; /* تقليل المساحة الداخلية */
         }
         
         .math-container {
@@ -396,25 +419,14 @@
             box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
         }
         
-        .highlight {
-            background-color: #fffde7;
-            padding: 5px 15px;
-            border-radius: 8px;
-            display: inline-block;
-            margin: 10px 0;
-            border: 2px solid #ffd54f;
-        }
-        
-        /* زيادة حجم الخط في الأمثلة الرياضية */
         .example-box p, .explore-box p, .terms-box p, .lesson-idea p {
-            font-size: 1.3rem;
+            font-size: 1.15rem;
             margin: 15px 0;
             line-height: 1.8;
         }
         
-        /* زيادة حجم خط العناوين الفرعية */
         .explore-box h3, .lesson-idea h3, .terms-box h3 {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             margin-bottom: 20px;
             color: #1a5d38;
             text-align: center;
@@ -423,7 +435,7 @@
         }
         
         .interactive-section h4 {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             margin: 25px 0 15px;
             color: #1a5d38;
             background-color: #e8f5e9;
@@ -442,7 +454,7 @@
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             
             .input-group {
@@ -453,6 +465,7 @@
             .input-group label {
                 margin-bottom: 15px;
                 width: 100%;
+                font-size: 1.15rem;
             }
             
             .fraction-container {
@@ -463,6 +476,8 @@
             .btn {
                 width: 100%;
                 margin: 5px 0;
+                font-size: 1.05rem;
+                padding: 12px 20px;
             }
             
             .btn-group {
@@ -472,14 +487,24 @@
             .nav-btn {
                 width: 100%;
                 margin-bottom: 10px;
+                font-size: 1.05rem;
+                padding: 12px 20px;
             }
             
             .math-text, .large-fraction {
-                font-size: 1.6rem;
+                font-size: 1.4rem;
             }
             
             .page-title {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
+            }
+            
+            .explore-box h3, .lesson-idea h3, .terms-box h3 {
+                font-size: 1.5rem;
+            }
+            
+            .example-title {
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -488,7 +513,7 @@
     <div class="container">
         <header>
             <h1>العدد النسبي</h1>
-            <p style="font-size: 1.4rem;">درس تفاعلي في الرياضيات - الصفحة الأولى</p>
+            <p style="font-size: 1.3rem;">درس تفاعلي في الرياضيات - الصفحة الأولى</p>
         </header>
         
         <div class="page">
@@ -529,10 +554,12 @@
                     
                     <h4>2. \( 65\% \)</h4>
                     <div class="math-container">
-                        <p>الحل: <span class="math-text">\( 65\% = 0.65 = \frac{65}{100} = \)</span> <span class="highlight large-fraction">\( \frac{13}{20} \)</span></p>
+                        <p>الحل:<p> 
+                         <p>   <span class="math-text">\( 65\% = 0.65 = \frac{65}{100} = \)</span></p>
+                        </p> <span class="highlight large-fraction">\( \frac{13}{20} \)</span></p>
                     </div>
                    
-                    <h4>3. <span class="math-text large-fraction">\( 1\frac{2}{5} \)</span> <span style="font-size: 1.4rem">(واحد واثنان على خمسة)</span>:</h4>
+                    <h4>3. <span class="math-text large-fraction">\( 1\frac{2}{5} \)</span> <span style="font-size: 1.25rem">(واحد واثنان على خمسة)</span>:</h4>
                     <div class="input-group">
                         <label for="ex1-3">أدخل الكسر:</label>
                         <div class="fraction-container">
