@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جمع وطرح الأعداد النسبية - الصفحة التفاعلية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #0d47a1, #1976d2);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #1976d2;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0d47a1, transparent 70%);
+            border-radius: 0 0 0 10px;
+        }
+        
+        .section-title {
+            color: #0d47a1;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 1.5rem;
+            position: relative;
+            padding-right: 15px;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, #0d47a1, transparent);
+        }
+        
+        .definition {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-right: 4px solid #1976d2;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .definition::before {
+            content: "معلومة";
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            background: #1976d2;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .example {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .example-title {
+            color: #d32f2f;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .example-title i {
+            background: #d32f2f;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .math-expression {
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-family: 'Cambria Math', serif;
+            border: 1px dashed #1976d2;
+            direction: ltr;
+            overflow-x: auto;
+        }
+        
+        /* تصميم جديد ومحسّن لخطوات الأمثلة */
+        .steps {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-right: 3px solid #64b5f6;
+            direction: ltr;
+            position: relative;
+        }
+        
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-left: 3px solid #1976d2;
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 3px solid #d32f2f;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #0d47a1;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .step-content {
+            display: inline-block;
+            width: calc(100% - 40px);
+            vertical-align: top;
+        }
+        
+        .step-explanation {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e3f2fd;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            display: none;
+        }
+        
+        .show-explanation {
+            display: block;
+        }
+        
+        .toggle-explanation {
+            margin-top: 10px;
+            background: #0d47a1;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .toggle-explanation:hover {
+            background: #1565c0;
+        }
+        
+        .exercise {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .exercise-title {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .exercise-title i {
+            background: #2e7d32;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .problem {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-left: 3px solid #4caf50;
+        }
+        
+        .problem p {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1b5e20;
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .input-group label {
+            font-weight: bold;
+            min-width: 70px;
+        }
+        
+        .input-group input {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            width: 140px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-group input:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+            outline: none;
+        }
+        
+        button {
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+        }
+        
+        button:hover {
+            background-color: #0d47a1;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-check {
+            background-color: #2e7d32;
+        }
+        
+        .btn-check:hover {
+            background-color: #1b5e20;
+        }
+        
+        .btn-reset {
+            background-color: #d32f2f;
+        }
+        
+        .btn-reset:hover {
+            background-color: #b71c1c;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            animation: fadeIn 0.5s ease;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #a5d6a7;
+        }
+        
+        .incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 2px solid #ef9a9a;
+        }
+        
+        .life-example {
+            background: linear-gradient(to right, #bbdefb, #e3f2fd);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #90caf9;
+            box-shadow: inset 0 0 20px rgba(144, 202, 249, 0.3);
+        }
+        
+        .life-example::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #0d47a1, #1976d2, #0d47a1);
+        }
+        
+        .ocean-graphic {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 25px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .above-water, .below-water {
+            width: 100%;
+            text-align: center;
+            padding: 25px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .above-water {
+            background: linear-gradient(to bottom, #64b5f6, #42a5f5);
+        }
+        
+        .below-water {
+            background: linear-gradient(to top, #0d47a1, #1565c0);
+        }
+        
+        .diver {
+            font-size: 2.5rem;
+            margin: 15px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding: 0 20px;
+            gap: 20px;
+        }
+        
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(to right, #0d47a1, #1976d2);
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .nav-btn i {
+            margin: 0 8px;
+        }
+        
+        .prev-btn {
+            background: linear-gradient(to right, #d32f2f, #f57c00);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to right, #0d47a1, #1976d2);
+            color: white;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        /* تحسينات خاصة بالشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+            
+            .example-title, .exercise-title {
+                font-size: 1.1rem;
+            }
+            
+            .math-expression {
+                font-size: 1.2rem;
+                padding: 10px;
+            }
+            
+            .step {
+                padding: 12px;
+                margin: 10px 0;
+            }
+            
+            .step-number {
+                width: 25px;
+                height: 25px;
+                line-height: 25px;
+                font-size: 0.9rem;
+            }
+            
+            .step-content {
+                font-size: 0.95rem;
+            }
+            
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 0.95rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .input-group input {
+                width: 100%;
+            }
+            
+            .problem {
+                padding: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 10px;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-btn {
+                justify-content: center;
+            }
+            
+            .math-expression {
+                font-size: 1.1rem;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>جمع وطرح الأعداد النسبية</h1>
+            <div class="subtitle">الصفحة التفاعلية - الدرس الرابع</div>
+        </header>
+        
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">النظير الجمعي</h2>
+                <div class="definition">
+                    <p>عند جمع أي عدد نسبي إلى معكوسه يكون الناتج صفرًا، لذلك يُسمى كل منهما <strong>نظيرًا جمعيًا</strong> (Additive Inverse). هذه الخاصية أساسية في تبسيط العمليات الحسابية المعقدة.</p>
+                </div>
+                
+                <div class="example">
+                    <h3 class="example-title"><i class="fas fa-lightbulb"></i>مثال 4: إيجاد الناتج باستخدام النظير الجمعي</h3>
+                    
+                    <div class="problem">
+                        <div class="math-expression">1. \( 2.4 + (-\frac{12}{5}) \)</div>
+                        <div class="steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">\( 2.4 + (-\frac{12}{5}) = 2.4 + (-2.4) \)</span>
+                                <button class="toggle-explanation" onclick="toggleExplanation('explain1')">شرح</button>
+                                <div class="step-explanation" id="explain1">
+                                    <strong>التحويل:</strong> نلاحظ أن \( -\frac{12}{5} = -2.4 \)
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">\( = 0 \)</span>
+                                <button class="toggle-explanation" onclick="toggleExplanation('explain2')">شرح</button>
+                                <div class="step-explanation" id="explain2">
+                                    <strong>السبب:</strong> لأن 2.4 و -2.4 هما نظيران جمعيان
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="problem">
+                        <div class="math-expression">2. \( 5 \frac{1}{2} + 3 \frac{1}{4} + (-\frac{11}{2}) \)</div>
+                        <div class="steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">\( 5 \frac{1}{2} + 3 \frac{1}{4} + (-\frac{11}{2}) = \frac{11}{2} + \frac{13}{4} + (-\frac{11}{2}) \)</span>
+                                <button class="toggle-explanation" onclick="toggleExplanation('explain3')">شرح</button>
+                                <div class="step-explanation" id="explain3">
+                                    <strong>التحويل:</strong> تحويل الأعداد الكسرية إلى كسور غير حقيقية
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">\( = \frac{11}{2} + (-\frac{11}{2}) + \frac{13}{4} \)</span>
+                                <button class="toggle-explanation" onclick="toggleExplanation('explain4')">شرح</button>
+                                <div class="step-explanation" id="explain4">
+                                    <strong>الخاصية التبديلية:</strong> إعادة ترتيب الحدود لتسهيل الحل
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">\( = 0 + \frac{13}{4} = \frac{13}{4} = 3.25 \)</span>
+                                <button class="toggle-explanation" onclick="toggleExplanation('explain5')">شرح</button>
+                                <div class="step-explanation" id="explain5">
+                                    <strong>الاستنتاج:</strong> استفدنا من النظير الجمعي لتبسيط العملية
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">أتحقق من فهمي</h2>
+                <div class="exercise">
+                    <h3 class="exercise-title"><i class="fas fa-pencil-alt"></i>تمارين تفاعلية</h3>
+                    
+                    <div class="problem">
+                        <p>3. \( -3.7 + 3.7 \)</p>
+                        <div class="input-group">
+                            <label for="ex3">الناتج:</label>
+                            <input type="text" id="ex3" placeholder="أدخل الإجابة">
+                            <button class="btn-check" onclick="checkAnswer('ex3', '0')">
+                                <i class="fas fa-check"></i> تحقق
+                            </button>
+                        </div>
+                        <div id="result3" class="result">
+                            <i class="fas fa-info-circle"></i> سيظهر الناتج هنا بعد الإجابة
+                        </div>
+                    </div>
+                    
+                    <div class="problem">
+                        <p>4. \( 6 \frac{1}{4} + (-5.2) + (-6.25) \)</p>
+                        <div class="input-group">
+                            <label for="ex4">الناتج:</label>
+                            <input type="text" id="ex4" placeholder="أدخل الإجابة">
+                            <button class="btn-check" onclick="checkAnswer('ex4', '-5.2')">
+                                <i class="fas fa-check"></i> تحقق
+                            </button>
+                        </div>
+                        <div id="result4" class="result">
+                            <i class="fas fa-info-circle"></i> سيظهر الناتج هنا بعد الإجابة
+                        </div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="btn-reset" onclick="resetExercises()">
+                            <i class="fas fa-redo"></i> إعادة تعيين جميع التمارين
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">مثال من الحياة: رعاية بحرية</h2>
+                <div class="life-example">
+                    <p>رصد أيمن من ارتفاع 12.3 متر فوق سطح البحر، وعند ثلاث ساعات، غاص إلى الأسفل 2.8 متر. استعمل الأعداد النسبية لإيجاد الفرق بين موقع غوص أيمن والعمق الذي وصل إليه تحت سطح الماء.</p>
+                    
+                    <div class="ocean-graphic">
+                        <div class="above-water">
+                            فوق سطح البحر: 12.3 متر
+                            <div class="diver">👨‍🔬</div>
+                        </div>
+                        <div class="below-water">
+                            تحت سطح البحر: 2.8 متر
+                            <div class="diver">🤿</div>
+                        </div>
+                    </div>
+                    
+                    <div class="math-expression">الفرق بين الارتفاعين</div>
+                    <div class="math-expression">
+                        \( 12.3 - (-2.8) = 12.3 + 2.8 = 15.1 \)
+                    </div>
+                    <p>أي أن الفرق بين موقع غوص أيمن والعمق الذي وصل إليه تحت سطح الماء هو 15.1 متر.</p>
+                    
+                    <div class="definition">
+                        <p><strong>تفسير رياضي:</strong> يمكن اعتبار الارتفاع فوق سطح البحر قيمة موجبة (+)، والعمق تحت سطح البحر قيمة سالبة (-).</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- أزرار التنقل بين الصفحات -->
+            <div class="navigation">
+                <a href="u1l4p3.html" class="nav-btn prev-btn">
+                    <i class="fas fa-arrow-right"></i> السابق
+                </a>
+                <a href="u1l4p5.html" class="nav-btn">
+                    التالي <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>الصفحة التفاعلية لدرس جمع وطرح الأعداد النسبية | تم التصميم باستخدام HTML, CSS, JavaScript</p>
+            <p>حقوق النشر © 2023 - جميع الحقوق محفوظة</p>
+        </footer>
+    </div>
+    
+    <script>
+        // وظائف للتمارين التفاعلية
+        function checkAnswer(inputId, correctAnswer) {
+            const input = document.getElementById(inputId);
+            const resultDiv = document.getElementById(`result${inputId.slice(2)}`);
+            const userAnswer = input.value.trim();
+            
+            if (userAnswer === correctAnswer) {
+                resultDiv.innerHTML = `<i class="fas fa-check-circle"></i> إجابة صحيحة! أحسنت!`;
+                resultDiv.className = 'result correct';
+                resultDiv.style.display = 'flex';
+                
+                // إضافة تأثير للاحتفال
+                input.style.borderColor = '#2e7d32';
+                input.style.boxShadow = '0 0 0 3px rgba(46, 125, 50, 0.3)';
+                
+                setTimeout(() => {
+                    input.style.borderColor = '#ddd';
+                    input.style.boxShadow = 'inset 0 1px 3px rgba(0, 0, 0, 0.1)';
+                }, 2000);
+            } else {
+                resultDiv.innerHTML = `<i class="fas fa-times-circle"></i> الإجابة غير صحيحة. الجواب الصحيح هو ${correctAnswer}. حاول مرة أخرى!`;
+                resultDiv.className = 'result incorrect';
+                resultDiv.style.display = 'flex';
+                
+                // إضافة تأثير اهتزاز للإجابة الخاطئة
+                input.style.animation = 'shake 0.5s';
+                input.style.borderColor = '#c62828';
+                input.style.boxShadow = '0 0 0 3px rgba(198, 40, 40, 0.3)';
+                
+                setTimeout(() => {
+                    input.style.animation = '';
+                    input.style.borderColor = '#ddd';
+                    input.style.boxShadow = 'inset 0 1px 3px rgba(0, 0, 0, 0.1)';
+                }, 500);
+            }
+        }
+        
+        function resetExercises() {
+            // إعادة تعيين الحقول
+            document.getElementById('ex3').value = '';
+            document.getElementById('ex4').value = '';
+            
+            // إعادة تعيين الأنماط
+            document.getElementById('ex3').style.borderColor = '#ddd';
+            document.getElementById('ex4').style.borderColor = '#ddd';
+            document.getElementById('ex3').style.boxShadow = 'inset 0 1px 3px rgba(0, 0, 0, 0.1)';
+            document.getElementById('ex4').style.boxShadow = 'inset 0 1px 3px rgba(0, 0, 0, 0.1)';
+            
+            // إعادة تعيين النتائج
+            document.getElementById('result3').innerHTML = '<i class="fas fa-info-circle"></i> سيظهر الناتج هنا بعد الإجابة';
+            document.getElementById('result3').className = 'result';
+            document.getElementById('result4').innerHTML = '<i class="fas fa-info-circle"></i> سيظهر الناتج هنا بعد الإجابة';
+            document.getElementById('result4').className = 'result';
+            
+            // إظهار إشعار
+            const notification = document.createElement('div');
+            notification.innerHTML = '<i class="fas fa-sync-alt"></i> تم إعادة تعيين جميع الحلول';
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = '#1976d2';
+            notification.style.color = 'white';
+            notification.style.padding = '15px 25px';
+            notification.style.borderRadius = '8px';
+            notification.style.zIndex = '1000';
+            notification.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+            notification.style.animation = 'fadeIn 0.5s, fadeOut 0.5s 2.5s';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+        
+        // وظيفة لإظهار/إخفاء الشرح
+        function toggleExplanation(id) {
+            const explanation = document.getElementById(id);
+            explanation.classList.toggle('show-explanation');
+        }
+        
+        // تهيئة MathJax لعرض المعادلات الرياضية
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            startup: {
+                typeset: false
+            }
+        };
+        
+        // تحميل مكتبة MathJax
+        (function() {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+            script.async = true;
+            document.head.appendChild(script);
+            
+            script.onload = () => {
+                MathJax.typesetPromise();
+            };
+        })();
+        
+        // إضافة تأثيرات الرسوم المتحركة
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(20px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
