@@ -16,11 +16,12 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
+            line-height: 1.7; /* زيادة ارتفاع السطر */
             color: #333;
             background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
             padding: 20px;
             min-height: 100vh;
+            font-size: 20px; /* زيادة حجم الخط الأساسي */
         }
         
         .container {
@@ -40,8 +41,8 @@
         }
         
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 3rem; /* زيادة حجم العنوان الرئيسي */
+            margin-bottom: 15px;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
         }
         
@@ -52,9 +53,9 @@
         
         .page-title {
             color: #2c7744;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            font-size: 2.2rem; /* زيادة حجم عنوان الصفحة */
+            margin-bottom: 25px;
+            padding-bottom: 15px;
             border-bottom: 2px solid #e0e0e0;
             text-align: center;
         }
@@ -62,19 +63,20 @@
         .example-box {
             background-color: #f5f5f5;
             border-radius: 8px;
-            padding: 20px;
-            margin: 25px 0;
+            padding: 25px; /* زيادة المساحة الداخلية */
+            margin: 30px 0; /* زيادة الهامش */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            font-size: 1.1em; /* زيادة حجم النص */
         }
         
         .example-title {
             color: #2196f3;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            padding: 10px;
+            font-size: 1.6rem; /* زيادة حجم العنوان التوضيحي */
+            padding: 15px; /* زيادة المساحة الداخلية */
             background: linear-gradient(to right, #e3f2fd, #bbdefb);
             border-radius: 8px;
         }
@@ -83,18 +85,19 @@
             background-color: #edf7ff;
             border: 1px solid #bbdefb;
             border-radius: 10px;
-            padding: 25px;
-            margin: 30px 0;
+            padding: 30px; /* زيادة المساحة الداخلية */
+            margin: 35px 0; /* زيادة الهامش */
+            font-size: 1.1em; /* زيادة حجم النص */
         }
         
         .exercise-title {
             color: #1976d2;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            padding: 10px;
+            font-size: 1.6rem; /* زيادة حجم عنوان التمرين */
+            padding: 15px; /* زيادة المساحة الداخلية */
             background: linear-gradient(to right, #e8f5e9, #c8e6c9);
             border-radius: 8px;
         }
@@ -102,10 +105,10 @@
         /* خط الأعداد الثابت للمثال - تصميم محسن */
         .static-number-line-container {
             position: relative;
-            height: 140px;
-            margin: 30px 0;
+            height: 150px; /* زيادة الارتفاع */
+            margin: 35px 0; /* زيادة الهامش */
             border-radius: 10px;
-            padding: 20px;
+            padding: 25px; /* زيادة المساحة الداخلية */
             background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
             overflow: hidden;
@@ -113,62 +116,62 @@
         
         .static-number-line {
             position: absolute;
-            top: 70px;
-            left: 30px;
-            right: 30px;
-            height: 4px;
+            top: 75px; /* تعديل الموضع */
+            left: 35px; /* زيادة المساحة */
+            right: 35px; /* زيادة المساحة */
+            height: 5px; /* زيادة السُمك */
             background: linear-gradient(to right, #1a237e, #283593, #3949ab, #5c6bc0);
-            border-radius: 2px;
+            border-radius: 3px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             z-index: 1;
         }
         
         .static-tick {
             position: absolute;
-            top: 65px;
-            width: 1px;
-            height: 8px;
+            top: 70px; /* تعديل الموضع */
+            width: 1.5px; /* زيادة السُمك */
+            height: 10px; /* زيادة الارتفاع */
             background-color: #546e7a;
             z-index: 2;
         }
         
         .static-major-tick {
-            height: 20px;
+            height: 25px; /* زيادة الارتفاع */
             background-color: #263238;
-            width: 3px;
+            width: 3.5px; /* زيادة السُمك */
         }
         
         .static-tick-label {
             position: absolute;
-            top: 90px;
+            top: 95px; /* تعديل الموضع */
             left: 0;
-            font-size: 16px;
+            font-size: 18px; /* زيادة حجم الخط */
             font-weight: bold;
             color: #263238;
             z-index: 2;
             transform: translateX(-50%);
             background: rgba(255,255,255,0.8);
-            padding: 2px 8px;
-            border-radius: 4px;
+            padding: 3px 10px; /* زيادة المساحة الداخلية */
+            border-radius: 5px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .static-point {
             position: absolute;
-            top: 60px;
-            width: 32px;
-            height: 32px;
+            top: 65px; /* تعديل الموضع */
+            width: 36px; /* زيادة الحجم */
+            height: 36px; /* زيادة الحجم */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 20px; /* زيادة حجم الخط */
             transform: translateX(-50%);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             z-index: 10;
-            border: 2px solid white;
+            border: 3px solid white; /* زيادة سمك الحدود */
             transition: transform 0.3s ease;
         }
         
@@ -179,36 +182,36 @@
         
         .point-value-label {
             position: absolute;
-            top: 35px;
+            top: 40px; /* تعديل الموضع */
             left: 50%;
             transform: translateX(-50%);
-            font-size: 16px;
+            font-size: 18px; /* زيادة حجم الخط */
             font-weight: bold;
             z-index: 11;
-            padding: 4px 10px;
-            border-radius: 20px;
+            padding: 5px 12px; /* زيادة المساحة الداخلية */
+            border-radius: 25px;
             background: rgba(255, 255, 255, 0.9);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
             white-space: nowrap;
-            min-width: 50px;
+            min-width: 60px; /* زيادة العرض الأدنى */
             text-align: center;
             font-family: 'Courier New', monospace;
         }
         
         .fraction-value-label {
             position: absolute;
-            top: 35px;
+            top: 40px; /* تعديل الموضع */
             left: 50%;
             transform: translateX(-50%);
-            font-size: 16px;
+            font-size: 18px; /* زيادة حجم الخط */
             font-weight: bold;
             z-index: 11;
-            padding: 4px 10px;
-            border-radius: 20px;
+            padding: 5px 12px; /* زيادة المساحة الداخلية */
+            border-radius: 25px;
             background: rgba(255, 255, 255, 0.9);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
             white-space: nowrap;
-            min-width: 50px;
+            min-width: 60px; /* زيادة العرض الأدنى */
             text-align: center;
             font-family: 'Courier New', monospace;
             color: #c2185b;
@@ -223,34 +226,34 @@
         }
         
         .arrow-right {
-            right: 15px;
-            top: 68px;
-            border-width: 10px 0 10px 15px;
+            right: 20px; /* تعديل الموضع */
+            top: 73px; /* تعديل الموضع */
+            border-width: 12px 0 12px 18px; /* زيادة الحجم */
             border-color: transparent transparent transparent #1a237e;
         }
         
         .arrow-left {
-            left: 15px;
-            top: 68px;
-            border-width: 10px 15px 10px 0;
+            left: 20px; /* تعديل الموضع */
+            top: 73px; /* تعديل الموضع */
+            border-width: 12px 18px 12px 0; /* زيادة الحجم */
             border-color: transparent #1a237e transparent transparent;
         }
         
         .arrow-label {
             position: absolute;
-            font-size: 14px;
+            font-size: 16px; /* زيادة حجم الخط */
             font-weight: bold;
             color: #1a237e;
         }
         
         .positive-direction {
-            right: 10px;
-            top: 50px;
+            right: 15px; /* تعديل الموضع */
+            top: 55px; /* تعديل الموضع */
         }
         
         .negative-direction {
-            left: 10px;
-            top: 50px;
+            left: 15px; /* تعديل الموضع */
+            top: 55px; /* تعديل الموضع */
         }
         
         /* خط الأعداد التفاعلي للتمرين - أزرق */
@@ -258,8 +261,8 @@
             width: 100%;
             overflow-x: auto;
             overflow-y: hidden;
-            padding: 10px 0;
-            margin: 20px 0;
+            padding: 15px 0; /* زيادة المساحة الداخلية */
+            margin: 25px 0; /* زيادة الهامش */
             -webkit-overflow-scrolling: touch;
             background-color: #fff;
             border-radius: 8px;
@@ -268,42 +271,42 @@
         
         .number-line-container {
             position: relative;
-            height: 120px;
-            min-width: 800px;
+            height: 130px; /* زيادة الارتفاع */
+            min-width: 850px; /* زيادة العرض الأدنى */
             margin: 0 auto;
         }
         
         .number-line {
             position: absolute;
-            top: 60px;
-            left: 25px;
-            right: 25px;
-            height: 4px;
+            top: 65px; /* تعديل الموضع */
+            left: 30px; /* زيادة المساحة */
+            right: 30px; /* زيادة المساحة */
+            height: 5px; /* زيادة السُمك */
             background: linear-gradient(to right, #3498db, #2c3e50);
             z-index: 1;
-            border-radius: 2px;
+            border-radius: 3px;
         }
         
         .tick {
             position: absolute;
-            top: 55px;
-            width: 2px;
-            height: 10px;
+            top: 60px; /* تعديل الموضع */
+            width: 2.5px; /* زيادة السُمك */
+            height: 12px; /* زيادة الارتفاع */
             background-color: #3498db;
             z-index: 2;
         }
         
         .major-tick {
-            height: 15px;
+            height: 18px; /* زيادة الارتفاع */
             background-color: #2c3e50;
-            width: 3px;
+            width: 3.5px; /* زيادة السُمك */
         }
         
         .tick-label {
             position: absolute;
-            top: 80px;
+            top: 85px; /* تعديل الموضع */
             transform: translateX(-50%);
-            font-size: 14px;
+            font-size: 16px; /* زيادة حجم الخط */
             font-weight: bold;
             color: #2c3e50;
             z-index: 2;
@@ -311,27 +314,27 @@
         
         .draggable-point {
             position: absolute;
-            width: 26px;
-            height: 26px;
+            width: 30px; /* زيادة الحجم */
+            height: 30px; /* زيادة الحجم */
             border-radius: 50%;
-            top: 47px;
+            top: 50px; /* تعديل الموضع */
             cursor: grab;
             transform: translateX(-50%);
             z-index: 10;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s, box-shadow 0.2s;
-            border: 2px solid #fff;
+            border: 3px solid #fff; /* زيادة سمك الحدود */
         }
         
         .point-label {
             position: absolute;
-            top: 25px;
+            top: 30px; /* تعديل الموضع */
             transform: translateX(-50%);
-            font-size: 16px;
+            font-size: 18px; /* زيادة حجم الخط */
             font-weight: bold;
             z-index: 11;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 10px; /* زيادة المساحة الداخلية */
+            border-radius: 5px;
             background: rgba(255, 255, 255, 0.9);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             white-space: nowrap;
@@ -346,19 +349,21 @@
         .table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 25px 0; /* زيادة الهامش */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 1.1em; /* زيادة حجم الخط */
         }
         
         .table th, .table td {
-            border: 1px solid #ddd;
-            padding: 12px;
+            border: 2px solid #ddd; /* زيادة سمك الحدود */
+            padding: 15px; /* زيادة المساحة الداخلية */
             text-align: center;
         }
         
         .table th {
             background-color: #2c7744;
             color: white;
+            font-size: 1.2em; /* زيادة حجم الخط */
         }
         
         .table tr:nth-child(even) {
@@ -372,16 +377,17 @@
         .interactive-section {
             background: linear-gradient(to bottom, #ffffff, #f0f9ff);
             border-radius: 10px;
-            padding: 25px;
-            margin: 30px 0;
+            padding: 30px; /* زيادة المساحة الداخلية */
+            margin: 35px 0; /* زيادة الهامش */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            font-size: 1.1em; /* زيادة حجم الخط */
         }
         
         .controls {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 20px; /* زيادة المسافة بين الأزرار */
+            margin-top: 20px; /* زيادة الهامش العلوي */
             flex-wrap: wrap;
         }
         
@@ -389,21 +395,22 @@
             background: linear-gradient(to right, #4caf50, #2c7744);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 15px 30px; /* زيادة المساحة الداخلية */
+            border-radius: 10px; /* زيادة نصف القطر */
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px; /* زيادة حجم الخط */
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 180px;
+            min-width: 200px; /* زيادة العرض الأدنى */
         }
         
         .btn i {
-            margin-left: 8px;
+            margin-left: 10px; /* زيادة المسافة بين الأيقونة والنص */
+            font-size: 1.2em; /* زيادة حجم الأيقونة */
         }
         
         .btn:hover {
@@ -421,13 +428,13 @@
         }
         
         .feedback {
-            padding: 12px;
-            margin: 15px 0;
+            padding: 15px; /* زيادة المساحة الداخلية */
+            margin: 20px 0; /* زيادة الهامش */
             border-radius: 12px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 18px; /* زيادة حجم الخط */
             text-align: center;
-            min-height: 50px;
+            min-height: 60px; /* زيادة الارتفاع الأدنى */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -446,9 +453,9 @@
         }
         
         .result {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            padding: 12px;
+            margin-top: 25px; /* زيادة الهامش العلوي */
+            font-size: 1.3rem; /* زيادة حجم الخط */
+            padding: 15px; /* زيادة المساحة الداخلية */
             border-radius: 10px;
             background: rgba(30, 30, 60, 0.1);
             text-align: center;
@@ -456,33 +463,34 @@
         }
         
         .counter {
-            margin-top: 8px;
-            font-size: 1.3rem;
+            margin-top: 10px; /* زيادة الهامش العلوي */
+            font-size: 1.4rem; /* زيادة حجم الخط */
             color: #1a5d38;
         }
         
         footer {
             text-align: center;
-            padding: 20px;
+            padding: 25px; /* زيادة المساحة الداخلية */
             background-color: #f1f1f1;
             color: #666;
-            font-size: 0.9rem;
+            font-size: 1.1rem; /* زيادة حجم الخط */
         }
         
         .navigation {
             display: flex;
             justify-content: space-between;
-            padding: 20px;
+            padding: 25px; /* زيادة المساحة الداخلية */
             background-color: #f1f1f1;
         }
         
         .nav-btn {
-            padding: 10px 20px;
+            padding: 12px 25px; /* زيادة المساحة الداخلية */
             background-color: #2c7744;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px; /* زيادة نصف القطر */
             transition: background-color 0.3s;
+            font-size: 1.1em; /* زيادة حجم الخط */
         }
         
         .nav-btn:hover {
@@ -490,6 +498,11 @@
         }
         
         @media (max-width: 768px) {
+            body {
+                font-size: 18px; /* حجم خط أصغر للأجهزة المحمولة */
+                padding: 15px; /* تقليل المساحة الداخلية */
+            }
+            
             .container {
                 border-radius: 10px;
             }
@@ -499,17 +512,21 @@
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 2.4rem; /* حجم خط أصغر للأجهزة المحمولة */
+            }
+            
+            .page-title {
+                font-size: 1.8rem; /* حجم خط أصغر للأجهزة المحمولة */
             }
             
             .number-line-container {
-                min-width: 600px;
+                min-width: 650px; /* عرض أصغر للأجهزة المحمولة */
             }
             
             .btn {
                 width: 100%;
-                margin: 5px 0;
-                padding: 12px;
+                margin: 8px 0; /* زيادة الهامش بين الأزرار */
+                padding: 15px;
             }
             
             .controls {
@@ -591,22 +608,22 @@
                 <h3 class="exercise-title">تمارين تفاعلية</h3>
                 <p>أمثل كلّ عددٍ نسبي ممّا يأتي على خط الأعداد:</p>
                 
-                <div class="number-labels" style="display: flex; justify-content: center; gap: 20px; margin: 20px 0;">
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <div style="width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at center, #3498db, #1a2530);"></div>
-                        <span style="color: #3498db; font-weight: bold;">2</span>
+                <div class="number-labels" style="display: flex; justify-content: center; gap: 25px; margin: 25px 0;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 25px; height: 25px; border-radius: 50%; background: radial-gradient(circle at center, #3498db, #1a2530);"></div>
+                        <span style="color: #3498db; font-weight: bold; font-size: 1.1em;">2</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <div style="width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at center, #e74c3c, #1a2530);"></div>
-                        <span style="color: #e74c3c; font-weight: bold;">-0.8</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 25px; height: 25px; border-radius: 50%; background: radial-gradient(circle at center, #e74c3c, #1a2530);"></div>
+                        <span style="color: #e74c3c; font-weight: bold; font-size: 1.1em;">-0.8</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <div style="width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at center, #2ecc71, #1a2530);"></div>
-                        <span style="color: #2ecc71; font-weight: bold;">4.6</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 25px; height: 25px; border-radius: 50%; background: radial-gradient(circle at center, #2ecc71, #1a2530);"></div>
+                        <span style="color: #2ecc71; font-weight: bold; font-size: 1.1em;">4.6</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <div style="width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at center, #9b59b6, #1a2530);"></div>
-                        <span style="color: #9b59b6; font-weight: bold;">-3.2</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 25px; height: 25px; border-radius: 50%; background: radial-gradient(circle at center, #9b59b6, #1a2530);"></div>
+                        <span style="color: #9b59b6; font-weight: bold; font-size: 1.1em;">-3.2</span>
                     </div>
                 </div>
                 
