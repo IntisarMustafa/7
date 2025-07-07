@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدرس 4: جمع الأعداد النسبية وطرحها - صفحة ٣</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+            color: #333;
+            line-height: 1.8;
+            padding: 20px;
+            min-height: 100vh;
+            font-size: 18px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 100, 0.15);
+            overflow: hidden;
+            border: 1px solid #d1e8ff;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a5fb4 0%, #0d47a1 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 5px solid #ffd700;
+            position: relative;
+        }
+        
+        .header-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(90deg, #ffd700 0%, #ff9800 100%);
+        }
+        
+        header h1 {
+            font-size: 34px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        header h2 {
+            font-size: 26px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        
+        .lesson-title {
+            background: #e3f2fd;
+            padding: 18px;
+            text-align: center;
+            font-size: 24px;
+            color: #0d47a1;
+            border-bottom: 2px dashed #90caf9;
+            font-weight: 700;
+            position: relative;
+        }
+        
+        .lesson-title::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #1a5fb4;
+            border-radius: 3px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .example-box {
+            background: #f9f9ff;
+            border: 2px solid #d1e8ff;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .example-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 100, 0.1);
+        }
+        
+        .example-header {
+            background: linear-gradient(90deg, #e8f4ff 0%, #d1e8ff 100%);
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin: -25px -25px 25px -25px;
+            display: flex;
+            align-items: center;
+            border-right: 5px solid #1a5fb4;
+        }
+        
+        .example-header h3 {
+            color: #1a5fb4;
+            font-size: 26px;
+            margin-left: 15px;
+            font-weight: 700;
+        }
+        
+        .method-box {
+            background: white;
+            border: 1px solid #d1e8ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+            position: relative;
+        }
+        
+        .method-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: #64b5f6;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .method-title {
+            color: #1a5fb4;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+        }
+        
+        .method-title i {
+            margin-left: 12px;
+            background: #e3f2fd;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .math-expression {
+            font-size: 24px;
+            padding: 18px;
+            background: #f5f9ff;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            direction: ltr;
+            border: 1px solid #d1e8ff;
+            font-weight: 600;
+            color: #0d47a1;
+        }
+        
+        .step {
+            margin: 18px 0;
+            padding: 18px;
+            border-right: 3px solid #64b5f6;
+            background: #f8fbff;
+            border-radius: 8px;
+            position: relative;
+            padding-right: 30px;
+            font-size: 19px;
+        }
+        
+        .step::before {
+            content: "•";
+            position: absolute;
+            right: 10px;
+            top: 15px;
+            font-size: 24px;
+            color: #1a5fb4;
+        }
+        
+        .practice-box {
+            background: #f0f8ff;
+            border: 2px solid #bbdefb;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .practice-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #0d47a1 0%, #64b5f6 100%);
+        }
+        
+        .practice-header {
+            background: linear-gradient(90deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 16px 25px;
+            border-radius: 8px;
+            margin: -25px -25px 25px -25px;
+            text-align: center;
+            color: #0d47a1;
+            font-size: 24px;
+            font-weight: 700;
+            border-left: 5px solid #0d47a1;
+        }
+        
+        .practice-header i {
+            margin-left: 12px;
+            background: #0d47a1;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .exercise {
+            margin: 30px 0;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid #d1e8ff;
+        }
+        
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+        
+        .exercise-number {
+            background: #1a5fb4;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .exercise-statement {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .exercise-statement .instruction {
+            font-size: 22px;
+            font-weight: 600;
+            color: #0d47a1;
+            margin-bottom: 15px;
+        }
+        
+        .solution-box {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        input[type="text"] {
+            padding: 16px 20px;
+            border: 2px solid #bbdefb;
+            border-radius: 10px;
+            font-size: 22px;
+            width: 240px;
+            text-align: center;
+            direction: ltr;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        input[type="text"]:focus {
+            border-color: #1a5fb4;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 95, 180, 0.2);
+        }
+        
+        button {
+            padding: 16px 30px;
+            background: linear-gradient(to bottom, #1a5fb4, #0d47a1);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background: linear-gradient(to bottom, #0d47a1, #1a5fb4);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .result {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 14px 24px;
+            border-radius: 10px;
+            min-width: 240px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #a5d6a7;
+            box-shadow: 0 3px 6px rgba(46, 125, 50, 0.1);
+        }
+        
+        .incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #ef9a9a;
+            box-shadow: 0 3px 6px rgba(198, 40, 40, 0.1);
+        }
+        
+        .footer {
+            background: linear-gradient(90deg, #0d47a1 0%, #1a5fb4 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ffd700 0%, #ff9800 100%);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding: 0 20px;
+            gap: 20px;
+        }
+        
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            padding: 16px 30px;
+            background: linear-gradient(to bottom, #1a5fb4, #0d47a1);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 20px;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-btn:hover {
+            background: linear-gradient(to bottom, #0d47a1, #1a5fb4);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .nav-btn i {
+            margin: 0 10px;
+            font-size: 20px;
+        }
+        
+        .answer-format {
+            background: #e1f5fe;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px dashed #4fc3f7;
+            position: relative;
+            font-size: 19px;
+        }
+        
+        .answer-format h5 {
+            color: #0277bd;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .answer-format h5 i {
+            margin-left: 12px;
+            background: #0277bd;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .format-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .format-box {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #bbdefb;
+            font-size: 19px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .format-box strong {
+            color: #1a5fb4;
+            font-size: 20px;
+        }
+        
+        .hint {
+            margin-top: 25px;
+            padding: 20px;
+            background: #fffde7;
+            border-radius: 10px;
+            border: 1px solid #ffecb3;
+            display: none;
+            font-size: 19px;
+        }
+        
+        .hint p {
+            margin-bottom: 15px;
+        }
+        
+        .hint .math-expression {
+            font-size: 22px;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                font-size: 17px;
+                padding: 15px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            header h1 {
+                font-size: 28px;
+            }
+            
+            header h2 {
+                font-size: 22px;
+            }
+            
+            .lesson-title {
+                font-size: 22px;
+                padding: 15px;
+            }
+            
+            .example-box, .practice-box {
+                padding: 20px;
+            }
+            
+            .math-expression {
+                font-size: 22px;
+                padding: 15px;
+            }
+            
+            .solution-box {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            input[type="text"] {
+                width: 100%;
+                font-size: 20px;
+            }
+            
+            button, .nav-btn {
+                width: 100%;
+                justify-content: center;
+                font-size: 18px;
+            }
+            
+            .result {
+                font-size: 20px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-decoration"></div>
+            <h1>الدرس 4: جمع الأعداد النسبية وطرحها</h1>
+            <h2>وحدة الأعداد النسبية</h2>
+        </header>
+        
+        <div class="lesson-title">
+            جمع الأعداد النسبية وطرحها - صفحة ٣
+        </div>
+        
+        <div class="content">
+            <!-- مثال 3 المعدل -->
+            <div class="example-box">
+                <div class="example-header">
+                    <h3>مثال 3</h3>
+                    <i class="fas fa-calculator"></i>
+                </div>
+                
+                <!-- التعديل الرئيسي: وضع نص "جد ناتج" ثم السؤال الرياضي تحته -->
+                <div class="exercise-statement">
+                    <div class="instruction">جد ناتج:</div>
+                    <div class="math-expression">\(-3\frac{1}{2} + 2\frac{5}{6}\)</div>
+                </div>
+                
+                <div class="method-box">
+                    <div class="method-title">
+                        <i class="fas fa-route"></i>
+                        <span>الطريقة 1: أحول الأعداد الكسرية إلى كسور غير فعلية ثم أجمعها</span>
+                    </div>
+                    
+                    <div class="step">
+                        <p>1. أحول العدد الكسري إلى كسر غير فعلي:</p>
+                        <p class="math-expression">\(-3\frac{1}{2} = -\frac{7}{2}\)</p>
+                        <p class="math-expression">\(2\frac{5}{6} = \frac{17}{6}\)</p>
+                    </div>
+                    
+                    <div class="step">
+                        <p>2. أجد المضاعف المشترك الأصغر (م.م.أ) للمقامين وهو 6:</p>
+                        <p class="math-expression">\(-\frac{7}{2} = -\frac{7 \times 3}{2 \times 3} = -\frac{21}{6}\)</p>
+                        <p class="math-expression">\(\frac{17}{6} = \frac{17}{6}\)</p>
+                    </div>
+                    
+                    <div class="step">
+                        <p>3. أجمع الكسور:</p>
+                        <p class="math-expression">\(-\frac{21}{6} + \frac{17}{6} = \frac{-21 + 17}{6} = -\frac{4}{6}\)</p>
+                    </div>
+                    
+                    <div class="step">
+                        <p>4. أبسط الناتج:</p>
+                        <p class="math-expression">\(-\frac{4}{6} = -\frac{2}{3}\)</p>
+                    </div>
+                </div>
+                
+                <div class="method-box">
+                    <div class="method-title">
+                        <i class="fas fa-route"></i>
+                        <span>الطريقة 2: أجمع الأعداد الكلية والكسور بشكل منفصل</span>
+                    </div>
+                    
+                    <div class="step">
+                        <p>1. أجمع الأعداد الكلية والكسور بشكل منفصل:</p>
+                        <p class="math-expression">الأعداد الكلية: \(-3 + 2 = -1\)</p>
+                        <p class="math-expression">الكسور: \(-\frac{1}{2} + \frac{5}{6}\)</p>
+                    </div>
+                    
+                    <div class="step">
+                        <p>2. أجد المضاعف المشترك الأصغر (م.م.أ) للكسور وهو 6:</p>
+                        <p class="math-expression">\(-\frac{1}{2} = -\frac{3}{6}\)</p>
+                        <p class="math-expression">\(\frac{5}{6} = \frac{5}{6}\)</p>
+                    </div>
+                    
+                    <div class="step">
+                        <p>3. أجمع الكسور:</p>
+                        <p class="math-expression">\(-\frac{3}{6} + \frac{5}{6} = \frac{2}{6} = \frac{1}{3}\)</p>
+                    </div>
+                    
+                    <div class="step">
+                        <p>4. أجمع الناتجين:</p>
+                        <p class="math-expression">\(-1 + \frac{1}{3} = -\frac{3}{3} + \frac{1}{3} = -\frac{2}{3}\)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- أتحقق من فهمي -->
+            <div class="practice-box">
+                <div class="practice-header">
+                    <i class="fas fa-check-circle"></i>
+                    أتحقق من فهمي
+                </div>
+                
+                <p style="text-align: center; margin: 20px 0; font-size: 20px; color: #0d47a1;">
+                    استخدم الطريقتين اللتين تعلمتهما في مثال 3 لحل المسائل التالية:
+                </p>
+                
+                <div class="answer-format">
+                    <h5><i class="fas fa-info-circle"></i> تنسيقات الإجابة المقبولة:</h5>
+                    <p>يمكنك إدخال الإجابة بأي من الصيغ التالية:</p>
+                    <div class="format-examples">
+                        <div class="format-box">كسر: <strong>-25/6</strong></div>
+                        <div class="format-box">كسر عشري: <strong>-4.1667</strong></div>
+                        <div class="format-box">عدد كسري: <strong>-4 1/6</strong></div>
+                        <div class="format-box">عدد صحيح: <strong>5</strong></div>
+                    </div>
+                </div>
+                
+                <!-- تمارين مع حذف كلمة "تمرين" -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-number">1</div>
+                    </div>
+                    
+                    <div class="exercise-statement">
+                        <div class="instruction">جد ناتج:</div>
+                        <div class="math-expression">\(-1\frac{1}{9} - 3\frac{1}{6}\)</div>
+                    </div>
+                    
+                    <div class="solution-box">
+                        <input type="text" id="answer1" placeholder="أدخل الإجابة هنا">
+                        <button onclick="checkAnswer(1)">تحقق من الإجابة</button>
+                        <div class="result" id="result1"></div>
+                    </div>
+                    
+                    <div class="hint" id="hint1">
+                        <p><strong>تلميح:</strong> حول الأعداد الكسرية إلى كسور غير فعلية:</p>
+                        <p class="math-expression">\(-1\frac{1}{9} = -\frac{10}{9}\)</p>
+                        <p class="math-expression">\(-3\frac{1}{6} = -\frac{19}{6}\)</p>
+                        <p>م.م.أ للعددين 9 و 6 هو 18</p>
+                        <p class="math-expression">\(-\frac{10}{9} = -\frac{20}{18}\)</p>
+                        <p class="math-expression">\(-\frac{19}{6} = -\frac{57}{18}\)</p>
+                        <p class="math-expression">\(-\frac{20}{18} - \frac{57}{18} = -\frac{77}{18} = -4\frac{5}{18}\)</p>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-number">2</div>
+                    </div>
+                    
+                    <div class="exercise-statement">
+                        <div class="instruction">جد ناتج:</div>
+                        <div class="math-expression">\(-2\frac{1}{3} + 4\frac{5}{12}\)</div>
+                    </div>
+                    
+                    <div class="solution-box">
+                        <input type="text" id="answer2" placeholder="أدخل الإجابة هنا">
+                        <button onclick="checkAnswer(2)">تحقق من الإجابة</button>
+                        <div class="result" id="result2"></div>
+                    </div>
+                    
+                    <div class="hint" id="hint2">
+                        <p><strong>تلميح:</strong> حول الأعداد الكسرية إلى كسور غير فعلية:</p>
+                        <p class="math-expression">\(-2\frac{1}{3} = -\frac{7}{3}\)</p>
+                        <p class="math-expression">\(4\frac{5}{12} = \frac{53}{12}\)</p>
+                        <p>م.م.أ للعددين 3 و 12 هو 12</p>
+                        <p class="math-expression">\(-\frac{7}{3} = -\frac{28}{12}\)</p>
+                        <p class="math-expression">\(\frac{53}{12} = \frac{53}{12}\)</p>
+                        <p class="math-expression">\(-\frac{28}{12} + \frac{53}{12} = \frac{25}{12} = 2\frac{1}{12}\)</p>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-number">3</div>
+                    </div>
+                    
+                    <div class="exercise-statement">
+                        <div class="instruction">جد ناتج:</div>
+                        <div class="math-expression">\(5\frac{1}{2} + 3\frac{1}{4} + (-\frac{11}{2})\)</div>
+                    </div>
+                    
+                    <div class="solution-box">
+                        <input type="text" id="answer3" placeholder="أدخل الإجابة هنا">
+                        <button onclick="checkAnswer(3)">تحقق من الإجابة</button>
+                        <div class="result" id="result3"></div>
+                    </div>
+                    
+                    <div class="hint" id="hint3">
+                        <p><strong>تلميح:</strong> لاحظ أن \(5\frac{1}{2} = \frac{11}{2}\)، لذا:</p>
+                        <p class="math-expression">\(\frac{11}{2} + (-\frac{11}{2}) + 3\frac{1}{4} = 0 + 3\frac{1}{4}\)</p>
+                        <p class="math-expression">\(3\frac{1}{4} = \frac{13}{4} = 3.25\)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- أزرار التنقل -->
+            <div class="navigation">
+                <a href="u1l4p2.html" class="nav-btn">
+                    <i class="fas fa-arrow-right"></i> الصفحة السابقة
+                </a>
+                <a href="u1l4p4.html" class="nav-btn">
+                    الصفحة التالية <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            جمع الأعداد النسبية وطرحها - صفحة ٣
+        </div>
+    </div>
+
+    <script>
+        // دالة للتحقق من الإجابات
+        function checkAnswer(exerciseNum) {
+            const answerInput = document.getElementById(`answer${exerciseNum}`);
+            const resultDiv = document.getElementById(`result${exerciseNum}`);
+            const hintDiv = document.getElementById(`hint${exerciseNum}`);
+            const answer = answerInput.value.trim();
+            
+            // الإجابات الصحيحة بأنواعها المختلفة
+            const correctAnswers = {
+                1: ["-77/18", "-4 5/18", "-4.2778", "-4.28", "-4.3", "-4.277", "-77/18", "-4 5/18"],
+                2: ["25/12", "2 1/12", "2.0833", "2.083", "2.08", "2.1", "25/12", "2 1/12"],
+                3: ["13/4", "3 1/4", "3.25", "3.250", "3.3", "13/4", "3 1/4", "3.25"]
+            };
+            
+            // القيم العددية للإجابات الصحيحة
+            const correctValues = {
+                1: -77/18, // حوالي -4.2778
+                2: 25/12,  // حوالي 2.0833
+                3: 13/4    // 3.25
+            };
+            
+            // تحقق من الإجابة
+            let isCorrect = false;
+            let userValue = null;
+            
+            // 1. التحقق من المطابقة النصية
+            if (correctAnswers[exerciseNum].includes(answer)) {
+                isCorrect = true;
+            } 
+            // 2. التحقق من القيمة العددية
+            else {
+                // محاولة تحويل الإجابة إلى عدد
+                const numValue = parseFloat(answer);
+                if (!isNaN(numValue)) {
+                    // هامش الخطأ المسموح به
+                    const tolerance = 0.05;
+                    const diff = Math.abs(numValue - correctValues[exerciseNum]);
+                    if (diff < tolerance) {
+                        isCorrect = true;
+                        userValue = numValue;
+                    }
+                }
+                // محاولة تحليل الكسور
+                else if (answer.includes('/')) {
+                    const parts = answer.split('/');
+                    if (parts.length === 2) {
+                        const numerator = parseFloat(parts[0]);
+                        const denominator = parseFloat(parts[1]);
+                        if (!isNaN(numerator) && !isNaN(denominator) && denominator !== 0) {
+                            const fractionValue = numerator / denominator;
+                            const diff = Math.abs(fractionValue - correctValues[exerciseNum]);
+                            if (diff < tolerance) {
+                                isCorrect = true;
+                                userValue = fractionValue;
+                            }
+                        }
+                    }
+                }
+                // محاولة تحليل الأعداد الكسرية
+                else if (answer.includes(' ')) {
+                    const parts = answer.split(' ');
+                    if (parts.length === 2) {
+                        const whole = parseFloat(parts[0]);
+                        const fractionParts = parts[1].split('/');
+                        if (fractionParts.length === 2 && !isNaN(whole)) {
+                            const numerator = parseFloat(fractionParts[0]);
+                            const denominator = parseFloat(fractionParts[1]);
+                            if (!isNaN(numerator) && !isNaN(denominator) && denominator !== 0) {
+                                const fractionValue = whole + (numerator / denominator);
+                                const diff = Math.abs(fractionValue - correctValues[exerciseNum]);
+                                if (diff < tolerance) {
+                                    isCorrect = true;
+                                    userValue = fractionValue;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // عرض النتيجة
+            if (isCorrect) {
+                resultDiv.textContent = "✓ إجابة صحيحة! أحسنت!";
+                resultDiv.className = "result correct";
+                hintDiv.style.display = "none";
+                
+                // إضافة تأثير للنتيجة الصحيحة
+                resultDiv.animate([
+                    { transform: 'scale(1)', opacity: 1 },
+                    { transform: 'scale(1.1)', opacity: 1 },
+                    { transform: 'scale(1)', opacity: 1 }
+                ], {
+                    duration: 500,
+                    iterations: 1
+                });
+            } else {
+                resultDiv.textContent = "✗ إجابة غير صحيحة، حاول مرة أخرى!";
+                resultDiv.className = "result incorrect";
+                hintDiv.style.display = "block";
+                
+                // إضافة تأثير للنتيجة الخاطئة
+                resultDiv.animate([
+                    { transform: 'translateX(0)', opacity: 1 },
+                    { transform: 'translateX(-10px)', opacity: 1 },
+                    { transform: 'translateX(10px)', opacity: 1 },
+                    { transform: 'translateX(0)', opacity: 1 }
+                ], {
+                    duration: 300,
+                    iterations: 2
+                });
+            }
+        }
+        
+        // معادلات رياضية عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحميل مكتبة MathJax لعرض المعادلات الرياضية
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML';
+            script.async = true;
+            document.head.appendChild(script);
+            
+            // إضافة تأثيرات للصفحة عند التحميل
+            const container = document.querySelector('.container');
+            container.animate([
+                { opacity: 0, transform: 'translateY(20px)' },
+                { opacity: 1, transform: 'translateY(0)' }
+            ], {
+                duration: 800,
+                fill: 'forwards'
+            });
+        });
+        
+        // إضافة تأثيرات عند التركيز على حقول الإدخال
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.animate([
+                    { transform: 'scale(1)', boxShadow: '0 3px 6px rgba(0, 0, 0, 0.05)' },
+                    { transform: 'scale(1.02)', boxShadow: '0 5px 15px rgba(26, 95, 180, 0.2)' },
+                    { transform: 'scale(1)', boxShadow: '0 3px 6px rgba(0, 0, 0, 0.05)' }
+                ], {
+                    duration: 300,
+                    iterations: 1
+                });
+            });
+        });
+    </script>
+</body>
+</html>
