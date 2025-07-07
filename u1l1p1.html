@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>العدد النسبي - الصفحة الأولى</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <!-- تكوين MathJax لزيادة حجم الكسور -->
     <script>
     window.MathJax = {
         tex: {
@@ -45,7 +44,7 @@
             background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ee 100%);
             padding: 20px;
             min-height: 100vh;
-            font-size: 1.0rem; /* تم التكبير من 1.1rem */
+            font-size: 1.0rem; /* قاعدة حجم الخط */
         }
         
         .container {
@@ -64,20 +63,26 @@
             text-align: center;
         }
         
+        /* Fluid Typography for Header H1 */
         h1 {
-            font-size: 2.5rem; /* تم التكبير من 2.5rem */
+            font-size: clamp(2rem, 5vw, 3rem); /* Min 32px, fluid up to 48px */
             margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
+        header p {
+            font-size: 1.25rem; /* حجم الفقرة في الهيدر */
+        }
+
         .page {
             padding: 35px;
             border-bottom: 2px dashed #d0e8d0;
         }
         
+        /* Fluid Typography for Page Title */
         .page-title {
             color: #1a5d38;
-            font-size: 2.0rem; /* تم التكبير من 2rem */
+            font-size: clamp(1.8rem, 4vw, 2.5rem); /* Min 28.8px, fluid up to 40px */
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 3px solid #e0f0e0;
@@ -88,8 +93,8 @@
         }
         
         .page-title i {
+            font-size: clamp(1.4rem, 3.5vw, 2rem); /* Min 22.4px, fluid up to 32px */
             margin-left: 15px;
-            font-size: 1.6rem; /* تم التكبير من 1.6rem */
         }
         
         .explore-box {
@@ -120,7 +125,7 @@
             margin-top: 20px;
             font-style: italic;
             text-align: center;
-            font-size: 1.1rem; /* تم التكبير من 1.25rem */
+            font-size: 1rem; /* حجم الملاحظة */
             border: 2px dashed #4caf50;
         }
         
@@ -145,7 +150,7 @@
         .term {
             font-weight: bold;
             color: #e65100;
-            font-size: 1.2rem; /* تم التكبير من 1.25rem */
+            font-size: 1.1rem; /* حجم المصطلح */
         }
         
         .example-box {
@@ -157,13 +162,14 @@
             border: 2px solid #e0f0e0;
         }
         
+        /* Fluid Typography for Example Title */
         .example-title {
             color: #1976d2;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem; /* تم التكبير من 1.8rem */
+            font-size: clamp(1.5rem, 3vw, 2rem); /* Min 24px, fluid up to 32px */
             padding: 10px;
             background: linear-gradient(to right, #e3f2fd, #bbdefb);
             border-radius: 10px;
@@ -172,7 +178,7 @@
         .example-title::before {
             content: "✎";
             margin-left: 15px;
-            font-size: 1.2rem; /* تم التكبير من 1.8rem */
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem); /* Icon size adjusts with title */
         }
         
         .interactive-section {
@@ -194,7 +200,7 @@
             width: 180px;
             font-weight: bold;
             color: #0d47a1;
-            font-size: 1.25rem; /* تم التكبير من 1.2rem */
+            font-size: 1.15rem; /* حجم الليبل */
         }
         
         /* تصميم مربعات إدخال الكسر */
@@ -218,7 +224,7 @@
             padding: 12px;
             border: 2px solid #bbdefb;
             border-radius: 8px;
-            font-size: 1.15rem; /* تم التكبير من 1.1rem */
+            font-size: 1.1rem; /* حجم النص في المدخلات */
             text-align: center;
             transition: all 0.3s;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -255,7 +261,7 @@
             top: 50%;
             transform: translateY(-50%);
             color: #1976d2;
-            font-size: 14px; /* تم التكبير من 14px */
+            font-size: 14px; /* لا يتغير كثيرًا، يمكن أن يبقى ثابتًا أو يتأثر بـ vw قليلاً */
             font-weight: bold;
             display: flex;
             flex-direction: column;
@@ -288,7 +294,7 @@
             padding: 14px 30px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.15rem; /* تم التكبير من 1.1rem */
+            font-size: 1.1rem; /* حجم نص الزر */
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -321,7 +327,7 @@
             margin: 20px 0;
             border-radius: 12px;
             font-weight: bold;
-            font-size: 1.2rem; /* تم التكبير من 1.15rem */
+            font-size: 1.1rem; /* حجم نص التغذية الراجعة */
             text-align: center;
         }
         
@@ -344,13 +350,13 @@
             padding: 25px;
             background-color: #f1f8e9;
             color: #2e7d32;
-            font-size: 1.15rem; /* تم التكبير من 1.1rem */
+            font-size: 1.05rem; /* حجم نص الفوتر */
             font-weight: bold;
         }
         
         .navigation {
             display: flex;
-            justify-content: center; /* تم التعديل لجعل الزر في الوسط */
+            justify-content: center;
             padding: 25px;
             background-color: #f1f8e9;
         }
@@ -362,7 +368,7 @@
             text-decoration: none;
             border-radius: 10px;
             transition: all 0.3s;
-            font-size: 1.15rem; /* تم التكبير من 1.1rem */
+            font-size: 1.1rem; /* حجم نص زر التنقل */
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             display: flex;
@@ -377,24 +383,25 @@
         
         /* تحسين حجم الكسور الرياضية بشكل متناسق */
         .math-text {
-            font-size: 1.25rem; /* تم التكبير من 1.2rem */
+            font-size: 1.15rem; /* حجم أساسي للنص الرياضي */
             vertical-align: middle;
-            margin: 0 8px;
+            margin: 0 5px; /* تقليل الهامش الأفقي قليلاً */
         }
         
-        /* تحسين النصوص المظللة باللون الأصفر - تم التعديل هنا */
+        /* تحسين النصوص المظللة باللون الأصفر */
         .highlight {
             background-color: #fffde7;
-            padding: 4px 8px; /* تقليل المساحة الداخلية */
-            border-radius: 6px; /* تعديل الزوايا */
+            padding: 4px 8px;
+            border-radius: 6px;
             display: inline-block;
             margin: 5px 0;
-            border: 2px solid #ffd54f; /* تقليل سماكة الحدود */
-            box-shadow: 0 2px 5px rgba(255, 213, 79, 0.2); /* تعديل الظل */
+            border: 2px solid #ffd54f;
+            box-shadow: 0 2px 5px rgba(255, 213, 79, 0.2);
             font-weight: 600;
             color: #333;
             text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
             transition: all 0.3s ease;
+            font-size: inherit; /* يرث حجم الخط من العنصر الأب */
         }
         
         .highlight:hover {
@@ -405,9 +412,9 @@
         
         /* تعديل حجم الكسور الرياضية في النصوص المظللة */
         .large-fraction {
-            font-size: 1.3rem; /* تم التكبير من 1.25rem */
+            font-size: 1.25rem; /* أكبر قليلاً للكسور المميزة */
             vertical-align: middle;
-            padding: 2px 4px; /* تقليل المساحة الداخلية */
+            padding: 2px 4px;
         }
         
         .math-container {
@@ -417,17 +424,19 @@
             background-color: #f8f9fa;
             border-radius: 15px;
             box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
-            font-size: 1.15rem; /* تم التكبير */
+            font-size: 1.05rem; /* حجم النص داخل حاوية الرياضيات */
         }
         
+        /* أحجام الفقرات */
         .example-box p, .explore-box p, .terms-box p, .lesson-idea p {
-            font-size: 1.2rem; /* تم التكبير من 1.15rem */
+            font-size: 1.15rem; /* حجم أكبر قليلاً للنصوص الرئيسية */
             margin: 15px 0;
             line-height: 1.8;
         }
         
+        /* Fluid Typography for Subheadings */
         .explore-box h3, .lesson-idea h3, .terms-box h3 {
-            font-size: 1.7rem; /* تم التكبير من 1.7rem */
+            font-size: clamp(1.5rem, 3.5vw, 2rem); /* Min 24px, fluid up to 32px */
             margin-bottom: 20px;
             color: #1a5d38;
             text-align: center;
@@ -435,8 +444,9 @@
             border-bottom: 2px solid #c8e6c9;
         }
         
+        /* Fluid Typography for Interactive Section Headings */
         .interactive-section h4 {
-            font-size: 1.45rem; /* تم التكبير من 1.4rem */
+            font-size: clamp(1.2rem, 2.8vw, 1.6rem); /* Min 19.2px, fluid up to 25.6px */
             margin: 25px 0 15px;
             color: #1a5d38;
             background-color: #e8f5e9;
@@ -446,6 +456,9 @@
         }
         
         @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
             .container {
                 border-radius: 15px;
             }
@@ -454,9 +467,7 @@
                 padding: 20px 15px;
             }
             
-            h1 {
-                font-size: 2.1rem; /* تم التكبير من 2rem */
-            }
+            /* العناوين ستتكيف تلقائيًا بفضل clamp() */
             
             .input-group {
                 flex-direction: column;
@@ -466,7 +477,7 @@
             .input-group label {
                 margin-bottom: 15px;
                 width: 100%;
-                font-size: 1.2rem; /* تم التكبير من 1.15rem */
+                font-size: 1.1rem; /* حجم أصغر قليلاً لليبل على الشاشات الصغيرة */
             }
             
             .fraction-container {
@@ -477,7 +488,7 @@
             .btn {
                 width: 100%;
                 margin: 5px 0;
-                font-size: 1.1rem; /* تم التكبير من 1.05rem */
+                font-size: 1rem; /* حجم الزر على الشاشات الصغيرة */
                 padding: 12px 20px;
             }
             
@@ -488,24 +499,13 @@
             .nav-btn {
                 width: 100%;
                 margin-bottom: 10px;
-                font-size: 1.1rem; /* تم التكبير من 1.05rem */
+                font-size: 1rem; /* حجم زر التنقل على الشاشات الصغيرة */
                 padding: 12px 20px;
             }
             
+            /* قد تحتاج لزيادة حجم MathJax قليلاً على الجوال إذا بدت صغيرة جدًا */
             .math-text, .large-fraction {
-                font-size: 1.45rem; /* تم التكبير من 1.4rem */
-            }
-            
-            .page-title {
-                font-size: 1.7rem; /* تم التكبير من 1.6rem */
-            }
-            
-            .explore-box h3, .lesson-idea h3, .terms-box h3 {
-                font-size: 1.6rem; /* تم التكبير من 1.5rem */
-            }
-            
-            .example-title {
-                font-size: 1.7rem; /* تم التكبير من 1.6rem */
+                font-size: 1.25rem; /* تعديل لـ MathJax على الشاشات الصغيرة إذا لزم الأمر */
             }
         }
     </style>
@@ -514,7 +514,7 @@
     <div class="container">
         <header>
             <h1>العدد النسبي</h1>
-            <p style="font-size: 1.35rem;">درس تفاعلي في الرياضيات - الصفحة الأولى</p> <!-- تم التكبير من 1.3rem -->
+            <p>درس تفاعلي في الرياضيات - الصفحة الأولى</p>
         </header>
         
         <div class="page">
@@ -560,7 +560,7 @@
                         <p>\( 65\% = 0.65 = \frac{65}{100} = \frac{13}{20} \)</p>
                     </div>
                    
-                    <h4>3. <span class="math-text large-fraction">\( 1\frac{2}{5} \)</span> <span style="font-size: 1.3rem"></span>:</h4> <!-- تم التكبير -->
+                    <h4>3. <span class="math-text large-fraction">\( 1\frac{2}{5} \)</span>:</h4>
                     <div class="input-group">
                         <label for="ex1-3">أدخل الكسر:</label>
                         <div class="fraction-container">
