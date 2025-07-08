@@ -6,6 +6,7 @@
     <title>ماريو الرياضيات: جمع الأعداد النسبية وطرحها</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* CSS الخاص بك لا يتغير كثيرًا، فقط حذف التنسيقات المتعلقة بالكسور */
         * {
             margin: 0;
             padding: 0;
@@ -334,30 +335,20 @@
             justify-content: center;
             border: 2px solid #00aaff;
             box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
-        }
-        
-        .fraction {
-            display: inline-block;
+            /* السماح لـ MathJax بتحديد الاتجاه داخل السؤال */
+            direction: ltr; /* مهم لـ MathJax */
             text-align: center;
-            vertical-align: middle;
-            margin: 0 10px;
         }
-        
-        .numerator {
-            border-bottom: 3px solid #00e6ff;
-            padding: 0 15px;
-            text-shadow: 0 0 10px rgba(0, 230, 255, 0.7);
-        }
-        
-        .denominator {
-            padding: 0 15px;
-        }
+
+        /* تم إزالة تنسيقات الكسور القديمة */
+        /* .fraction, .numerator, .denominator - لم تعد ضرورية مع MathJax */
         
         .options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             margin-top: 30px;
+            direction: rtl; /* Options also RTL for overall layout */
         }
         
         .option {
@@ -375,6 +366,7 @@
             justify-content: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             transform: translateZ(10px);
+            direction: ltr; /* Options values are LTR */
         }
         
         .option:hover {
@@ -399,6 +391,7 @@
             font-weight: bold;
             padding: 10px;
             border-radius: 10px;
+            direction: rtl; /* Result message is RTL */
         }
         
         .result.correct {
@@ -622,6 +615,21 @@
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        // هذا السكربت يخبر MathJax بتحديث الـ DOM عندما يتغير محتوى MathJax
+        // مما يضمن عرض المعادلات الجديدة التي يتم إدراجها بواسطة JavaScript
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
 </head>
 <body>
     <div class="container">
@@ -1193,7 +1201,7 @@ function drawFlag() {
     );
     
     ctx.quadraticCurveTo(
-        flag.x + 8 + flag.width/2, 
+        flag.x + 8 + flag.width*0.6, 
         flag.y + flag.height*0.6 + waveOffset, 
         flag.x + 8, 
         flag.y + (flag.height * 2) / 3
@@ -1458,7 +1466,7 @@ function generateRationalQuestion() {
     
     switch(type) {
         case 'fraction':
-            // كسور
+            // كسور باستخدام LaTeX: \frac{numerator}{denominator}
             const den1 = Math.floor(Math.random() * 9) + 2;
             const nume1 = Math.floor(Math.random() * den1) + 1;
             const den2 = Math.floor(Math.random() * 9) + 2;
@@ -1473,7 +1481,8 @@ function generateRationalQuestion() {
                 correctAnswer = num1 - num2;
             }
             
-            questionStr = `${nume1}/${den1} ${operation} ${nume2}/${den2}`;
+            // استخدام $$...$$ لـ MathJax لعرض المعادلة بشكل منفصل
+            questionStr = `$$\\frac{${nume1}}{${den1}} ${operation} \\frac{${nume2}}{${den2}}$$`;
             break;
             
         case 'decimal':
@@ -1487,7 +1496,7 @@ function generateRationalQuestion() {
                 correctAnswer = num1 - num2;
             }
             
-            questionStr = `${num1} ${operation} ${num2}`;
+            questionStr = `$$${num1} ${operation} ${num2}$$`;
             break;
             
         case 'negative':
@@ -1501,7 +1510,7 @@ function generateRationalQuestion() {
                 correctAnswer = num1 - num2;
             }
             
-            questionStr = `${num1} ${operation} ${num2}`;
+            questionStr = `$$${num1} ${operation} ${num2}$$`;
             break;
             
         case 'mixed':
@@ -1519,7 +1528,7 @@ function generateRationalQuestion() {
                     correctAnswer = num1 - num2;
                 }
                 
-                questionStr = `${nume}/${den} ${operation} ${num2}`;
+                questionStr = `$$\\frac{${nume}}{${den}} ${operation} ${num2}$$`;
             } else {
                 // عدد صحيح + كسر
                 num1 = Math.floor(Math.random() * 10) - 5;
@@ -1533,7 +1542,7 @@ function generateRationalQuestion() {
                     correctAnswer = num1 - num2;
                 }
                 
-                questionStr = `${num1} ${operation} ${nume}/${den}`;
+                questionStr = `$$${num1} ${operation} \\frac{${nume}}{${den}}$$`;
             }
             break;
     }
@@ -1585,7 +1594,7 @@ function generateRationalQuestion() {
     });
     
     return {
-        question: questionStr,
+        question: questionStr, // هذا سيحتوي الآن على صيغة LaTeX
         options: formattedOptions,
         correct: Number.isInteger(correctAnswer) ? correctAnswer.toString() : correctAnswer.toFixed(2)
     };
@@ -1597,9 +1606,17 @@ function showQuestion() {
     gameState.running = false; // توقيف اللعبة عند ظهور السؤال
     
     const question = generateRationalQuestion();
-    questionText.textContent = question.question;
+    // قم بتعيين سؤال MathJax مباشرة هنا
+    questionText.innerHTML = `${question.question}`; 
     resultMessage.textContent = "";
     resultMessage.className = "result";
+    
+    // بعد تحديث محتوى MathJax، قم بتحديثه في الـ DOM
+    // `typesetPromise` سيضمن أن MathJax قد قام بمعالجة المعادلة قبل عرض الـ modal
+    MathJax.typesetPromise([questionText]).then(() => {
+        questionModal.style.display = "flex";
+        continueBtn.style.display = "none";
+    });
     
     // إزالة أي خيارات سابقة
     optionsContainer.innerHTML = "";
@@ -1608,13 +1625,10 @@ function showQuestion() {
     question.options.forEach((option, index) => {
         const optionElement = document.createElement('div');
         optionElement.className = 'option';
-        optionElement.textContent = option;
+        optionElement.textContent = option; // لا حاجة لـ MathJax للخيارات إذا كانت أعدادًا بسيطة
         optionElement.onclick = () => checkAnswer(option, question.correct);
         optionsContainer.appendChild(optionElement);
     });
-    
-    questionModal.style.display = "flex";
-    continueBtn.style.display = "none";
 }
 
 // التحقق من الإجابة
