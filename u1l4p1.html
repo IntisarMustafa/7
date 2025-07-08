@@ -545,26 +545,23 @@
         }
 
         .content {
-            display: flex;
-            flex-wrap: wrap;
+            display: block;
             padding: 20px;
         }
 
         .explanation {
-            flex: 1;
-            min-width: 300px;
+            width: 100%;
             padding: 20px;
             background-color: #f8f9fa;
             border-radius: 10px;
-            margin: 10px;
+            margin: 10px 0;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .number-line-container {
-            flex: 2;
-            min-width: 300px;
+            width: 100%;
             padding: 20px;
-            margin: 10px;
+            margin: 10px 0;
         }
 
         .example-selector {
@@ -898,14 +895,6 @@
         }
 
         @media (max-width: 768px) {
-            .content {
-                flex-direction: column;
-            }
-
-            .explanation, .number-line-container {
-                min-width: 100%;
-            }
-
             header h1 {
                 font-size: 2rem;
             }
