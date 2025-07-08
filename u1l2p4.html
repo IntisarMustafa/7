@@ -652,7 +652,7 @@
                             // إجابة خاطئة
                             showAnswerMessage("إجابة خاطئة! حاول مرة أخرى", false);
                             statusPanel.textContent = "إجابة خاطئة! حاول مرة أخرى";
-                            incorrectSound.play(); // Play incorrect sound
+                            // لا تشغل الصوت هنا، سيتم تشغيله في showAnswerMessage
                         }
                         
                         // تغيير اتجاه الكرة بعد الاصطدام
@@ -727,6 +727,11 @@
             answerMessage.className = isCorrect ? 'answer-message correct' : 'answer-message incorrect';
             answerMessage.style.display = 'block';
             
+            if (!isCorrect) {
+                incorrectSound.currentTime = 0; // إعادة الصوت من البداية
+                incorrectSound.play(); // تشغيل صوت الخطأ
+            }
+
             setTimeout(() => {
                 answerMessage.style.display = 'none';
             }, 2000);
