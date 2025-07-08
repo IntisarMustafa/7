@@ -425,6 +425,13 @@
                 <canvas id="gameCanvas" width="600" height="400"></canvas>
                 <div class="status-panel" id="statusPanel">الحالة: اضغط 'ابدأ اللعبة'</div>
                 <div class="answer-message" id="answerMessage"></div>
+                <audio id="startSound" src="https://www.soundjay.com/buttons/beep-07.mp3" preload="auto"></audio>
+                <audio id="launchSound" src="https://www.soundjay.com/mechanical/zip-sound-1.mp3" preload="auto"></audio>
+                <audio id="bounceSound" src="https://www.soundjay.com/mechanical/thud-sound-1.mp3" preload="auto"></audio>
+                <audio id="correctSound" src="https://www.soundjay.com/misc/success-sound-2.mp3" preload="auto"></audio>
+                <audio id="incorrectSound" src="https://www.soundjay.com/misc/fail-buzzer-01.mp3" preload="auto"></audio>
+                <audio id="levelUpSound" src="https://www.soundjay.com/misc/magic-chime-01.mp3" preload="auto"></audio>
+                <audio id="gameOverSound" src="https://www.soundjay.com/misc/game-over-arcade-01.mp3" preload="auto"></audio>
             </div>
             
             <div class="stats">
@@ -483,6 +490,15 @@
         const answerMessage = document.getElementById('answerMessage');
         const correctAnswersElement = document.getElementById('correctAnswers');
         const infoText = document.getElementById('infoText');
+
+        // Audio Elements
+        const startSound = document.getElementById('startSound');
+        const launchSound = document.getElementById('launchSound');
+        const bounceSound = document.getElementById('bounceSound');
+        const correctSound = document.getElementById('correctSound');
+        const incorrectSound = document.getElementById('incorrectSound');
+        const levelUpSound = document.getElementById('levelUpSound');
+        const gameOverSound = document.getElementById('gameOverSound');
         
         // متغيرات اللعبة
         let balls = 5;
@@ -589,16 +605,19 @@
                     this.x = this.radius;
                     this.velocity.x *= -0.7;
                     statusPanel.textContent = "الكرة اصطدمت بالجدار!";
+                    bounceSound.play(); // Play bounce sound
                 } else if (this.x + this.radius > canvas.width) {
                     this.x = canvas.width - this.radius;
                     this.velocity.x *= -0.7;
                     statusPanel.textContent = "الكرة اصطدمت بالجدار!";
+                    bounceSound.play(); // Play bounce sound
                 }
                 
                 if (this.y + this.radius > canvas.height) {
                     this.y = canvas.height - this.radius;
                     this.velocity.y *= -0.7;
                     statusPanel.textContent = "الكرة اصطدمت بالأرض!";
+                    bounceSound.play(); // Play bounce sound
                     
                     // إيقاف الكرة عندما تصبح سرعتها صغيرة
                     if (Math.abs(this.velocity.y) < 0.5) {
@@ -619,6 +638,7 @@
                             scoreElement.textContent = score;
                             correctAnswers++;
                             correctAnswersElement.textContent = correctAnswers;
+                            correctSound.play(); // Play correct sound
                             
                             // عرض رسالة الإجابة الصحيحة
                             showAnswerMessage("إجابة صحيحة! +50 نقطة", true);
@@ -632,6 +652,7 @@
                             // إجابة خاطئة
                             showAnswerMessage("إجابة خاطئة! حاول مرة أخرى", false);
                             statusPanel.textContent = "إجابة خاطئة! حاول مرة أخرى";
+                            incorrectSound.play(); // Play incorrect sound
                         }
                         
                         // تغيير اتجاه الكرة بعد الاصطدام
@@ -831,6 +852,7 @@
                 statusPanel.textContent = "اسحب الكرة وأطلقها!";
             } else {
                 // انتهت الكرات
+                gameOverSound.play(); // Play game over sound
                 setTimeout(() => {
                     alert(`انتهت اللعبة! النقاط النهائية: ${score}\nالإجابات الصحيحة: ${correctAnswers}`);
                     initGame();
@@ -848,6 +870,7 @@
             createTargets();
             prepareNextBall();
             statusPanel.textContent = `مرحبًا بالمستوى ${level}!`;
+            levelUpSound.play(); // Play level up sound
         }
         
         // تحديث شريط القوة
@@ -962,6 +985,7 @@
                 currentBall.launched = true;
                 balls--;
                 ballsCountElement.textContent = balls;
+                launchSound.play(); // Play sound on launch
                 
                 // إخفاء شريط القوة
                 powerBar.style.width = '0%';
@@ -1034,6 +1058,7 @@
                 gameStarted = true;
                 startBtn.disabled = true;
                 statusPanel.textContent = "اللعبة بدأت! اسحب الكرة وأطلقها";
+                startSound.play(); // Play sound on game start
             });
             
             resetBtn.addEventListener('click', initGame);
