@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تمارين جمع وطرح الأعداد النسبية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e6f0ff 0%, #f0f7ff 100%);
+            color: #1a3b6b;
+            line-height: 1.7;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(26, 95, 180, 0.15);
+            overflow: hidden;
+            border: 1px solid #d0d7e5;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a5fb4 0%, #0d4a9e 100%);
+            color: white;
+            padding: 28px 35px;
+            text-align: center;
+            border-bottom: 5px solid #0a3d87;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -40px;
+            right: -40px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            font-weight: 800;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 20px;
+            opacity: 0.92;
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 35px;
+        }
+        
+        .instructions {
+            background: linear-gradient(135deg, #e9f5ff 0%, #d8ecff 100%);
+            border: 1px solid #b8d4f8;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 35px;
+            box-shadow: inset 0 0 15px rgba(26, 95, 180, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .instructions::before {
+            content: "i";
+            position: absolute;
+            top: -30px;
+            left: -30px;
+            font-size: 180px;
+            color: rgba(26, 95, 180, 0.03);
+            font-weight: bold;
+            font-family: Arial;
+            transform: rotate(20deg);
+        }
+        
+        .instructions h2 {
+            color: #1a5fb4;
+            font-size: 24px;
+            margin-bottom: 18px;
+            border-bottom: 2px solid #a0c6f7;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .instructions h2 i {
+            background: #1a5fb4;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .instructions ul {
+            padding-right: 30px;
+            margin: 20px 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 14px;
+            position: relative;
+            padding-right: 35px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .instructions li:before {
+            content: "•";
+            color: #1a5fb4;
+            font-weight: bold;
+            font-size: 28px;
+            position: absolute;
+            right: 0;
+            top: -5px;
+        }
+        
+        .questions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+        }
+        
+        .question-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f9fcff 100%);
+            border: 1px solid #d0d7e5;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.09);
+            border-color: #7eb4f0;
+        }
+        
+        .question-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #1a5fb4, #0d4a9e);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 18px;
+            border-bottom: 2px solid #e9f0f9;
+        }
+        
+        .question-number {
+            background: linear-gradient(135deg, #1a5fb4 0%, #0d4a9e 100%);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: 18px;
+            box-shadow: 0 5px 12px rgba(13, 74, 158, 0.35);
+            flex-shrink: 0;
+        }
+        
+        .question-text {
+            font-size: 21px;
+            font-weight: 600;
+            color: #1a3b6b;
+            line-height: 1.5;
+        }
+        
+        .number-line-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8fbff;
+            border-radius: 12px;
+            border: 1px solid #c2d8f0;
+        }
+        
+        .number-line-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #0d4a9e;
+            font-size: 18px;
+        }
+        
+        .number-line {
+            position: relative;
+            height: 60px;
+            background: #e9f5ff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #b8d4f8;
+        }
+        
+        .line {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            right: 10px;
+            height: 3px;
+            background: #1a5fb4;
+            transform: translateY(-50%);
+        }
+        
+        .tick {
+            position: absolute;
+            top: 50%;
+            width: 2px;
+            height: 15px;
+            background: #5a6a85;
+            transform: translateY(-50%);
+        }
+        
+        .tick-label {
+            position: absolute;
+            top: calc(50% + 12px);
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #1a3b6b;
+        }
+        
+        .point {
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+        
+        .point-label {
+            position: absolute;
+            top: calc(50% - 25px);
+            transform: translateX(-50%);
+            font-weight: bold;
+            font-size: 16px;
+            padding: 3px 8px;
+            border-radius: 5px;
+            z-index: 3;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: 30%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            font-weight: bold;
+            color: #0d4a9e;
+            z-index: 1;
+        }
+        
+        .answer-section {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            gap: 15px;
+        }
+        
+        .answer-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #c2d8f0;
+            border-radius: 10px;
+            font-size: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fbff;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: #1a5fb4;
+            box-shadow: 0 0 0 4px rgba(26, 95, 180, 0.15);
+            background-color: white;
+        }
+        
+        .check-btn {
+            background: linear-gradient(135deg, #1a5fb4 0%, #0d4a9e 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 24px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 5px 12px rgba(13, 74, 158, 0.35);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .check-btn:hover {
+            background: linear-gradient(135deg, #0d4a9e 0%, #093a7d 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(13, 74, 158, 0.45);
+        }
+        
+        .result {
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.6s;
+            font-size: 18px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .correct {
+            background-color: #e6f7e9;
+            border: 2px solid #4caf50;
+            color: #2e7d32;
+        }
+        
+        .incorrect {
+            background-color: #ffebee;
+            border: 2px solid #f44336;
+            color: #c62828;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 45px;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            background: linear-gradient(135deg, #1a5fb4 0%, #0d4a9e 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 35px;
+            font-size: 19px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 7px 20px rgba(13, 74, 158, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .control-btn:hover {
+            background: linear-gradient(135deg, #0d4a9e 0%, #093a7d 100%);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(13, 74, 158, 0.5);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            padding: 25px;
+            color: #5a6a85;
+            font-size: 17px;
+            border-top: 1px solid #e0e6f0;
+            background-color: #f8fbff;
+        }
+        
+        /* تخصيص السؤال 11 */
+        .question-11 {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #f8fbff 0%, #e6f0ff 100%);
+            border: 2px solid #b8d4f8;
+        }
+        
+        .question-11 .question-text {
+            font-size: 22px;
+            color: #0d4a9e;
+        }
+        
+        .question-11 .question-number {
+            background: linear-gradient(135deg, #0d4a9e 0%, #093a7d 100%);
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+        }
+        
+        .sea-background {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(90deg, #1a5fb4, #0d4a9e, #093a7d);
+            z-index: 0;
+            border-radius: 0 0 18px 18px;
+        }
+        
+        /* أزرار نهاية الصفحة */
+        .bottom-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #1a5fb4 0%, #0d4a9e 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 7px 20px rgba(13, 74, 158, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            min-width: 200px;
+            justify-content: center;
+        }
+        
+        .nav-btn:hover {
+            background: linear-gradient(135deg, #0d4a9e 0%, #093a7d 100%);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(13, 74, 158, 0.5);
+        }
+        
+        .nav-btn i {
+            font-size: 20px;
+        }
+        
+        .nav-btn.previous {
+            background: linear-gradient(135deg, #5a6a85 0%, #4a5a75 100%);
+        }
+        
+        .nav-btn.previous:hover {
+            background: linear-gradient(135deg, #4a5a75 0%, #3a4a65 100%);
+        }
+        
+        .nav-btn.home {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        }
+        
+        .nav-btn.home:hover {
+            background: linear-gradient(135deg, #2e7d32 0%, #1e6d22 100%);
+        }
+        
+        @media (max-width: 900px) {
+            .questions-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 26px;
+            }
+            
+            .header p {
+                font-size: 18px;
+            }
+            
+            .question-text {
+                font-size: 19px;
+            }
+            
+            .control-btn {
+                padding: 14px 25px;
+                font-size: 17px;
+            }
+            
+            .nav-btn {
+                padding: 14px 20px;
+                min-width: 160px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .instructions {
+                padding: 20px;
+            }
+            
+            .answer-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .answer-input, .check-btn {
+                width: 100%;
+            }
+            
+            .number-line {
+                height: 50px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>تدريبات على جمع وطرح الأعداد النسبية</h1>
+            <p>الوحدة 1 - الدَّرْسُ 4: جَمْعُ الأعدادِ النِّسبِيَّةِ وطَرْحُها</p>
+        </div>
+        
+        <div class="content">
+            <div class="instructions">
+                <h2><i class="fas fa-info-circle"></i> تعليمات الحل:</h2>
+                <ul>
+                    <li>لنحضر الدفتر ونحل الأسئلة ثم نتأكد من الإجابات بإدخال الجواب في المكان المخصص للإجابة</li>
+                    <li>استعمل خط الأعداد لأيجاد ناتج الجمع والطرح</li>
+                    <li>لجمع أو طرح عددين نسبيين لهما مقامان مختلفان، أجد المضاعف المشترك الأصغر (م.م.أ) للمقامين</li>
+                    <li>أجد عددًا نسبيًّا مكافئًا لأحد العددين أو كليهما</li>
+                    <li>اجمع البسطين أو اطرحهما، ثم اكتب الناتج فوق المقام نفسه</li>
+                    <li>عند جمع أي عدد نسبي إلى معكوسه يكون الناتج صفرًا (النظير الجمعي)</li>
+                    <li>يمكنك كتابة الإجابات في صورة كسور أو أعداد عشرية أو أعداد كسرية</li>
+                </ul>
+            </div>
+            
+            <div class="questions-container">
+                <!-- السؤال 1 مع خط الأعداد -->
+                <div class="question-box" id="q1">
+                    <div class="question-header">
+                        <div class="question-number">1</div>
+                        <div class="question-text">باستخدام خط الأعداد، أجد ناتج: \( -5 + \frac{1}{2} \)</div>
+                    </div>
+                    <div class="number-line-container">
+                        <div class="number-line-title">خط الأعداد:</div>
+                        <div class="number-line">
+                            <div class="line"></div>
+                            <!-- العلامات والأرقام -->
+                            <div class="tick" style="left: 0%;"></div>
+                            <div class="tick-label" style="left: 0%;">-5.5</div>
+                            
+                            <div class="tick" style="left: 10%;"></div>
+                            <div class="tick-label" style="left: 10%;">-5</div>
+                            
+                            <div class="tick" style="left: 20%;"></div>
+                            <div class="tick-label" style="left: 20%;">-4.5</div>
+                            
+                            <div class="tick" style="left: 30%;"></div>
+                            <div class="tick-label" style="left: 30%;">-4</div>
+                            
+                            <div class="tick" style="left: 40%;"></div>
+                            <div class="tick-label" style="left: 40%;">-3.5</div>
+                            
+                            <div class="tick" style="left: 50%;"></div>
+                            <div class="tick-label" style="left: 50%;">-3</div>
+                            
+                            <div class="tick" style="left: 60%;"></div>
+                            <div class="tick-label" style="left: 60%;">-2.5</div>
+                            
+                            <div class="tick" style="left: 70%;"></div>
+                            <div class="tick-label" style="left: 70%;">-2</div>
+                            
+                            <div class="tick" style="left: 80%;"></div>
+                            <div class="tick-label" style="left: 80%;">-1.5</div>
+                            
+                            <div class="tick" style="left: 90%;"></div>
+                            <div class="tick-label" style="left: 90%;">-1</div>
+                            
+                            <div class="tick" style="left: 100%;"></div>
+                            <div class="tick-label" style="left: 100%;">-0.5</div>
+                            
+                            <!-- النقطة البداية فقط -->
+                            <div class="point" style="left: 10%; background-color: #1a5fb4;"></div>
+                            <div class="point-label" style="left: 10%; background-color: #1a5fb4; color: white;">-5</div>
+                            
+                            <!-- الأسهم -->
+                            <div class="arrow" style="left: 10%; transform: translateX(0);">
+                                → +0.5
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(1)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- السؤال 2 مع خط الأعداد - بدون العدد الأخضر -->
+                <div class="question-box" id="q2">
+                    <div class="question-header">
+                        <div class="question-number">2</div>
+                        <div class="question-text">باستخدام خط الأعداد، أجد ناتج: \( -\frac{7}{4} - \frac{1}{2} \)</div>
+                    </div>
+                    <div class="number-line-container">
+                        <div class="number-line-title">خط الأعداد:</div>
+                        <div class="number-line">
+                            <div class="line"></div>
+                            <!-- العلامات والأرقام -->
+                            <div class="tick" style="left: 0%;"></div>
+                            <div class="tick-label" style="left: 0%;">-3</div>
+                            
+                            <div class="tick" style="left: 10%;"></div>
+                            <div class="tick-label" style="left: 10%;">-2.75</div>
+                            
+                            <div class="tick" style="left: 20%;"></div>
+                            <div class="tick-label" style="left: 20%;">-2.5</div>
+                            
+                            <div class="tick" style="left: 30%;"></div>
+                            <div class="tick-label" style="left: 30%;">-2.25</div>
+                            
+                            <div class="tick" style="left: 40%;"></div>
+                            <div class="tick-label" style="left: 40%;">-2</div>
+                            
+                            <div class="tick" style="left: 50%;"></div>
+                            <div class="tick-label" style="left: 50%;">-1.75</div>
+                            
+                            <div class="tick" style="left: 60%;"></div>
+                            <div class="tick-label" style="left: 60%;">-1.5</div>
+                            
+                            <div class="tick" style="left: 70%;"></div>
+                            <div class="tick-label" style="left: 70%;">-1.25</div>
+                            
+                            <div class="tick" style="left: 80%;"></div>
+                            <div class="tick-label" style="left: 80%;">-1</div>
+                            
+                            <div class="tick" style="left: 90%;"></div>
+                            <div class="tick-label" style="left: 90%;">-0.75</div>
+                            
+                            <div class="tick" style="left: 100%;"></div>
+                            <div class="tick-label" style="left: 100%;">-0.5</div>
+                            
+                            <!-- النقطة البداية فقط (تم حذف النقطة الخضراء) -->
+                            <div class="point" style="left: 60%; background-color: #1a5fb4;"></div>
+                            <div class="point-label" style="left: 60%; background-color: #1a5fb4; color: white;">-1.75</div>
+                            
+                            <!-- الأسهم -->
+                            <div class="arrow" style="left: 60%; transform: translateX(0);">
+                                ← -0.5
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(2)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- الأسئلة من 3 إلى 11 تبقى كما هي -->
+                <!-- السؤال 3 -->
+                <div class="question-box" id="q3">
+                    <div class="question-header">
+                        <div class="question-number">3</div>
+                        <div class="question-text">أجد ناتج: \( -1.3 + 1.3 \)</div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(3)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- السؤال 4 -->
+                <div class="question-box" id="q4">
+                    <div class="question-header">
+                        <div class="question-number">4</div>
+                        <div class="question-text">أجد ناتج: \( -\frac{3}{10} + (-\frac{1}{10}) \)</div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(4)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- السؤال 5 -->
+                <div class="question-box" id="q5">
+                    <div class="question-header">
+                        <div class="question-number">5</div>
+                        <div class="question-text">أجد ناتج: \( 3 \frac{1}{8} - \frac{7}{8} \)</div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(5)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- السؤال 6 -->
+                <div class="question-box" id="q6">
+                    <div class="question-header">
+                        <div class="question-number">6</div>
+                        <div class="question-text">أجد ناتج: \( -\frac{4}{9} + \frac{2}{3} \)</div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(6)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- السؤال 7 -->
+                <div class="question-box" id="q7">
+                    <div class="question-header">
+                        <div class="question-number">7</div>
+                        <div class="question-text">أجد ناتج: \( 0.75 + (-\frac{1}{4}) \)</div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(7)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- السؤال 8 -->
+                <div class="question-box" id="q8">
+                    <div class="question-header">
+                        <div class="question-number">8</div>
+                        <div class="question-text">أجد ناتج: \( -1 \frac{1}{5} + 2 \frac{3}{15} \)</div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(8)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- السؤال 9 -->
+                <div class="question-box" id="q9">
+                    <div class="question-header">
+                        <div class="question-number">9</div>
+                        <div class="question-text">أجد ناتج: \( -1 \frac{1}{6} - 2 \frac{1}{9} \)</div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(9)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- السؤال 10 -->
+                <div class="question-box" id="q10">
+                    <div class="question-header">
+                        <div class="question-number">10</div>
+                        <div class="question-text">أجد ناتج: \( 4.2 - (-8.5) \)</div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا">
+                        <button class="check-btn" onclick="checkAnswer(10)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+                
+                <!-- السؤال 11 -->
+                <div class="question-box question-11" id="q11">
+                    <div class="question-header">
+                        <div class="question-number">11</div>
+                        <div class="question-text">البحر الميت: يعد البحر الميت أخفض نقطة على سطح الأرض، حيث يبلغ انخفاضه 430.5 متراً تحت سطح البحر. إذا كان جبل الجرمق في فلسطين يرتفع 1208 متراً فوق سطح البحر، فما الفرق بين ارتفاع جبل الجرمق وانخفاض البحر الميت؟</div>
+                    </div>
+                    <div class="answer-section">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة هنا (بالمتر)">
+                        <button class="check-btn" onclick="checkAnswer(11)"><i class="fas fa-check"></i> تحقق</button>
+                    </div>
+                    <div class="result"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" onclick="checkAll()"><i class="fas fa-check-double"></i> تحقق من جميع الإجابات</button>
+                <button class="control-btn" onclick="resetAll()"><i class="fas fa-redo"></i> إعادة تعيين</button>
+            </div>
+            
+            <!-- أزرار التنقل في نهاية الصفحة -->
+            <div class="bottom-buttons">
+                <a href="u1l4p3.html" class="nav-btn previous">
+                    <i class="fas fa-arrow-right"></i> السابق
+                </a>
+                <a href="u1l4p5.html" class="nav-btn">
+                    <i class="fas fa-gamepad"></i> لعبة تعليمية
+                </a>
+                <a href="u1.html" class="nav-btn home">
+                    <i class="fas fa-home"></i> الصفحة الرئيسية
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><i class="fas fa-book"></i> كتاب الرياضيات - الصف الأول المتوسط | جميع الحقوق محفوظة ©</p>
+        </div>
+        
+        <div class="sea-background"></div>
+    </div>
+    
+    <script>
+        // الإجابات الصحيحة
+        const correctAnswers = {
+            1: "-4.5", // أو -9/2
+            2: "-9/4", // أو -2.25
+            3: "0",
+            4: "-2/5", // أو -0.4
+            5: "2.5", // أو 5/2 أو 2 1/2
+            6: "2/9",
+            7: "0.5", // أو 1/2
+            8: "1",
+            9: "-59/18", // أو -3 5/18
+            10: "12.7",
+            11: "1638.5" // 1208 - (-430.5) = 1208 + 430.5 = 1638.5
+        };
+        
+        // تنسيقات مقبولة للإجابات
+        const acceptedFormats = {
+            1: ["-4.5", "-9/2", "-4 1/2"],
+            2: ["-9/4", "-2.25", "-2 1/4"],
+            3: ["0"],
+            4: ["-2/5", "-0.4"],
+            5: ["2.5", "5/2", "2 1/2"],
+            6: ["2/9"],
+            7: ["0.5", "1/2"],
+            8: ["1"],
+            9: ["-59/18", "-3 5/18"],
+            10: ["12.7"],
+            11: ["1638.5", "1638.5 متر", "1638.5 م"]
+        };
+        
+        // حلول مفصلة
+        const detailedSolutions = {
+            1: "الحل باستخدام خط الأعداد: نبدأ من النقطة -5، ثم نتحرك بمقدار نصف وحدة إلى اليمين (لأننا نجمع نصف)، فنصل إلى النقطة -4.5",
+            2: "الحل باستخدام خط الأعداد: نبدأ من النقطة -1.75 (لأن -7/4 = -1.75)، ثم نتحرك بمقدار نصف وحدة إلى اليسار (لأننا نطرح نصف)، فنصل إلى النقطة -2.25",
+            3: "الحل: \( -1.3 + 1.3 = 0 \) (النظير الجمعي)",
+            4: "الحل: \( -\frac{3}{10} + (-\frac{1}{10}) = -\frac{4}{10} = -\frac{2}{5} = -0.4 \)",
+            5: "الحل: \( 3 \frac{1}{8} - \frac{7}{8} = \frac{25}{8} - \frac{7}{8} = \frac{18}{8} = \frac{9}{4} = 2.25 \)",
+            6: "الحل: \( -\frac{4}{9} + \frac{2}{3} = -\frac{4}{9} + \frac{6}{9} = \frac{2}{9} \)",
+            7: "الحل: \( 0.75 + (-\frac{1}{4}) = 0.75 - 0.25 = 0.5 \)",
+            8: "الحل: \( -1 \frac{1}{5} + 2 \frac{3}{15} = -1.2 + 2.2 = 1 \)",
+            9: "الحل: \( -1 \frac{1}{6} - 2 \frac{1}{9} = -\frac{7}{6} - \frac{19}{9} = -\frac{21}{18} - \frac{38}{18} = -\frac{59}{18} = -3\frac{5}{18} \)",
+            10: "الحل: \( 4.2 - (-8.5) = 4.2 + 8.5 = 12.7 \)",
+            11: "الحل: الفرق = 1208 - (-430.5) = 1208 + 430.5 = 1638.5 متر"
+        };
+        
+        // دالة التحقق من الإجابة
+        function checkAnswer(questionNum) {
+            const input = document.querySelector(`#q${questionNum} .answer-input`);
+            const resultDiv = document.querySelector(`#q${questionNum} .result`);
+            const userAnswer = input.value.trim();
+            
+            // الحصول على الإجابات المقبولة لهذا السؤال
+            const accepted = acceptedFormats[questionNum];
+            
+            // التحقق مما إذا كانت الإجابة المدخلة مطابقة لأحد التنسيقات المقبولة
+            const isCorrect = accepted.includes(userAnswer);
+            
+            // عرض النتيجة
+            if (isCorrect) {
+                resultDiv.innerHTML = `<i class="fas fa-check-circle"></i> إجابة صحيحة! أحسنت!`;
+                resultDiv.className = "result correct";
+                input.style.borderColor = "#4caf50";
+            } else {
+                resultDiv.innerHTML = `<i class="fas fa-times-circle"></i> إجابة غير صحيحة. الإجابة الصحيحة هي: ${correctAnswers[questionNum]}`;
+                resultDiv.className = "result incorrect";
+                input.style.borderColor = "#f44336";
+            }
+            
+            resultDiv.style.display = "block";
+        }
+        
+        // دالة التحقق من جميع الأسئلة
+        function checkAll() {
+            for (let i = 1; i <= 11; i++) {
+                checkAnswer(i);
+            }
+        }
+        
+        // دالة إعادة تعيين جميع الحقول
+        function resetAll() {
+            for (let i = 1; i <= 11; i++) {
+                const input = document.querySelector(`#q${i} .answer-input`);
+                const resultDiv = document.querySelector(`#q${i} .result`);
+                
+                input.value = "";
+                input.style.borderColor = "#c2d8f0";
+                resultDiv.style.display = "none";
+                resultDiv.className = "result";
+            }
+        }
+    </script>
+</body>
+</html>
