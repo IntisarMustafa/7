@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصفحة التفاعلية - الوحدة 1</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Changed font to a more modern one */
+            line-height: 1.8; /* Increased line-height for better readability */
+            color: #333;
+            background-color: #eef2f7; /* Lighter, softer background */
+            margin: 0;
+            padding: 25px; /* Slightly more padding */
+        }
+        .container {
+            max-width: 850px; /* Slightly wider container */
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 35px; /* More internal padding */
+            border-radius: 20px; /* More rounded corners */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+        }
+        h1 {
+            color: #1a5276; /* Darker blue for main heading */
+            text-align: center;
+            border-bottom: 3px solid #5d9cec; /* Thicker, more vibrant blue border */
+            padding-bottom: 20px; /* More padding below border */
+            margin-bottom: 35px;
+            font-size: 2.2em; /* Larger main heading */
+            font-weight: 700; /* Bolder */
+        }
+        h2 {
+            color: #2e86c1; /* Consistent blue for subheadings */
+            margin-top: 30px; /* More space above subheadings */
+            border-bottom: 1px solid #dcdcdc; /* Lighter border for subheadings */
+            padding-bottom: 10px;
+            font-size: 1.6em; /* Larger subheadings */
+            font-weight: 600; /* Semi-bold */
+        }
+        .exercise-section {
+            background-color: #f8fcfd; /* Very light blue background */
+            padding: 25px; /* More padding */
+            border-radius: 15px; /* More rounded corners */
+            margin-bottom: 30px;
+            border-left: 5px solid #5d9cec; /* More prominent left border */
+        }
+        .exercise {
+            margin: 20px 0; /* More vertical spacing between exercises */
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px; /* Nicer rounded corners */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Softer shadow */
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 1.15em; /* Slightly increased font size for questions */
+            color: #34495e; /* Darker text for questions */
+        }
+        .exercise p {
+            font-size: 1.1em; /* Increased font size for paragraphs */
+            font-weight: bold; /* All paragraphs are bold now */
+            margin-bottom: 1em; /* Add some space below paragraphs */
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        input[type="text"], input[type="number"] {
+            padding: 12px 15px; /* Larger padding for inputs */
+            border: 1px solid #c0d1e3; /* Softer border color */
+            border-radius: 8px; /* More rounded input fields */
+            width: 150px; /* Slightly wider inputs */
+            margin-left: 15px; /* More space to the left */
+            text-align: center;
+            font-size: 1.05em; /* Larger text in inputs */
+            transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+        }
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #5d9cec;
+            box-shadow: 0 0 0 3px rgba(93, 156, 236, 0.3); /* Focus glow */
+            outline: none;
+        }
+        button {
+            background-color: #5d9cec; /* Professional blue */
+            color: white;
+            border: none;
+            padding: 12px 20px; /* Larger buttons */
+            border-radius: 8px; /* More rounded buttons */
+            cursor: pointer;
+            font-size: 1.05em; /* Larger font in buttons */
+            margin: 8px; /* More margin around buttons */
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* Smooth transitions */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft button shadow */
+        }
+        button:hover {
+            background-color: #4a8cdb; /* Darker blue on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .result {
+            margin-top: 15px; /* More space above results */
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            font-size: 1.05em; /* Larger result text */
+            font-weight: bold; /* Result text is bold */
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .open-question, .writing-section {
+            background-color: #e8f5fe; /* Lighter blue/yellow for these sections */
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+        }
+        textarea {
+            width: calc(100% - 20px); /* Adjust width for padding */
+            height: 150px; /* Taller textarea */
+            padding: 15px; /* More padding */
+            border: 1px solid #c0d1e3;
+            border-radius: 8px;
+            font-family: inherit;
+            margin-top: 15px;
+            font-size: 1.05em;
+            resize: vertical; /* Allow vertical resizing */
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        textarea:focus {
+            border-color: #5d9cec;
+            box-shadow: 0 0 0 3px rgba(93, 156, 236, 0.3);
+            outline: none;
+        }
+        .fraction-input {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* More space between fraction parts */
+            margin-bottom: 15px;
+        }
+        .fraction-input input {
+            width: 60px; /* Slightly wider inputs for fractions */
+            font-size: 1.1em; /* Larger font in fraction inputs */
+        }
+        .fraction-line {
+            border-top: 2px solid #000; /* Thicker fraction line */
+            width: 60px;
+        }
+        .solution {
+            color: #28a745; /* Green for solution */
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .highlight {
+            background-color: #fffacd;
+            padding: 4px 6px; /* Slightly more padding */
+            border-radius: 5px; /* Rounded highlight */
+        }
+        /* Further increased MathJax fractions size */
+        .MathJax .MJX_Assistive_MathML {
+            font-size: 1.25em !important; /* Larger fractions */
+        }
+        .MathJax_Display {
+            font-size: 1.25em !important; /* Larger fractions in display mode */
+        }
+        .navigation-buttons {
+            text-align: center;
+            margin-top: 50px; /* More space above navigation buttons */
+            padding-top: 30px; /* More padding above the border */
+            border-top: 1px solid #e0e0e0;
+            
+            /* التعديلات الجديدة هنا لجعل الأزرار في سطر واحد ومتباعدة */
+            display: flex; /* يجعل الأزرار تتوزع في سطر واحد */
+            justify-content: center; /* يوزع الأزرار في المنتصف */
+            gap: 20px; /* يضيف مسافة 20 بكسل بين الأزرار */
+            flex-wrap: wrap; /* يسمح للأزرار بالانتقال إلى سطر جديد إذا كانت الشاشة صغيرة جدًا */
+        }
+        .navigation-buttons button {
+            padding: 14px 30px; /* Larger buttons */
+            font-size: 1.15em; /* Larger font */
+            /* margin: 0 15px; /* تم إزالة أو تقليل هذا الهامش لصالح 'gap' */
+            border-radius: 10px; /* More rounded */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Consistent shadow */
+        }
+        .navigation-buttons button.prev {
+            background-color: #ff9800; /* Orange */
+        }
+        .navigation-buttons button.prev:hover {
+            background-color: #fb8c00;
+        }
+        .navigation-buttons button.next {
+            background-color: #2196f3; /* Blue */
+        }
+        .navigation-buttons button.next:hover {
+            background-color: #1976d2;
+        }
+        .navigation-buttons button.home {
+            background-color: #607d8b; /* Greyish blue */
+        }
+        .navigation-buttons button.home:hover {
+            background-color: #455a64;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>الوحدة 1: ضرب الأعداد النسبية وقسمتها</h1>
+        
+        <div class="exercise-section">
+            <h2>أجد ناتج الضرب في أبسط صورة:</h2>
+            
+            <div class="exercise">
+                <div class="question">1. \( \frac{3}{4} \times \frac{6}{9} \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans1" placeholder="الإجابة">
+                    <button onclick="checkAnswer(1)">تحقق</button>
+                </div>
+                <div id="result1" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">2. \( -\frac{1}{7} \times \frac{2}{3} \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans2" placeholder="الإجابة">
+                    <button onclick="checkAnswer(2)">تحقق</button>
+                </div>
+                <div id="result2" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">3. \( 11 \times \frac{5}{8} \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans3" placeholder="الإجابة">
+                    <button onclick="checkAnswer(3)">تحقق</button>
+                </div>
+                <div id="result3" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">4. \( \frac{6}{8} \times \left(-3 \frac{1}{2}\right) \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans4" placeholder="الإجابة">
+                    <button onclick="checkAnswer(4)">تحقق</button>
+                </div>
+                <div id="result4" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">5. \( 2 \frac{3}{5} \times 2 \frac{1}{6} \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans5" placeholder="الإجابة">
+                    <button onclick="checkAnswer(5)">تحقق</button>
+                </div>
+                <div id="result5" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">6. \( 9 \times \left(-1 \frac{2}{7}\right) \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans6" placeholder="الإجابة">
+                    <button onclick="checkAnswer(6)">تحقق</button>
+                </div>
+                <div id="result6" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">7. \( -1.7 \times (-0.93) \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans7" placeholder="الإجابة">
+                    <button onclick="checkAnswer(7)">تحقق</button>
+                </div>
+                <div id="result7" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">8. \( 2.04 \times (-1.9) \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans8" placeholder="الإجابة">
+                    <button onclick="checkAnswer(8)">تحقق</button>
+                </div>
+                <div id="result8" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">9. \( 11.4 \times 1 \frac{4}{5} \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans9" placeholder="الإجابة">
+                    <button onclick="checkAnswer(9)">تحقق</button>
+                </div>
+                <div id="result9" class="result"></div>
+            </div>
+        </div>
+        
+        <div class="exercise-section">
+            <h2>أجد ناتج القسمة في أبسط صورة:</h2>
+            
+            <div class="exercise">
+                <div class="question">10. \( 11 \div \frac{2}{3} \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans10" placeholder="الإجابة">
+                    <button onclick="checkAnswer(10)">تحقق</button>
+                </div>
+                <div id="result10" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">11. \( \frac{4}{6} \div \frac{1}{12} \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans11" placeholder="الإجابة">
+                    <button onclick="checkAnswer(11)">تحقق</button>
+                </div>
+                <div id="result11" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">12. \( 5 \frac{3}{4} \div \frac{2}{7} \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans12" placeholder="الإجابة">
+                    <button onclick="checkAnswer(12)">تحقق</button>
+                </div>
+                <div id="result12" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">13. \( 76.68 \div (-2.8) \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans13" placeholder="الإجابة">
+                    <button onclick="checkAnswer(13)">تحقق</button>
+                </div>
+                <div id="result13" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">14. \( 14.88 \div 1 \frac{1}{5} \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans14" placeholder="الإجابة">
+                    <button onclick="checkAnswer(14)">تحقق</button>
+                </div>
+                <div id="result14" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">15. \( -119.35 \div \left(-3 \frac{1}{10}\right) \)</div>
+                <div class="input-group">
+                    <input type="text" id="ans15" placeholder="الإجابة">
+                    <button onclick="checkAnswer(15)">تحقق</button>
+                </div>
+                <div id="result15" class="result"></div>
+            </div>
+        </div>
+        
+        <div class="exercise-section">
+            <h2>أسئلة تطبيقية:</h2>
+            
+            <div class="exercise">
+                <div class="question">
+                    <p>طاووس: يعدّ الطاووس واحدًا من أكبر الطيور، ويُمكنُ أن يبلغ طول ذيله 60% من طوله الكلي، إذا كانَ طولُ أحدها 145 cm، فكمْ يبلغُ طولُ ذيله؟</p>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="ans16" placeholder="طول الذيل بالسنتيمتر">
+                    <button onclick="checkAnswer(16)">تحقق</button>
+                </div>
+                <div id="result16" class="result"></div>
+            </div>
+            
+            <div class="exercise">
+                <div class="question">
+                    <p>خياط: يحتاج خيّاط إلى \( 2 \frac{1}{4} \) متر من القماش؛ لصنع ثوب واحد، كمْ ثوبًا يمكنُ صنعهُ باستعمال 14 مترًا من القماش؟</p>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="ans17" placeholder="عدد الثياب">
+                    <button onclick="checkAnswer(17)">تحقق</button>
+                </div>
+                <div id="result17" class="result"></div>
+            </div>
+        </div>
+        
+        <div class="exercise-section">
+            <h2>اكتشف الخطأ:</h2>
+            <div class="exercise">
+                <div class="question">
+                    <p>أوجدت فاطمة ناتج: \( -3 \frac{3}{8} \times \left(-4 \frac{1}{3}\right) = 12 \frac{1}{8} \)</p>
+                    <p>اكتشف خطأ فاطمة، ثم صححه:</p>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="ans18" placeholder="التصحيح">
+                    <button onclick="checkAnswer(18)">تحقق</button>
+                </div>
+                <div id="result18" class="result"></div>
+            </div>
+        </div>
+        
+        <div class="open-question">
+            <h2>مسألة مفتوحة:</h2>
+            <div class="question"> <p>أجد كسرين ناتج ضربهما أكبر من النصف وأصغر من الواحد.</p>
+            </div>
+            
+            <div class="fraction-input">
+                <div>
+                    <p>الكسر الأول:</p>
+                    <input type="number" id="num1" placeholder="بسط" min="1">
+                    <div class="fraction-line"></div>
+                    <input type="number" id="den1" placeholder="مقام" min="1">
+                </div>
+                
+                <div style="margin: 0 20px; font-size: 24px;">×</div>
+                
+                <div>
+                    <p>الكسر الثاني:</p>
+                    <input type="number" id="num2" placeholder="بسط" min="1">
+                    <div class="fraction-line"></div>
+                    <input type="number" id="den2" placeholder="مقام" min="1">
+                </div>
+            </div>
+            
+            <button onclick="checkOpenQuestion()">تحقق من الناتج</button>
+            <div id="openResult" class="result" style="margin-top: 15px;"></div>
+        </div>
+        
+        <div class="writing-section">
+            <h2>الكتابة التوضيحية:</h2>
+            <div class="question"> <p>اكتب فقرة قصيرة تبيّن فيها لماذا يكون ناتج ضرب الكسر \( \frac{1}{4} \) في نفسه أقل من \( \frac{1}{4} \).</p>
+            </div>
+            <textarea id="writingAnswer" placeholder="اكتب إجابتك هنا..."></textarea>
+            <button onclick="saveWriting()">حفظ الإجابة</button>
+            <div id="writingResult" class="result"></div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="checkAll()" style="background-color: #28a745; padding: 12px 25px; font-size: 1.1em;">تحقق من جميع الإجابات</button>
+        </div>
+
+        <div class="navigation-buttons">
+            <button class="prev" onclick="window.location.href='u1l5p2.html'">السابق</button>
+            <button class="home" onclick="window.location.href='u1.html'">الصفحة الرئيسية</button>
+            <button class="next" onclick="window.location.href='u1l5p4.html'">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        // الإجابات الصحيحة
+        const correctAnswers = {
+            1: "1/2",
+            2: "-2/21",
+            3: "55/8",
+            4: "-21/8",
+            5: "273/30",
+            6: "-81/7",
+            7: "1.581",
+            8: "-3.876",
+            9: "1026/50",
+            10: "33/2",
+            11: "8",
+            12: "161/8",
+            13: "-27.3857",
+            14: "12.4",
+            15: "38.5",
+            16: "87",
+            17: "6",
+            18: "14.5"
+        };
+        
+        // التحقق من إجابة
+        function checkAnswer(questionNum) {
+            const answerInput = document.getElementById(`ans${questionNum}`);
+            const resultDiv = document.getElementById(`result${questionNum}`);
+            let userAnswer = answerInput.value.trim();
+
+            if (!userAnswer) {
+                resultDiv.textContent = "الرجاء إدخال إجابة";
+                resultDiv.className = "result incorrect";
+                resultDiv.style.display = "block";
+                return;
+            }
+            
+            let isCorrect = false;
+            if (userAnswer.includes('/') && correctAnswers[questionNum].includes('/')) {
+                const [userNum, userDen] = userAnswer.split('/').map(Number);
+                const [correctNum, correctDen] = correctAnswers[questionNum].split('/').map(Number);
+                if (userNum / userDen === correctNum / correctDen) {
+                    isCorrect = true;
+                }
+            } else if (parseFloat(userAnswer) == parseFloat(correctAnswers[questionNum])) {
+                isCorrect = true;
+            } else if (userAnswer === correctAnswers[questionNum]) { // Exact string match for non-numeric cases or specific formats
+                isCorrect = true;
+            }
+
+            if (isCorrect) {
+                resultDiv.textContent = "إجابة صحيحة! ✓";
+                resultDiv.className = "result correct";
+            } else {
+                resultDiv.innerHTML = `إجابة خاطئة. الإجابة الصحيحة هي: <span class="solution">${correctAnswers[questionNum]}</span>`;
+                resultDiv.className = "result incorrect";
+            }
+            resultDiv.style.display = "block";
+        }
+        
+        // التحقق من المسألة المفتوحة
+        function checkOpenQuestion() {
+            const num1 = parseInt(document.getElementById("num1").value);
+            const den1 = parseInt(document.getElementById("den1").value);
+            const num2 = parseInt(document.getElementById("num2").value);
+            const den2 = parseInt(document.getElementById("den2").value);
+            const resultDiv = document.getElementById("openResult");
+            
+            if (isNaN(num1) || isNaN(den1) || isNaN(num2) || isNaN(den2) || den1 === 0 || den2 === 0) {
+                resultDiv.textContent = "الرجاء إدخال جميع القيم الصحيحة للكسور.";
+                resultDiv.className = "result incorrect";
+                resultDiv.style.display = "block";
+                return;
+            }
+            
+            const fraction1 = num1 / den1;
+            const fraction2 = num2 / den2;
+            const product = fraction1 * fraction2;
+            
+            if (product > 0.5 && product < 1) {
+                resultDiv.textContent = `ناتج الضرب هو ${product.toFixed(4)} وهو بين 0.5 و1 - إجابة صحيحة! ✓`;
+                resultDiv.className = "result correct";
+            } else {
+                resultDiv.textContent = `ناتج الضرب هو ${product.toFixed(4)} وهو ليس بين 0.5 و1 - حاول مرة أخرى`;
+                resultDiv.className = "result incorrect";
+            }
+            resultDiv.style.display = "block";
+        }
+        
+        // حفظ الكتابة التوضيحية
+        function saveWriting() {
+            const writing = document.getElementById("writingAnswer").value.trim();
+            const resultDiv = document.getElementById("writingResult");
+            
+            if (!writing) {
+                resultDiv.textContent = "الرجاء كتابة الفقرة المطلوبة";
+                resultDiv.className = "result incorrect";
+                resultDiv.style.display = "block";
+                return;
+            }
+            
+            if (writing.length < 50) {
+                resultDiv.textContent = "الفقرة قصيرة جدًا، الرجاء الإسهاب في الشرح";
+                resultDiv.className = "result incorrect";
+            } else {
+                resultDiv.textContent = "تم حفظ إجابتك بنجاح ✓";
+                resultDiv.className = "result correct";
+                
+                // إضافة نص تبياني للطالب
+                const explanation = document.createElement("p");
+                explanation.innerHTML = "عند ضرب كسرين أصغر من 1، يكون الناتج أصغر من الكسور الأصلية. مثلاً: <span class='highlight'>\\( \\frac{1}{4} \\times \\frac{1}{4} = \\frac{1}{16} \\)</span> حيث \\( \\frac{1}{16} \\) أصغر من \\( \\frac{1}{4} \\) لأننا نقسم الواحد الصحيح إلى أجزاء أكثر.";
+                explanation.style.marginTop = "15px";
+                explanation.style.color = "#2c3e50";
+                resultDiv.appendChild(explanation);
+            }
+            resultDiv.style.display = "block";
+        }
+        
+        // التحقق من جميع الإجابات
+        function checkAll() {
+            for (let i = 1; i <= 18; i++) {
+                checkAnswer(i);
+            }
+        }
+        
+        // تهيئة MathJax عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            MathJax.typeset();
+        });
+    </script>
+</body>
+</html>
