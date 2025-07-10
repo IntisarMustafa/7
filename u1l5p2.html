@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ضرب الأعداد النسبية وقسمتها - الصفحات 29-30</title>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: true,
+          packages: {'[+]': ['ams']}
+        },
+        options: {
+          ignoreHtmlClass: 'tex2jax_ignore',
+          processHtmlClass: 'tex2jax_process'
+        },
+        chtml: {
+          scale: 1.1,
+          mtextInheritFont: true
+        },
+        loader: {load: ['[tex]/ams']},
+        startup: {
+          ready: () => {
+            MathJax.startup.defaultReady();
+            // إعادة معالجة الرياضيات بعد التحميل
+            setTimeout(() => MathJax.typesetPromise(), 300);
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #3498db;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        h3 {
+            color: #2980b9;
+            font-size: 1.4rem;
+            margin: 20px 0 15px;
+        }
+
+        .example-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exercise-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .math {
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 15px;
+            text-align: center;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+        }
+
+        .math-inline {
+            display: inline-block;
+            margin: 0 5px;
+            vertical-align: middle;
+        }
+
+        .steps {
+            padding: 15px 25px;
+            background: #fffde7;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .steps li {
+            margin-bottom: 10px;
+        }
+
+        .key-concept {
+            background: #fff3e0;
+            border: 2px dashed #ff9800;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 15px 5px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-check {
+            background: #27ae60;
+        }
+
+        .btn-hint {
+            background: #f39c12;
+        }
+
+        .interactive-box {
+            background: #edf7ff;
+            border: 2px solid #3498db;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        input {
+            padding: 12px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            width: 120px;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 30px;
+        }
+
+        .correct {
+            color: #27ae60;
+        }
+
+        .incorrect {
+            color: #e74c3c;
+        }
+
+        /* تنسيق الأزرار الجديدة */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between; /* لوضع الأزرار على الأطراف */
+            align-items: center;
+            padding: 10px 30px; /* نفس عرض الـ content */
+            margin-top: 20px; /* مسافة بين المحتوى والأزرار */
+            /* لا تضع خلفية هنا، دعها شفافة لتبدو جزءاً من الـ content */
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            font-size: 1rem;
+            margin-top: 20px; /* مسافة بين الأزرار والفوتر */
+        }
+
+        footer p {
+            margin: 5px 0; /* مسافة بين الفقرات في الفوتر */
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .summary-item {
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .math {
+                padding: 10px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                gap: 10px;
+                padding: 10px 20px; /* Adjust padding for small screens */
+            }
+            .navigation-buttons .btn {
+                width: 100%; /* Make buttons take full width */
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ضرب الأعداد النسبية وقسمتها</h1>
+            <div class="subtitle">الصفحات 29-30 - مفهوم أساسي: قسمة الأعداد النسبية</div>
+        </header>
+
+        <div class="content">
+            <div class="section">
+                <h2>الوحدة 1 - قسمة الأعداد النسبية</h2>
+
+                <div class="key-concept">
+                    <h3>مفهوم أساسي</h3>
+                    <p><span class="highlight">بالكلمات:</span> لقسمة العدد النسبي a/b على العدد النسبي c/d، أضرب في المعكوس الضربي (مقلوب c/d)، ثم أطبق قواعد ضرب الأعداد النسبية لتحديد إشارة ناتج القسمة.</p>
+                    <div class="math">
+                        \[ \frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \times \frac{d}{c} \]
+                        <br>
+                        \[ \text{حيث } b, c, d \neq 0 \]
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h3>مثال 3: أجد ناتج القسمة في أبسط صورة</h3>
+
+                    <div class="math">1) \( \dfrac{1}{4} \div \left(-\dfrac{3}{5}\right) \)</div>
+
+                    <div class="steps">
+                        <p>الحل:</p>
+                        <div class="math">\[ \dfrac{1}{4} \div \left(-\dfrac{3}{5}\right) = \dfrac{1}{4} \times \left(-\dfrac{5}{3}\right) \]</div>
+                        <p>أضرب في المعكوس الضربي للمقسوم عليه \( -\dfrac{3}{5} \)</p>
+                        <div class="math">\[ = -\dfrac{1 \times 5}{4 \times 3} = -\dfrac{5}{12} \]</div>
+                        <p>أحدد إشارة الناتج، ثم أضرب البسطين، وأضرب المقامين</p>
+                    </div>
+
+                    <div class="math">2) \( -3 \div \left(2 \dfrac{1}{3}\right) \)</div>
+
+                    <div class="steps">
+                        <p>الحل:</p>
+                        <div class="math">\[ -3 \div \left(2 \dfrac{1}{3}\right) = -\dfrac{3}{1} \div \dfrac{7}{3} \]</div>
+                        <p>أحول العدد الكسري إلى كسر غير فعلي</p>
+                        <div class="math">\[ = -\dfrac{3}{1} \times \dfrac{3}{7} = -\dfrac{3 \times 3}{1 \times 7} = -\dfrac{9}{7} \]</div>
+                        <div class="math">\[ = -1 \dfrac{2}{7} \]</div>
+                    </div>
+                </div>
+
+                <div class="interactive-box">
+                    <h3>جرب بنفسك: قسمة كسرين</h3>
+                    <div class="math">\( \dfrac{2}{5} \div \dfrac{3}{4} \)</div>
+                    <input type="text" id="division-input" placeholder="أدخل الإجابة">
+                    <button class="btn btn-check" onclick="checkDivision()">تحقق من الإجابة</button>
+                    <div id="division-feedback" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>تمارين تطبيقية</h2>
+
+                <div class="exercise-box">
+                    <h3>أجد نتيجة القسمة في كل مما يلي:</h3>
+
+                    <div class="math">1) \( -7.56 \div 0.24 \)</div>
+                    <div class="steps">
+                        <p>الحل:</p>
+                        <div class="math">\[ -7.56 \div 0.24 = \dfrac{-7.56 \times 100}{0.24 \times 100} = \dfrac{-756}{24} \]</div>
+                        <div class="math">\[ = -31.5 \]</div>
+                    </div>
+
+                    <div class="math">2) \( -2.28 \div \left(-9 \dfrac{1}{2}\right) \)</div>
+                    <div class="steps">
+                        <p>الحل:</p>
+                        <div class="math">\[ -2.28 \div \left(-9 \dfrac{1}{2}\right) = -2.28 \div (-9.5) \]</div>
+                        <div class="math">\[ = \dfrac{-2.28 \times 10}{-9.5 \times 10} = \dfrac{-22.8}{-95} \]</div>
+                        <div class="math">\[ = 0.24 \]</div>
+                    </div>
+                </div>
+
+                <div class="exercise-box">
+                    <h3>أجد ناتج القسمة:</h3>
+
+                    <div class="interactive-box">
+                        <div class="math">1) \( 7.7 \div -14 \)</div>
+                        <input type="text" id="exercise1-input" placeholder="أدخل الإجابة">
+                        <button class="btn btn-hint" onclick="showHint(1)">عرض تلميح</button>
+                        <button class="btn btn-check" onclick="checkExercise(1)">تحقق</button>
+                        <div id="exercise1-feedback" class="feedback"></div>
+                        <div id="exercise1-hint" class="feedback" style="display:none; color: #f39c12;">
+                            تلميح: قسمة عدد عشري على عدد صحيح، انتبه للإشارة
+                        </div>
+                    </div>
+
+                    <div class="interactive-box">
+                        <div class="math">2) \( 47.6 \div -1.7 \)</div>
+                        <input type="text" id="exercise2-input" placeholder="أدخل الإجابة">
+                        <button class="btn btn-hint" onclick="showHint(2)">عرض تلميح</button>
+                        <button class="btn btn-check" onclick="checkExercise(2)">تحقق</button>
+                        <div id="exercise2-feedback" class="feedback"></div>
+                        <div id="exercise2-hint" class="feedback" style="display:none; color: #f39c12;">
+                            تلميح: حرك الفاصلة في كلا العددين لتصبح القسمة على عدد صحيح
+                        </div>
+                    </div>
+
+                    <div class="interactive-box">
+                        <div class="math">3) \( 97.8 \div 1 \dfrac{1}{2} \)</div>
+                        <input type="text" id="exercise3-input" placeholder="أدخل الإجابة">
+                        <button class="btn btn-hint" onclick="showHint(3)">عرض تلميح</button>
+                        <button class="btn btn-check" onclick="checkExercise(3)">تحقق</button>
+                        <div id="exercise3-feedback" class="feedback"></div>
+                        <div id="exercise3-hint" class="feedback" style="display:none; color: #f39c12;">
+                            تلميح: حول العدد الكسري إلى كسر عشري أولاً (1.5) ثم نفذ القسمة
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-concept">
+                    <h3>ملخص قاعدة القسمة</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <p>1. لقسمة كسر على كسر:</p>
+                            <div class="math">\[ \dfrac{a}{b} \div \dfrac{c}{d} = \dfrac{a}{b} \times \dfrac{d}{c} \]</div>
+                        </div>
+
+                        <div class="summary-item">
+                            <p>2. لقسمة أعداد عشرية:</p>
+                            <div class="math">\[ \dfrac{a \times 10^n}{b \times 10^n} \]</div>
+                        </div>
+
+                        <div class="summary-item">
+                            <p>3. لقسمة عدد كسري:</p>
+                            <div class="math">\[ a \dfrac{b}{c} = \dfrac{a \times c + b}{c} \]</div>
+                        </div>
+
+                        <div class="summary-item">
+                            <p>4. قواعد الإشارة:</p>
+                            <div class="math">
+                                \[ (+) \div (+) = (+) \]
+                                \[ (-) \div (-) = (+) \]
+                                \[ (-) \div (+) = (-) \]
+                                \[ (+) \div (-) = (-) \]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-buttons">
+            <button class="btn" onclick="window.location.href='u1l5p1.html'">السابق</button>
+            <button class="btn" onclick="window.location.href='u1l5p3.html'">التالي</button>
+        </div>
+
+        <footer>
+            <p>الوحدة 1: ضرب الأعداد النسبية وقسمتها | الصفحات 29-30</p>
+            <p>مادة الرياضيات - منهج تعليمي</p>
+        </footer>
+    </div>
+
+    <script>
+        function checkDivision() {
+            const input = document.getElementById('division-input').value;
+            const feedback = document.getElementById('division-feedback');
+
+            // الإجابة الصحيحة: 8/15
+            const correctAnswers = ['8/15', '0.533', '0.5333', '0.53333', '8/15'];
+            const isCorrect = correctAnswers.some(ans =>
+                input.trim().replace(/\s/g, '') === ans.replace(/\s/g, '')
+            );
+
+            if (isCorrect) {
+                feedback.textContent = 'إجابة صحيحة! أحسنت! الناتج هو 8/15';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = 'إجابة غير صحيحة. حاول مرة أخرى. تذكر: اضرب في مقلوب المقسوم عليه';
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function showHint(exerciseNum) {
+            const hint = document.getElementById(`exercise${exerciseNum}-hint`);
+            hint.style.display = 'block';
+        }
+
+        function checkExercise(exerciseNum) {
+            const input = document.getElementById(`exercise${exerciseNum}-input`).value;
+            const feedback = document.getElementById(`exercise${exerciseNum}-feedback`);
+            let correct = false;
+            let correctAnswer = '';
+
+            switch(exerciseNum) {
+                case 1:
+                    // 7.7 ÷ -14 = -0.55
+                    correct = input === '-0.55' || input === '-11/20';
+                    correctAnswer = '-0.55';
+                    break;
+                case 2:
+                    // 47.6 ÷ -1.7 = -28
+                    correct = input === '-28';
+                    correctAnswer = '-28';
+                    break;
+                case 3:
+                    // 97.8 ÷ 1.5 = 65.2
+                    correct = input === '65.2' || input === '326/5';
+                    correctAnswer = '65.2';
+                    break;
+            }
+
+            if (correct) {
+                feedback.textContent = `إجابة صحيحة! ممتاز! الناتج هو ${correctAnswer}`;
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = 'إجابة غير صحيحة. راجع خطوات الحل وحاول مرة أخرى.';
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        // إعادة معالجة الرياضيات بعد تحميل الصفحة
+        window.addEventListener('load', function() {
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typesetPromise().catch(err => console.log('MathJax typeset error:', err));
+            }
+        });
+    </script>
+</body>
+</html>
