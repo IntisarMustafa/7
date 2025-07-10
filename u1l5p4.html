@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة كاندي كرش التعليمية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .header {
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .game-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            max-width: 100%;
+            overflow: auto;
+            position: relative;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-gap: 5px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .candy {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .candy:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .candy.selected {
+            transform: scale(0.9);
+            box-shadow: 0 0 0 4px white;
+        }
+
+        .candy.red { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
+        .candy.blue { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .candy.green { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .candy.yellow { background: linear-gradient(135deg, #f6d365, #fda085); }
+        .candy.purple { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+        .candy.orange { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff8a00, #da1b60);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #toggle-sound-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        #toggle-sound-btn.disabled {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .instructions {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 600px;
+        }
+
+        .instructions h2 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .instructions ul {
+            text-align: right;
+            list-style-type: none;
+            padding: 0 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* تأثيرات الرسوم المتحركة */
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        .pop {
+            animation: pop 0.5s forwards;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .fall {
+            animation: fall 0.5s ease-out;
+        }
+
+        /* نافذة السؤال التعليمي */
+        .question-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .question-content {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .question-content h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .question-content p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .answers-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .answer-btn {
+            background: linear-gradient(135deg, #3498db, #1abc9c);
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.2rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .answer-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .feedback {
+            font-size: 1.3rem;
+            font-weight: bold;
+            min-height: 30px;
+            margin-top: 20px;
+        }
+
+        .correct {
+            color: #2ecc71;
+        }
+
+        .incorrect {
+            color: #e74c3c;
+        }
+
+        /* شريط التقدم */
+        .progress-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 20px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff8a00, #da1b60);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* دعم الرموز الرياضية */
+        .math-symbols {
+            display: inline-block;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* نافذة الفوز */
+        .win-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .win-content {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            animation: fadeInScale 0.5s ease-out forwards;
+        }
+
+        .win-content h2 {
+            color: white;
+            margin-bottom: 25px;
+            font-size: 3rem;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .win-content p {
+            font-size: 1.8rem;
+            color: #ecf0f1;
+            margin-bottom: 35px;
+        }
+
+        .win-content button {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            padding: 15px 30px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+        }
+
+        .win-content button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .candy {
+                width: 40px;
+                height: 40px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .stats {
+                font-size: 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .question-content {
+                padding: 20px;
+            }
+
+            .question-content p {
+                font-size: 1.3rem;
+            }
+
+            .answers-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .candy {
+                width: 30px;
+                height: 30px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .question-content {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .question-content h2 {
+                font-size: 1.7rem;
+            }
+
+            .question-content p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>لعبة كاندي كرش التعليمية</h1>
+        <p>استمتع باللعبة وتعلم ضرب وقسمة الأعداد النسبية!</p>
+    </div>
+
+    <div class="game-container">
+        <div class="stats">
+            <div class="stat">
+                <div>الحركات</div>
+                <div id="moves" class="stat-value">20</div>
+            </div>
+            <div class="stat">
+                <div>النقاط</div>
+                <div id="score" class="stat-value">0</div>
+            </div>
+            <div class="stat">
+                <div>الهدف</div>
+                <div id="target" class="stat-value">500</div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="game-board" id="game-board"></div>
+
+        <div class="controls">
+            <button id="reset-btn">لعبة جديدة</button>
+            <button id="hint-btn">مساعدة</button>
+            <button id="toggle-sound-btn">إيقاف الصوت</button>
+        </div>
+    </div>
+
+    <div class="instructions">
+        <h2>كيفية اللعب</h2>
+        <ul>
+            <li>١. انقر على حلوى لتحديدها (ستظهر بحد أبيض)</li>
+            <li>٢. انقر على حلوى مجاورة (أعلى، أسفل، يمين، يسار) للتبديل</li>
+            <li>٣. إذا شكلت ٣ أو أكثر من نفس اللون في صف أو عمود، ستختفي وتحصل على نقاط</li>
+            <li>٤. كل ١٠٠ نقطة ستظهر سؤال تعليمي حول ضرب أو قسمة الأعداد النسبية</li>
+            <li>٥. حاول الوصول إلى الهدف قبل انتهاء الحركات</li>
+        </ul>
+    </div>
+
+    <div class="question-modal" id="question-modal">
+        <div class="question-content">
+            <h2>سؤال تعليمي</h2>
+            <p id="question-text">ما هو ناتج ضرب 3/4 × 2/5؟</p>
+
+            <div class="answers-container" id="answers-container">
+                </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <button id="continue-btn">استمر في اللعب</button>
+        </div>
+    </div>
+
+    <div class="win-modal" id="win-modal">
+        <div class="win-content">
+            <h2 id="win-title">🎉 تهانينا! 🎉</h2>
+            <p id="win-message">لقد حققت الهدف وفزت باللعبة!</p>
+            <button id="play-again-btn">العب مرة أخرى</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // عناصر DOM
+            const gameBoard = document.getElementById('game-board');
+            const movesDisplay = document.getElementById('moves');
+            const scoreDisplay = document.getElementById('score');
+            const targetDisplay = document.getElementById('target');
+            const resetBtn = document.getElementById('reset-btn');
+            const hintBtn = document.getElementById('hint-btn');
+            const toggleSoundBtn = document.getElementById('toggle-sound-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const questionModal = document.getElementById('question-modal');
+            const questionText = document.getElementById('question-text');
+            const answersContainer = document.getElementById('answers-container');
+            const feedbackElement = document.getElementById('feedback');
+            const continueBtn = document.getElementById('continue-btn');
+            const winModal = document.getElementById('win-modal');
+            const winTitle = document.getElementById('win-title');
+            const winMessage = document.getElementById('win-message');
+            const playAgainBtn = document.getElementById('play-again-btn');
+
+            // إعدادات اللعبة
+            const BOARD_SIZE = 8;
+            const COLORS = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
+            const TARGET_SCORE = 500;
+            const QUESTION_INTERVAL = 100;
+            let moves = 20;
+            let score = 0;
+            let board = [];
+            let selectedCandy = null;
+            let lastQuestionScore = 0;
+            let isPaused = false;
+            let soundEnabled = true;
+
+            // إعداد Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // وظيفة تشغيل الأصوات مع قيم "ألطف" افتراضية
+            function playSound(frequency, type = 'sine', duration = 0.08, volume = 0.15) {
+                if (!soundEnabled) return;
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = type;
+                oscillator.frequency.value = frequency;
+                gainNode.gain.value = volume;
+                
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + duration); // تلاشي الصوت
+                oscillator.stop(audioContext.currentTime + duration);
+            }
+
+            // الأسئلة التعليمية المعدلة مع إجابة صحيحة واحدة فقط
+            const mathQuestions = [
+                {
+                    question: "ما هو ناتج ضرب <span class='math-symbols'>(-3/4) × (2/5)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>-3/10</span>",
+                        "<span class='math-symbols'>3/10</span>",
+                        "<span class='math-symbols'>-6/15</span>",
+                        "<span class='math-symbols'>6/15</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج قسمة <span class='math-symbols'>(-4/5) ÷ (1/2)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>-8/5</span>",
+                        "<span class='math-symbols'>8/5</span>",
+                        "<span class='math-symbols'>-4/10</span>",
+                        "<span class='math-symbols'>4/10</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج ضرب <span class='math-symbols'>(5/6) × (-3/2)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>-5/4</span>",
+                        "<span class='math-symbols'>5/4</span>",
+                        "<span class='math-symbols'>-10/8</span>",
+                        "<span class='math-symbols'>10/8</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج قسمة <span class='math-symbols'>(7/8) ÷ (-1/4)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>-7/2</span>",
+                        "<span class='math-symbols'>7/2</span>",
+                        "<span class='math-symbols'>-7/32</span>",
+                        "<span class='math-symbols'>7/32</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج ضرب <span class='math-symbols'>(-2/3) × (-5/7)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>10/21</span>",
+                        "<span class='math-symbols'>-10/21</span>",
+                        "<span class='math-symbols'>-7/10</span>",
+                        "<span class='math-symbols'>7/10</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج قسمة <span class='math-symbols'>(-9/10) ÷ (-3/5)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>3/2</span>",
+                        "<span class='math-symbols'>-3/2</span>",
+                        "<span class='math-symbols'>27/50</span>",
+                        "<span class='math-symbols'>-27/50</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج <span class='math-symbols'>(3/4) × (-8/9)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>-2/3</span>",
+                        "<span class='math-symbols'>2/3</span>",
+                        "<span class='math-symbols'>-6/9</span>",
+                        "<span class='math-symbols'>6/9</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج <span class='math-symbols'>(-1/2) ÷ (3/4)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>-2/3</span>",
+                        "<span class='math-symbols'>2/3</span>",
+                        "<span class='math-symbols'>-3/2</span>",
+                        "<span class='math-symbols'>3/2</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج <span class='math-symbols'>(0.6) × (-0.25)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>-0.15</span>",
+                        "<span class='math-symbols'>0.15</span>",
+                        "<span class='math-symbols'>-1.5</span>",
+                        "<span class='math-symbols'>1.5</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج <span class='math-symbols'>(-1.8) ÷ (-0.3)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>6</span>",
+                        "<span class='math-symbols'>-6</span>",
+                        "<span class='math-symbols'>0.6</span>",
+                        "<span class='math-symbols'>-0.6</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج <span class='math-symbols'>(2.5) × (-0.4)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>-1</span>",
+                        "<span class='math-symbols'>1</span>",
+                        "<span class='math-symbols'>-0.1</span>",
+                        "<span class='math-symbols'>0.1</span>"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "ما هو ناتج <span class='math-symbols'>(-3/5) ÷ (1/4)</span>؟",
+                    answers: [
+                        "<span class='math-symbols'>-12/5</span>",
+                        "<span class='math-symbols'>12/5</span>",
+                        "<span class='math-symbols'>-3/20</span>",
+                        "<span class='math-symbols'>3/20</span>"
+                    ],
+                    correct: 0
+                }
+            ];
+
+            // تهيئة اللعبة
+            function initGame() {
+                moves = 20;
+                score = 0;
+                lastQuestionScore = 0;
+                isPaused = false;
+                movesDisplay.textContent = moves;
+                scoreDisplay.textContent = score;
+                targetDisplay.textContent = TARGET_SCORE;
+                updateProgressBar();
+                createBoard();
+                renderBoard();
+                questionModal.style.display = 'none';
+                winModal.style.display = 'none';
+                feedbackElement.textContent = '';
+                feedbackElement.className = 'feedback';
+                winTitle.textContent = '🎉 تهانينا! 🎉';
+                winMessage.textContent = 'لقد حققت الهدف وفزت باللعبة!';
+                document.querySelector('.win-content').style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+            }
+
+            // إنشاء لوحة اللعبة
+            function createBoard() {
+                board = [];
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    board[row] = [];
+                    for (let col = 0; col < BOARD_SIZE; col++) {
+                        board[row][col] = {
+                            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                            row,
+                            col
+                        };
+                    }
+                }
+
+                while (checkMatches().length > 0) {
+                    for (let row = 0; row < BOARD_SIZE; row++) {
+                        for (let col = 0; col < BOARD_SIZE; col++) {
+                            board[row][col].color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                        }
+                    }
+                }
+            }
+
+            // عرض لوحة اللعبة
+            function renderBoard() {
+                gameBoard.innerHTML = '';
+
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    for (let col = 0; col < BOARD_SIZE; col++) {
+                        const candy = board[row][col];
+                        const candyElement = document.createElement('div');
+                        candyElement.className = `candy ${candy.color}`;
+                        candyElement.dataset.row = row;
+                        candyElement.dataset.col = col;
+
+                        candyElement.addEventListener('click', () => handleCandyClick(candy));
+
+                        gameBoard.appendChild(candyElement);
+                    }
+                }
+            }
+
+            // تحديث شريط التقدم
+            function updateProgressBar() {
+                const progress = (score / TARGET_SCORE) * 100;
+                progressBar.style.width = `${Math.min(100, progress)}%`;
+            }
+
+            // التعامل مع النقر على الحلوى
+            function handleCandyClick(candy) {
+                if (isPaused) return;
+
+                if (!selectedCandy) {
+                    selectedCandy = candy;
+                    highlightCandy(candy, true);
+                    playSound(350, 'sine', 0.08, 0.1); // صوت عند تحديد الحلوى (ألطف)
+                    return;
+                }
+
+                if (selectedCandy.row === candy.row && selectedCandy.col === candy.col) {
+                    highlightCandy(selectedCandy, false);
+                    selectedCandy = null;
+                    playSound(250, 'sine', 0.08, 0.1); // صوت عند إلغاء تحديد الحلوى (ألطف)
+                    return;
+                }
+
+                if (isAdjacent(selectedCandy, candy)) {
+                    swapCandies(selectedCandy, candy);
+
+                    setTimeout(() => {
+                        const matches = checkMatches();
+
+                        if (matches.length > 0) {
+                            processMatches(matches);
+                        } else {
+                            swapCandies(selectedCandy, candy); // ارجع التبديل
+                            playSound(120, 'triangle', 0.15, 0.2); // صوت حركة غير صالحة (ألطف)
+                            moves++; // إعادة الحركة إذا لم تكن هناك تطابقات
+                            movesDisplay.textContent = moves;
+                        }
+
+                        highlightCandy(selectedCandy, false);
+                        selectedCandy = null;
+                    }, 300);
+                } else {
+                    highlightCandy(selectedCandy, false);
+                    selectedCandy = candy;
+                    highlightCandy(candy, true);
+                    playSound(350, 'sine', 0.08, 0.1); // صوت عند تحديد حلوى جديدة (ألطف)
+                }
+            }
+
+            // تحديد الحلوى
+            function highlightCandy(candy, isSelected) {
+                const candyElement = document.querySelector(`.candy[data-row="${candy.row}"][data-col="${candy.col}"]`);
+                if (candyElement) {
+                    if (isSelected) {
+                        candyElement.classList.add('selected');
+                    } else {
+                        candyElement.classList.remove('selected');
+                    }
+                }
+            }
+
+            // التحقق إذا كانت الحلوتين متجاورتين
+            function isAdjacent(candy1, candy2) {
+                const rowDiff = Math.abs(candy1.row - candy2.row);
+                const colDiff = Math.abs(candy1.col - candy2.col);
+
+                return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
+            }
+
+            // تبديل الحلوى
+            function swapCandies(candy1, candy2) {
+                const tempColor = candy1.color;
+                candy1.color = candy2.color;
+                candy2.color = tempColor;
+
+                renderBoard();
+
+                moves--;
+                movesDisplay.textContent = moves;
+
+                checkGameEnd();
+            }
+
+            // التحقق من التطابقات
+            function checkMatches() {
+                const matches = [];
+
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    for (let col = 0; col < BOARD_SIZE - 2; col++) {
+                        const color = board[row][col].color;
+                        if (color !== null && color === board[row][col + 1].color &&
+                            color === board[row][col + 2].color) {
+
+                            const match = [];
+                            let c = col;
+                            while (c < BOARD_SIZE && board[row][c].color === color) {
+                                match.push(board[row][c]);
+                                c++;
+                            }
+                            matches.push(match);
+                            col = c - 1;
+                        }
+                    }
+                }
+
+                for (let col = 0; col < BOARD_SIZE; col++) {
+                    for (let row = 0; row < BOARD_SIZE - 2; row++) {
+                        const color = board[row][col].color;
+                        if (color !== null && color === board[row + 1][col].color &&
+                            color === board[row + 2][col].color) {
+
+                            const match = [];
+                            let r = row;
+                            while (r < BOARD_SIZE && board[r][col].color === color) {
+                                match.push(board[r][col]);
+                                r++;
+                            }
+                            matches.push(match);
+                            row = r - 1;
+                        }
+                    }
+                }
+
+                return matches;
+            }
+
+            // معالجة التطابقات
+            function processMatches(matches) {
+                matches.forEach(match => {
+                    match.forEach(candy => {
+                        const candyElement = document.querySelector(`.candy[data-row="${candy.row}"][data-col="${candy.col}"]`);
+                        if (candyElement) {
+                            candyElement.classList.add('pop');
+                            playSound(500, 'square', 0.1, 0.2); // صوت عند اختفاء الحلوى (ألطف)
+                        }
+                    });
+
+                    const points = match.length * 10;
+                    score += points;
+                    scoreDisplay.textContent = score;
+                    updateProgressBar();
+                });
+
+                setTimeout(() => {
+                    matches.flat().forEach(candy => {
+                        candy.color = null;
+                    });
+
+                    dropCandies();
+
+                    fillEmptySpaces();
+
+                    // بعد معالجة التطابقات الجديدة وسقوط الحلوى
+                    // تحقق من ظهور السؤال هنا
+                    setTimeout(() => {
+                        const newMatches = checkMatches();
+                        if (newMatches.length > 0) {
+                            processMatches(newMatches); // استمر في معالجة التطابقات المتتالية
+                        } else {
+                            // لا توجد تطابقات جديدة، الآن تحقق من شرط ظهور السؤال
+                            if (score >= lastQuestionScore + QUESTION_INTERVAL && score < TARGET_SCORE) {
+                                showMathQuestion();
+                            } else {
+                                checkGameEnd(); // تحقق من نهاية اللعبة فقط إذا لم يظهر سؤال
+                            }
+                        }
+                    }, 500);
+                }, 500);
+            }
+
+            // سقوط الحلوى لملء الفراغات
+            function dropCandies() {
+                for (let col = 0; col < BOARD_SIZE; col++) {
+                    let emptyRow = BOARD_SIZE - 1;
+
+                    for (let row = BOARD_SIZE - 1; row >= 0; row--) {
+                        if (board[row][col].color !== null) {
+                            if (row !== emptyRow) {
+                                board[emptyRow][col].color = board[row][col].color;
+                                board[row][col].color = null;
+                            }
+                            emptyRow--;
+                        }
+                    }
+                }
+                renderBoard();
+            }
+
+            // ملء الفراغات بحلوى جديدة
+            function fillEmptySpaces() {
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    for (let col = 0; col < BOARD_SIZE; col++) {
+                        if (board[row][col].color === null) {
+                            board[row][col].color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                            const candyElement = document.querySelector(`.candy[data-row="${row}"][data-col="${col}"]`);
+                            if (candyElement) {
+                                candyElement.classList.add('fall');
+                                playSound(200 + row * 10, 'sawtooth', 0.08, 0.1); // صوت سقوط الحلوى (ألطف)
+                            }
+                        }
+                    }
+                }
+            }
+
+            // عرض سؤال تعليمي
+            function showMathQuestion() {
+                isPaused = true;
+                lastQuestionScore = score; // تحديث lastQuestionScore إلى score الحالي
+                                            // للتأكد من أن السؤال يظهر كل 100 نقطة من هذه النقطة
+                const randomIndex = Math.floor(Math.random() * mathQuestions.length);
+                const question = mathQuestions[randomIndex];
+
+                questionText.innerHTML = question.question;
+                feedbackElement.textContent = '';
+                feedbackElement.className = 'feedback';
+
+                answersContainer.innerHTML = '';
+                question.answers.forEach((answer, index) => {
+                    const answerBtn = document.createElement('button');
+                    answerBtn.className = 'answer-btn';
+                    answerBtn.innerHTML = answer;
+                    answerBtn.dataset.index = index;
+                    answerBtn.addEventListener('click', () => checkAnswer(index, question.correct));
+                    answersContainer.appendChild(answerBtn);
+                });
+
+                questionModal.style.display = 'flex';
+                playSound(700, 'triangle', 0.15, 0.3); // صوت ظهور السؤال (ألطف)
+            }
+
+            // التحقق من الإجابة
+            function checkAnswer(selectedIndex, correctIndex) {
+                // تعطيل أزرار الإجابات لمنع النقر المتعدد
+                Array.from(answersContainer.children).forEach(btn => btn.disabled = true);
+
+                if (selectedIndex === correctIndex) {
+                    feedbackElement.textContent = 'إجابة صحيحة! +٥ حركات';
+                    feedbackElement.className = 'feedback correct';
+                    moves += 5;
+                    movesDisplay.textContent = moves;
+                    playSound(900, 'sine', 0.15, 0.4); // صوت إجابة صحيحة (ألطف)
+                } else {
+                    feedbackElement.textContent = 'إجابة خاطئة! حاول مرة أخرى';
+                    feedbackElement.className = 'feedback incorrect';
+                    playSound(80, 'sawtooth', 0.2, 0.3); // صوت إجابة خاطئة (ألطف)
+                }
+                // تفعيل زر الاستمرار بعد الإجابة
+                continueBtn.disabled = false;
+            }
+
+            // وظيفة جديدة للتحقق من انتهاء اللعبة (الفوز أو الخسارة)
+            function checkGameEnd() {
+                if (score >= TARGET_SCORE) {
+                    isPaused = true;
+                    winTitle.textContent = '🎉 تهانينا! 🎉';
+                    winMessage.textContent = 'لقد حققت الهدف وفزت باللعبة!';
+                    document.querySelector('.win-content').style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                    winModal.style.display = 'flex';
+                    playSound(1100, 'sine', 0.4, 0.5); // صوت الفوز (ألطف)
+                } else if (moves <= 0 && score < TARGET_SCORE) {
+                    isPaused = true;
+                    setTimeout(() => {
+                        winTitle.textContent = 'انتهت اللعبة!';
+                        winMessage.textContent = 'لم تتمكن من تحقيق الهدف هذه المرة.';
+                        document.querySelector('.win-content').style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+                        winModal.style.display = 'flex';
+                        playSound(60, 'square', 0.3, 0.4); // صوت الخسارة (ألطف)
+                    }, 500);
+                }
+            }
+
+            // زر المساعدة
+            hintBtn.addEventListener('click', () => {
+                if (moves > 0 && !isPaused) {
+                    alert('ابحث عن ثلاث حلويات أو أكثر من نفس اللون في صف أو عمود!');
+                    playSound(400, 'triangle', 0.1, 0.2); // صوت عند طلب المساعدة (ألطف)
+                }
+            });
+
+            // زر إعادة البدء (لعبة جديدة من شريط التحكم)
+            resetBtn.addEventListener('click', () => {
+                initGame();
+                playSound(250, 'sine', 0.1, 0.2); // صوت عند بدء لعبة جديدة (ألطف)
+            });
+
+            // زر الاستمرار في اللعب (بعد الإجابة على السؤال)
+            continueBtn.addEventListener('click', () => {
+                questionModal.style.display = 'none';
+                isPaused = false;
+                continueBtn.disabled = true; // إعادة تعطيل زر الاستمرار
+                // إعادة تفعيل أزرار الإجابات لأسئلة مستقبلية
+                Array.from(answersContainer.children).forEach(btn => btn.disabled = false);
+                checkGameEnd();
+                playSound(600, 'sine', 0.1, 0.2); // صوت عند الاستمرار في اللعب (ألطف)
+            });
+
+            // زر "العب مرة أخرى" في نافذة الفوز/الخسارة
+            playAgainBtn.addEventListener('click', () => {
+                initGame();
+                playSound(250, 'sine', 0.1, 0.2); // صوت عند اللعب مرة أخرى (ألطف)
+            });
+
+            // زر تفعيل/تعطيل الصوت
+            toggleSoundBtn.addEventListener('click', () => {
+                soundEnabled = !soundEnabled;
+                if (soundEnabled) {
+                    toggleSoundBtn.textContent = 'إيقاف الصوت';
+                    toggleSoundBtn.classList.remove('disabled');
+                    playSound(800, 'sine', 0.1, 0.3); // صوت عند تفعيل الصوت (ألطف)
+                } else {
+                    toggleSoundBtn.textContent = 'تشغيل الصوت';
+                    toggleSoundBtn.classList.add('disabled');
+                }
+            });
+
+            // بدء اللعبة عند تحميل الصفحة
+            initGame();
+        });
+    </script>
+</body>
+</html>
