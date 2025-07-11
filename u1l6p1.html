@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حل المسألة باستراتيجية الحل العكسي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 40px);
+        }
+        
+        header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #fdbb2d;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .explanation-box {
+            background: linear-gradient(135deg, #e6f7ff, #ccefff);
+            border: 2px solid #99daff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px;
+            text-align: center;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            box-shadow: 0 8px 20px rgba(0, 120, 255, 0.15);
+            color: #1a3e6e;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .explanation-box::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 80px;
+            height: 80px;
+            background: rgba(153, 218, 255, 0.2);
+            border-radius: 50%;
+        }
+
+        .explanation-box h3 {
+            color: #0066cc;
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .explanation-box h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #0066cc;
+            border-radius: 2px;
+        }
+
+        .explanation-box p {
+            margin-top: 15px;
+            font-weight: 500;
+        }
+        
+        .problem-section {
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-bottom: 2px dashed #ddd;
+        }
+        
+        .problem-card {
+            background: linear-gradient(to bottom right, #ffffff, #f0f8ff);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid #3498db;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .problem-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 0 0 0 100%;
+        }
+        
+        .problem-card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+        }
+        
+        .problem-card h2 i {
+            color: #e74c3c;
+            font-size: 1.5em;
+        }
+        
+        .problem-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            background-color: rgba(248, 249, 250, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            position: relative;
+            z-index: 2;
+        }
+
+        .problem-text strong {
+            font-size: 1.25rem;
+            color: #d35400;
+        }
+        
+        .interactive-road {
+            padding: 40px 20px;
+            background: linear-gradient(to bottom, #5d8aa8, #3e5f8a);
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
+        }
+        
+        .road {
+            position: relative;
+            height: 250px; 
+            background: #2c3e50;
+            border-radius: 15px;
+            margin: 0 auto;
+            max-width: 900px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+        
+        .road::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 0;
+            border-top: 8px dashed #ffd700;
+            transform: translateY(-50%);
+        }
+        
+        .milestones {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row-reverse; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 0 30px;
+        }
+        
+        .milestone {
+            position: relative;
+            width: 20%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .milestone-point {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2c3e50;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            z-index: 12;
+            font-size: 1.2rem;
+            border: 2px solid #3498db;
+        }
+        
+        .milestone-label {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 18px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+            z-index: 12;
+            min-width: 130px;
+            font-size: 1rem;
+            border: 2px solid;
+        }
+        
+        .milestone:nth-child(1) .milestone-label { background: #3498db; color: white; border-color: #2980b9; }
+        .milestone:nth-child(2) .milestone-label { background: #e74c3c; color: white; border-color: #c0392b; }
+        .milestone:nth-child(3) .milestone-label { background: #2ecc71; color: white; border-color: #27ae60; }
+        .milestone:nth-child(4) .milestone-label { background: #f39c12; color: white; border-color: #d35400; }
+        .milestone:nth-child(5) .milestone-label { background: #9b59b6; color: white; border-color: #8e44ad; }
+        
+        .car-container {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            transform: translateY(-50%);
+            z-index: 10;
+            transition: left 1s ease;
+        }
+        
+        .car {
+            width: 130px;
+            height: 65px;
+            background: #e74c3c;
+            border-radius: 20px 20px 8px 8px;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            cursor: grab;
+            transition: transform 0.3s ease;
+        }
+        
+        .car:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+        }
+        
+        .car::before {
+            content: '';
+            position: absolute;
+            width: 45px;
+            height: 35px;
+            background: #3498db;
+            top: -35px;
+            left: 25px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.6);
+        }
+        
+        .car::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            border-radius: 50%;
+            bottom: 8px;
+            left: 25px;
+            box-shadow: 60px 0 #fff;
+            border: 2px solid #333;
+        }
+        
+        .calculation-bubble {
+            position: absolute;
+            top: -85px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 35px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            min-width: 180px;
+            text-align: center;
+            display: none;
+            border: 2px solid #3498db;
+            color: #2c3e50;
+            z-index: 15;
+            animation: bubbleFloat 3s infinite ease-in-out;
+        }
+
+        @keyframes bubbleFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(to bottom, #fdbb2d, #f9a602);
+            color: #2c3e50;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px solid #e6a100;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(to bottom, #ff9800, #e68a00);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-next {
+            background: linear-gradient(to bottom, #28a745, #218838);
+            color: white;
+            font-size: 1.3rem;
+            padding: 16px 45px;
+            border: 2px solid #1e7e34;
+        }
+
+        .btn-next:hover {
+            background: linear-gradient(to bottom, #218838, #1c7430);
+        }
+        
+        .solution-section {
+            padding: 30px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            flex-grow: 1;
+        }
+        
+        .solution-container {
+            background: linear-gradient(to bottom, #ffffff, #f5f9ff);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e6f0;
+        }
+        
+        .solution-container h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            font-size: 1.8rem;
+            padding-bottom: 15px;
+        }
+        
+        .solution-container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 5px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            border-radius: 3px;
+        }
+        
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .step-card {
+            background: linear-gradient(to right, #f8f9fa, #eef5ff);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 6px solid #3498db;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .step-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 20px;
+            font-weight: bold;
+            font-size: 1.4rem;
+            box-shadow: 0 5px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .step-title {
+            font-size: 1.35rem;
+            color: #2c3e50;
+            font-weight: bold;
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .step-content {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 12px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            border: 1px solid #e0e6f0;
+        }
+        
+        .calculation-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+        
+        .calc-step {
+            display: flex;
+            align-items: center;
+            padding: 18px;
+            background: linear-gradient(to right, #ffffff, #f0f8ff);
+            border-radius: 12px;
+            border-left: 5px solid #3498db;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .calc-step-number {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 20px;
+            flex-shrink: 0;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .final-result {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-top: 25px;
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+            animation: pulse 2s infinite;
+            border: 2px solid #27ae60;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4); }
+            50% { transform: scale(1.02); box-shadow: 0 12px 30px rgba(46, 204, 113, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4); }
+        }
+
+        .navigation-bottom {
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-top: 1px solid #e0e6f0;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+        }
+        
+        footer {
+            background: linear-gradient(to right, #1a2a6c, #2c3e50);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 1rem;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .subtitle { font-size: 1rem; }
+            .explanation-box { 
+                font-size: 1rem; 
+                padding: 20px; 
+                margin: 15px;
+            }
+            .explanation-box h3 { 
+                font-size: 1.3rem; 
+            }
+            
+            .problem-card h2 { 
+                font-size: 1.5rem; 
+            }
+            .problem-text { 
+                font-size: 1.05rem; 
+                padding: 15px;
+            }
+            .problem-text strong { 
+                font-size: 1.1rem; 
+            }
+
+            .milestones {
+                padding: 0 10px;
+            }
+            
+            .milestone-label {
+                font-size: 0.85rem;
+                min-width: 100px;
+                padding: 8px 12px;
+            }
+            
+            .car {
+                width: 100px;
+                height: 50px;
+            }
+            
+            .car::before {
+                width: 35px;
+                height: 25px;
+                top: -25px;
+                left: 20px;
+            }
+            
+            .car::after {
+                width: 20px;
+                height: 20px;
+                left: 20px;
+                box-shadow: 45px 0 #fff;
+            }
+            
+            .calculation-bubble {
+                font-size: 1.2rem;
+                top: -70px;
+                min-width: 150px;
+                padding: 12px 20px;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+
+            .btn-next {
+                font-size: 1.15rem;
+                padding: 14px 35px;
+            }
+            
+            .solution-container h2 { 
+                font-size: 1.5rem; 
+            }
+            .step-card {
+                padding: 20px;
+            }
+            .step-title { 
+                font-size: 1.2rem; 
+            }
+            .step-content { 
+                font-size: 1.05rem; 
+            }
+            .calc-step { 
+                font-size: 1.05rem; 
+                padding: 15px;
+            }
+            .final-result { 
+                font-size: 1.3rem; 
+                padding: 20px;
+            }
+            footer { 
+                font-size: 0.9rem; 
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 90%;
+                justify-content: center;
+            }
+            
+            .milestone-label {
+                font-size: 0.75rem;
+                min-width: 80px;
+                padding: 6px 8px;
+            }
+            
+            .step-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-car"></i> حل المسألة باستراتيجية الحل العكسي</h1>
+            <p class="subtitle">الخطوات التفصيلية: أفهم • أخطط • أحل • أتحقق</p>
+        </header>
+
+        <div class="explanation-box">
+            <h3>كيف نحل المسألة بطريقة الحل العكسي؟</h3>
+            <p>عندما تكون لديك مسألة تعرف فيها النتيجة النهائية ومجموعة من العمليات التي حدثت، ولكنك لا تعرف القيمة التي بدأت بها، يمكنك استخدام استراتيجية <strong>الحل العكسي</strong>. تبدأ من النتيجة النهائية، ثم تقوم بعكس العمليات الحسابية خطوة بخطوة للوصول إلى القيمة الأصلية.</p>
+            <p>مثال: إذا أُضيف شيء، تقوم بطرحه؛ وإذا طُرح شيء، تقوم بإضافته. وإذا ضُرب في عدد، تقسم عليه، والعكس صحيح.</p>
+        </div>
+        
+        <section class="problem-section">
+            <div class="problem-card">
+                <h2><i class="fas fa-question-circle"></i> نص المسألة</h2>
+                <div class="problem-text">
+                    <p>انطلقت سيدة في رحلة بسيارتها، فاستهلكت 6.3 لترًا من الوقود، ثم توقفت للحظة وزودت سيارتها بمقدار 15 لترًا من الوقود، وأكملت رحلتها، فاستهلكت السيارة 11.8 لترًا أخرى، وعند نهاية الرحلة بقي في السيارة 8.9 لترًا.</p>
+                    <p><strong>المطلوب:</strong> ما كمية الوقود التي كانت في خزان السيارة بداية الرحلة؟</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="interactive-road">
+            <div class="road">
+                <div class="milestones">
+                    <div class="milestone">
+                        <div class="milestone-point">1</div>
+                        <div class="milestone-label">البداية (؟)</div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-point">2</div>
+                        <div class="milestone-label">-6.3 لتر</div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-point">3</div>
+                        <div class="milestone-label">+15 لتر</div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-point">4</div>
+                        <div class="milestone-label">-11.8 لتر</div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-point">5</div>
+                        <div class="milestone-label">النهاية (8.9 لتر)</div>
+                    </div>
+                </div>
+                
+                <div class="car-container" id="carContainer">
+                    <div class="car" id="interactiveCar">
+                        <div class="calculation-bubble" id="calcBubble"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn" id="forwardBtn">
+                    <i class="fas fa-play"></i> تشغيل الرحلة
+                </button>
+                <button class="btn" id="reverseBtn">
+                    <i class="fas fa-undo"></i> الحل العكسي
+                </button>
+                <button class="btn" id="resetBtn">
+                    <i class="fas fa-redo"></i> إعادة تعيين
+                </button>
+            </div>
+        </section>
+        
+        <section class="solution-section">
+            <div class="solution-container">
+                <h2><i class="fas fa-calculator"></i> خطوات الحل التفصيلية</h2>
+                
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-icon">١</div>
+                            <div class="step-title">أفهم: فهم المسألة</div>
+                        </div>
+                        <div class="step-content">
+                            <p><strong>المعطيات:</strong></p>
+                            <ul>
+                                <li>استهلكت السيارة 6.3 لتر وقود في البداية</li>
+                                <li>ثم زودت ب 15 لتر وقود</li>
+                                <li>استهلكت بعد ذلك 11.8 لتر وقود</li>
+                                <li>بقي في السيارة 8.9 لتر في النهاية</li>
+                            </ul>
+                            <p><strong>المطلوب:</strong> إيجاد كمية الوقود في بداية الرحلة</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-icon">٢</div>
+                            <div class="step-title">أخطط: اختيار استراتيجية الحل</div>
+                        </div>
+                        <div class="step-content">
+                            <p>استخدام خطة الحل العكسية حيث تكون النتيجة النهائية ناتجة من سلسلة من الخطوات الحسابية، والمطلوب إيجاد القيمة التي بدأت بها تلك السلسلة.</p>
+                            <p>سنبدأ بالقيمة النهائية (8.9 لتر) ونرجع عكسياً خطوة بخطوة:</p>
+                            <ol>
+                                <li>نبدأ من الكمية المتبقية في النهاية (8.9 لتر)</li>
+                                <li>نضيف الاستهلاك الأخير (11.8 لتر)</li>
+                                <li>نطرح كمية الوقود التي تمت إضافتها (15 لتر)</li>
+                                <li>نضيف الاستهلاك الأول (6.3 لتر)</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-icon">٣</div>
+                            <div class="step-title">أحل: تطبيق الحل العكسي</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="calculation-steps">
+                                <div class="calc-step">
+                                    <div class="calc-step-number">١</div>
+                                    <div>الكمية قبل الاستهلاك الثاني = الكمية المتبقية + الاستهلاك الثاني = 8.9 + 11.8 = 20.7 لتر</div>
+                                </div>
+                                
+                                <div class="calc-step">
+                                    <div class="calc-step-number">٢</div>
+                                    <div>الكمية قبل الإضافة = الكمية قبل الاستهلاك الثاني - الكمية المضافة = 20.7 - 15 = 5.7 لتر</div>
+                                </div>
+                                
+                                <div class="calc-step">
+                                    <div class="calc-step-number">٣</div>
+                                    <div>الكمية في البداية = الكمية قبل الإضافة + الاستهلاك الأول = 5.7 + 6.3 = 12 لتر</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-icon">٤</div>
+                            <div class="step-title">أتحقق: التأكد من صحة الحل</div>
+                        </div>
+                        <div class="step-content">
+                            <p>نبدأ من الكمية في البداية (12 لتر) ونطبق الخطوات بالترتيب:</p>
+                            <ol>
+                                <li>12 - 6.3 = 5.7 لتر (بعد الاستهلاك الأول)</li>
+                                <li>5.7 + 15 = 20.7 لتر (بعد التزويد)</li>
+                                <li>20.7 - 11.8 = 8.9 لتر (في النهاية)</li>
+                            </ol>
+                            <p>النتيجة النهائية (8.9 لتر) تطابق المعطيات في المسألة، مما يؤكد صحة الحل.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="final-result">
+                    كمية الوقود في بداية الرحلة = 12 لتر
+                </div>
+            </div>
+        </section>
+
+        <div class="navigation-bottom">
+            <button class="btn btn-next" id="nextPageBtn">
+                <i class="fas fa-arrow-left"></i> التالي
+            </button>
+        </div>
+        
+        <footer>
+            <p>تم تصميم هذه الصفحة لتوضيح استراتيجية الحل العكسي باستخدام سيارة تفاعلية</p>
+            <p>الرياضيات | حل المشكلات | الاستراتيجيات الذهنية</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carContainer = document.getElementById('carContainer');
+            const interactiveCar = document.getElementById('interactiveCar');
+            const calcBubble = document.getElementById('calcBubble');
+            const forwardBtn = document.getElementById('forwardBtn');
+            const reverseBtn = document.getElementById('reverseBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            
+            // Function to show the bubble with a delay
+            function showBubble(text, delay = 0) {
+                clearTimeout(calcBubble.timer);
+                calcBubble.style.display = 'none';
+            
+                calcBubble.timer = setTimeout(() => {
+                    calcBubble.textContent = text;
+                    calcBubble.style.display = 'block';
+                }, delay);
+            }
+            
+            // Function to hide the bubble
+            function hideBubble() {
+                clearTimeout(calcBubble.timer);
+                calcBubble.style.display = 'none';
+            }
+            
+            // Forward movement of the car
+            forwardBtn.addEventListener('click', function() {
+                hideBubble();
+                carContainer.style.transition = 'left 1s ease-in-out';
+                carContainer.style.left = '5%';
+                showBubble('البداية (؟)', 100); 
+                
+                setTimeout(() => {
+                    carContainer.style.left = '22%';
+                    showBubble('12 - 6.3 = 5.7 لتر', 1000); 
+                }, 1000); 
+            
+                setTimeout(() => {
+                    carContainer.style.left = '42%';
+                    showBubble('5.7 + 15 = 20.7 لتر', 1000); 
+                }, 2000); 
+            
+                setTimeout(() => {
+                    carContainer.style.left = '62%';
+                    showBubble('20.7 - 11.8 = 8.9 لتر', 1000); 
+                }, 3000); 
+            
+                setTimeout(() => {
+                    carContainer.style.left = '82%';
+                    showBubble('النهاية: 8.9 لتر', 1000); 
+                }, 4000); 
+            });
+            
+            // Reverse movement of the car
+            reverseBtn.addEventListener('click', function() {
+                hideBubble();
+                carContainer.style.transition = 'left 1s ease-in-out';
+                carContainer.style.left = '82%';
+                showBubble('النهاية: 8.9 لتر', 100); 
+            
+                setTimeout(() => {
+                    carContainer.style.left = '62%';
+                    showBubble('8.9 + 11.8 = 20.7 لتر', 1000); 
+                }, 1000);
+            
+                setTimeout(() => {
+                    carContainer.style.left = '42%';
+                    showBubble('20.7 - 15 = 5.7 لتر', 1000); 
+                }, 2000);
+            
+                setTimeout(() => {
+                    carContainer.style.left = '22%';
+                    showBubble('5.7 + 6.3 = 12 لتر', 1000); 
+                }, 3000);
+            
+                setTimeout(() => {
+                    carContainer.style.left = '5%';
+                    showBubble('البداية: 12 لتر', 1000); 
+                }, 4000);
+            });
+            
+            // Reset the car
+            resetBtn.addEventListener('click', function() {
+                carContainer.style.transition = 'left 0.5s ease';
+                carContainer.style.left = '5%';
+                hideBubble();
+            });
+
+            // Handle "Next" button click
+            nextPageBtn.addEventListener('click', function() {
+                alert('سيتم الانتقال إلى الصفحة التالية: u1l6p2.html');
+                // window.location.href = 'u1l6p2.html';
+            });
+            
+            // Make the car draggable
+            let isDragging = false;
+            let startX, startLeft;
+            
+            interactiveCar.addEventListener('mousedown', startDrag);
+            interactiveCar.addEventListener('touchstart', startDrag);
+            
+            function startDrag(e) {
+                e.preventDefault();
+                isDragging = true;
+                startX = e.clientX || e.touches?.[0]?.clientX;
+                startLeft = parseFloat(carContainer.style.left) || 5; 
+                carContainer.style.transition = 'none';
+                
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag);
+                document.addEventListener('mouseup', stopDrag);
+                document.addEventListener('touchend', stopDrag);
+                
+                // Show bubble when dragging starts
+                updateBubbleOnDrag(startLeft);
+            }
+            
+            function drag(e) {
+                if (!isDragging) return;
+            
+                const currentX = e.clientX || e.touches?.[0]?.clientX;
+                const deltaX = currentX - startX;
+                const roadWidth = carContainer.parentElement.offsetWidth;
+                const newLeft = startLeft + (deltaX / roadWidth * 100); 
+            
+                const clampedLeft = Math.max(5, Math.min(82, newLeft));
+                carContainer.style.left = `${clampedLeft}%`;
+                
+                // Update the bubble constantly during drag
+                updateBubbleOnDrag(clampedLeft);
+            }
+            
+            function stopDrag() {
+                isDragging = false;
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('touchmove', drag);
+            }
+            
+            // Update the bubble based on car position
+            function updateBubbleOnDrag(currentLeft) {
+                if (currentLeft >= 5 && currentLeft < 23.5) { 
+                    showBubble('البداية: 12 لتر', 0); 
+                } else if (currentLeft >= 23.5 && currentLeft < 43.5) { 
+                    showBubble('12 - 6.3 = 5.7 لتر', 0);
+                } else if (currentLeft >= 43.5 && currentLeft < 63.5) {
+                    showBubble('5.7 + 15 = 20.7 لتر', 0);
+                } else if (currentLeft >= 63.5 && currentLeft < 81) { 
+                    showBubble('20.7 - 11.8 = 8.9 لتر', 0);
+                } else if (currentLeft >= 81) { 
+                    showBubble('النهاية: 8.9 لتر', 0);
+                } else {
+                    hideBubble();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
