@@ -650,9 +650,9 @@
             }
             
             forwardBtn.addEventListener('click', function() {
-                hideBubble();
+                //hideBubble();
                 moneyContainer.style.transition = 'left 1s ease-in-out';
-                moneyContainer.style.left = '95%';
+                moneyContainer.style.left = '90%';
                 // الفقاعة لن تعرض "61.15" هنا، بل نص "المبلغ الأصلي"
                // showBubble('المبلغ الأصلي', 100); 
                 
@@ -667,7 +667,7 @@
                 }, 2000); 
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '5%';
+                    moneyContainer.style.left = '25%';
                     showBubble('الباقي: 34.4 دينار', 1000); 
                 }, 3000); 
             
