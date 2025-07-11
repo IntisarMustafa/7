@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>لعبة سونيك التعليمية - حل المسائل بشكل عكسي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #1a2980, #26d0ce);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            direction: rtl;
+            padding: 10px;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 70vh;
+            max-height: 600px;
+            background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 4px solid #2c3e50;
+        }
+
+        canvas {
+            background: transparent;
+        }
+
+        .header {
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #f1c40f;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 16px;
+            max-width: 100%;
+            line-height: 1.4;
+        }
+
+        .stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            display: flex;
+            gap: 15px;
+            z-index: 5;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rings {
+            color: #f1c40f;
+            font-weight: bold;
+        }
+
+        .lives {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .score {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .game-over, .game-start, .game-win, .question-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .game-over h2, .game-start h2, .game-win h2, .question-screen h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+
+        .game-start h2 {
+            color: #f1c40f;
+        }
+
+        .game-win {
+            background: rgba(46, 204, 113, 0.85);
+        }
+
+        .game-win h2 {
+            color: #f1c40f;
+        }
+
+        .question-screen h2 {
+            color: #3498db;
+        }
+
+        .final-score {
+            font-size: 24px;
+            margin: 15px 0;
+            color: #2ecc71;
+        }
+
+        .btn {
+            background: #f1c40f;
+            color: #2c3e50;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            box-shadow: 0 5px 0 #d35400;
+        }
+
+        .btn:hover {
+            background: #f39c12;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 #d35400;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 #d35400;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .sonic-logo {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #f1c40f;
+            text-shadow: 0 0 15px rgba(241, 196, 15, 0.8);
+        }
+
+        .instructions {
+            max-width: 100%;
+            margin: 15px 0;
+            line-height: 1.6;
+            font-size: 16px;
+            color: #ecf0f1;
+        }
+
+        .highlight {
+            color: #f1c40f;
+            font-weight: bold;
+        }
+
+        /* شاشة السؤال */
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            margin: 20px 0;
+            border: 2px solid #3498db;
+        }
+
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #f1c40f;
+            line-height: 1.6;
+            text-align: right;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .option-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: right;
+        }
+
+        .option-btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+        }
+
+        .option-btn:active {
+            transform: translateY(1px);
+        }
+
+        .explanation {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: right;
+            font-size: 16px;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .explanation-title {
+            color: #f1c40f;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* عناصر التحكم للهاتف */
+        .mobile-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 5;
+            touch-action: none;
+        }
+
+        .d-pad {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .d-pad-row {
+            display: flex;
+            gap: 5px;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid white;
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .jump-btn {
+            background: rgba(241, 196, 15, 0.8);
+            width: 70px;
+            height: 70px;
+            font-size: 30px;
+        }
+
+        .center-btn {
+            background: rgba(0, 0, 0, 0.7);
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+        }
+
+        /* زر التحكم بالصوت */
+        .sound-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid white;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            cursor: pointer;
+        }
+
+        /* الشاشات الصغيرة جداً */
+        @media (max-width: 400px) {
+            .control-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .jump-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .stats {
+                font-size: 14px;
+                padding: 5px 10px;
+                gap: 10px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .sound-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+            
+            .question-text {
+                font-size: 18px;
+            }
+            
+            .option-btn {
+                padding: 10px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>لعبة سونيك التعليمية</h1>
+        <p>تحكم في سونيك، اجمع الحلقات الذهبية، وأجب على الأسئلة لاستعادة أرواحك!</p>
+    </div>
+
+    <div class="game-container">
+        <div class="game-start" id="gameStart">
+            <div class="sonic-logo">SONIC</div>
+            <h2>مغامرة تعليمية في حل المسائل</h2>
+            <div class="instructions">
+                <p>استخدم <span class="highlight">أزرار التحكم</span> في الأسفل للتحرك والقفز</p>
+                <p>اجمع <span class="highlight">الحلقات الذهبية</span> لتزيد نقاطك</p>
+                <p>تجنب <span class="highlight">الأعداء الحمراء</span> أو ستخسر أرواحك!</p>
+                <p>عند خسارة 3 أرواح، أجب على سؤال في حل المسائل بشكل عكسي لاستعادة أرواحك!</p>
+                <p>الأسئلة من منهاج الصف السابع في الأردن</p>
+            </div>
+            <button class="btn" id="startBtn">ابدأ اللعب</button>
+        </div>
+
+        <div class="game-over hidden" id="gameOver">
+            <h2>انتهت اللعبة!</h2>
+            <div class="final-score" id="finalScore">النقاط: 0</div>
+            <button class="btn" id="restartBtn">العب مرة أخرى</button>
+        </div>
+
+        <div class="game-win hidden" id="gameWin">
+            <h2>لقد فزت!</h2>
+            <div class="final-score" id="winScore">النقاط: 0</div>
+            <p>أحسنت! لقد جمعت كل الحلقات المطلوبة.</p>
+            <button class="btn" id="playAgainBtn">العب مرة أخرى</button>
+        </div>
+        
+        <!-- شاشة السؤال التعليمية -->
+        <div class="question-screen hidden" id="questionScreen">
+            <h2>استعد أرواحك!</h2>
+            <p>أجب على السؤال التالي لاستعادة 3 أرواح:</p>
+            
+            <div class="question-container">
+                <div class="question-text" id="questionText"></div>
+                <div class="options-container" id="optionsContainer"></div>
+                
+                <div class="explanation" id="explanation">
+                    <div class="explanation-title">شرح الحل:</div>
+                    <div id="explanationText"></div>
+                </div>
+            </div>
+            
+            <p id="feedbackText"></p>
+        </div>
+
+        <div class="sound-btn" id="soundBtn">🔊</div>
+
+        <div class="stats">
+            <div class="stat">
+                <span>الحلقات:</span>
+                <span class="rings" id="ringsCounter">0</span>
+            </div>
+            <div class="stat">
+                <span>الأرواح:</span>
+                <span class="lives" id="livesCounter">3</span>
+            </div>
+            <div class="stat">
+                <span>النقاط:</span>
+                <span class="score" id="scoreCounter">0</span>
+            </div>
+        </div>
+
+        <div class="mobile-controls">
+            <div class="d-pad">
+                <div class="d-pad-row">
+                    <div class="control-btn" id="upBtn">↑</div>
+                </div>
+                <div class="d-pad-row">
+                    <div class="control-btn" id="rightBtn">→</div>
+                    <div class="control-btn center-btn"></div>
+                    <div class="control-btn" id="leftBtn">←</div>
+                </div>
+            </div>
+
+            <div class="control-btn jump-btn" id="jumpBtn">↑</div>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <script>
+        // تهيئة حجم Canvas لتلائم الشاشة
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+
+        // عناصر DOM
+        const gameStart = document.getElementById('gameStart');
+        const gameOver = document.getElementById('gameOver');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const ringsCounter = document.getElementById('ringsCounter');
+        const livesCounter = document.getElementById('livesCounter');
+        const scoreCounter = document.getElementById('scoreCounter');
+        const finalScore = document.getElementById('finalScore');
+        const soundBtn = document.getElementById('soundBtn');
+        const gameWin = document.getElementById('gameWin');
+        const winScore = document.getElementById('winScore');
+        const playAgainBtn = document.getElementById('playAgainBtn');
+        
+        // عناصر شاشة السؤال
+        const questionScreen = document.getElementById('questionScreen');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const feedbackText = document.getElementById('feedbackText');
+        const explanation = document.getElementById('explanation');
+        const explanationText = document.getElementById('explanationText');
+
+        // عناصر التحكم للهاتف
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+        const jumpBtn = document.getElementById('jumpBtn');
+        const upBtn = document.getElementById('upBtn');
+
+        // متغيرات اللعبة
+        let gameRunning = false;
+        let score = 0;
+        let rings = 0;
+        let lives = 3;
+        let gameSpeed = 5;
+        let soundEnabled = true;
+        let winRings = 50; // عدد الحلقات المطلوبة للفوز
+
+        // تهيئة نظام الصوت
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        // دالة لتشغيل الأصوات
+        function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
+            if (!soundEnabled) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.type = type;
+            oscillator.frequency.value = frequency;
+            gainNode.gain.value = volume;
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // كائن سونيك
+        const sonic = {
+            x: 100,
+            y: canvas.height - 150,
+            width: 40,
+            height: 60,
+            speed: 8,
+            velX: 0,
+            velY: 0,
+            jumping: false,
+            grounded: false,
+            color: '#1E90FF',
+            draw() {
+                // جسم سونيك
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x + 20, this.y + 15, 15, 0, Math.PI * 2);
+                ctx.fill();
+
+                // جسم سونيك
+                ctx.fillRect(this.x, this.y + 20, 40, 40);
+
+                // عيون
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(this.x + 30, this.y + 20, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(this.x + 30, this.y + 20, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // أحذية
+                ctx.fillStyle = 'red';
+                ctx.fillRect(this.x, this.y + 55, 15, 5);
+                ctx.fillRect(this.x + 25, this.y + 55, 15, 5);
+
+                // أشواك
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.moveTo(this.x + 20, this.y + 10);
+                ctx.lineTo(this.x + 40, this.y + 25);
+                ctx.lineTo(this.x + 20, this.y + 30);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.moveTo(this.x + 40, this.y + 25);
+                ctx.lineTo(this.x + 50, this.y + 30);
+                ctx.lineTo(this.x + 40, this.y + 40);
+                ctx.closePath();
+                ctx.fill();
+            },
+            update() {
+                // الجاذبية
+                this.velY += 0.8;
+
+                // تحديث الموضع
+                this.x += this.velX;
+                this.y += this.velY;
+
+                // حدود الشاشة
+                if (this.x < 0) this.x = 0;
+                if (this.x + this.width > canvas.width) this.x = canvas.width - this.width;
+
+                // الأرض
+                if (this.y > canvas.height - 140) {
+                    this.y = canvas.height - 140;
+                    this.velY = 0;
+                    this.jumping = false;
+                    this.grounded = true;
+                }
+            }
+        };
+
+        // الحلقات
+        const ringsList = [];
+        function createRing() {
+            if (Math.random() < 0.02 && ringsList.length < 5) {
+                ringsList.push({
+                    x: canvas.width,
+                    y: Math.random() * (canvas.height - 200) + 100,
+                    width: 20,
+                    height: 20,
+                    collected: false,
+                    draw() {
+                        if (this.collected) return;
+
+                        ctx.fillStyle = '#f1c40f';
+                        ctx.beginPath();
+                        ctx.arc(this.x + 10, this.y + 10, 10, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        ctx.strokeStyle = '#d35400';
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(this.x + 10, this.y + 10, 8, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+                });
+            }
+        }
+
+        // الأعداء
+        const enemies = [];
+        function createEnemy() {
+            if (Math.random() < 0.01 && enemies.length < 3) {
+                enemies.push({
+                    x: canvas.width,
+                    y: canvas.height - 140,
+                    width: 40,
+                    height: 40,
+                    speed: 3 + Math.random() * 2,
+                    draw() {
+                        // جسم العدو
+                        ctx.fillStyle = '#e74c3c';
+                        ctx.fillRect(this.x, this.y, this.width, this.height);
+
+                        // عيون
+                        ctx.fillStyle = 'white';
+                        ctx.fillRect(this.x + 5, this.y + 10, 8, 8);
+                        ctx.fillRect(this.x + 25, this.y + 10, 8, 8);
+
+                        ctx.fillStyle = 'black';
+                        ctx.fillRect(this.x + 7, this.y + 12, 4, 4);
+                        ctx.fillRect(this.x + 27, this.y + 12, 4, 4);
+
+                        // فم
+                        ctx.fillStyle = '#c0392b';
+                        ctx.fillRect(this.x + 10, this.y + 25, 20, 5);
+                    },
+                    update() {
+                        this.x -= this.speed;
+                        return this.x + this.width < 0; // إرجاع true إذا كان خارج الشاشة
+                    }
+                });
+            }
+        }
+
+        // المنصة
+        function drawPlatform() {
+            // الأرض
+            ctx.fillStyle = '#27ae60';
+            ctx.fillRect(0, canvas.height - 110, canvas.width, 110);
+
+            // العشب
+            ctx.fillStyle = '#2ecc71';
+            ctx.fillRect(0, canvas.height - 110, canvas.width, 10);
+
+            // خلفية الجبال
+            ctx.fillStyle = '#3498db';
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(100, 50);
+            ctx.lineTo(200, 100);
+            ctx.lineTo(300, 30);
+            ctx.lineTo(400, 80);
+            ctx.lineTo(500, 40);
+            ctx.lineTo(600, 90);
+            ctx.lineTo(700, 30);
+            ctx.lineTo(canvas.width, 100);
+            ctx.lineTo(canvas.width, canvas.height - 110);
+            ctx.lineTo(0, canvas.height - 110);
+            ctx.closePath();
+            ctx.fill();
+
+            // الشمس
+            ctx.fillStyle = '#f1c40f';
+            ctx.beginPath();
+            ctx.arc(canvas.width - 100, 80, 40, 0, Math.PI * 2);
+            ctx.fill();
+
+            // الغيوم
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(200, 100, 25, 0, Math.PI * 2);
+            ctx.arc(230, 90, 30, 0, Math.PI * 2);
+            ctx.arc(260, 100, 25, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(500, 70, 20, 0, Math.PI * 2);
+            ctx.arc(530, 60, 25, 0, Math.PI * 2);
+            ctx.arc(560, 70, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // الاصطدام
+        function collision(obj1, obj2) {
+            return obj1.x < obj2.x + obj2.width &&
+                   obj1.x + obj1.width > obj2.x &&
+                   obj1.y < obj2.y + obj2.height &&
+                   obj1.y + obj1.height > obj2.y;
+        }
+
+        // تحديث اللعبة
+        function update() {
+            // تحديث سونيك
+            sonic.update();
+
+            // إنشاء الحلقات والأعداء
+            createRing();
+            createEnemy();
+
+            // تحديث الحلقات
+            for (let i = ringsList.length - 1; i >= 0; i--) {
+                const ring = ringsList[i];
+                ring.x -= gameSpeed;
+
+                if (collision(sonic, ring) && !ring.collected) {
+                    ring.collected = true;
+                    rings++;
+                    score += 100;
+                    ringsCounter.textContent = rings;
+                    scoreCounter.textContent = score;
+                    playSound(880, 'triangle', 0.2, 0.4); // صوت جمع حلقة
+                }
+
+                if (ring.x + ring.width < 0) {
+                    ringsList.splice(i, 1);
+                }
+            }
+
+            // تحديث الأعداء
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                if (enemies[i].update()) {
+                    enemies.splice(i, 1);
+                } else if (collision(sonic, enemies[i])) {
+                    lives--;
+                    livesCounter.textContent = lives;
+                    enemies.splice(i, 1);
+                    playSound(220, 'sawtooth', 0.3, 0.5); // صوت اصطدام بعدو
+
+                    // التحقق إذا كانت الأرواح انتهت
+                    if (lives <= 0) {
+                        gameRunning = false;
+                        showQuestion();
+                    }
+                }
+            }
+
+            // التحقق من شرط الفوز
+            if (rings >= winRings && gameRunning) {
+                endGame(true); // استدعاء endGame مع true للإشارة إلى الفوز
+                return; // إيقاف التحديث لمنع أي إجراءات إضافية
+            }
+        }
+
+        // الرسم
+        function draw() {
+            // مسح الشاشة
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // رسم الخلفية والمنصة
+            drawPlatform();
+
+            // رسم الحلقات
+            ringsList.forEach(ring => ring.draw());
+
+            // رسم الأعداء
+            enemies.forEach(enemy => enemy.draw());
+
+            // رسم سونيك
+            sonic.draw();
+        }
+
+        // حلقة اللعبة
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            update();
+            draw();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // بدء اللعبة
+        function startGame() {
+            gameRunning = true;
+            gameStart.classList.add('hidden');
+            gameOver.classList.add('hidden');
+            gameWin.classList.add('hidden'); // إخفاء شاشة الفوز عند البدء
+            questionScreen.classList.add('hidden'); // إخفاء شاشة السؤال
+            score = 0;
+            rings = 0;
+            lives = 3;
+
+            ringsCounter.textContent = rings;
+            livesCounter.textContent = lives;
+            scoreCounter.textContent = score;
+
+            ringsList.length = 0;
+            enemies.length = 0;
+
+            // إعادة تعيين موقع سونيك
+            sonic.x = 100;
+            sonic.y = canvas.height - 150;
+            sonic.velX = 0;
+            sonic.velY = 0;
+
+            // تشغيل صوت البداية
+            playSound(523.25, 'sine', 0.1, 0.5);
+            playSound(659.25, 'sine', 0.1, 0.5);
+            playSound(783.99, 'sine', 0.2, 0.5);
+
+            gameLoop();
+        }
+
+        // انتهاء اللعبة (فوز أو خسارة)
+        function endGame(won = false) { // إضافة معلمة 'won' افتراضياً false
+            gameRunning = false;
+            if (won) {
+                winScore.textContent = `النقاط: ${score}`;
+                gameWin.classList.remove('hidden'); // إظهار شاشة الفوز
+                playSound(900, 'sine', 0.5, 0.6); // صوت فوز
+                setTimeout(() => playSound(1200, 'sine', 0.5, 0.6), 100); // صوت فوز إضافي بعد تأخير
+                setTimeout(() => playSound(1500, 'sine', 0.5, 0.6), 200); // صوت فوز إضافي آخر
+            } else {
+                finalScore.textContent = `النقاط: ${score}`;
+                gameOver.classList.remove('hidden'); // إظهار شاشة انتهاء اللعبة
+                playSound(110, 'sine', 1.0, 0.6); // صوت نهاية اللعبة
+            }
+        }
+        
+        // الأسئلة التعليمية المحدثة حول حل المسائل بشكل عكسي للصف السابع
+        const questions = [
+            {
+                question: "استهلَكت السيارة 11.8 لترات من الوقود بعد تزويدها، وتبقى فيها 8.9 لتر عند نهاية الرحلة. كم كان في خزان السيارة بعد التزويد مباشرة؟",
+                options: ["17.4", "20.7", "19.2", "15.6"],
+                correct: 1,
+                explanation: "لحل المسألة بشكل عكسي: نضيف الكمية المستهلكة إلى الكمية المتبقية: 11.8 + 8.9 = 20.7 لتر"
+            },
+            {
+                question: "اشترى عامر كتابًا بقيمة 0.75 دينار، ودفع للبائع دينارًا واحدًا، فكم تبقى له من الباقي؟",
+                options: ["0.25 دينار", "0.5 دينار", "0.75 دينار", "1 دينار"],
+                correct: 0,
+                explanation: "لحل المسألة بشكل عكسي: نطرح ثمن الكتاب من المبلغ الذي دفعه: 1 - 0.75 = 0.25 دينار"
+            },
+            {
+                question: "سعر سيارة انخفض كل سنة بمقدار 350 دينارًا. وبعد 5 سنوات أصبح سعرها 10200 دينار. كم كان سعر السيارة الأصلي؟",
+                options: ["11500", "11750", "12000", "11950"],
+                correct: 3,
+                explanation: "لحل المسألة بشكل عكسي: نضيف الانخفاض الكلي (5 × 350 = 1750) إلى السعر الحالي: 10200 + 1750 = 11950 دينار"
+            },
+            {
+                question: "صعد عدد من الركاب إلى الحافلة، ثم نزل راكبان، وصعد 5 آخرون، فأصبح عدد الركاب 25. كم كان عدد الركاب في البداية؟",
+                options: ["20", "22", "18", "19"],
+                correct: 1,
+                explanation: "لحل المسألة بشكل عكسي: نبدأ من النهاية (25) ونعكس العمليات: 25 - 5 (الذين صعدوا أخيرًا) ثم + 2 (الذين نزلوا) = 25 - 5 = 20، ثم 20 + 2 = 22"
+            },
+            {
+                question: "اشترى فيصل علبة عصير، واستهلك منها 0.3 لتر، وبقي لديه 0.5 لتر. كم سعة العلبة؟",
+                options: ["0.2 لتر", "0.6 لتر", "0.8 لتر", "1 لتر"],
+                correct: 2,
+                explanation: "لحل المسألة بشكل عكسي: نجمع الكمية المستهلكة والكمية المتبقية: 0.3 + 0.5 = 0.8 لتر"
+            },
+            {
+                question: "إذا كان عمر أحمد بعد 5 سنوات سيكون 17 سنة، فكم عمره الآن؟",
+                options: ["10 سنوات", "12 سنة", "14 سنة", "15 سنة"],
+                correct: 1,
+                explanation: "لحل المسألة بشكل عكسي: نطرح عدد السنوات من العمر المستقبلي: 17 - 5 = 12 سنة"
+            }
+        ];
+        
+        // عرض سؤال عشوائي
+        function showQuestion() {
+            feedbackText.textContent = "";
+            feedbackText.style.color = "";
+            explanation.style.display = "none";
+            
+            // اختيار سؤال عشوائي
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            const q = questions[randomIndex];
+            
+            // عرض السؤال
+            questionText.textContent = q.question;
+            optionsContainer.innerHTML = "";
+            
+            // إضافة الخيارات
+            q.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-btn');
+                button.addEventListener('click', () => checkAnswer(index, q.correct, q.explanation));
+                optionsContainer.appendChild(button);
+            });
+            
+            // إظهار شاشة السؤال
+            questionScreen.classList.remove('hidden');
+        }
+        
+        // التحقق من الإجابة
+        function checkAnswer(selectedIndex, correctIndex, explanationTextContent) {
+            if (selectedIndex === correctIndex) {
+                // الإجابة صحيحة: نستعيد الأرواح
+                lives = 3;
+                livesCounter.textContent = lives;
+                playSound(523.25, 'sine', 0.2, 0.5); // صوت صحيح
+                feedbackText.textContent = "✓ إجابة صحيحة! لقد استعدت 3 أرواح.";
+                feedbackText.style.color = "#2ecc71";
+                
+                // عرض الشرح
+                explanationText.textContent = explanationTextContent;
+                explanation.style.display = "block";
+                
+                // بعد 2 ثانية، نختفي شاشة السؤال ونعود للعبة
+                setTimeout(() => {
+                    questionScreen.classList.add('hidden');
+                    gameRunning = true;
+                    
+                    // إعادة تعيين موقع سونيك لمنع المشاكل
+                    sonic.x = 100;
+                    sonic.y = canvas.height - 150;
+                    sonic.velX = 0;
+                    sonic.velY = 0;
+                    
+                    // إعادة تشغيل حلقة اللعبة
+                    gameLoop();
+                }, 2000);
+            } else {
+                // الإجابة خاطئة
+                playSound(220, 'sawtooth', 0.5, 0.5); // صوت خطأ
+                feedbackText.textContent = "✗ إجابة خاطئة! انتهت اللعبة.";
+                feedbackText.style.color = "#e74c3c";
+                
+                setTimeout(() => {
+                    endGame(false);
+                }, 2000);
+            }
+        }
+
+        // التحكم باللمس للهاتف
+        let touchJump = false;
+        let touchLeft = false;
+        let touchRight = false;
+
+        function setupMobileControls() {
+            // زر القفز
+            jumpBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                touchJump = true;
+                if (sonic.grounded) {
+                    sonic.velY = -15;
+                    sonic.jumping = true;
+                    sonic.grounded = false;
+                    playSound(440, 'sine', 0.2, 0.4); // صوت القفز
+                }
+            });
+
+            jumpBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                touchJump = false;
+            });
+
+            upBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                touchJump = true;
+                if (sonic.grounded) {
+                    sonic.velY = -15;
+                    sonic.jumping = true;
+                    sonic.grounded = false;
+                    playSound(440, 'sine', 0.2, 0.4); // صوت القفز
+                }
+            });
+
+            upBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                touchJump = false;
+            });
+
+            // زر اليسار (الموجود على اليمين في الواجهة)
+            leftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                touchLeft = true;
+                touchRight = false;
+            });
+
+            leftBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                touchLeft = false;
+            });
+
+            // زر اليمين (الموجود على اليسار في الواجهة)
+            rightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                touchRight = true;
+                touchLeft = false;
+            });
+
+            rightBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                touchRight = false;
+            });
+        }
+
+        // تحريك سونيك
+        function handleMovement() {
+            sonic.velX = 0;
+
+            if (touchLeft) {
+                sonic.velX = -sonic.speed; // تحريك لليسار
+            }
+
+            if (touchRight) {
+                sonic.velX = sonic.speed; // تحريك لليمين
+            }
+        }
+
+        // تحديث الحركة
+        function updateMovement() {
+            handleMovement();
+            requestAnimationFrame(updateMovement);
+        }
+
+        // التحكم بالصوت
+        soundBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundBtn.textContent = soundEnabled ? '🔊' : '🔇';
+
+            // تشغيل صوت تغيير حالة الصوت
+            if (soundEnabled) {
+                playSound(523.25, 'sine', 0.1, 0.3);
+            } else {
+                playSound(329.63, 'sine', 0.1, 0.3);
+            }
+        });
+
+        // بدء الشاشة الرئيسية
+        gameOver.classList.add('hidden');
+        gameWin.classList.add('hidden'); // تأكد من إخفاء شاشة الفوز عند التحميل الأولي
+        questionScreen.classList.add('hidden'); // إخفاء شاشة السؤال
+
+        // أحداث الأزرار
+        startBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', startGame);
+        playAgainBtn.addEventListener('click', startGame);
+
+        // تهيئة التحكم للهاتف
+        setupMobileControls();
+
+        // بدء تحديث الحركة
+        updateMovement();
+
+        // تعديل حجم Canvas عند تغيير حجم النافذة
+        window.addEventListener('resize', () => {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        });
+    </script>
+</body>
+</html>
