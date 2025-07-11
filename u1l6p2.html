@@ -652,22 +652,22 @@
             forwardBtn.addEventListener('click', function() {
                 hideBubble();
                 moneyContainer.style.transition = 'left 1s ease-in-out';
-                moneyContainer.style.left = '82%';
+                moneyContainer.style.left = '95%';
                 // الفقاعة لن تعرض "61.15" هنا، بل نص "المبلغ الأصلي"
-                showBubble('المبلغ الأصلي', 100); 
+               // showBubble('المبلغ الأصلي', 100); 
                 
                 setTimeout(() => {
-                    moneyContainer.style.left = '62%';
+                    moneyContainer.style.left = '75%';
                     showBubble('تبرعت بـ 17.5', 1000); 
                 }, 1000); 
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '42%';
+                    moneyContainer.style.left = '50%';
                     showBubble('اشترت حقيبة بـ 9.25', 1000); 
                 }, 2000); 
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '22%';
+                    moneyContainer.style.left = '5%';
                     showBubble('الباقي: 34.4 دينار', 1000); 
                 }, 3000); 
             
