@@ -652,22 +652,22 @@
             forwardBtn.addEventListener('click', function() {
                 //hideBubble();
                 moneyContainer.style.transition = 'left 1s ease-in-out';
-                moneyContainer.style.left = '90%';
+                moneyContainer.style.left = '80%';
                 // الفقاعة لن تعرض "61.15" هنا، بل نص "المبلغ الأصلي"
                // showBubble('المبلغ الأصلي', 100); 
                 
                 setTimeout(() => {
-                    moneyContainer.style.left = '75%';
+                    moneyContainer.style.left = '65%';
                     showBubble('تبرعت بـ 17.5', 1000); 
                 }, 1000); 
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '50%';
+                    moneyContainer.style.left = '45%';
                     showBubble('اشترت حقيبة بـ 9.25', 1000); 
                 }, 2000); 
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '25%';
+                    moneyContainer.style.left = '20%';
                     showBubble('الباقي: 34.4 دينار', 1000); 
                 }, 3000); 
             
@@ -684,22 +684,22 @@
                 showBubble('المبلغ المتبقي: 34.4 دينار', 100); 
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '25%';
+                    moneyContainer.style.left = '20%';
                     showBubble('34.4 + 9.25 = ' + (34.4 + 9.25).toFixed(2), 1000); 
                 }, 1000);
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '50%';
+                    moneyContainer.style.left = '45%';
                     showBubble('المبلغ بعد إضافة ثمن الحقيبة', 1000); 
                 }, 2000);
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '75%';
+                    moneyContainer.style.left = '65%';
                     showBubble((34.4 + 9.25).toFixed(2) + ' + 17.5 = ' + (34.4 + 9.25 + 17.5).toFixed(2), 1000); 
                 }, 3000);
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '95%';
+                    moneyContainer.style.left = '85%';
                     // هنا تظهر القيمة المحسوبة النهائية، وهذا هو السلوك الصحيح للحل العكسي
                    // showBubble('المبلغ الأصلي: ' + (34.4 + 9.25 + 17.5).toFixed(2) + ' دينار', 1000); 
                 }, 4000);
