@@ -140,7 +140,6 @@
             left: 0;
             right: 0;
             height: 0;
-            /* تم حذف الخطوط الصفراء */
             transform: translateY(-50%);
         }
         
@@ -222,10 +221,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Removed flex-direction: column; */
             color: white;
             font-weight: bold;
-            font-size: 3rem; /* Increased font size for emoji */
+            font-size: 3rem;
             text-align: center;
         }
         
@@ -233,8 +231,6 @@
             cursor: grabbing;
             transform: scale(1.05);
         }
-        
-        /* Removed .money-box::before */
         
         .calculation-bubble {
             position: absolute;
@@ -284,7 +280,7 @@
             align-items: center;
             gap: 12px;
             border: 2px solid #3a5a9e;
-            text-decoration: none; /* Added for anchor tags */
+            text-decoration: none;
         }
         
         .btn:hover {
@@ -293,7 +289,7 @@
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .btn-next, .btn-prev { /* Combined styles for navigation buttons */
+        .btn-next, .btn-prev {
             background: linear-gradient(to bottom, #28a745, #218838);
             color: white;
             font-size: 1.3rem;
@@ -310,6 +306,24 @@
             background: linear-gradient(to bottom, #218838, #1c7430);
             transform: translateY(-5px);
         }
+        
+        .btn-home {
+            background: linear-gradient(to bottom, #8a2be2, #4b0082);
+            color: white;
+            font-size: 1.3rem;
+            padding: 16px 45px;
+            border: 2px solid #6a0dad;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .btn-home:hover {
+            background: linear-gradient(to bottom, #6a0dad, #3a006a);
+            transform: translateY(-5px);
+        }
 
         .navigation-buttons {
             display: flex;
@@ -317,14 +331,15 @@
             width: 100%;
             max-width: 1000px;
             padding: 20px;
-            margin-top: auto; /* Push to the bottom before footer */
-            margin-bottom: 20px; /* Space above footer */
+            margin-top: auto;
+            margin-bottom: 20px;
+            gap: 15px;
         }
 
-        .navigation-buttons .btn {
+        .navigation-buttons .btn,
+        .navigation-buttons .btn-home {
             width: auto;
             flex-grow: 1;
-            margin: 0 10px;
             justify-content: center;
         }
         
@@ -436,7 +451,7 @@
             .money-box {
                 width: 80px;
                 height: 80px;
-                font-size: 2.5rem; /* Adjusted for smaller screens */
+                font-size: 2.5rem;
             }
             
             .calculation-bubble {
@@ -451,7 +466,7 @@
                 font-size: 1rem;
             }
 
-            .btn-next, .btn-prev {
+            .btn-next, .btn-prev, .btn-home {
                 font-size: 1.15rem;
                 padding: 14px 35px;
             }
@@ -511,7 +526,8 @@
                 align-items: center;
             }
 
-            .navigation-buttons .btn {
+            .navigation-buttons .btn,
+            .navigation-buttons .btn-home {
                 width: 90%;
             }
         }
@@ -592,6 +608,9 @@
             <a href="u1l6p1.html" class="btn btn-prev">
                 <i class="fas fa-chevron-right"></i> السابق
             </a>
+            <a href="u1.html" class="btn btn-home">
+                <i class="fas fa-home"></i> الصفحة الرئيسية
+            </a>
             <a href="u1l6p3.html" class="btn btn-next">
                 التالي <i class="fas fa-chevron-left"></i>
             </a>
@@ -607,7 +626,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             const moneyContainer = document.getElementById('moneyContainer');
             const interactiveMoney = document.getElementById('interactiveMoney');
-            // const moneyValue = document.getElementById('moneyValue'); // Removed
             const calcBubble = document.getElementById('calcBubble');
             const forwardBtn = document.getElementById('forwardBtn');
             const reverseBtn = document.getElementById('reverseBtn');
@@ -616,7 +634,6 @@
             const checkBtn = document.getElementById('checkAnswer');
             const feedback = document.getElementById('feedback');
             
-            // Function to show the bubble with a delay
             function showBubble(text, delay = 0) {
                 clearTimeout(calcBubble.timer);
                 calcBubble.style.display = 'none';
@@ -627,93 +644,78 @@
                 }, delay);
             }
             
-            // Function to hide the bubble
             function hideBubble() {
                 clearTimeout(calcBubble.timer);
                 calcBubble.style.display = 'none';
             }
             
-            // Forward movement of the money (الرحلة الأمامية)
             forwardBtn.addEventListener('click', function() {
                 hideBubble();
                 moneyContainer.style.transition = 'left 1s ease-in-out';
-                moneyContainer.style.left = '82%'; // Start at the end
-                // moneyValue.textContent = 'المبلغ الأصلي'; // Removed
+                moneyContainer.style.left = '82%';
+                // الفقاعة لن تعرض "61.15" هنا، بل نص "المبلغ الأصلي"
                 showBubble('المبلغ الأصلي', 100); 
                 
                 setTimeout(() => {
                     moneyContainer.style.left = '62%';
-                    // moneyValue.textContent = '...'; // Removed
                     showBubble('تبرعت بـ 17.5', 1000); 
                 }, 1000); 
             
                 setTimeout(() => {
                     moneyContainer.style.left = '42%';
-                    // moneyValue.textContent = '...'; // Removed
                     showBubble('اشترت حقيبة بـ 9.25', 1000); 
                 }, 2000); 
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '22%'; // Adjusted to align with point 4
-                    // moneyValue.textContent = '34.4'; // Removed
+                    moneyContainer.style.left = '22%';
                     showBubble('الباقي: 34.4 دينار', 1000); 
                 }, 3000); 
             
                 setTimeout(() => {
-                    moneyContainer.style.left = '5%'; // Final position for 'الباقي'
-                    // moneyValue.textContent = '34.4'; // Removed
+                    moneyContainer.style.left = '5%';
                     showBubble('الباقي: 34.4 دينار', 1000); 
                 }, 4000); 
             });
             
-            // Reverse movement of the money (الحل العكسي)
             reverseBtn.addEventListener('click', function() {
                 hideBubble();
                 moneyContainer.style.transition = 'left 1s ease-in-out';
                 moneyContainer.style.left = '5%';
-                // moneyValue.textContent = '34.4'; // Removed
                 showBubble('المبلغ المتبقي: 34.4 دينار', 100); 
             
                 setTimeout(() => {
                     moneyContainer.style.left = '22%';
-                    // moneyValue.textContent = (34.4 + 9.25).toFixed(2); // Removed
                     showBubble('34.4 + 9.25 = ' + (34.4 + 9.25).toFixed(2), 1000); 
                 }, 1000);
             
                 setTimeout(() => {
                     moneyContainer.style.left = '42%';
-                    // moneyValue.textContent = (34.4 + 9.25).toFixed(2); // Removed
                     showBubble('المبلغ بعد إضافة ثمن الحقيبة', 1000); 
                 }, 2000);
             
                 setTimeout(() => {
                     moneyContainer.style.left = '62%';
-                    // moneyValue.textContent = (34.4 + 9.25 + 17.5).toFixed(2); // Removed
                     showBubble((34.4 + 9.25).toFixed(2) + ' + 17.5 = ' + (34.4 + 9.25 + 17.5).toFixed(2), 1000); 
                 }, 3000);
             
                 setTimeout(() => {
                     moneyContainer.style.left = '82%';
-                    // moneyValue.textContent = (34.4 + 9.25 + 17.5).toFixed(2); // Removed
-                    showBubble('المبلغ الأصلي: ' + (؟).toFixed(2) + ' دينار', 1000); 
+                    // هنا تظهر القيمة المحسوبة النهائية، وهذا هو السلوك الصحيح للحل العكسي
+                    showBubble('المبلغ الأصلي: ' + (34.4 + 9.25 + 17.5).toFixed(2) + ' دينار', 1000); 
                 }, 4000);
             });
             
-            // Reset the money
             resetBtn.addEventListener('click', function() {
                 moneyContainer.style.transition = 'left 0.5s ease';
                 moneyContainer.style.left = '5%';
-                // moneyValue.textContent = '34.4'; // Removed
                 hideBubble();
                 feedback.textContent = '';
                 answerInput.value = '';
                 interactiveMoney.style.background = '#2ecc71';
             });
 
-            // Check answer
             checkBtn.addEventListener('click', function() {
                 const userAnswer = parseFloat(answerInput.value);
-                // Calculate the correct answer: 34.4 + 9.25 + 17.5 = 61.15
                 const correctAnswer = 34.4 + 9.25 + 17.5; 
 
                 if (isNaN(userAnswer)) {
@@ -722,7 +724,7 @@
                     return;
                 }
                 
-                if (Math.abs(userAnswer - correctAnswer) < 0.01) { // Allow for small floating point errors
+                if (Math.abs(userAnswer - correctAnswer) < 0.01) {
                     feedback.textContent = `إجابة صحيحة! أحسنت! المبلغ الأصلي كان ${correctAnswer.toFixed(2)} دينار`;
                     feedback.className = 'feedback correct';
                     interactiveMoney.style.background = '#2ecc71';
@@ -733,7 +735,6 @@
                 }
             });
             
-            // Make the money draggable
             let isDragging = false;
             let startX, startLeft;
             
@@ -761,18 +762,8 @@
                 const roadWidth = moneyContainer.parentElement.offsetWidth;
                 const newLeft = startLeft + (deltaX / roadWidth * 100); 
             
-                // Define thresholds for each milestone.
-                // Assuming 5% for milestone 4, 22% for milestone 3, 42% for milestone 2, 62% for milestone 1 (original)
-                const milestone1Pos = 82; // Original amount
-                const milestone2Pos = 62; // After donation
-                const milestone3Pos = 42; // After bag purchase
-                const milestone4Pos = 5; // Remaining
-
                 let clampedLeft = Math.max(5, Math.min(82, newLeft));
                 moneyContainer.style.left = `${clampedLeft}%`;
-                
-                // Update value based on position (removed moneyValue.textContent updates)
-                // The emoji will stay constant, and the bubble will show relevant text.
             }
             
             function stopDrag() {
