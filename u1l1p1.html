@@ -108,7 +108,7 @@
         /* مشهد الغابة التفاعلي */
         .forest-scene {
             width: 100%;
-            height: 300px; /* زيادة الارتفاع لاستيعاب الصفوف الجديدة */
+            height: 350px;
             background: linear-gradient(to bottom, #87CEEB 50%, #5D8A66 100%);
             border-radius: 12px;
             position: relative;
@@ -256,6 +256,22 @@
             align-items: flex-end;
         }
         
+        /* طبقة الأشجار الأمامية جداً (الأقرب) */
+        .trees-foremost-layer {
+            position: absolute;
+            bottom: 10%;  /* إزاحة نحو الأسفل بمقدار 10% */
+            width: 100%;
+            height: 70%;   /* ارتفاع أكبر لاستيعاب الأشجار الكبيرة */
+            z-index: 7;    /* أعلى من الطبقة الأمامية السابقة */
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+        }
+        
+        .trees-foremost-layer .tree {
+            margin: 0 -22px; /* تقليل الهوامش لجعل الأشجار متلاصقة */
+        }
+        
         .forest-scene .tree {
             position: relative;
             display: inline-block;
@@ -297,6 +313,11 @@
         .trees-front-layer .tree {
             transform: scale(1.3);
             filter: brightness(1.1);
+        }
+        
+        .trees-foremost-layer .tree {
+            transform: scale(1.7); /* حجم أكبر من الطبقة الأمامية السابقة */
+            filter: brightness(1.3);
         }
         
         .forest-scene .bird {
@@ -711,7 +732,7 @@
             }
             
             .forest-scene {
-                height: 350px; /* زيادة الارتفاع في الأجهزة المحمولة */
+                height: 400px;
             }
         }
     </style>
@@ -895,6 +916,71 @@
                         <div class="tree">
                             <div class="tree-trunk" style="height: 55px;"></div>
                             <div class="tree-crown" style="background: #1b4d2c; width: 65px; height: 75px;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- طبقة الأشجار الأمامية جداً (الأقرب) -->
+                    <div class="trees-foremost-layer">
+                        <!-- 15 شجرة متلاصقة مع تنوع في الأحجام والألوان -->
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 70px;"></div>
+                            <div class="tree-crown" style="background: #0a2d1c; width: 80px; height: 95px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 75px;"></div>
+                            <div class="tree-crown" style="background: #1b4d2c; width: 85px; height: 100px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 65px;"></div>
+                            <div class="tree-crown" style="background: #0a2d1c; width: 75px; height: 90px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 70px;"></div>
+                            <div class="tree-crown" style="background: #1b4d2c; width: 80px; height: 95px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 75px;"></div>
+                            <div class="tree-crown" style="background: #0a2d1c; width: 85px; height: 100px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 68px;"></div>
+                            <div class="tree-crown" style="background: #143a23; width: 78px; height: 92px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 72px;"></div>
+                            <div class="tree-crown" style="background: #1d5431; width: 82px; height: 97px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 74px;"></div>
+                            <div class="tree-crown" style="background: #0e321e; width: 84px; height: 98px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 67px;"></div>
+                            <div class="tree-crown" style="background: #1a4a2a; width: 77px; height: 91px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 73px;"></div>
+                            <div class="tree-crown" style="background: #0c2919; width: 83px; height: 96px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 76px;"></div>
+                            <div class="tree-crown" style="background: #1f5833; width: 86px; height: 101px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 69px;"></div>
+                            <div class="tree-crown" style="background: #123721; width: 79px; height: 93px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 71px;"></div>
+                            <div class="tree-crown" style="background: #0b2415; width: 81px; height: 94px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 74px;"></div>
+                            <div class="tree-crown" style="background: #1c502e; width: 84px; height: 99px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 66px;"></div>
+                            <div class="tree-crown" style="background: #0f351f; width: 76px; height: 89px;"></div>
                         </div>
                     </div>
                     
@@ -1133,16 +1219,18 @@
         function moveTrees() {
             const trees = document.querySelectorAll('.tree');
             trees.forEach((tree, index) => {
-                const layer = tree.closest('.trees-back-layer, .trees-middle-layer, .trees-front-layer');
+                const layer = tree.closest('.trees-back-layer, .trees-middle-layer, .trees-front-layer, .trees-foremost-layer');
                 let swayFactor = 1;
                 
                 if (layer.classList.contains('trees-back-layer')) {
                     swayFactor = 0.5; // حركة أبطأ في الخلف
+                } else if (layer.classList.contains('trees-foremost-layer')) {
+                    swayFactor = 1.8; // حركة أبطأ للأشجار المتلاصقة
                 } else if (layer.classList.contains('trees-front-layer')) {
-                    swayFactor = 1.5; // حركة أسرع في الأمام
+                    swayFactor = 1.5; // حركة متوسطة في الأمام
                 }
                 
-                const sway = Math.sin(Date.now() / (1000 / swayFactor) + index) * (2 * swayFactor);
+                const sway = Math.sin(Date.now() / (1000 / swayFactor) * (1 + index/trees.length)) * (2 * swayFactor);
                 tree.style.transform = `translateX(${sway}px)`;
             });
             requestAnimationFrame(moveTrees);
