@@ -78,7 +78,6 @@
         .explore-image {
             width: 100%;
             height: 250px;
-            /* تعديل لون السماء إلى الأزرق */
             background: linear-gradient(135deg, #87CEEB, #1E90FF);
             border-radius: 10px;
             margin-bottom: 20px;
@@ -90,24 +89,22 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        /* الأرضية الخضراء */
         .ground {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 40%; /* ارتفاع الأرضية */
+            height: 40%;
             background: linear-gradient(to top, #4CAF50, #8BC34A);
             z-index: 1;
         }
         
-        /* طبقة الثلج فوق الأرضية */
         .snow-layer {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 15%; /* ارتفاع طبقة الثلج */
+            height: 15%;
             background: linear-gradient(to top, #E0F7FA, #FFFFFF);
             border-top: 2px solid #B3E5FC;
             z-index: 2;
@@ -115,10 +112,10 @@
         
         .tree {
             position: absolute;
-            bottom: 40px; /* تعديل الموقع ليكون فوق الأرضية */
+            bottom: 40px;
             width: 80px;
             height: 120px;
-            z-index: 3; /* فوق طبقات الأرض والثلج */
+            z-index: 3;
         }
         
         .tree-trunk {
@@ -138,8 +135,7 @@
             width: 80px;
             height: 90px;
             background: #4CAF50;
-            border-radius: 50% 50% 40% 40%;
-            clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+            border-radius: 50% 60% 40% 50% / 60% 50% 70% 60%;
         }
         
         .orange {
@@ -173,7 +169,6 @@
             animation: fall linear infinite;
         }
         
-        /* إضافة غيوم متحركة */
         .cloud {
             position: absolute;
             background: rgba(255, 255, 255, 0.9);
@@ -464,18 +459,16 @@
             gap: 5px;
         }
         
-        /* تكبير حجم خط التمارين 1 و 2 فقط */
         .interactive-section .exercise:nth-of-type(1) h3,
         .interactive-section .exercise:nth-of-type(2) h3 {
-            font-size: 26px; /* نفس حجم التمارين 3 و 4 */
+            font-size: 26px;
         }
         
         .interactive-section .exercise:nth-of-type(1) .math,
         .interactive-section .exercise:nth-of-type(2) .math {
-            font-size: 26px; /* نفس حجم التمارين 3 و 4 */
+            font-size: 26px;
         }
         
-        /* تكبير حجم الكسور في التمارين 3 و 4 (بقيت كما هي) */
         .interactive-section .exercise:nth-of-type(3) h3,
         .interactive-section .exercise:nth-of-type(4) h3 {
             font-size: 26px;
@@ -513,13 +506,11 @@
                 min-width: 100%;
             }
             
-            /* حجم أكبر للكسور في الجوال (بقيت كما هي) */
             .interactive-section .exercise:nth-of-type(3) h3,
             .interactive-section .exercise:nth-of-type(4) h3 {
                 font-size: 24px;
             }
             
-            /* التعديل الجديد: تكبير حجم خط التمارين 1 و 2 في الجوال */
             .interactive-section .exercise:nth-of-type(1) h3,
             .interactive-section .exercise:nth-of-type(2) h3 {
                 font-size: 24px;
@@ -537,18 +528,15 @@
             <h2><i class="fas fa-binoculars"></i> استكشف</h2>
             
             <div class="explore-image">
-                <!-- الأرضية الخضراء -->
                 <div class="ground"></div>
                 
-                <!-- طبقة الثلج فوق الأرضية -->
                 <div class="snow-layer"></div>
                 
-                <!-- الغيوم المضافة -->
                 <div class="cloud cloud-1"></div>
                 <div class="cloud cloud-2"></div>
                 <div class="cloud cloud-3"></div>
                 
-                <div class="tree">
+                <div class="tree" style="left: 5%;">
                     <div class="tree-trunk"></div>
                     <div class="tree-top"></div>
                     <div class="orange" style="top: 30px; left: 20px;"></div>
@@ -556,27 +544,51 @@
                     <div class="orange" style="top: 70px; left: 10px;"></div>
                 </div>
                 
-                <div class="tree" style="left: 20%;">
+                <div class="tree" style="left: 15%;">
                     <div class="tree-trunk"></div>
                     <div class="tree-top"></div>
                     <div class="orange" style="top: 40px; left: 30px;"></div>
                     <div class="orange" style="top: 60px; left: 50px;"></div>
                 </div>
                 
-                <div class="tree frozen-tree" style="left: 40%;">
+                <div class="tree frozen-tree" style="left: 25%;">
                     <div class="tree-trunk"></div>
                     <div class="tree-top"></div>
                 </div>
                 
-                <div class="tree" style="left: 60%;">
+                <div class="tree" style="left: 35%;">
                     <div class="tree-trunk"></div>
                     <div class="tree-top"></div>
                     <div class="orange" style="top: 30px; left: 30px;"></div>
                     <div class="orange" style="top: 60px; left: 10px;"></div>
                     <div class="orange" style="top: 80px; left: 50px;"></div>
                 </div>
+
+                <div class="tree" style="left: 45%;">
+                    <div class="tree-trunk"></div>
+                    <div class="tree-top"></div>
+                    <div class="orange" style="top: 50px; left: 25px;"></div>
+                </div>
+
+                <div class="tree frozen-tree" style="left: 55%;">
+                    <div class="tree-trunk"></div>
+                    <div class="tree-top"></div>
+                </div>
+
+                <div class="tree" style="left: 65%;">
+                    <div class="tree-trunk"></div>
+                    <div class="tree-top"></div>
+                    <div class="orange" style="top: 45px; left: 15px;"></div>
+                    <div class="orange" style="top: 70px; left: 35px;"></div>
+                </div>
+
+                <div class="tree" style="left: 75%;">
+                    <div class="tree-trunk"></div>
+                    <div class="tree-top"></div>
+                    <div class="orange" style="top: 35px; left: 40px;"></div>
+                </div>
                 
-                <div class="tree frozen-tree" style="left: 80%;">
+                <div class="tree frozen-tree" style="left: 85%;">
                     <div class="tree-trunk"></div>
                     <div class="tree-top"></div>
                 </div>
@@ -606,7 +618,6 @@
             <div class="example">
                 <h3><i class="fas fa-clipboard-list"></i> أمثلة</h3>
                 
-                <!-- المثال الأول مع تمرير أفقي -->
                 <div class="example-horizontal-scroll">
                     <div class="example-content">
                         <div class="example-number">1</div>
@@ -619,7 +630,6 @@
                 </div>
                 <p class="scroll-hint"><i class="fas fa-arrows-left-right"></i> يمكنك التمرير أفقيًا لمشاهدة المثال كاملاً</p>
                 
-                <!-- المثال الثاني مع تمرير أفقي -->
                 <div class="example-horizontal-scroll">
                     <div class="example-content">
                         <div class="example-number">2</div>
@@ -699,7 +709,6 @@
     </div>
 
     <script>
-        // إنشاء رقاقات الثلج
         function createSnowflakes() {
             const container = document.getElementById('snowflakes');
             const flakeCount = 30;
@@ -708,16 +717,13 @@
                 const flake = document.createElement('div');
                 flake.classList.add('snowflake');
                 
-                // حجم عشوائي
                 const size = Math.random() * 5 + 2;
                 flake.style.width = `${size}px`;
                 flake.style.height = `${size}px`;
                 
-                // موقع بداية عشوائي
                 flake.style.left = `${Math.random() * 100}%`;
                 flake.style.top = `-${size}px`;
                 
-                // سرعة سقوط عشوائية
                 const duration = Math.random() * 5 + 5;
                 flake.style.animationDuration = `${duration}s`;
                 flake.style.animationDelay = `${Math.random() * 5}s`;
@@ -726,10 +732,8 @@
             }
         }
         
-        // تتبع التمارين المكتملة
         const completedExercises = [false, false, false, false];
         
-        // التحقق من التمارين
         function checkExercise(exNumber) {
             const answerInput = document.getElementById(`ex${exNumber}-answer`);
             const feedback = document.getElementById(`ex${exNumber}-feedback`);
@@ -739,19 +743,19 @@
             let correctAnswer = '';
             
             switch(exNumber) {
-                case 1: // التمرين 1: 1/2
+                case 1:
                     isCorrect = userAnswer === '0.5' || userAnswer === '.5' || userAnswer === '0,5' || userAnswer === ',5';
                     correctAnswer = '0.5';
                     break;
-                case 2: // التمرين 2: 3/5
+                case 2:
                     isCorrect = userAnswer === '0.6' || userAnswer === '.6' || userAnswer === '0,6' || userAnswer === ',6';
                     correctAnswer = '0.6';
                     break;
-                case 3: // التمرين 3: -7/20
+                case 3:
                     isCorrect = userAnswer === '-0.35' || userAnswer === '-.35' || userAnswer === '-0,35' || userAnswer === '-,35';
                     correctAnswer = '-0.35';
                     break;
-                case 4: // التمرين 4: 4/25
+                case 4:
                     isCorrect = userAnswer === '0.16' || userAnswer === '.16' || userAnswer === '0,16' || userAnswer === ',16';
                     correctAnswer = '0.16';
                     break;
@@ -770,7 +774,6 @@
             feedback.style.display = 'block';
         }
         
-        // التحقق من اكتمال جميع التمارين
         function checkAllCompleted() {
             const allCompleted = completedExercises.every(ex => ex === true);
             if (allCompleted) {
@@ -779,17 +782,15 @@
             }
         }
         
-        // الانتقال للصفحة التالية
         function nextPage() {
             if (completedExercises.every(ex => ex === true)) {
                 alert("تم الانتقال للصفحة التالية بنجاح!");
-                 window.location.href = "u1l2p2.html"; // في التطبيق الفعلي
+                 window.location.href = "u1l2p2.html";
             } else {
                 alert("الرجاء إكمال جميع التمارين قبل الانتقال للصفحة التالية");
             }
         }
         
-        // تمكين الإدخال عند الضغط على Enter
         document.querySelectorAll('input').forEach(input => {
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
@@ -799,7 +800,6 @@
             });
         });
         
-        // تهيئة الرقاقات الثلجية عند تحميل الصفحة
         window.onload = function() {
             createSnowflakes();
         };
