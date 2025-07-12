@@ -265,6 +265,7 @@
             padding: 0 20px;
             z-index: 5;
             touch-action: none;
+            display: none; /* مخفية افتراضيًا */
         }
 
         .d-pad {
@@ -324,8 +325,33 @@
             z-index: 5;
             cursor: pointer;
         }
+        
+        /* إرشادات لوحة المفاتيح */
+        .keyboard-instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 0 20px;
+            font-size: 14px;
+            z-index: 5;
+        }
 
         /* الشاشات الصغيرة جداً */
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: flex;
+            }
+            
+            .keyboard-instructions {
+                display: none;
+            }
+        }
+
         @media (max-width: 400px) {
             .control-btn {
                 width: 50px;
@@ -377,7 +403,7 @@
             <div class="sonic-logo">SONIC</div>
             <h2>مغامرة تعليمية في حل المسائل</h2>
             <div class="instructions">
-                <p>استخدم <span class="highlight">أزرار التحكم</span> في الأسفل للتحرك والقفز</p>
+                <p id="controlsInfo">استخدم <span class="highlight">أزرار الأسهم</span> على الكيبورد للتحرك و <span class="highlight">المسافة</span> للقفز</p>
                 <p>اجمع <span class="highlight">الحلقات الذهبية</span> لتزيد نقاطك</p>
                 <p>تجنب <span class="highlight">الأعداء الحمراء</span> أو ستخسر أرواحك!</p>
                 <p>عند خسارة 3 أرواح، أجب على سؤال في حل المسائل بشكل عكسي لاستعادة أرواحك!</p>
@@ -448,6 +474,10 @@
 
             <div class="control-btn jump-btn" id="jumpBtn">↑</div>
         </div>
+        
+        <div class="keyboard-instructions">
+            استخدم الأسهم للتحرك ومسافة للقفز
+        </div>
 
         <canvas id="gameCanvas"></canvas>
     </div>
@@ -472,6 +502,7 @@
         const gameWin = document.getElementById('gameWin');
         const winScore = document.getElementById('winScore');
         const playAgainBtn = document.getElementById('playAgainBtn');
+        const controlsInfo = document.getElementById('controlsInfo');
         
         // عناصر شاشة السؤال
         const questionScreen = document.getElementById('questionScreen');
@@ -495,6 +526,16 @@
         let gameSpeed = 5;
         let soundEnabled = true;
         let winRings = 30; // عدد الحلقات المطلوبة للفوز
+
+        // متغيرات التحكم بالكيبورد
+        let keyLeft = false;
+        let keyRight = false;
+        let keyJump = false;
+        
+        // متغيرات التحكم باللمس
+        let touchJump = false;
+        let touchLeft = false;
+        let touchRight = false;
 
         // تهيئة نظام الصوت
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -950,10 +991,6 @@
         }
 
         // التحكم باللمس للهاتف
-        let touchJump = false;
-        let touchLeft = false;
-        let touchRight = false;
-
         function setupMobileControls() {
             // زر القفز
             jumpBtn.addEventListener('touchstart', (e) => {
@@ -1012,16 +1049,52 @@
                 touchRight = false;
             });
         }
+        
+        // التحكم بالكيبورد للكمبيوتر
+        function setupKeyboardControls() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' || e.key === 'Left') {
+                    keyLeft = true;
+                } else if (e.key === 'ArrowRight' || e.key === 'Right') {
+                    keyRight = true;
+                } else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'Up') {
+                    if (!keyJump && sonic.grounded) {
+                        keyJump = true;
+                        sonic.velY = -15;
+                        sonic.jumping = true;
+                        sonic.grounded = false;
+                        playSound(440, 'sine', 0.2, 0.4); // صوت القفز
+                    }
+                }
+                
+                // منع التمرير عند الضغط على الأسهم
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === ' ') {
+                    e.preventDefault();
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                if (e.key === 'ArrowLeft' || e.key === 'Left') {
+                    keyLeft = false;
+                } else if (e.key === 'ArrowRight' || e.key === 'Right') {
+                    keyRight = false;
+                } else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'Up') {
+                    keyJump = false;
+                }
+            });
+        }
 
         // تحريك سونيك
         function handleMovement() {
             sonic.velX = 0;
 
-            if (touchLeft) {
+            // التحكم باللمس أو الكيبورد لليسار
+            if (touchLeft || keyLeft) {
                 sonic.velX = -sonic.speed; // تحريك لليسار
             }
 
-            if (touchRight) {
+            // التحكم باللمس أو الكيبورد لليمين
+            if (touchRight || keyRight) {
                 sonic.velX = sonic.speed; // تحريك لليمين
             }
         }
@@ -1055,8 +1128,9 @@
         restartBtn.addEventListener('click', startGame);
         playAgainBtn.addEventListener('click', startGame);
 
-        // تهيئة التحكم للهاتف
+        // تهيئة التحكم للهاتف والكمبيوتر
         setupMobileControls();
+        setupKeyboardControls();
 
         // بدء تحديث الحركة
         updateMovement();
@@ -1066,6 +1140,13 @@
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
         });
+        
+        // تحديث رسائل التحكم بناءً على نوع الجهاز
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+            controlsInfo.innerHTML = "استخدم <span class='highlight'>أزرار التحكم</span> في الأسفل للتحرك والقفز";
+        } else {
+            controlsInfo.innerHTML = "استخدم <span class='highlight'>أزرار الأسهم</span> على الكيبورد للتحرك و <span class='highlight'>المسافة</span> للقفز";
+        }
     </script>
 </body>
 </html>
