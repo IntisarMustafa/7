@@ -11,7 +11,7 @@
             inlineMath: [['$', '$'], ['\\(', '\\)']]
         },
         chtml: {
-            scale: 1.4, // زيادة حجم الكسور بنسبة 80%
+            scale: 1.4,
             mtextInheritFont: true
         },
         options: {
@@ -29,688 +29,8 @@
     };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غابة تفاعلية - شمس خلف الأشجار</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            padding: 20px;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 900px;
-            text-align: center;
-        }
-        
-        h1 {
-            color: #fff;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .description {
-            color: #f8f9fa;
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 30px;
-            line-height: 1.6;
-        }
-        
-        .scene {
-            width: 100%;
-            height: 500px;
-            background: linear-gradient(to bottom, #87CEEB 60%, #5D8A66 100%);
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            margin-bottom: 30px;
-        }
-        
-        /* الشمس خلف الأشجار */
-        .sun {
-            position: absolute;
-            top: 80px;
-            right: 100px;
-            width: 80px;
-            height: 80px;
-            background: #FFD700;
-            border-radius: 50%;
-            box-shadow: 0 0 50px #FFA500, 0 0 100px rgba(255, 165, 0, 0.5);
-            z-index: 3; /* أقل من z-index الأشجار */
-            transition: all 2s ease;
-            cursor: pointer;
-        }
-        
-        .night .sun {
-            background: #F5F5DC;
-            box-shadow: 0 0 30px #F5F5DC, 0 0 60px rgba(245, 245, 220, 0.6);
-            transform: translateY(300px) translateX(150px);
-        }
-        
-        /* الغيوم */
-        .cloud {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            z-index: 4;
-        }
-        
-        .cloud-1 {
-            top: 70px;
-            left: 50px;
-            width: 120px;
-            height: 50px;
-        }
-        
-        .cloud-1:before, .cloud-1:after {
-            content: '';
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-        }
-        
-        .cloud-1:before {
-            width: 60px;
-            height: 60px;
-            top: -25px;
-            left: 20px;
-        }
-        
-        .cloud-1:after {
-            width: 40px;
-            height: 40px;
-            top: -15px;
-            right: 20px;
-        }
-        
-        .cloud-2 {
-            top: 150px;
-            right: 100px;
-            width: 100px;
-            height: 40px;
-        }
-        
-        .cloud-2:before, .cloud-2:after {
-            content: '';
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-        }
-        
-        .cloud-2:before {
-            width: 50px;
-            height: 50px;
-            top: -20px;
-            left: 15px;
-        }
-        
-        .cloud-2:after {
-            width: 30px;
-            height: 30px;
-            top: -10px;
-            right: 15px;
-        }
-        
-        /* الأرض */
-        .ground {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 40%;
-            background: linear-gradient(to top, #5D8A66, #7CA982);
-            z-index: 3;
-        }
-        
-        /* الأشجار */
-        .trees-container {
-            position: absolute;
-            bottom: 40%;
-            width: 100%;
-            height: 60%;
-            z-index: 4; /* أعلى من الشمس */
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-        }
-        
-        .tree {
-            position: relative;
-            display: inline-block;
-            margin: 0 -15px;
-        }
-        
-        .tree-trunk {
-            position: absolute;
-            bottom: 0;
-            width: 20px;
-            height: 80px;
-            background: #8B4513;
-            border-radius: 5px;
-            z-index: 1;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .tree-crown {
-            position: absolute;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 120px;
-            background: #2E8B57;
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            border-radius: 50% 50% 0 0;
-            z-index: 2;
-        }
-        
-        /* أشجار متلاصقة مع تنوع في الأحجام والألوان */
-        .tree:nth-child(1) { transform: scale(1.0); }
-        .tree:nth-child(2) { transform: scale(1.1); }
-        .tree:nth-child(3) { transform: scale(0.9); }
-        .tree:nth-child(4) { transform: scale(1.2); }
-        .tree:nth-child(5) { transform: scale(0.95); }
-        .tree:nth-child(6) { transform: scale(1.15); }
-        .tree:nth-child(7) { transform: scale(1.05); }
-        .tree:nth-child(8) { transform: scale(0.85); }
-        .tree:nth-child(9) { transform: scale(1.25); }
-        .tree:nth-child(10) { transform: scale(0.8); }
-        
-        .tree:nth-child(1) .tree-crown { background: #3CB371; }
-        .tree:nth-child(2) .tree-crown { background: #2E8B57; }
-        .tree:nth-child(3) .tree-crown { background: #228B22; }
-        .tree:nth-child(4) .tree-crown { background: #006400; }
-        .tree:nth-child(5) .tree-crown { background: #32CD32; }
-        .tree:nth-child(6) .tree-crown { background: #4CAF50; }
-        .tree:nth-child(7) .tree-crown { background: #388E3C; }
-        .tree:nth-child(8) .tree-crown { background: #2E7D32; }
-        .tree:nth-child(9) .tree-crown { background: #1B5E20; }
-        .tree:nth-child(10) .tree-crown { background: #43A047; }
-        
-        /* الطيور - الاتجاه المعاكس */
-        .bird {
-            position: absolute;
-            color: #333;
-            font-size: 24px;
-            z-index: 6;
-        }
-        
-        .bird-1 { top: 200px; right: 200px; animation: flyReverse 20s linear infinite; }
-        .bird-2 { top: 170px; right: 300px; animation: flyReverse 18s linear infinite; }
-        .bird-3 { top: 230px; right: 450px; animation: flyReverse 22s linear infinite; }
-        
-        @keyframes flyReverse {
-            0% { transform: translateX(100px); }
-            100% { transform: translateX(-1000px); }
-        }
-        
-        /* النجوم (للليل) */
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 2s;
-            z-index: 2;
-        }
-        
-        .night .star {
-            opacity: 1;
-        }
-        
-        /* عناصر التحكم */
-        .controls {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 180px;
-        }
-        
-        .control-group label {
-            color: white;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        
-        .btn {
-            background: rgba(255, 255, 255, 0.3);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.5);
-            transform: translateY(-3px);
-        }
-        
-        .btn i {
-            font-size: 1.2rem;
-        }
-        
-        .toggle {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 30px;
-        }
-        
-        .toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 30px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 22px;
-            width: 22px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: #4CAF50;
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(30px);
-        }
-        
-        /* التأثيرات الليلية */
-        .night {
-            background: linear-gradient(to bottom, #0a1929 60%, #1a3a1a 100%);
-        }
-        
-        .night .ground {
-            background: linear-gradient(to top, #1a3a1a, #2c5a2c);
-        }
-        
-        .stormy .cloud {
-            background: #a9a9a9;
-        }
-        
-        /* التفاصيل الإضافية */
-        .hill {
-            position: absolute;
-            bottom: 40%;
-            width: 200px;
-            height: 100px;
-            background: #4a7c59;
-            border-radius: 50% 50% 0 0;
-            z-index: 2;
-        }
-        
-        .hill-1 {
-            left: -50px;
-            width: 300px;
-            height: 150px;
-        }
-        
-        .hill-2 {
-            right: -50px;
-            width: 250px;
-            height: 120px;
-        }
-        
-        /* النجوم */
-        .star-1 { top: 100px; left: 150px; width: 3px; height: 3px; }
-        .star-2 { top: 70px; left: 300px; width: 2px; height: 2px; }
-        .star-3 { top: 120px; left: 400px; width: 4px; height: 4px; }
-        .star-4 { top: 90px; left: 600px; width: 3px; height: 3px; }
-        .star-5 { top: 150px; left: 700px; width: 2px; height: 2px; }
-        .star-6 { top: 60px; left: 800px; width: 3px; height: 3px; }
-        
-        /* الرسالة */
-        .message {
-            color: white;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-size: 1rem;
-        }
-        
-        /* أشجار خلفية إضافية للكثافة */
-        .background-trees {
-            position: absolute;
-            bottom: 45%;
-            width: 100%;
-            height: 40%;
-            z-index: 3; /* فوق الشمس لكن تحت الأشجار الأمامية */
-            display: flex;
-            justify-content: space-around;
-        }
-        
-        .background-tree {
-            position: relative;
-            opacity: 0.7;
-            transform: scale(0.7);
-            filter: blur(1px);
-        }
-        
-        /* تأثير ضوء الشمس خلف الأشجار */
-        .sun-rays {
-            position: absolute;
-            top: 70px;
-            right: 90px;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, rgba(255,215,0,0) 70%);
-            z-index: 2;
-            pointer-events: none;
-            animation: pulse 3s infinite alternate;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 0.6; transform: scale(1); }
-            100% { opacity: 0.9; transform: scale(1.1); }
-        }
-        
-        .night .sun-rays {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>غابة تفاعلية - شمس خلف الأشجار</h1>
-        <p class="description">مشهد غابة ساحر مع شمس تشرق خلف الأشجار وطيور تطير في الاتجاه المعاكس. استمتع بالتحكم في المشهد!</p>
-        
-        <div class="scene" id="scene">
-            <!-- الشمس خلف الأشجار -->
-            <div class="sun"></div>
-            <div class="sun-rays"></div>
-            
-            <!-- الغيوم -->
-            <div class="cloud cloud-1"></div>
-            <div class="cloud cloud-2"></div>
-            
-            <!-- التلال -->
-            <div class="hill hill-1"></div>
-            <div class="hill hill-2"></div>
-            
-            <!-- الأرض -->
-            <div class="ground"></div>
-            
-            <!-- أشجار خلفية للكثافة -->
-            <div class="background-trees">
-                <div class="background-tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown" style="background: #2E8B57;"></div>
-                </div>
-                <div class="background-tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown" style="background: #228B22;"></div>
-                </div>
-                <div class="background-tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown" style="background: #006400;"></div>
-                </div>
-                <div class="background-tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown" style="background: #2E7D32;"></div>
-                </div>
-                <div class="background-tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown" style="background: #1B5E20;"></div>
-                </div>
-            </div>
-            
-            <!-- الأشجار الرئيسية (متلاصقة) -->
-            <div class="trees-container">
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-                <div class="tree">
-                    <div class="tree-trunk"></div>
-                    <div class="tree-crown"></div>
-                </div>
-            </div>
-            
-            <!-- الطيور - الاتجاه المعاكس -->
-            <div class="bird bird-1">🕊️</div>
-            <div class="bird bird-2">🕊️</div>
-            <div class="bird bird-3">🕊️</div>
-            
-            <!-- النجوم -->
-            <div class="star star-1"></div>
-            <div class="star star-2"></div>
-            <div class="star star-3"></div>
-            <div class="star star-4"></div>
-            <div class="star star-5"></div>
-            <div class="star star-6"></div>
-        </div>
-        
-        <div class="controls">
-            <div class="control-group">
-                <label>التحكم بالوقت</label>
-                <button class="btn" id="dayNightBtn">
-                    <i class="fas fa-moon"></i> تبديل الليل/النهار
-                </button>
-            </div>
-            
-            <div class="control-group">
-                <label>التحكم بالطقس</label>
-                <button class="btn" id="weatherBtn">
-                    <i class="fas fa-cloud-sun"></i> تبديل الطقس
-                </button>
-            </div>
-            
-            <div class="control-group">
-                <label>الطيور المتحركة</label>
-                <label class="toggle">
-                    <input type="checkbox" id="birdsToggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            
-            <div class="control-group">
-                <label>حركة الأشجار</label>
-                <label class="toggle">
-                    <input type="checkbox" id="treeMoveToggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        
-        <div class="message">
-            <i class="fas fa-info-circle"></i> الشمس الآن خلف الأشجار والطيور تطير في الاتجاه المعاكس!
-        </div>
-    </div>
-
-    <script>
-        // عناصر DOM
-        const scene = document.getElementById('scene');
-        const dayNightBtn = document.getElementById('dayNightBtn');
-        const weatherBtn = document.getElementById('weatherBtn');
-        const birdsToggle = document.getElementById('birdsToggle');
-        const treeMoveToggle = document.getElementById('treeMoveToggle');
-        const sun = document.querySelector('.sun');
-        const clouds = document.querySelectorAll('.cloud');
-        const birds = document.querySelectorAll('.bird');
-        const trees = document.querySelectorAll('.tree');
-        const backgroundTrees = document.querySelectorAll('.background-tree');
-        
-        // تبديل الليل والنهار
-        dayNightBtn.addEventListener('click', () => {
-            scene.classList.toggle('night');
-            
-            if (scene.classList.contains('night')) {
-                dayNightBtn.innerHTML = '<i class="fas fa-sun"></i> تبديل النهار';
-            } else {
-                dayNightBtn.innerHTML = '<i class="fas fa-moon"></i> تبديل الليل';
-            }
-        });
-        
-        // تبديل الطقس
-        weatherBtn.addEventListener('click', () => {
-            scene.classList.toggle('stormy');
-            
-            if (scene.classList.contains('stormy')) {
-                weatherBtn.innerHTML = '<i class="fas fa-sun"></i> طقس صافي';
-            } else {
-                weatherBtn.innerHTML = '<i class="fas fa-cloud-rain"></i> طقس غائم';
-            }
-        });
-        
-        // التحكم في الطيور
-        birdsToggle.addEventListener('change', () => {
-            birds.forEach(bird => {
-                if (birdsToggle.checked) {
-                    bird.style.display = 'block';
-                } else {
-                    bird.style.display = 'none';
-                }
-            });
-        });
-        
-        // تأثير النقر على الشمس
-        sun.addEventListener('click', () => {
-            sun.style.transform = 'scale(1.2)';
-            sun.style.boxShadow = '0 0 80px #FF4500, 0 0 150px rgba(255, 69, 0, 0.8)';
-            
-            setTimeout(() => {
-                sun.style.transform = scene.classList.contains('night') 
-                    ? 'translateY(300px) translateX(150px)' 
-                    : 'scale(1)';
-                    
-                sun.style.boxShadow = scene.classList.contains('night')
-                    ? '0 0 30px #F5F5DC, 0 0 60px rgba(245, 245, 220, 0.6)'
-                    : '0 0 50px #FFA500, 0 0 100px rgba(255, 165, 0, 0.5)';
-            }, 500);
-        });
-        
-        // حركة الغيوم
-        function moveClouds() {
-            clouds.forEach((cloud, index) => {
-                const currentLeft = parseFloat(getComputedStyle(cloud).left);
-                const newLeft = (currentLeft - 0.05) % 900;
-                
-                cloud.style.left = `${newLeft < -100 ? 900 : newLeft}px`;
-            });
-            
-            requestAnimationFrame(moveClouds);
-        }
-        
-        // حركة الأشجار (إذا تم تفعيلها)
-        function moveTrees() {
-            if (treeMoveToggle.checked) {
-                trees.forEach((tree, index) => {
-                    const sway = Math.sin(Date.now() / 1000 + index) * 3;
-                    tree.style.transform = `scale(${getTreeScale(index)}) translateX(${sway}px)`;
-                });
-                
-                backgroundTrees.forEach((tree, index) => {
-                    const sway = Math.sin(Date.now() / 1200 + index) * 2;
-                    tree.style.transform = `scale(0.7) translateX(${sway}px)`;
-                });
-            }
-            
-            requestAnimationFrame(moveTrees);
-        }
-        
-        // الحصول على مقياس الشجرة بناءً على موقعها
-        function getTreeScale(index) {
-            const scales = [1.0, 1.1, 0.9, 1.2, 0.95, 1.15, 1.05, 0.85, 1.25, 0.8];
-            return scales[index] || 1.0;
-        }
-        
-        // بدء الحركات
-        moveClouds();
-        moveTrees();
-    </script>
-</body>
-</html>
         * {
             box-sizing: border-box;
             margin: 0;
@@ -724,7 +44,7 @@
             background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ee 100%);
             padding: 20px;
             min-height: 100vh;
-            font-size: 1.0rem; /* قاعدة حجم الخط */
+            font-size: 1.0rem;
         }
         
         .container {
@@ -743,15 +63,14 @@
             text-align: center;
         }
         
-        /* Fluid Typography for Header H1 */
         h1 {
-            font-size: clamp(2rem, 5vw, 3rem); /* Min 32px, fluid up to 48px */
+            font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         header p {
-            font-size: 1.25rem; /* حجم الفقرة في الهيدر */
+            font-size: 1.25rem;
         }
 
         .page {
@@ -759,10 +78,9 @@
             border-bottom: 2px dashed #d0e8d0;
         }
         
-        /* Fluid Typography for Page Title */
         .page-title {
             color: #1a5d38;
-            font-size: clamp(1.8rem, 4vw, 2.5rem); /* Min 28.8px, fluid up to 40px */
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 3px solid #e0f0e0;
@@ -773,7 +91,7 @@
         }
         
         .page-title i {
-            font-size: clamp(1.4rem, 3.5vw, 2rem); /* Min 22.4px, fluid up to 32px */
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
             margin-left: 15px;
         }
         
@@ -787,16 +105,231 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
         
-        .amazon-img {
+        /* مشهد الغابة التفاعلي */
+        .forest-scene {
             width: 100%;
-            height: 250px;
-            background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
+            height: 300px; /* زيادة الارتفاع لاستيعاب الصفوف الجديدة */
+            background: linear-gradient(to bottom, #87CEEB 50%, #5D8A66 100%);
             border-radius: 12px;
+            position: relative;
+            overflow: hidden;
             margin: 20px 0;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
+        
+        .forest-scene .sun {
+            position: absolute;
+            top: 40px;
+            right: 50px;
+            width: 40px;
+            height: 40px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 50px #FFA500, 0 0 100px rgba(255, 165, 0, 0.5);
+            z-index: 8;
+            transition: all 2s ease;
+            cursor: pointer;
+        }
+        
+        .forest-scene .sun-rays {
+            position: absolute;
+            top: 35px;
+            right: 45px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, rgba(255,215,0,0) 70%);
+            z-index: 7;
+            pointer-events: none;
+            animation: pulse 3s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 0.9; transform: scale(1.1); }
+        }
+        
+        .forest-scene .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 9;
+        }
+        
+        .forest-scene .cloud-1 {
+            top: 35px;
+            left: 25px;
+            width: 120px;
+            height: 50px;
+        }
+        
+        .forest-scene .cloud-1:before, .forest-scene .cloud-1:after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .forest-scene .cloud-1:before {
+            width: 60px;
+            height: 60px;
+            top: -25px;
+            left: 20px;
+        }
+        
+        .forest-scene .cloud-1:after {
+            width: 40px;
+            height: 40px;
+            top: -15px;
+            right: 20px;
+        }
+        
+        .forest-scene .cloud-2 {
+            top: 75px;
+            right: 50px;
+            width: 100px;
+            height: 40px;
+        }
+        
+        .forest-scene .cloud-2:before, .forest-scene .cloud-2:after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .forest-scene .cloud-2:before {
+            width: 50px;
+            height: 50px;
+            top: -20px;
+            left: 15px;
+        }
+        
+        .forest-scene .cloud-2:after {
+            width: 30px;
+            height: 30px;
+            top: -10px;
+            right: 15px;
+        }
+        
+        .forest-scene .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, #5D8A66, #7CA982);
+            z-index: 6;
+        }
+        
+        /* طبقات الأشجار */
+        .trees-back-layer {
+            position: absolute;
+            bottom: 40%;
+            width: 100%;
+            height: 40%;
+            z-index: 3;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+        }
+        
+        .trees-middle-layer {
+            position: absolute;
+            bottom: 30%;
+            width: 100%;
+            height: 50%;
+            z-index: 4;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+        }
+        
+        .trees-front-layer {
+            position: absolute;
+            bottom: 20%;
+            width: 100%;
+            height: 60%;
+            z-index: 5;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+        }
+        
+        .forest-scene .tree {
+            position: relative;
+            display: inline-block;
+            margin: 0 -15px;
+            transition: transform 0.5s ease;
+        }
+        
+        .forest-scene .tree-trunk {
+            position: absolute;
+            bottom: 0;
+            width: 10px;
+            height: 40px;
+            background: #8B4513;
+            border-radius: 3px;
+            z-index: 1;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .forest-scene .tree-crown {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 60px;
+            background: #2E8B57;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            border-radius: 50% 50% 0 0;
+            z-index: 2;
+        }
+        
+        /* أنماط خاصة بطبقات الأشجار المختلفة */
+        .trees-back-layer .tree {
+            transform: scale(0.7);
+            filter: brightness(0.8);
+        }
+        
+        .trees-front-layer .tree {
+            transform: scale(1.3);
+            filter: brightness(1.1);
+        }
+        
+        .forest-scene .bird {
+            position: absolute;
+            color: #333;
+            font-size: 16px;
+            z-index: 10;
+        }
+        
+        .forest-scene .bird-1 { top: 100px; right: 200px; animation: flyReverse 20s linear infinite; }
+        .forest-scene .bird-2 { top: 85px; right: 300px; animation: flyReverse 18s linear infinite; }
+        .forest-scene .bird-3 { top: 115px; right: 450px; animation: flyReverse 22s linear infinite; }
+        
+        @keyframes flyReverse {
+            0% { transform: translateX(50px); }
+            100% { transform: translateX(-1000px); }
+        }
+        
+        .forest-scene .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 2s;
+            z-index: 2;
+        }
+        
+        .forest-scene .star-1 { top: 50px; left: 75px; width: 2px; height: 2px; }
+        .forest-scene .star-2 { top: 35px; left: 150px; width: 1px; height: 1px; }
+        .forest-scene .star-3 { top: 60px; left: 200px; width: 2px; height: 2px; }
+        .forest-scene .star-4 { top: 45px; left: 300px; width: 2px; height: 2px; }
+        .forest-scene .star-5 { top: 75px; left: 350px; width: 1px; height: 1px; }
+        .forest-scene .star-6 { top: 30px; left: 400px; width: 2px; height: 2px; }
         
         .explore-note {
             background-color: #d4edda;
@@ -805,7 +338,7 @@
             margin-top: 20px;
             font-style: italic;
             text-align: center;
-            font-size: 1rem; /* حجم الملاحظة */
+            font-size: 1rem;
             border: 2px dashed #4caf50;
         }
         
@@ -830,7 +363,7 @@
         .term {
             font-weight: bold;
             color: #e65100;
-            font-size: 1.1rem; /* حجم المصطلح */
+            font-size: 1.1rem;
         }
         
         .example-box {
@@ -842,14 +375,13 @@
             border: 2px solid #e0f0e0;
         }
         
-        /* Fluid Typography for Example Title */
         .example-title {
             color: #1976d2;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1.5rem, 3vw, 2rem); /* Min 24px, fluid up to 32px */
+            font-size: clamp(1.5rem, 3vw, 2rem);
             padding: 10px;
             background: linear-gradient(to right, #e3f2fd, #bbdefb);
             border-radius: 10px;
@@ -858,7 +390,7 @@
         .example-title::before {
             content: "✎";
             margin-left: 15px;
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem); /* Icon size adjusts with title */
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
         }
         
         .interactive-section {
@@ -880,10 +412,9 @@
             width: 180px;
             font-weight: bold;
             color: #0d47a1;
-            font-size: 1.15rem; /* حجم الليبل */
+            font-size: 1.15rem;
         }
         
-        /* تصميم مربعات إدخال الكسر */
         .fraction-container {
             display: flex;
             flex-direction: column;
@@ -904,7 +435,7 @@
             padding: 12px;
             border: 2px solid #bbdefb;
             border-radius: 8px;
-            font-size: 1.1rem; /* حجم النص في المدخلات */
+            font-size: 1.1rem;
             text-align: center;
             transition: all 0.3s;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -941,7 +472,7 @@
             top: 50%;
             transform: translateY(-50%);
             color: #1976d2;
-            font-size: 14px; /* لا يتغير كثيرًا، يمكن أن يبقى ثابتًا أو يتأثر بـ vw قليلاً */
+            font-size: 14px;
             font-weight: bold;
             display: flex;
             flex-direction: column;
@@ -974,7 +505,7 @@
             padding: 14px 30px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1rem; /* حجم نص الزر */
+            font-size: 1.1rem;
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -1007,7 +538,7 @@
             margin: 20px 0;
             border-radius: 12px;
             font-weight: bold;
-            font-size: 1.1rem; /* حجم نص التغذية الراجعة */
+            font-size: 1.1rem;
             text-align: center;
         }
         
@@ -1030,7 +561,7 @@
             padding: 25px;
             background-color: #f1f8e9;
             color: #2e7d32;
-            font-size: 1.05rem; /* حجم نص الفوتر */
+            font-size: 1.05rem;
             font-weight: bold;
         }
         
@@ -1048,7 +579,7 @@
             text-decoration: none;
             border-radius: 10px;
             transition: all 0.3s;
-            font-size: 1.1rem; /* حجم نص زر التنقل */
+            font-size: 1.1rem;
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             display: flex;
@@ -1061,14 +592,12 @@
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
         
-        /* تحسين حجم الكسور الرياضية بشكل متناسق */
         .math-text {
-            font-size: 1.15rem; /* حجم أساسي للنص الرياضي */
+            font-size: 1.15rem;
             vertical-align: middle;
-            margin: 0 5px; /* تقليل الهامش الأفقي قليلاً */
+            margin: 0 5px;
         }
         
-        /* تحسين النصوص المظللة باللون الأصفر */
         .highlight {
             background-color: #fffde7;
             padding: 4px 8px;
@@ -1081,7 +610,7 @@
             color: #333;
             text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
             transition: all 0.3s ease;
-            font-size: inherit; /* يرث حجم الخط من العنصر الأب */
+            font-size: inherit;
         }
         
         .highlight:hover {
@@ -1090,9 +619,8 @@
             transform: translateY(-1px);
         }
         
-        /* تعديل حجم الكسور الرياضية في النصوص المظللة */
         .large-fraction {
-            font-size: 1.25rem; /* أكبر قليلاً للكسور المميزة */
+            font-size: 1.25rem;
             vertical-align: middle;
             padding: 2px 4px;
         }
@@ -1104,19 +632,17 @@
             background-color: #f8f9fa;
             border-radius: 15px;
             box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
-            font-size: 1.05rem; /* حجم النص داخل حاوية الرياضيات */
+            font-size: 1.05rem;
         }
         
-        /* أحجام الفقرات */
         .example-box p, .explore-box p, .terms-box p, .lesson-idea p {
-            font-size: 1.15rem; /* حجم أكبر قليلاً للنصوص الرئيسية */
+            font-size: 1.15rem;
             margin: 15px 0;
             line-height: 1.8;
         }
         
-        /* Fluid Typography for Subheadings */
         .explore-box h3, .lesson-idea h3, .terms-box h3 {
-            font-size: clamp(1.5rem, 3.5vw, 2rem); /* Min 24px, fluid up to 32px */
+            font-size: clamp(1.5rem, 3.5vw, 2rem);
             margin-bottom: 20px;
             color: #1a5d38;
             text-align: center;
@@ -1124,9 +650,8 @@
             border-bottom: 2px solid #c8e6c9;
         }
         
-        /* Fluid Typography for Interactive Section Headings */
         .interactive-section h4 {
-            font-size: clamp(1.2rem, 2.8vw, 1.6rem); /* Min 19.2px, fluid up to 25.6px */
+            font-size: clamp(1.2rem, 2.8vw, 1.6rem);
             margin: 25px 0 15px;
             color: #1a5d38;
             background-color: #e8f5e9;
@@ -1147,8 +672,6 @@
                 padding: 20px 15px;
             }
             
-            /* العناوين ستتكيف تلقائيًا بفضل clamp() */
-            
             .input-group {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1157,7 +680,7 @@
             .input-group label {
                 margin-bottom: 15px;
                 width: 100%;
-                font-size: 1.1rem; /* حجم أصغر قليلاً لليبل على الشاشات الصغيرة */
+                font-size: 1.1rem;
             }
             
             .fraction-container {
@@ -1168,7 +691,7 @@
             .btn {
                 width: 100%;
                 margin: 5px 0;
-                font-size: 1rem; /* حجم الزر على الشاشات الصغيرة */
+                font-size: 1rem;
                 padding: 12px 20px;
             }
             
@@ -1179,13 +702,16 @@
             .nav-btn {
                 width: 100%;
                 margin-bottom: 10px;
-                font-size: 1rem; /* حجم زر التنقل على الشاشات الصغيرة */
+                font-size: 1rem;
                 padding: 12px 20px;
             }
             
-            /* قد تحتاج لزيادة حجم MathJax قليلاً على الجوال إذا بدت صغيرة جدًا */
             .math-text, .large-fraction {
-                font-size: 1.25rem; /* تعديل لـ MathJax على الشاشات الصغيرة إذا لزم الأمر */
+                font-size: 1.25rem;
+            }
+            
+            .forest-scene {
+                height: 350px; /* زيادة الارتفاع في الأجهزة المحمولة */
             }
         }
     </style>
@@ -1206,7 +732,182 @@
                 <h3>أستكشف</h3>
                 <p>غابة الأمازون هي أكبر غابة مطيرة في العالم، وتقع في قارة أمريكا الجنوبية، وتغطي مساحة <span class="highlight large-fraction">\( \frac{11}{2} \)</span> مليون كيلومتر مربع. ما اسم مجموعة الأعداد التي ينتمي إليها العدد <span class="highlight large-fraction">\( \frac{11}{2} \)؟</span></p>
                 
-                <div class="amazon-img"></div>
+                <!-- مشهد الغابة التفاعلي مع طبقات الأشجار -->
+                <div class="forest-scene">
+                    <div class="sun"></div>
+                    <div class="sun-rays"></div>
+                    <div class="cloud cloud-1"></div>
+                    <div class="cloud cloud-2"></div>
+                    <div class="ground"></div>
+                    
+                    <!-- طبقة الأشجار الخلفية (الأبعد) -->
+                    <div class="trees-back-layer">
+                        <!-- الأشجار الخلفية تكون أصغر وأبهت لوناً -->
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #2a6b3d;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #2e5a3a;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #1d4e2d;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #2a6b3d;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #2e5a3a;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #1d4e2d;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- طبقة الأشجار الوسطى -->
+                    <div class="trees-middle-layer">
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #3CB371;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #2E8B57;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #228B22;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #006400;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #32CD32;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #4CAF50;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #388E3C;"></div>
+                        </div>
+                        
+                        <!-- الصف الأول من الأشجار المضافة -->
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #1B5E20;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #2E8540;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #3E8E41;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #4C9C4C;"></div>
+                        </div>
+                        
+                        <!-- الصف الثاني من الأشجار المضافة -->
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #1E6B30;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #2D7D46;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #3C8E5A;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #4B9F6E;"></div>
+                        </div>
+                        
+                        <!-- الصف الثالث من الأشجار المضافة -->
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #1A5D38;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #297A45;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #389752;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #47B45F;"></div>
+                        </div>
+                        
+                        <!-- الصف الرابع من الأشجار المضافة -->
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #0F4C30;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #1E6B45;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #2D8A5A;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk"></div>
+                            <div class="tree-crown" style="background: #3CA96F;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- طبقة الأشجار الأمامية (الأقرب) -->
+                    <div class="trees-front-layer">
+                        <!-- الأشجار الأمامية تكون أكبر وأغمق لوناً -->
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 50px;"></div>
+                            <div class="tree-crown" style="background: #1b4d2c; width: 60px; height: 70px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 55px;"></div>
+                            <div class="tree-crown" style="background: #0f3b22; width: 65px; height: 75px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 45px;"></div>
+                            <div class="tree-crown" style="background: #1b4d2c; width: 55px; height: 65px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 50px;"></div>
+                            <div class="tree-crown" style="background: #0f3b22; width: 60px; height: 70px;"></div>
+                        </div>
+                        <div class="tree">
+                            <div class="tree-trunk" style="height: 55px;"></div>
+                            <div class="tree-crown" style="background: #1b4d2c; width: 65px; height: 75px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bird bird-1">🕊️</div>
+                    <div class="bird bird-2">🕊️</div>
+                    <div class="bird bird-3">🕊️</div>
+                    <div class="star star-1"></div>
+                    <div class="star star-2"></div>
+                    <div class="star star-3"></div>
+                    <div class="star star-4"></div>
+                    <div class="star star-5"></div>
+                    <div class="star star-6"></div>
+                </div>
                 
                 <div class="explore-note">
                     سنتعرف على إجابة هذا السؤال بعد دراسة هذا الدرس
@@ -1405,7 +1106,6 @@
         // السماح بإدخال الأرقام والرموز الرياضية
         document.querySelectorAll('input[type="text"]').forEach(input => {
             input.addEventListener('keydown', function(e) {
-                // السماح بكتابة الأرقام وعلامة السالب والنقطة
                 if ((e.key >= '0' && e.key <= '9') || 
                     e.key === '-' || 
                     e.key === '.' || 
@@ -1418,6 +1118,62 @@
                 e.preventDefault();
             });
         });
+        
+        // حركة الغيوم والطيور والأشجار
+        function moveClouds() {
+            const clouds = document.querySelectorAll('.cloud');
+            clouds.forEach((cloud, index) => {
+                const currentLeft = parseFloat(getComputedStyle(cloud).left);
+                const newLeft = (currentLeft - 0.05) % 900;
+                cloud.style.left = `${newLeft < -100 ? 900 : newLeft}px`;
+            });
+            requestAnimationFrame(moveClouds);
+        }
+        
+        function moveTrees() {
+            const trees = document.querySelectorAll('.tree');
+            trees.forEach((tree, index) => {
+                const layer = tree.closest('.trees-back-layer, .trees-middle-layer, .trees-front-layer');
+                let swayFactor = 1;
+                
+                if (layer.classList.contains('trees-back-layer')) {
+                    swayFactor = 0.5; // حركة أبطأ في الخلف
+                } else if (layer.classList.contains('trees-front-layer')) {
+                    swayFactor = 1.5; // حركة أسرع في الأمام
+                }
+                
+                const sway = Math.sin(Date.now() / (1000 / swayFactor) + index) * (2 * swayFactor);
+                tree.style.transform = `translateX(${sway}px)`;
+            });
+            requestAnimationFrame(moveTrees);
+        }
+        
+        // تأثير النقر على الشمس
+        document.querySelector('.sun')?.addEventListener('click', function() {
+            this.style.transform = 'scale(1.2)';
+            this.style.boxShadow = '0 0 80px #FF4500, 0 0 150px rgba(255, 69, 0, 0.8)';
+            
+            // إظهار النجوم عند النقر على الشمس ليلاً
+            document.querySelectorAll('.star').forEach(star => {
+                star.style.opacity = 1;
+            });
+            
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = '0 0 50px #FFA500, 0 0 100px rgba(255, 165, 0, 0.5)';
+                
+                // إخفاء النجوم بعد 3 ثواني
+                setTimeout(() => {
+                    document.querySelectorAll('.star').forEach(star => {
+                        star.style.opacity = 0;
+                    });
+                }, 3000);
+            }, 500);
+        });
+        
+        // بدء الحركات
+        moveClouds();
+        moveTrees();
     </script>
 </body>
 </html>
