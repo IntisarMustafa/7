@@ -651,6 +651,15 @@
             0% { transform: translate(-50%, 0); opacity: 1; }
             100% { transform: translate(-50%, -100px); opacity: 0; }
         }
+        
+        /* حل مشكلة اتجاه الأسهم */
+        [dir="rtl"] #right-btn i {
+            transform: scaleX(-1) !important;
+        }
+
+        [dir="rtl"] #left-btn i {
+            transform: scaleX(-1) !important;
+        }
     </style>
 </head>
 <body>
