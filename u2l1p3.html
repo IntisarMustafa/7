@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مهارات التفكير العليا - قوانين الأسس</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.7;
+            padding: 10px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        header {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #ffd700;
+        }
+        h1 {
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+        .section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            border: 1px solid #e0e0e0;
+            width: 100%;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .section-title {
+            color: #3a7bd5;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffd700;
+            font-size: 1.7rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .exercise {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        .exercise-number {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-bottom-right-radius: 15px;
+        }
+        .exercise-title {
+            color: #4caf50;
+            margin: 12px 0 12px 40px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .exercise-content {
+            font-size: 1.15rem;
+            margin-bottom: 15px;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #4caf50;
+            line-height: 1.8;
+        }
+        .exercise-input {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        input {
+            padding: 14px;
+            border: 2px solid #3a7bd5;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.3);
+        }
+        button {
+            padding: 14px;
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+        }
+        button:hover::before {
+            left: 100%;
+        }
+        .feedback {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            color: #2e7d32;
+        }
+        .incorrect {
+            background-color: #ffebee;
+            border-left: 5px solid #f44336;
+            color: #d32f2f;
+        }
+        .highlight {
+            background: linear-gradient(120deg, rgba(255,215,0,0.3), rgba(255,215,0,0));
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        .math-expression-inline {
+            font-family: 'Cambria Math', serif;
+            font-size: 1.15rem;
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: isolate;
+            padding: 0 5px;
+            background-color: #f0f7ff;
+            border-radius: 4px;
+            margin: 0 2px;
+            border: 1px solid #d1e0ff;
+        }
+        .comparison-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .comparison-btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .info-box {
+            background-color: #e3f2fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #3a7bd5;
+            animation: pulse 2s infinite;
+        }
+        .info-title {
+            color: #3a7bd5;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .visual-aid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f7ff;
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+        .visual-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 200px;
+            transition: transform 0.3s ease;
+        }
+        .visual-item:hover {
+            transform: scale(1.05);
+        }
+        .visual-title {
+            color: #3a7bd5;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .visual-content {
+            font-size: 1.3rem;
+            font-family: 'Cambria Math', serif;
+            direction: ltr;
+            unicode-bidi: isolate;
+        }
+        .gold-navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: linear-gradient(to right, #3a1c00, #8a5a1e, #3a1c00);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 30px;
+            background: linear-gradient(145deg, #ffd700, #d4af37);
+            color: #3a1c00;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(139, 87, 42, 0.4);
+            border: 2px solid #d4af37;
+            min-width: 180px;
+        }
+        .nav-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(218, 165, 32, 0.6);
+            background: linear-gradient(145deg, #ffff00, #ffd700);
+            color: #000;
+        }
+        .nav-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 10px rgba(139, 87, 42, 0.4);
+        }
+        .nav-btn i {
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+        .nav-btn:hover i {
+            transform: scale(1.2);
+        }
+        .prev-btn {
+            flex-direction: row-reverse;
+        }
+        .next-btn {
+            flex-direction: row;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            height: 20px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        /* تنسيقات الكسور الرياضية */
+        .math-fraction {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        .math-fraction sup {
+            display: block;
+            border-bottom: 1px solid #000;
+            line-height: 1.2em;
+        }
+        .math-fraction sub {
+            display: block;
+            line-height: 1.2em;
+        }
+        
+        /* تنسيقات المتغيرات الرياضية */
+        .math-var {
+            font-style: italic;
+            font-family: 'Cambria Math', serif;
+        }
+        
+        /* تنسيقات الأسس */
+        .superscript {
+            vertical-align: super;
+            font-size: 0.8em;
+            display: inline-block; /* Ensure it stays inline with the base */
+            margin-left: 0; /* Remove margin-left */
+            margin-right: 2px; /* Add margin-right to push it right */
+        }
+        
+        /* تنسيقات خيارات الاختيار من متعدد */
+        .mcq-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .mcq-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            direction: ltr; /* جعل المحتوى من اليسار لليمين */
+            text-align: left; /* محاذاة النص لليسار */
+        }
+        .mcq-option:hover {
+            background-color: #e3f2fd;
+            border-color: #3a7bd5;
+        }
+        .mcq-option.selected {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+        }
+        .mcq-option.incorrect {
+            background-color: #ffebee;
+            border-color: #f44336;
+        }
+        .mcq-option .option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #3a7bd5;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px; /* حرف الخيار على اليسار */
+            font-weight: bold;
+        }
+        
+        /* تحسين تنسيق الأسس في خيارات الاختيار من متعدد */
+        .mcq-option .math-fraction sup,
+        .mcq-option .math-fraction sub {
+            font-size: 0.8em;
+        }
+        
+        /* تخصيص التمرينين الأول والثاني لمحاذاة الخيارات لليسار */
+        .exercise:nth-child(1) .mcq-options,
+        .exercise:nth-child(2) .mcq-options {
+            direction: ltr;
+            text-align: left;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(58, 123, 213, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(58, 123, 213, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(58, 123, 213, 0); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+        
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .section {
+                padding: 20px;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .nav-btn {
+                padding: 12px 20px;
+                min-width: 150px;
+                font-size: 1rem;
+            }
+            .gold-navigation {
+                padding: 15px 20px;
+            }
+            .mcq-option {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            .math-fraction {
+                font-size: 0.8em;
+            }
+        }
+        @media (max-width: 480px) {
+            header {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .section {
+                padding: 15px;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+            .gold-navigation {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+            .nav-btn {
+                width: 100%;
+                min-width: auto;
+            }
+            .comparison-buttons {
+                flex-direction: column;
+            }
+            .mcq-option .option-letter {
+                width: 25px;
+                height: 25px;
+                font-size: 0.9rem;
+            }
+            .math-fraction {
+                font-size: 0.7em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-brain"></i> مهارات التفكير العليا</h1>
+            <p class="subtitle">تمارين قوانين الأسس الصحيحة - تطبيقات متقدمة</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-lightbulb"></i> تمارين مهارات التفكير العليا</h2>
+                
+                <div class="info-box">
+                    <div class="info-title"><i class="fas fa-info-circle"></i> إرشادات هامة</div>
+                    <p>• استخدم قوانين الأسس في حل الأسئلة. بعض الأسئلة ستكون اختيار من متعدد وبعضها املأ الفراغ.</p>
+                </div>
+                
+                <!-- تمرين 1 - اختيار من متعدد -->
+                <div class="exercise">
+                    <div class="exercise-number">1</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">أكتب بالصيغة الأسية: 
+                        <span class="math-expression-inline">
+                            <span class="math-fraction"><sup>1</sup><sub>2</sub></span> × 
+                            <span class="math-fraction"><sup>1</sup><sub>2</sub></span> × 
+                            <span class="math-fraction"><sup>1</sup><sub>2</sub></span> × 
+                            3 × 3 × 3 × 3
+                        </span>
+                    </p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A">
+                            <span class="option-letter">a</span> (<span class="math-fraction"><sup>1</sup><sub>2</sub></span>)<span class="superscript">3</span> × 3<span class="superscript">4</span>
+                        </div>
+                        <div class="mcq-option" data-value="B">
+                            <span class="option-letter">b</span> (<span class="math-fraction"><sup>1</sup><sub>2</sub></span>)<span class="superscript">4</span> × 3<span class="superscript">3</span>
+                        </div>
+                        <div class="mcq-option" data-value="C">
+                            <span class="option-letter">c</span> 3<span class="superscript">3</span> × 2<span class="superscript">-3</span>
+                        </div>
+                        <div class="mcq-option" data-value="D">
+                            <span class="option-letter">d</span> (<span class="math-fraction"><sup>1</sup><sub>2</sub></span>)<span class="superscript">7</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <!-- تمرين 2 - اختيار من متعدد -->
+                <div class="exercise">
+                    <div class="exercise-number">2</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">أكتب بالصيغة الأسية: 
+                        <span class="math-expression-inline">
+                            <span class="math-var">b</span> × <span class="math-var">b</span> × <span class="math-var">n</span> × 
+                            <span class="math-var">b</span> × <span class="math-var">b</span> × <span class="math-var">n</span> × 
+                            <span class="math-var">b</span> × <span class="math-var">b</span>
+                        </span>
+                    </p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A">
+                            <span class="option-letter">a</span> <span class="math-var">b</span><span class="superscript">6</span> × <span class="math-var">n</span><span class="superscript">2</span>
+                        </div>
+                        <div class="mcq-option" data-value="B">
+                            <span class="option-letter">b</span> <span class="math-var">b</span><span class="superscript">8</span> × <span class="math-var">n</span><span class="superscript">2</span>
+                        </div>
+                        <div class="mcq-option" data-value="C">
+                            <span class="option-letter">c</span> (<span class="math-var">b</span> × <span class="math-var">n</span>)<span class="superscript">8</span>
+                        </div>
+                        <div class="mcq-option" data-value="D">
+                            <span class="option-letter">d</span> <span class="math-var">b</span><span class="superscript">6</span> × <span class="math-var">n</span><span class="superscript">4</span>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">3</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">أجد قيمة: 
+                        <span class="math-expression-inline">2<span class="superscript">3</span> × 4<span class="superscript">3</span></span>
+                    </p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة">
+                        <button class="check-btn">تحقق من الإجابة</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">4</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">أجد قيمة: 
+                        <span class="math-expression-inline">5<span class="superscript">2</span> × (-2)<span class="superscript">2</span></span>
+                    </p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة">
+                        <button class="check-btn">تحقق من الإجابة</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">5</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">أجد قيمة: 
+                        <span class="math-expression-inline">(<span class="math-fraction"><sup>1</sup><sub>3</sub></span>)<span class="superscript">4</span> × 3<span class="superscript">6</span></span>
+                    </p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة">
+                        <button class="check-btn">تحقق من الإجابة</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="visual-aid">
+                    <div class="visual-item">
+                        <div class="visual-title">قاعدة ضرب القوى</div>
+                        <div class="visual-content">a<span class="superscript">m</span> × a<span class="superscript">n</span> = a<span class="superscript">m+n</span></div>
+                    </div>
+                    <div class="visual-item">
+                        <div class="visual-title">قاعدة قسمة القوى</div>
+                        <div class="visual-content">a<span class="superscript">m</span> ÷ a<span class="superscript">n</span> = a<span class="superscript">m-n</span></div>
+                    </div>
+                    <div class="visual-item">
+                        <div class="visual-title">قاعدة قوة القوة</div>
+                        <div class="visual-content">(a<span class="superscript">m</span>)<span class="superscript">n</span> = a<span class="superscript">m×n</span></div>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">6</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">علوم: يوجد نوع من البكتيريا يحول الحليب إلى لبن رائب، طوله تقريبًا 
+                        <span class="math-expression-inline">1.5 × 10<span class="superscript">-4</span> cm</span>
+                        . أكتب طول هذه البكتيريا من دون استخدام الأسس.
+                    </p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="أدخل الطول (مثل: 0.00123)">
+                        <button class="check-btn">تحقق من الإجابة</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">7</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">أزهار: يبلغ طول حبة لقاح زهرة شقائق النعمان 
+                        <span class="math-expression-inline">1.8 × 10<span class="superscript">-2</span> mm</span>
+                        . أكتب طول هذه الحبة من دون استخدام الأسس.
+                    </p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="أدخل الطول (مثل: 0.00123)">
+                        <button class="check-btn">تحقق من الإجابة</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">8</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">أضع الرمز المناسب (<, >, =) في الفراغ: 
+                        <span class="math-expression-inline">9<span class="superscript">0</span></span>
+                        &nbsp;&nbsp;_____&nbsp;&nbsp;
+                        <span class="math-expression-inline">(<span class="math-fraction"><sup>1</sup><sub>2</sub></span>)<span class="superscript">0</span></span>
+                    </p>
+                    <div class="comparison-buttons">
+                        <button class="comparison-btn" data-value="<">&lt;</button>
+                        <button class="comparison-btn" data-value=">">&gt;</button>
+                        <button class="comparison-btn" data-value="=">=</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">9</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">أضع الرمز المناسب (<, >, =) في الفراغ: 
+                        <span class="math-expression-inline">2<span class="superscript">3</span></span>
+                        &nbsp;&nbsp;_____&nbsp;&nbsp;
+                        <span class="math-expression-inline">(-2)<span class="superscript">5</span></span>
+                    </p>
+                    <div class="comparison-buttons">
+                        <button class="comparison-btn" data-value="<">&lt;</button>
+                        <button class="comparison-btn" data-value=">">&gt;</button>
+                        <button class="comparison-btn" data-value="=">=</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">10</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">أضع الرمز المناسب (<, >, =) في الفراغ: 
+                        <span class="math-expression-inline">(<span class="math-fraction"><sup>1</sup><sub>5</sub></span>)<span class="superscript">10</span></span>
+                        &nbsp;&nbsp;_____&nbsp;&nbsp;
+                        <span class="math-expression-inline">(-5)<span class="superscript">2</span></span>
+                    </p>
+                    <div class="comparison-buttons">
+                        <button class="comparison-btn" data-value="<">&lt;</button>
+                        <button class="comparison-btn" data-value=">">&gt;</button>
+                        <button class="comparison-btn" data-value="=">=</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">11</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">تبرير: أي العددين أقرب إلى المليون: 
+                        <span class="math-expression-inline">1.03 × 10<span class="superscript">5</span></span>
+                        أم 
+                        <span class="math-expression-inline">1.03 × 10<span class="superscript">6</span></span>
+                        ؟
+                    </p>
+                    <div class="exercise-input">
+                        <div class="comparison-buttons">
+                            <button class="comparison-btn" data-value="5">1.03 × 10<span class="superscript">5</span></button>
+                            <button class="comparison-btn" data-value="6">1.03 × 10<span class="superscript">6</span></button>
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-number">12</div>
+                    <h3 class="exercise-title"><i class="fas fa-pen-alt"></i> التمرين</h3>
+                    <p class="exercise-content">تحدٍ: أكتب صيغتين أسيتين مختلفتين لهما الإجابة نفسها.</p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="الصيغة الأولى (مثل: 2^4)" style="margin-bottom: 10px;">
+                        <input type="text" class="answer-input" placeholder="الصيغة الثانية (مثل: 4^2)">
+                        <button class="check-btn" id="challenge-btn">تحقق من التكافؤ</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- أزرار التنقل الذهبية -->
+        <div class="gold-navigation">
+            <a href="#" class="nav-btn prev-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>السابق</span>
+            </a>
+            
+            <a href="#" class="nav-btn next-btn">
+                <span>التالي</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        
+        <footer>
+            <p> الصف السابع _ الرياضيات </p>
+            <p>مهارات التفكير العليا - قوانين الأسس الصحيحة</p>
+            <p>تم تصميم هذه التمارين لتنمية مهارات التفكير العليا لدى الطلاب</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // تعريف الإجابات الصحيحة بشكل مخفي
+            const correctAnswers = {
+                exercise1: "A",
+                exercise2: "A",
+                exercise3: "512",
+                exercise4: "100",
+                exercise5: "9",
+                exercise6: "0.00015",
+                exercise7: "0.018",
+                exercise8: "=",
+                exercise9: ">",
+                exercise10: "<",
+                exercise11: "6"
+            };
+            
+            // متغيرات لتتبع التقدم
+            let completedExercises = 0;
+            const totalExercises = 12;
+            const progressBar = document.getElementById('progress-bar');
+            
+            // معالجة اختيارات التمارين متعددة الخيارات
+            const mcqOptions = document.querySelectorAll('.mcq-option');
+            mcqOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const exercise = this.closest('.exercise');
+                    const exerciseNum = parseInt(exercise.querySelector('.exercise-number').textContent);
+                    const feedback = exercise.querySelector('.feedback');
+                    
+                    // إزالة التحديد من جميع الخيارات
+                    exercise.querySelectorAll('.mcq-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // تحديد الخيار المختار
+                    this.classList.add('selected');
+                    const selectedValue = this.getAttribute('data-value');
+                    const correctValue = correctAnswers[`exercise${exerciseNum}`];
+                    
+                    if (selectedValue === correctValue) {
+                        feedback.textContent = 'إجابة صحيحة! أحسنت!';
+                        feedback.className = 'feedback correct';
+                        feedback.style.display = 'block';
+                        
+                        // تحديث التقدم
+                        if (!exercise.classList.contains('completed')) {
+                            exercise.classList.add('completed');
+                            completedExercises++;
+                            updateProgress();
+                        }
+                        
+                        // تأثير النجاح
+                        exercise.style.animation = 'celebrate 0.5s';
+                        setTimeout(() => {
+                            exercise.style.animation = '';
+                        }, 500);
+                    } else {
+                        feedback.textContent = 'الإجابة غير صحيحة. حاول مرة أخرى!';
+                        feedback.className = 'feedback incorrect';
+                        feedback.style.display = 'block';
+                        
+                        // اهتزاز التمرين للإشارة إلى خطأ
+                        exercise.style.animation = 'shake 0.5s';
+                        setTimeout(() => {
+                            exercise.style.animation = '';
+                        }, 500);
+                    }
+                });
+            });
+            
+            // التحقق من إجابات التمارين
+            const checkButtons = document.querySelectorAll('.check-btn:not(#challenge-btn)');
+            const exercises = document.querySelectorAll('.exercise');
+            
+            exercises.forEach((exercise, index) => {
+                const exerciseNum = index + 1;
+                const checkBtn = exercise.querySelector('.check-btn');
+                const feedback = exercise.querySelector('.feedback');
+                const input = exercise.querySelector('.answer-input');
+                
+                if (checkBtn && input) {
+                    checkBtn.addEventListener('click', function() {
+                        const userAnswer = input.value.trim();
+                        let correctAnswer;
+
+                        // For exercises 6 and 7, use a general placeholder for feedback
+                        if (exerciseNum === 6) {
+                            correctAnswer = "0.00015"; // Actual correct answer
+                            if (userAnswer.match(/^0\.0{3}15$/)) { // Regex to match 0.00015
+                                feedback.textContent = 'إجابة صحيحة! أحسنت!';
+                                feedback.className = 'feedback correct';
+                                feedback.style.display = 'block';
+                                if (!exercise.classList.contains('completed')) {
+                                    exercise.classList.add('completed');
+                                    completedExercises++;
+                                    updateProgress();
+                                }
+                                exercise.style.animation = 'celebrate 0.5s';
+                                setTimeout(() => { exercise.style.animation = ''; }, 500);
+                                return;
+                            } else {
+                                feedback.textContent = 'الإجابة غير صحيحة. حاول مرة أخرى (مثال: 0.00123)!';
+                                feedback.className = 'feedback incorrect';
+                                feedback.style.display = 'block';
+                                exercise.style.animation = 'shake 0.5s';
+                                setTimeout(() => { exercise.style.animation = ''; }, 500);
+                                return;
+                            }
+                        } else if (exerciseNum === 7) {
+                            correctAnswer = "0.018"; // Actual correct answer
+                            if (userAnswer.match(/^0\.018$/)) { // Regex to match 0.018
+                                feedback.textContent = 'إجابة صحيحة! أحسنت!';
+                                feedback.className = 'feedback correct';
+                                feedback.style.display = 'block';
+                                if (!exercise.classList.contains('completed')) {
+                                    exercise.classList.add('completed');
+                                    completedExercises++;
+                                    updateProgress();
+                                }
+                                exercise.style.animation = 'celebrate 0.5s';
+                                setTimeout(() => { exercise.style.animation = ''; }, 500);
+                                return;
+                            } else {
+                                feedback.textContent = 'الإجابة غير صحيحة. حاول مرة أخرى (مثال: 0.00123)!';
+                                feedback.className = 'feedback incorrect';
+                                feedback.style.display = 'block';
+                                exercise.style.animation = 'shake 0.5s';
+                                setTimeout(() => { exercise.style.animation = ''; }, 500);
+                                return;
+                            }
+                        } else {
+                            correctAnswer = correctAnswers[`exercise${exerciseNum}`];
+                        }
+                        
+                        if (userAnswer === correctAnswer) {
+                            feedback.textContent = 'إجابة صحيحة! أحسنت!';
+                            feedback.className = 'feedback correct';
+                            feedback.style.display = 'block';
+                            
+                            // تحديث التقدم
+                            if (!exercise.classList.contains('completed')) {
+                                exercise.classList.add('completed');
+                                completedExercises++;
+                                updateProgress();
+                            }
+                            
+                            // تأثير النجاح
+                            exercise.style.animation = 'celebrate 0.5s';
+                            setTimeout(() => {
+                                exercise.style.animation = '';
+                            }, 500);
+                        } else {
+                            feedback.textContent = 'الإجابة غير صحيحة. حاول مرة أخرى!';
+                            feedback.className = 'feedback incorrect';
+                            feedback.style.display = 'block';
+                            
+                            // اهتزاز التمرين للإشارة إلى خطأ
+                            exercise.style.animation = 'shake 0.5s';
+                            setTimeout(() => {
+                                exercise.style.animation = '';
+                            }, 500);
+                        }
+                    });
+                }
+            });
+            
+            // معالجة أزرار المقارنة
+            const comparisonButtons = document.querySelectorAll('.comparison-btn');
+            comparisonButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const exercise = this.closest('.exercise');
+                    const feedback = exercise.querySelector('.feedback');
+                    const exerciseNum = parseInt(exercise.querySelector('.exercise-number').textContent);
+                    
+                    const userAnswer = this.getAttribute('data-value');
+                    const correctAnswer = correctAnswers[`exercise${exerciseNum}`];
+                    
+                    if (userAnswer === correctAnswer) {
+                        feedback.textContent = 'إجابة صحيحة! أحسنت!';
+                        feedback.className = 'feedback correct';
+                        feedback.style.display = 'block';
+                        
+                        // تحديث التقدم
+                        if (!exercise.classList.contains('completed')) {
+                            exercise.classList.add('completed');
+                            completedExercises++;
+                            updateProgress();
+                        }
+                        
+                        // تغيير لون الزر المحدد
+                        this.style.background = 'linear-gradient(90deg, #4caf50, #2e7d32)';
+                        setTimeout(() => {
+                            this.style.background = '';
+                        }, 2000);
+                    } else {
+                        feedback.textContent = 'الإجابة غير صحيحة. حاول مرة أخرى!';
+                        feedback.className = 'feedback incorrect';
+                        feedback.style.display = 'block';
+                        
+                        // اهتزاز التمرين للإشارة إلى خطأ
+                        exercise.style.animation = 'shake 0.5s';
+                        setTimeout(() => {
+                            exercise.style.animation = '';
+                        }, 500);
+                    }
+                });
+            });
+            
+            // تحديث شريط التقدم
+            function updateProgress() {
+                const progress = (completedExercises / totalExercises) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            // معالجة تمرين التحدي (12)
+            const challengeBtn = document.getElementById('challenge-btn');
+            if (challengeBtn) {
+                challengeBtn.addEventListener('click', function() {
+                    const exercise = this.closest('.exercise');
+                    const feedback = exercise.querySelector('.feedback');
+                    const inputs = exercise.querySelectorAll('.answer-input');
+                    const exp1 = inputs[0].value.trim();
+                    const exp2 = inputs[1].value.trim();
+                    
+                    if (!exp1 || !exp2) {
+                        feedback.textContent = 'الرجاء إدخال الصيغتين الأسيتين';
+                        feedback.className = 'feedback incorrect';
+                        feedback.style.display = 'block';
+                        return;
+                    }
+                    
+                    try {
+                        const value1 = evaluateExpression(exp1);
+                        const value2 = evaluateExpression(exp2);
+                        
+                        if (value1 === value2 && exp1 !== exp2) {
+                            feedback.textContent = 'إجابة صحيحة! الصيغتان لهما نفس القيمة.';
+                            feedback.className = 'feedback correct';
+                            feedback.style.display = 'block';
+                            
+                            // تحديث التقدم
+                            if (!exercise.classList.contains('completed')) {
+                                exercise.classList.add('completed');
+                                completedExercises++;
+                                updateProgress();
+                            }
+                        } else if (exp1 === exp2) {
+                            feedback.textContent = 'الصيغتان متطابقتان، الرجاء إدخال صيغتين مختلفتين';
+                            feedback.className = 'feedback incorrect';
+                            feedback.style.display = 'block';
+                        } else {
+                            feedback.textContent = 'القيمتان غير متساويتين. حاول مرة أخرى!';
+                            feedback.className = 'feedback incorrect';
+                            feedback.style.display = 'block';
+                        }
+                    } catch (e) {
+                        feedback.textContent = 'تنسيق غير صحيح. استخدم الصيغة: أساس^أس';
+                        feedback.className = 'feedback incorrect';
+                        feedback.style.display = 'block';
+                    }
+                });
+            }
+            
+            // دالة لتقييم التعبيرات الأسية البسيطة
+            function evaluateExpression(expression) {
+                // معالجة التعبيرات البسيطة مثل "2^3" أو "4^2"
+                const parts = expression.split('^');
+                if (parts.length !== 2) throw new Error('تنسيق غير صحيح');
+                
+                const base = parseFloat(parts[0]);
+                const exponent = parseFloat(parts[1]);
+                
+                if (isNaN(base) || isNaN(exponent)) throw new Error('قيم غير صحيحة');
+                
+                return Math.pow(base, exponent);
+            }
+        });
+    </script>
+</body>
+</html>
