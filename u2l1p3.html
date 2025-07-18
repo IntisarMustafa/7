@@ -271,6 +271,9 @@
             position: sticky;
             bottom: 0;
             z-index: 100;
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+            gap: 15px; /* Spacing between buttons */
+            justify-content: center; /* Center buttons when wrapped */
         }
         .nav-btn {
             display: flex;
@@ -760,12 +763,18 @@
         
         <!-- أزرار التنقل الذهبية -->
         <div class="gold-navigation">
-            <a href="#" class="nav-btn prev-btn">
+            <a href="u2l1p2.html" class="nav-btn prev-btn">
                 <i class="fas fa-arrow-left"></i>
                 <span>السابق</span>
             </a>
             
-            <a href="#" class="nav-btn next-btn">
+            <!-- زر الصفحة الرئيسية الجديد -->
+            <a href="u2.html" class="nav-btn home-btn">
+                <i class="fas fa-home"></i>
+                <span>الصفحة الرئيسية</span>
+            </a>
+
+            <a href="u2l1p4.html" class="nav-btn next-btn">
                 <span>التالي</span>
                 <i class="fas fa-arrow-right"></i>
             </a>
@@ -1059,3 +1068,4 @@
     </script>
 </body>
 </html>
+
