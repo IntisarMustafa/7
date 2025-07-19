@@ -713,9 +713,33 @@
         [dir="rtl"] #left-btn i {
             transform: scaleX(-1) !important;
         }
+
+        /* أنماط رسالة الاحتفال */
+        #celebration-message .message-content {
+            background: linear-gradient(135deg, #00c853, #00e676); /* تدرج أخضر احتفالي */
+            border: 4px solid var(--primary);
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.9); /* ظل ذهبي أكثر بروزًا */
+        }
+        #celebration-message h2 {
+            color: white; /* لون أبيض للعنوان */
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+            font-size: 4rem; /* حجم أكبر للعنوان */
+        }
+        #celebration-message p {
+            color: var(--light);
+            font-size: 1.8rem;
+        }
+
+        /* إخفاء عناصر اللعبة عند ظهور الرسائل */
+        .game-hidden .game-container,
+        .game-hidden .controls,
+        .game-hidden .touch-controls,
+        .game-hidden .upgrades-panel {
+            display: none !important;
+        }
     </style>
 </head>
-<body>
+<body class="game-active-state">
     <div class="sound-toggle" id="sound-toggle">
         <i class="fas fa-volume-up"></i>
     </div>
@@ -760,7 +784,7 @@
         </div>
         
         <div class="controls">
-            <button id="start-btn"><i class="fas fa-play"></i> بدء اللعبة</button>
+            <button id="start-btn" data-state="initial"><i class="fas fa-play"></i> بدء اللعبة</button>
             <button id="upgrades-btn"><i class="fas fa-bolt"></i> الترقيات</button>
             <button id="restart-btn"><i class="fas fa-redo"></i> إعادة تشغيل</button>
         </div>
@@ -796,7 +820,7 @@
         <div class="message-content">
             <h2>مرحباً في متاهة الأسس الرياضية!</h2>
             <p>
-                مهمتك هي الوصول إلى النهاية الصفراء مع تجنب الأعداء الحمراء. 
+                مهمتك هي الوصول إلى النهاية الصفراء مع تجنب الأعداء الحمراء، وجمع <strong>1000 نقطة</strong> للفوز باللعبة.
                 عند الوصول للهدف، سيتم طرح سؤال في قوانين الأسس يجب حله لاستكمال اللعبة.
             </p>
             <p>
@@ -806,11 +830,25 @@
         </div>
     </div>
     
+    <!-- رسالة الفوز بعد حل سؤال الرياضيات -->
     <div id="win-message" class="message hidden">
         <div class="message-content">
-            <h2>مبروك! لقد فزت!</h2>
-            <p>لقد أكملت المستوى بنجاح. نقاطك: <span id="final-score">0</span></p>
+            <h2>مبروك! لقد أكملت المستوى!</h2>
+            <p>نقاطك في هذا المستوى: <span id="final-score">0</span></p>
+            <p>مجموع نقاطك الكلي: <span id="total-score-after-win">0</span></p>
             <button id="next-level-btn">المستوى التالي</button>
+        </div>
+    </div>
+
+    <!-- رسالة الاحتفال بوصول 1000 نقطة -->
+    <div id="celebration-message" class="message hidden">
+        <div class="message-content">
+            <h2><i class="fas fa-trophy"></i> تهانينا!</h2>
+            <p>لقد وصلت إلى <strong><span id="celebration-score">0</span> نقطة</strong>!</p>
+            <p>إنجاز رائع! مجموع نقاطك الكلي: <span id="total-score-after-celebration">0</span></p>
+            <p>هل ترغب في مواصلة التحدي؟ الهدف التالي هو <span id="next-score-target">2000</span> نقطة!</p>
+            <button id="continue-playing-btn" style="background: linear-gradient(to bottom, #00e676, #00c853); color: white; margin-right: 10px;"><i class="fas fa-play"></i> استكمال اللعب</button>
+            <button id="restart-game-from-celebration-btn" style="background: linear-gradient(to bottom, #ff1744, #d50000); color: white;"><i class="fas fa-redo"></i> إعادة تشغيل اللعبة</button>
         </div>
     </div>
     
@@ -833,6 +871,7 @@
 
     <script>
         // عناصر DOM
+        const bodyElement = document.body;
         const mazeElement = document.getElementById('maze');
         const levelElement = document.getElementById('level');
         const scoreElement = document.getElementById('score');
@@ -847,6 +886,7 @@
         const tryAgainBtn = document.getElementById('try-again-btn');
         const welcomeMessage = document.getElementById('welcome-message');
         const winMessage = document.getElementById('win-message');
+        const celebrationMessage = document.getElementById('celebration-message');
         const loseMessage = document.getElementById('lose-message');
         const mathQuestion = document.getElementById('math-question');
         const questionText = document.getElementById('question-text');
@@ -854,6 +894,12 @@
         const mathExplanation = document.getElementById('math-explanation');
         const finalScoreElement = document.getElementById('final-score');
         const loseScoreElement = document.getElementById('lose-score');
+        const totalScoreAfterWinElement = document.getElementById('total-score-after-win');
+        const celebrationScoreElement = document.getElementById('celebration-score');
+        const totalScoreAfterCelebrationElement = document.getElementById('total-score-after-celebration');
+        const nextScoreTargetElement = document.getElementById('next-score-target');
+        const continuePlayingBtn = document.getElementById('continue-playing-btn');
+        const restartGameFromCelebrationBtn = document.getElementById('restart-game-from-celebration-btn');
         const upBtn = document.getElementById('up-btn');
         const downBtn = document.getElementById('down-btn');
         const leftBtn = document.getElementById('left-btn');
@@ -874,7 +920,7 @@
             coins: [],
             powerUps: [],
             enemiesPos: [], // يحتوي الآن على نوع العدو أيضًا
-            gameActive: false,
+            gameActive: false, // حالة اللعب النشطة (للتحكم في حركة اللاعب والأعداء والمؤقت)
             timerInterval: null,
             enemyMoveInterval: null,
             playerSpeed: 200, // سرعة حركة اللاعب
@@ -886,7 +932,8 @@
             },
             soundEnabled: true,
             audioContext: null,
-            isFrozen: false // حالة تجميد الأعداء
+            isFrozen: false, // حالة تجميد الأعداء
+            scoreTarget: 1000 // الهدف الأولي للنقاط للفوز
         };
 
         // إنشاء مؤثرات صوتية
@@ -999,41 +1046,73 @@
             return grid;
         }
 
-        // تهيئة اللعبة
-        function initGame() {
-            config.gameActive = true;
-            config.enemies = 2 + config.level; // زيادة عدد الأعداء مع المستوى
-            config.gameTime = 60 + (config.level * 5); // زيادة الوقت مع المستوى
+        /**
+         * تهيئة اللعبة أو المستوى الجديد.
+         * @param {boolean} isNewGame - إذا كانت true، يتم إعادة تعيين النقاط والمستوى.
+         */
+        function initGame(isNewGame = false) {
+            clearInterval(config.timerInterval);
+            clearInterval(config.enemyMoveInterval);
+            config.gameActive = false; // اللعبة تكون متوقفة عند التهيئة
+
+            if (isNewGame) {
+                config.score = 0;
+                config.level = 1;
+                config.scoreTarget = 1000;
+            }
+
+            config.enemies = 2 + config.level;
+            config.gameTime = 60 + (config.level * 5);
             config.playerPos = {row: 1, col: 1};
             config.exitPos = {row: config.rows - 2, col: config.cols - 2};
             config.coins = [];
             config.powerUps = [];
             config.enemiesPos = [];
-            config.isFrozen = false; // إعادة تعيين حالة التجميد
+            config.isFrozen = false;
 
-            // تحديث عناصر واجهة المستخدم
             levelElement.textContent = config.level;
             scoreElement.textContent = config.score;
             enemiesCountElement.textContent = config.enemies;
             timerElement.textContent = config.gameTime;
             
-            createMaze(); // بناء المتاهة
-            updatePlayerPosition(); // وضع اللاعب
+            createMaze();
+            updatePlayerPosition();
 
-            // وضع نقطة الخروج
             const exitCell = getCell(config.exitPos.row, config.exitPos.col);
             const exitElement = document.createElement('div');
             exitElement.classList.add('exit');
             exitElement.innerHTML = '<i class="fas fa-flag"></i>';
             exitCell.appendChild(exitElement);
             
-            generateCoins(); // توليد العملات
-            generatePowerUps(); // توليد القوى الإضافية
-            generateEnemies(); // توليد الأعداء
+            generateCoins();
+            generatePowerUps();
+            generateEnemies();
             
-            startTimer(); // بدء المؤقت
-            startEnemyMovement(); // بدء حركة الأعداء
-            
+            // إظهار عناصر اللعبة وإخفاء الرسائل
+            bodyElement.classList.remove('game-hidden');
+            welcomeMessage.classList.add('hidden');
+            winMessage.classList.add('hidden');
+            loseMessage.classList.add('hidden');
+            mathQuestion.classList.add('hidden');
+            celebrationMessage.classList.add('hidden');
+
+            // تحديث نص زر البدء
+            if (isNewGame) {
+                startBtn.textContent = 'ابدأ اللعبة';
+            } else {
+                startBtn.textContent = 'ابدأ المستوى التالي';
+            }
+            startBtn.style.display = 'block'; // إظهار زر البدء
+        }
+
+        /**
+         * تبدأ اللعبة فعليًا (المؤقت وحركة الأعداء).
+         */
+        function startGame() {
+            config.gameActive = true;
+            startTimer();
+            startEnemyMovement();
+            startBtn.style.display = 'none'; // إخفاء زر البدء بعد الضغط عليه
             playSound(659.25, 'sine', 0.5, 0.3); // صوت بداية اللعبة
         }
 
@@ -1176,10 +1255,10 @@
                 // تعيين أيقونة بناءً على نوع العدو
                 switch(type) {
                     case 'hunter':
-                        enemyElement.innerHTML = '<i class="fas fa-skull"></i>'; // أيقونة جمجمة
+                        enemyElement.innerHTML = '<i class="fas fa-skull"></i>';
                         break;
                     case 'patrol':
-                        enemyElement.innerHTML = '<i class="fas fa-robot"></i>'; // أيقونة روبوت
+                        enemyElement.innerHTML = '<i class="fas fa-robot"></i>';
                         break;
                     case 'guard':
                         enemyElement.innerHTML = '<i class="fas fa-ghost"></i>'; // أيقونة شبح
@@ -1207,11 +1286,12 @@
             }
             
             config.timerInterval = setInterval(() => {
+                if (!config.gameActive) return; // توقف المؤقت إذا كانت اللعبة غير نشطة
                 config.gameTime--;
                 timerElement.textContent = config.gameTime;
                 
                 if (config.gameTime <= 0) {
-                    endGame(false); // انتهاء الوقت = خسارة
+                    endGame(false, 'time_out'); // انتهاء الوقت = خسارة
                 }
             }, 1000);
         }
@@ -1225,7 +1305,7 @@
             // سرعة حركة الأعداء تزداد مع المستوى
             const speed = Math.max(200, 1000 - (config.level * 80)); // أسرع قليلاً من السابق
             config.enemyMoveInterval = setInterval(() => {
-                if (config.gameActive && !config.isFrozen) { // لا تتحرك إذا كانت مجمدة
+                if (config.gameActive && !config.isFrozen) { // لا تتحرك إذا كانت مجمدة أو اللعبة غير نشطة
                     moveEnemies();
                 }
             }, speed);
@@ -1342,7 +1422,7 @@
                 
                 // التحقق من الاصطدام باللاعب
                 if (newRow === config.playerPos.row && newCol === config.playerPos.col) {
-                    endGame(false); // اصطدام = خسارة
+                    endGame(false, 'collision'); // اصطدام = خسارة
                 }
             });
         }
@@ -1388,7 +1468,8 @@
                 
                 // التحقق من الوصول إلى نقطة الخروج
                 if (newRow === config.exitPos.row && newCol === config.exitPos.col) {
-                    endGame(true); // وصول إلى الخروج = فوز
+                    // إذا وصل اللاعب إلى نقطة الخروج، يتم طرح سؤال الرياضيات أولاً
+                    endGame(true, 'exit'); 
                 }
             }
         }
@@ -1450,6 +1531,11 @@
                 
                 playSound(1046.50, 'sine', 0.2, 0.3); // صوت جمع العملة
                 createParticles(config.playerPos.row, config.playerPos.col, 'var(--coin-color)'); // استخدام لون العملة الجديد
+
+                // التحقق من شرط الفوز بالنقاط
+                if (config.score >= config.scoreTarget) {
+                    endGame(true, 'score'); // اللاعب يفوز بوصوله لـ 1000 نقطة مباشرة
+                }
             }
         }
 
@@ -1523,8 +1609,12 @@
         }
 
         // إنهاء اللعبة (فوز أو خسارة)
-        function endGame(isWin) {
-            config.gameActive = false;
+        /**
+         * @param {boolean} isWin - هل اللاعب فاز؟
+         * @param {string} winCondition - سبب الفوز ('score' أو 'exit') أو سبب الخسارة ('collision' أو 'time_out').
+         */
+        function endGame(isWin, winCondition) { 
+            config.gameActive = false; // إيقاف اللعبة
             clearInterval(config.timerInterval);
             clearInterval(config.enemyMoveInterval);
             
@@ -1533,14 +1623,39 @@
                 config.score += config.level * 50; // نقاط إضافية للمستوى
                 scoreElement.textContent = config.score;
                 
-                // عرض سؤال الأسس بدلاً من نافذة الفوز مباشرة
-                askMathQuestion();
-            } else {
+                if (winCondition === 'score') {
+                    showCelebrationMessage();
+                } else if (winCondition === 'exit') {
+                    // إذا كان الفوز بسبب الوصول للهدف، اعرض سؤال الأسس
+                    askMathQuestion();
+                }
+            } else { // Loss condition
                 loseScoreElement.textContent = config.score;
                 loseMessage.classList.remove('hidden');
+                bodyElement.classList.add('game-hidden'); // إخفاء عناصر اللعبة
                 playSound(155.56, 'sine', 0.5, 0.3); // صوت خسارة
                 setTimeout(() => playSound(138.59, 'sine', 0.5, 0.3), 150);
             }
+        }
+
+        // عرض رسالة الاحتفال بوصول 1000 نقطة
+        function showCelebrationMessage() {
+            celebrationScoreElement.textContent = config.score; // تحديث النقاط في رسالة الاحتفال
+            totalScoreAfterCelebrationElement.textContent = config.score;
+            nextScoreTargetElement.textContent = config.scoreTarget + 1000; // الهدف التالي
+            celebrationMessage.classList.remove('hidden');
+            bodyElement.classList.add('game-hidden'); // إخفاء عناصر اللعبة
+            playSound(523.25, 'sine', 0.5, 0.3); // صوت احتفال
+            setTimeout(() => playSound(659.25, 'sine', 0.5, 0.3), 150);
+        }
+
+        // وظيفة استكمال اللعب بعد الاحتفال
+        function continuePlaying() {
+            celebrationMessage.classList.add('hidden');
+            config.scoreTarget += 1000; // زيادة الهدف للنقاط (2000، ثم 3000، وهكذا)
+            config.level++; // زيادة المستوى
+            initGame(false); // تهيئة اللعبة مع الاحتفاظ بالنقاط الحالية والمستوى
+            startBtn.textContent = 'استئناف اللعب'; // تغيير نص الزر
         }
 
         // توليد سؤال في قوانين الأسس للصف السابع (لم يتم التعديل عليه بناءً على طلب المستخدم)
@@ -1675,6 +1790,7 @@
             mathExplanation.innerHTML = explanation;
             mathExplanation.style.display = 'none';
             mathOptions.innerHTML = '';
+            bodyElement.classList.add('game-hidden'); // إخفاء عناصر اللعبة
             
             // إنشاء خيارات الإجابة
             const answers = [correctAnswer];
@@ -1752,6 +1868,9 @@
                         setTimeout(() => {
                             mathQuestion.classList.add('hidden');
                             winMessage.classList.remove('hidden');
+                            // تحديث مجموع النقاط الكلي في رسالة الفوز
+                            finalScoreElement.textContent = config.score;
+                            totalScoreAfterWinElement.textContent = config.score; 
                         }, 2000);
                     } else {
                         // إجابة خاطئة
@@ -1776,25 +1895,16 @@
             mathQuestion.classList.remove('hidden');
         }
 
-        // بدء اللعبة من البداية
+        // بدء اللعبة من البداية (إعادة تعيين كاملة)
         function resetGame() {
-            config.level = 1;
-            config.score = 0;
-            config.gameActive = false;
-            clearInterval(config.timerInterval);
-            clearInterval(config.enemyMoveInterval);
-            winMessage.classList.add('hidden');
-            loseMessage.classList.add('hidden');
-            mathQuestion.classList.add('hidden');
-            initGame();
+            initGame(true); // بدء لعبة جديدة تمامًا
         }
 
-        // الانتقال للمستوى التالي
+        // الانتقال للمستوى التالي (بعد حل سؤال الرياضيات)
         function nextLevel() {
             config.level++;
-            winMessage.classList.add('hidden');
-            mathQuestion.classList.add('hidden');
-            initGame();
+            initGame(false); // تهيئة جديدة مع الاحتفاظ بالنقاط
+            startBtn.textContent = 'ابدأ المستوى التالي'; // تحديث نص زر البدء
         }
 
         // معالجة أحداث لوحة المفاتيح
@@ -1866,31 +1976,46 @@
         }
 
         // تهيئة الأحداث لأزرار التحكم الرئيسية
-        startBtn.addEventListener('click', () => {
-            playSound(261.63, 'sine', 0.1, 0.3);
+        // زر "ابدأ اللعبة" في شاشة الترحيب
+        startGameBtn.addEventListener('click', () => {
             welcomeMessage.classList.add('hidden');
-            initGame();
+            initGame(true); // تهيئة لعبة جديدة تمامًا
+            startGame(); // بدء اللعبة
         });
         
+        // زر "ابدأ اللعبة" / "ابدأ المستوى التالي" / "استئناف اللعب" في شريط التحكم
+        startBtn.addEventListener('click', () => {
+            startGame(); // بدء اللعبة
+        });
+
+        // زر "إعادة تشغيل" في شريط التحكم
         restartBtn.addEventListener('click', () => {
             playSound(261.63, 'sine', 0.1, 0.3);
             resetGame();
         });
         
-        startGameBtn.addEventListener('click', () => {
-            playSound(261.63, 'sine', 0.1, 0.3);
-            welcomeMessage.classList.add('hidden');
-            initGame();
-        });
-        
+        // حدث زر "المستوى التالي" بعد حل سؤال الرياضيات
         nextLevelBtn.addEventListener('click', () => {
             playSound(523.25, 'sine', 0.1, 0.3);
             nextLevel();
         });
         
+        // زر "حاول مرة أخرى" بعد الخسارة
         tryAgainBtn.addEventListener('click', () => {
             playSound(261.63, 'sine', 0.1, 0.3);
             loseMessage.classList.add('hidden');
+            resetGame();
+        });
+
+        // أحداث الأزرار الجديدة في رسالة الاحتفال
+        continuePlayingBtn.addEventListener('click', () => {
+            playSound(261.63, 'sine', 0.1, 0.3);
+            continuePlaying();
+            startGame(); // بدء اللعبة بعد الاستئناف
+        });
+
+        restartGameFromCelebrationBtn.addEventListener('click', () => {
+            playSound(261.63, 'sine', 0.1, 0.3);
             resetGame();
         });
         
@@ -1899,6 +2024,7 @@
 
         // إظهار رسالة الترحيب عند تحميل الصفحة
         welcomeMessage.classList.remove('hidden');
+        bodyElement.classList.add('game-hidden'); // إخفاء عناصر اللعبة حتى تبدأ
     </script>
 </body>
 </html>
