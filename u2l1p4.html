@@ -747,6 +747,18 @@
             <div id="maze"></div>
         </div>
         
+        <!-- تم نقل قسم أزرار الأسهم هنا -->
+        <div class="touch-controls mobile-only">
+            <div class="touch-row">
+                <div class="touch-btn" id="up-btn"><i class="fas fa-arrow-up"></i></div>
+            </div>
+            <div class="touch-row">
+                <div class="touch-btn" id="left-btn"><i class="fas fa-arrow-left"></i></div>
+                <div class="touch-btn" id="down-btn"><i class="fas fa-arrow-down"></i></div>
+                <div class="touch-btn" id="right-btn"><i class="fas fa-arrow-right"></i></div>
+            </div>
+        </div>
+        
         <div class="controls">
             <button id="start-btn"><i class="fas fa-play"></i> بدء اللعبة</button>
             <button id="upgrades-btn"><i class="fas fa-bolt"></i> الترقيات</button>
@@ -776,17 +788,6 @@
                     <p>إضافة 15 ثانية إضافية للمؤقت</p>
                     <div class="upgrade-cost">250 نقطة</div>
                 </div>
-            </div>
-        </div>
-        
-        <div class="touch-controls mobile-only">
-            <div class="touch-row">
-                <div class="touch-btn" id="up-btn"><i class="fas fa-arrow-up"></i></div>
-            </div>
-            <div class="touch-row">
-                <div class="touch-btn" id="left-btn"><i class="fas fa-arrow-left"></i></div>
-                <div class="touch-btn" id="down-btn"><i class="fas fa-arrow-down"></i></div>
-                <div class="touch-btn" id="right-btn"><i class="fas fa-arrow-right"></i></div>
             </div>
         </div>
     </div>
@@ -1094,7 +1095,8 @@
                 const coinCell = getCell(row, col);
                 const coinElement = document.createElement('div');
                 coinElement.classList.add('coin');
-                coinElement.innerHTML = '<i class="fas fa-star"></i>'; // تم تغيير الأيقونة إلى نجمة
+                // تم إزالة السطر التالي لإزالة النجمة البيضاء
+                // coinElement.innerHTML = '<i class="fas fa-star"></i>'; 
                 coinCell.appendChild(coinElement);
             }
         }
