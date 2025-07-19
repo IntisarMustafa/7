@@ -27,7 +27,9 @@
             --math: #4caf50; /* أخضر للرياضيات */
             --enemy-hunter: #ff1744; /* أحمر للصياد */
             --enemy-patrol: #ff9800; /* برتقالي للدورية */
-            --enemy-guard: #29b6f6; /* أزرق للحارس (تم التغيير) */
+            --enemy-guard: #29b6f6; /* أزرق للحارس */
+            --coin-color: #FFEB3B; /* لون جديد للعملات - ذهبي أصفر ساطع */
+            --coin-color-dark: #FBC02D; /* لون أغمق للعملات - ذهبي أصفر غني */
         }
         
         /* أنماط الجسم والخلفية */
@@ -266,9 +268,9 @@
             left: 50%;
             width: 40%;
             height: 40%;
-            background: radial-gradient(circle, var(--info), #0288d1);
+            background: radial-gradient(circle, var(--coin-color), var(--coin-color-dark)); /* استخدام الألوان الجديدة */
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--info);
+            box-shadow: 0 0 10px var(--coin-color); /* استخدام اللون الجديد */
             transform: translate(-50%, -50%);
             z-index: 5;
             animation: float 2s infinite ease-in-out; /* إضافة حركة للعملات */
@@ -332,10 +334,6 @@
         button:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-        
-        button:hover::before {
-            left: 100%;
         }
         
         button:active {
@@ -1096,7 +1094,7 @@
                 const coinCell = getCell(row, col);
                 const coinElement = document.createElement('div');
                 coinElement.classList.add('coin');
-                coinElement.innerHTML = '<i class="fas fa-coins"></i>'; // أيقونة العملة
+                coinElement.innerHTML = '<i class="fas fa-star"></i>'; // تم تغيير الأيقونة إلى نجمة
                 coinCell.appendChild(coinElement);
             }
         }
@@ -1449,7 +1447,7 @@
                 scoreElement.textContent = config.score;
                 
                 playSound(1046.50, 'sine', 0.2, 0.3); // صوت جمع العملة
-                createParticles(config.playerPos.row, config.playerPos.col, '#29b6f6'); // تأثير جسيمات
+                createParticles(config.playerPos.row, config.playerPos.col, 'var(--coin-color)'); // استخدام لون العملة الجديد
             }
         }
 
@@ -1481,7 +1479,7 @@
                     showPowerUpMessage('زيادة السرعة!');
                     break;
                 case 'vision':
-                    // يمكن إضافة تأثير رؤية مسارات الأعداء هنا (مثلاً، إظهار خطوط)
+                    // يمكن إضافة منطق رؤية مسارات الأعداء هنا (مثلاً، إظهار خطوط)
                     showPowerUpMessage('رؤية مسارات الأعداء!');
                     break;
                 case 'freeze':
