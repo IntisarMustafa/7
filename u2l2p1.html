@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أولويات العمليات الحسابية - الدرس الكامل</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* خط Inter للجمالية */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif; /* استخدام خط Inter */
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); /* خلفية متدرجة جذابة */
+            color: #333;
+            line-height: 1.7;
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* المحاذاة للأعلى لضمان رؤية المحتوى */
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%; /* جعل العرض مرنا */
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.98); /* خلفية شبه شفافة معتمة أكثر */
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); /* ظل أكبر وأكثر وضوحا */
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* حدود خفيفة */
+        }
+        
+        header {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff); /* تدرج أزرق فاتح */
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #ffd700; /* خط ذهبي */
+            position: relative;
+            overflow: hidden; /* لإخفاء أي عناصر تتجاوز الهيدر */
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: headerShine 15s infinite linear;
+        }
+
+        @keyframes headerShine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        h1 {
+            font-size: 2.5rem; /* حجم أكبر للعنوان */
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4); /* ظل أوضح */
+            position: relative;
+            z-index: 1; /* للتأكد من أن النص فوق تأثير اللمعان */
+        }
+        
+        .subtitle {
+            font-size: 1.3rem; /* حجم أكبر للعنوان الفرعي */
+            opacity: 0.98;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* مسافة أكبر بين الأقسام */
+            padding: 25px;
+        }
+        
+        .section {
+            background-color: white;
+            border-radius: 18px; /* حواف أكثر استدارة */
+            padding: 30px; /* مساحة داخلية أكبر */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* ظل أنعم وأوضح */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e0e0e0;
+            width: 100%;
+        }
+        
+        .section:hover {
+            transform: translateY(-7px); /* تأثير رفع أكبر */
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); /* ظل أكبر عند التحويم */
+        }
+        
+        .section-title {
+            color: #3a7bd5;
+            margin-bottom: 20px;
+            padding-bottom: 15px; /* مساحة أكبر تحت العنوان */
+            border-bottom: 3px solid #ffd700; /* خط سفلي أسمك */
+            font-size: 2rem; /* حجم أكبر */
+            display: flex;
+            align-items: center;
+            gap: 15px; /* مسافة أكبر بين الأيقونة والنص */
+            font-weight: 600; /* خط أثقل */
+        }
+        
+        .story {
+            background: linear-gradient(135deg, #f5f7fa, #e4edf9);
+        }
+        
+        .story-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 35px; /* مسافة أكبر */
+        }
+        
+        .story-text {
+            width: 100%;
+            font-size: 1.18rem; /* حجم خط أكبر */
+            line-height: 1.9; /* تباعد أسطر أكبر */
+            text-align: justify;
+            color: #555; /* لون نص أغمق قليلا */
+        }
+        
+        .underwater-scene-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px; /* عرض أكبر للمشهد */
+            height: 400px; /* ارتفاع أكبر للمشهد */
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); /* ظل واضح للمشهد */
+            background: linear-gradient(to bottom, #1a75bc, #1a3f8c); /* تدرج أزرق عميق */
+            border: 3px solid rgba(255, 255, 255, 0.5); /* إطار أبيض خفيف */
+        }
+        
+        .underwater-scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 100%, rgba(26, 117, 188, 0.8) 0%, rgba(26, 63, 140, 0.9) 70%); /* تأثير عمق إضافي */
+        }
+        
+        .water-surface {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), transparent); /* تأثير سطح الماء */
+            animation: surfaceWave 5s infinite ease-in-out; /* حركة موجية أنعم */
+            transform-origin: bottom center;
+        }
+        
+        @keyframes surfaceWave {
+            0% { transform: translateY(0) scaleY(1); opacity: 1; }
+            50% { transform: translateY(-15px) scaleY(1.1); opacity: 0.8; }
+            100% { transform: translateY(0) scaleY(1); opacity: 1; }
+        }
+        
+        .diver {
+            position: absolute;
+            bottom: 90%; /* بداية من 5 أمتار تحت السطح */
+            left: 40%;
+            z-index: 10;
+            transform: translateX(-50%);
+            transition: bottom 3s ease-in-out, transform 0.5s ease; /* إضافة انتقال للتحول */
+            animation: swimMove 4s infinite ease-in-out alternate; /* حركة سباحة أنعم وأكثر طبيعية */
+        }
+        
+        @keyframes swimMove {
+            0% { transform: translateX(-50%) rotate(-8deg); }
+            50% { transform: translateX(-50%) rotate(8deg); }
+            100% { transform: translateX(-50%) rotate(-8deg); }
+        }
+        
+        .diver-body {
+            position: relative;
+            width: 70px; /* حجم أكبر للغواص */
+            height: 110px;
+            transform-origin: center bottom;
+        }
+        
+        .diver-head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px; /* حجم أكبر */
+            height: 45px;
+            background: #ffccbc; /* لون بشرة */
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        }
+        
+        .diver-mask {
+            position: absolute;
+            top: 12px; /* تعديل الموضع */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px; /* حجم أكبر */
+            height: 30px;
+            background: #80deea; /* لون قناع */
+            border-radius: 50%;
+            z-index: 3;
+            border: 2px solid #263238; /* إطار للقناع */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .diver-body-shape {
+            position: absolute;
+            top: 40px; /* تعديل الموضع */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px; /* حجم أكبر */
+            height: 70px; /* طول أكبر */
+            background: linear-gradient(to bottom, #00bcd4, #00838f); /* تدرج للبدلة */
+            border-radius: 30px; /* حواف أكثر استدارة */
+            z-index: 1;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.3);
+        }
+        
+        .diver-tank {
+            position: absolute;
+            top: 40px; /* تعديل الموضع */
+            left: 55px; /* تعديل الموضع */
+            width: 25px; /* حجم أكبر */
+            height: 80px; /* طول أكبر */
+            background: linear-gradient(to bottom, #ff9800, #e65100); /* تدرج لأسطوانة الأكسجين */
+            border-radius: 12px;
+            z-index: 0;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+        }
+        
+        .diver-legs {
+            position: absolute;
+            top: 100px; /* تعديل الموضع */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px; /* عرض أكبر */
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .diver-leg {
+            width: 12px; /* سمك أكبر */
+            height: 55px; /* طول أكبر */
+            background: #00bcd4;
+            border-radius: 6px;
+            position: relative;
+            transform-origin: top center;
+            animation: legMove 4s infinite alternate ease-in-out; /* حركة أرجل */
+        }
+
+        .diver-leg:nth-child(1) { animation-delay: 0s; transform: rotate(-10deg); }
+        .diver-leg:nth-child(2) { animation-delay: 0.5s; transform: rotate(10deg); }
+        
+        @keyframes legMove {
+            0% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            100% { transform: rotate(-10deg); }
+        }
+        
+        .diver-fin {
+            position: absolute;
+            bottom: -25px; /* موضع الزعانف */
+            width: 35px; /* حجم أكبر */
+            height: 25px;
+            background: #ff5722; /* لون زعانف */
+            border-radius: 0 0 20px 20px; /* حواف أكثر استدارة */
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        }
+        
+        .diver-arm {
+            position: absolute;
+            top: 65px; /* تعديل الموضع */
+            width: 12px; /* سمك أكبر */
+            height: 45px; /* طول أكبر */
+            background: #00bcd4;
+            border-radius: 6px;
+            transform-origin: top center;
+            animation: armMove 4s infinite alternate ease-in-out; /* حركة ذراع */
+        }
+        
+        .diver-arm-left {
+            left: -12px; /* تعديل الموضع */
+            transform: rotate(-35deg);
+            animation-delay: 0.2s;
+        }
+        
+        .diver-arm-right {
+            right: -12px; /* تعديل الموضع */
+            transform: rotate(35deg);
+            animation-delay: 0s;
+        }
+        
+        @keyframes armMove {
+            0% { transform: rotate(25deg); }
+            100% { transform: rotate(-25deg); }
+        }
+        
+        .bubbles-container {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.7; /* شفافية للفقاعات */
+        }
+        
+        .bubble {
+            position: absolute;
+            bottom: -20px;
+            width: 18px; /* حجم أكبر للفقاعات */
+            height: 18px;
+            background: rgba(255, 255, 255, 0.8); /* لون أبيض أكثر وضوحا */
+            border-radius: 50%;
+            animation: bubbleRise linear infinite;
+            box-shadow: inset 0 0 5px rgba(255,255,255,0.5), 0 0 8px rgba(255,255,255,0.3); /* تأثير ضوء على الفقاعات */
+        }
+        
+        @keyframes bubbleRise {
+            0% {
+                transform: translateY(0) translateX(0) scale(0.5);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-200px) translateX(var(--x-offset)) scale(0.8);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-450px) translateX(var(--x-offset)) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .fish {
+            position: absolute;
+            width: 70px; /* حجم أكبر للأسماك */
+            height: 35px;
+            animation: swim linear infinite;
+            transform-origin: center center;
+        }
+        
+        .fish-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            border-radius: 50% 50% 40% 40%;
+            clip-path: polygon(0% 50%, 15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%);
+            box-shadow: inset 0 -3px 5px rgba(0,0,0,0.2);
+        }
+        
+        .fish-tail {
+            position: absolute;
+            right: -20px; /* موضع الذيل */
+            top: 7px; /* موضع الذيل */
+            width: 25px; /* حجم أكبر */
+            height: 25px;
+            background: #ff5722;
+            clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+            transform-origin: left center;
+            animation: tailWag 0.8s infinite alternate ease-in-out; /* حركة ذيل */
+        }
+
+        @keyframes tailWag {
+            0% { transform: rotate(-15deg); }
+            100% { transform: rotate(15deg); }
+        }
+        
+        .fish-eye {
+            position: absolute;
+            left: 12px; /* موضع العين */
+            top: 10px; /* موضع العين */
+            width: 10px; /* حجم أكبر */
+            height: 10px;
+            background: #000;
+            border-radius: 50%;
+            border: 1px solid white;
+        }
+        
+        @keyframes swim {
+            0% { transform: translateX(100vw); } /* تبدأ من خارج الشاشة على اليمين */
+            100% { transform: translateX(calc(-100vw - 100px)); } /* تخرج من الشاشة على اليسار */
+        }
+        
+        .sea-plants {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 35%; /* ارتفاع أكبر للنباتات */
+            z-index: 5;
+            display: flex;
+            justify-content: space-around; /* توزيع النباتات */
+            align-items: flex-end;
+        }
+        
+        .sea-plant {
+            position: relative; /* لتحديد موضع الأوراق */
+            bottom: 0;
+            height: var(--plant-height, 80px); /* ارتفاع متغير للنباتات */
+            width: var(--plant-width, 15px); /* سمك متغير للنباتات */
+            background: linear-gradient(to top, #4caf50, #2e7d32); /* تدرج أخضر داكن */
+            border-radius: 5px 5px 0 0;
+            box-shadow: inset 0 5px 10px rgba(0,0,0,0.2);
+            animation: plantSway var(--sway-duration, 5s) infinite alternate ease-in-out; /* حركة اهتزاز */
+            transform-origin: bottom center;
+        }
+
+        .sea-plant::before,
+        .sea-plant::after {
+            content: '';
+            position: absolute;
+            width: var(--leaf-size, 25px);
+            height: var(--leaf-size, 25px);
+            background: #4caf50;
+            border-radius: 50%;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .sea-plant::before {
+            top: 20%; /* موضع ورقة علوية */
+            left: -10px;
+            transform: rotate(-30deg);
+        }
+
+        .sea-plant::after {
+            top: 50%; /* موضع ورقة سفلية */
+            right: -10px;
+            transform: rotate(30deg);
+        }
+
+        @keyframes plantSway {
+            0% { transform: rotate(-3deg); }
+            100% { transform: rotate(3deg); }
+        }
+        
+        .depth-control {
+            width: 100%;
+            max-width: 650px; /* عرض متناسق مع المشهد */
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.9); /* خلفية أكثر وضوحا */
+            padding: 20px; /* مساحة داخلية أكبر */
+            border-radius: 15px; /* حواف أكثر استدارة */
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .depth-control label {
+            display: block;
+            margin-bottom: 12px; /* مسافة أكبر */
+            font-weight: 600; /* خط أثقل */
+            color: #1a3f8c;
+            font-size: 1.1rem;
+        }
+        
+        #depth-slider {
+            width: 90%; /* عرض أكبر للشريط */
+            margin: 10px 0;
+            height: 25px; /* سمك أكبر للشريط */
+            -webkit-appearance: none;
+            background: linear-gradient(to right, #00d2ff, #3a7bd5);
+            border-radius: 12px; /* حواف أكثر استدارة */
+            outline: none;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        #depth-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 35px; /* حجم أكبر للمقبض */
+            height: 35px;
+            border-radius: 50%;
+            background: #ffd700;
+            border: 3px solid #3a7bd5; /* إطار أسمك */
+            cursor: grab; /* مؤشر سحب */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); /* ظل واضح للمقبض */
+            transition: all 0.2s ease;
+        }
+
+        #depth-slider::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+        
+        #depth-value {
+            display: inline-block;
+            margin-top: 15px; /* مسافة أكبر */
+            font-weight: 700; /* خط أثقل */
+            color: #1a3f8c;
+            background: #e0f7fa;
+            padding: 8px 20px; /* مساحة داخلية أكبر */
+            border-radius: 25px; /* حواف أكثر استدارة */
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+        }
+        
+        #apply-solution {
+            background: linear-gradient(90deg, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            padding: 15px 30px; /* مساحة داخلية أكبر للزر */
+            border-radius: 10px; /* حواف أكثر استدارة */
+            font-size: 1.2rem; /* حجم خط أكبر */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 25px auto 0; /* مسافة أكبر من الأعلى */
+            display: block;
+            font-weight: 700; /* خط أثقل */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* ظل أوضح */
+            letter-spacing: 0.5px; /* تباعد أحرف */
+        }
+        
+        #apply-solution:hover {
+            transform: translateY(-5px); /* رفع أكبر عند التحويم */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35); /* ظل أكبر عند التحويم */
+            background: linear-gradient(90deg, #2e7d32, #4caf50);
+        }
+        
+        /* بقية الأنماط كما هي في الكود الأصلي مع بعض التحسينات */
+        .priority-section {
+            background: linear-gradient(135deg, #f0f9ff, #e0f7fa);
+        }
+        
+        .priority-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* مسافة أكبر بين الخطوات */
+            margin: 25px 0;
+        }
+        
+        .priority-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px; /* مسافة أكبر */
+            padding: 20px; /* مساحة داخلية أكبر */
+            background: white;
+            border-radius: 15px; /* حواف أكثر استدارة */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3a7bd5; /* خط أسمك */
+            transition: transform 0.2s ease;
+        }
+
+        .priority-step:hover {
+            transform: translateX(5px); /* تأثير تحريك بسيط عند التحويم */
+        }
+        
+        .step-number {
+            min-width: 50px; /* حجم أكبر للرقم */
+            height: 50px;
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem; /* حجم خط أكبر */
+            font-weight: 700; /* خط أثقل */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .step-content {
+            flex: 1;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+        }
+        
+        .examples {
+            background: linear-gradient(135deg, #fffde7, #fff9c4);
+        }
+        
+        .example {
+            margin: 25px 0; /* مسافة أكبر */
+            padding: 25px; /* مساحة داخلية أكبر */
+            background-color: white;
+            border-radius: 15px; /* حواف أكثر استدارة */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .example:hover {
+            transform: translateY(-3px);
+        }
+        
+        .example-title {
+            color: #ff9800;
+            margin-bottom: 18px; /* مسافة أكبر */
+            font-size: 1.5rem; /* حجم أكبر */
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+        
+        .example-content {
+            font-size: 1.15rem;
+            margin-bottom: 20px; /* مسافة أكبر */
+            padding: 15px; /* مساحة داخلية أكبر */
+            background-color: #fcfcfc; /* خلفية أفتح */
+            border-radius: 10px; /* حواف أكثر استدارة */
+            border-left: 4px solid #ff9800; /* خط أسمك */
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+        }
+        
+        .solution {
+            padding: 18px; /* مساحة داخلية أكبر */
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            margin-top: 20px; /* مسافة أكبر */
+            display: none;
+            font-size: 1.08rem;
+            border-left: 4px solid #4caf50;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        .toggle-btn {
+            background: linear-gradient(90deg, #ff9800, #ff5722);
+            margin-top: 15px; /* مسافة أكبر */
+            padding: 12px 20px; /* مساحة داخلية أكبر */
+            color: white;
+            border: none;
+            border-radius: 8px; /* حواف أكثر استدارة */
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            background: linear-gradient(90deg, #ff5722, #ff9800);
+        }
+        
+        .practice {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        }
+        
+        .exercise {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .exercise-title {
+            color: #4caf50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+        
+        .exercise-content {
+            font-size: 1.15rem;
+            margin-bottom: 18px;
+            padding: 15px;
+            background-color: #fcfcfc;
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+        }
+        
+        .exercise-input {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* مسافة أكبر */
+        }
+        
+        input {
+            padding: 15px; /* مساحة داخلية أكبر */
+            border: 2px solid #3a7bd5;
+            border-radius: 10px; /* حواف أكثر استدارة */
+            font-size: 1.15rem; /* حجم خط أكبر */
+            width: 100%;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #00d2ff;
+            box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.3);
+            outline: none;
+        }
+        
+        button {
+            padding: 15px; /* مساحة داخلية أكبر */
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            border: none;
+            border-radius: 10px; /* حواف أكثر استدارة */
+            cursor: pointer;
+            font-size: 1.15rem; /* حجم خط أكبر */
+            font-weight: 700;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+        }
+        
+        .check-btn {
+            background: linear-gradient(90deg, #4caf50, #2e7d32);
+        }
+
+        .check-btn:hover {
+            background: linear-gradient(90deg, #2e7d32, #4caf50);
+        }
+        
+        .feedback {
+            margin-top: 15px; /* مسافة أكبر */
+            padding: 15px; /* مساحة داخلية أكبر */
+            border-radius: 10px;
+            display: none;
+            font-weight: 600;
+            font-size: 1.08rem;
+            line-height: 1.6;
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 6px solid #4caf50; /* خط أسمك */
+            color: #2e7d32;
+        }
+        
+        .incorrect {
+            background-color: #ffebee;
+            border-left: 6px solid #f44336; /* خط أسمك */
+            color: #d32f2f;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, rgba(255,215,0,0.4), rgba(255,215,0,0.1)); /* تدرج أكثر وضوحا */
+            padding: 5px 10px; /* مساحة داخلية أكبر */
+            border-radius: 8px; /* حواف أكثر استدارة */
+            font-weight: 700; /* خط أثقل */
+            color: #a07a00; /* لون نص أغمق */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .math-expression {
+            font-family: 'Cambria Math', serif;
+            font-size: 1.4rem; /* حجم خط أكبر */
+            text-align: center;
+            margin: 25px 0; /* مسافة أكبر */
+            padding: 15px; /* مساحة داخلية أكبر */
+            background-color: #fefefe; /* خلفية أفتح */
+            border-radius: 12px; /* حواف أكثر استدارة */
+            border: 2px dashed #3a7bd5; /* حدود منقطة */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .term-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px; /* مساحة داخلية أكبر */
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #00bcd4; /* خط أسمك */
+        }
+        
+        .term-title {
+            color: #00bcd4;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .math-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            border-radius: 15px; /* حواف أكثر استدارة */
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); /* ظل أوضح */
+        }
+        
+        .math-table th {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            padding: 18px; /* مساحة داخلية أكبر */
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .math-table td {
+            padding: 18px;
+            text-align: center;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.05rem;
+            color: #444;
+        }
+        
+        .math-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .math-table .math-symbol {
+            font-size: 1.6rem; /* حجم أكبر للرموز */
+            font-weight: 700;
+            color: #3a7bd5;
+        }
+        
+        .priority-explanation {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f0f9ff;
+            border-radius: 15px;
+            border-left: 5px solid #3a7bd5;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .priority-explanation h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #3a7bd5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .priority-explanation ol {
+            padding-right: 25px;
+        }
+
+        .priority-explanation li {
+            margin-bottom: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px; /* مساحة داخلية أكبر */
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            font-size: 1.05rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px; /* مسافة أكبر */
+            border-top: 5px solid #ffd700;
+        }
+
+        .next-page-btn {
+            display: inline-flex; /* لجعل الأيقونة والنص في نفس السطر */
+            align-items: center;
+            gap: 8px; /* مسافة بين النص والأيقونة */
+            padding: 14px 28px; /* مساحة داخلية أكبر */
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            color: #333;
+            text-decoration: none;
+            border-radius: 10px; /* حواف أكثر استدارة */
+            font-weight: 700;
+            font-size: 1.15rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+            letter-spacing: 0.5px;
+        }
+
+        .next-page-btn:hover {
+            transform: translateY(-4px); /* رفع أكبر */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+            background: linear-gradient(90deg, #ff8c00, #ffd700);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+                gap: 10px;
+            }
+            
+            .math-expression {
+                font-size: 1.2rem;
+                margin: 20px 0;
+            }
+            
+            .underwater-scene-container {
+                height: 320px;
+                border-radius: 15px;
+            }
+
+            .diver-body {
+                width: 60px;
+                height: 100px;
+            }
+
+            .diver-head {
+                width: 38px;
+                height: 38px;
+            }
+
+            .diver-mask {
+                width: 30px;
+                height: 25px;
+                top: 10px;
+            }
+
+            .diver-body-shape {
+                width: 50px;
+                height: 60px;
+                top: 35px;
+            }
+
+            .diver-tank {
+                width: 20px;
+                height: 70px;
+                top: 35px;
+                left: 45px;
+            }
+
+            .diver-legs {
+                width: 50px;
+                top: 90px;
+            }
+
+            .diver-leg {
+                width: 10px;
+                height: 50px;
+            }
+
+            .diver-fin {
+                width: 30px;
+                height: 20px;
+                bottom: -20px;
+            }
+
+            .diver-arm {
+                width: 10px;
+                height: 40px;
+                top: 60px;
+            }
+
+            .diver-arm-left {
+                left: -10px;
+            }
+
+            .diver-arm-right {
+                right: -10px;
+            }
+
+            .fish {
+                width: 50px;
+                height: 25px;
+            }
+
+            .fish-tail {
+                right: -15px;
+                width: 20px;
+                height: 20px;
+            }
+
+            .fish-eye {
+                width: 7px;
+                height: 7px;
+                left: 8px;
+            }
+
+            .sea-plant {
+                --plant-height: 60px;
+                --plant-width: 12px;
+                --leaf-size: 20px;
+            }
+
+            .bubble {
+                width: 12px;
+                height: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .section {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .section-title i {
+                font-size: 1.2rem;
+            }
+            
+            .story-text, .example-content, .exercise-content, .solution, .step-content, .term-card p, .priority-explanation p, .priority-explanation li {
+                font-size: 1rem;
+            }
+
+            .math-expression {
+                font-size: 1.1rem;
+                padding: 10px;
+            }
+            
+            .underwater-scene-container {
+                height: 250px;
+                border-radius: 12px;
+            }
+
+            .diver-body {
+                width: 50px;
+                height: 90px;
+            }
+
+            .diver-head {
+                width: 35px;
+                height: 35px;
+            }
+
+            .diver-mask {
+                width: 25px;
+                height: 20px;
+                top: 8px;
+            }
+
+            .diver-body-shape {
+                width: 45px;
+                height: 55px;
+                top: 30px;
+            }
+
+            .diver-tank {
+                width: 18px;
+                height: 60px;
+                top: 30px;
+                left: 38px;
+            }
+
+            .diver-legs {
+                width: 45px;
+                top: 80px;
+            }
+
+            .diver-leg {
+                width: 8px;
+                height: 45px;
+            }
+
+            .diver-fin {
+                width: 25px;
+                height: 18px;
+                bottom: -18px;
+            }
+
+            .diver-arm {
+                width: 8px;
+                height: 35px;
+                top: 55px;
+            }
+
+            .diver-arm-left {
+                left: -8px;
+            }
+
+            .diver-arm-right {
+                right: -8px;
+            }
+
+            .fish {
+                width: 40px;
+                height: 20px;
+            }
+
+            .fish-tail {
+                right: -12px;
+                width: 15px;
+                height: 15px;
+            }
+
+            .fish-eye {
+                width: 6px;
+                height: 6px;
+                left: 7px;
+            }
+
+            .sea-plant {
+                --plant-height: 50px;
+                --plant-width: 10px;
+                --leaf-size: 18px;
+            }
+
+            .bubble {
+                width: 10px;
+                height: 10px;
+            }
+
+            .depth-control {
+                padding: 15px;
+            }
+
+            #depth-slider {
+                height: 20px;
+            }
+
+            #depth-slider::-webkit-slider-thumb {
+                width: 28px;
+                height: 28px;
+            }
+
+            #apply-solution, .toggle-btn, button {
+                padding: 12px 20px;
+                font-size: 1.05rem;
+            }
+
+            .next-page-btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> أولويات العمليات الحسابية</h1>
+            <p class="subtitle">تعلم قواعد ترتيب العمليات الحسابية بطريقة تفاعلية ممتعة</p>
+        </header>
+        
+        <div class="content">
+            <div class="section story">
+                <h2 class="section-title"><i class="fas fa-book-open"></i> قصة الدرس: الغواص</h2>
+                <div class="story-content">
+                    <div class="story-text">
+                        <p>هبط غواص إلى عمق 5 أمتار تحت سطح مياه خليج العقبة، ثم هبط 13 مترًا أخرى، ثم هبط مرة ثانية 13 مترًا، ثم هبط مرة ثالثة 13 مترًا، بعد ذلك صعد بمقدار 20 مترًا.</p>
+                        <p>يمثل المقدار العددي التالي العمق الذي يقف عنده الغواص الآن:</p>
+                        <div class="math-expression">
+                            \[-5 + 3 \times (-13) + 20\]
+                        </div>
+                        <p class="highlight">السؤال: كيف يمكن حساب قيمة هذا المقدار العددي؟ وما هي العمليات الحسابية اللازمة؟</p>
+                    </div>
+                    <div class="underwater-scene-container">
+                        <div class="underwater-scene">
+                            <div class="water-surface"></div>
+                            
+                            <!-- الغواص -->
+                            <div class="diver">
+                                <div class="diver-body">
+                                    <div class="diver-head"></div>
+                                    <div class="diver-mask"></div>
+                                    <div class="diver-body-shape"></div>
+                                    <div class="diver-tank"></div>
+                                    <div class="diver-legs">
+                                        <div class="diver-leg">
+                                            <div class="diver-fin"></div>
+                                        </div>
+                                        <div class="diver-leg">
+                                            <div class="diver-fin"></div>
+                                        </div>
+                                    </div>
+                                    <div class="diver-arm diver-arm-left"></div>
+                                    <div class="diver-arm diver-arm-right"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- الأسماك -->
+                            <div class="fish" style="top: 50px; left: 10%; animation-duration: 15s; animation-delay: 2s; transform: scaleX(-1);">
+                                <div class="fish-body"></div>
+                                <div class="fish-tail"></div>
+                                <div class="fish-eye"></div>
+                            </div>
+                            
+                            <div class="fish" style="top: 150px; left: 70%; animation-duration: 20s; animation-delay: 5s;">
+                                <div class="fish-body" style="background: linear-gradient(45deg, #4caf50, #2e7d32);"></div>
+                                <div class="fish-tail" style="background: #2e7d32;"></div>
+                                <div class="fish-eye"></div>
+                            </div>
+                            
+                            <div class="fish" style="top: 250px; left: 30%; animation-duration: 12s; animation-delay: 7s; transform: scaleX(-1);">
+                                <div class="fish-body" style="background: linear-gradient(45deg, #9c27b0, #673ab7);"></div>
+                                <div class="fish-tail" style="background: #673ab7;"></div>
+                                <div class="fish-eye"></div>
+                            </div>
+                            
+                            <!-- النباتات البحرية -->
+                            <div class="sea-plants">
+                                <div class="sea-plant" style="left: 5%; --plant-height: 70px; --plant-width: 14px; --leaf-size: 22px; --sway-duration: 4.5s;"></div>
+                                <div class="sea-plant" style="left: 20%; --plant-height: 100px; --plant-width: 18px; --leaf-size: 28px; --sway-duration: 5s;"></div>
+                                <div class="sea-plant" style="left: 40%; --plant-height: 85px; --plant-width: 16px; --leaf-size: 25px; --sway-duration: 4s;"></div>
+                                <div class="sea-plant" style="left: 60%; --plant-height: 95px; --plant-width: 17px; --leaf-size: 26px; --sway-duration: 5.5s;"></div>
+                                <div class="sea-plant" style="left: 80%; --plant-height: 75px; --plant-width: 15px; --leaf-size: 23px; --sway-duration: 4.8s;"></div>
+                            </div>
+                            
+                            <!-- الفقاعات -->
+                            <div class="bubbles-container">
+                                <!-- سيتم إنشاء الفقاعات ديناميكيًا باستخدام JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- شريط التحكم في العمق -->
+                    <div class="depth-control">
+                        <label for="depth-slider">تحكم في عمق الغواص:</label>
+                        <input type="range" id="depth-slider" min="-50" max="0" step="1" value="-5">
+                        <div id="depth-value">5 متر تحت سطح البحر</div>
+                        <button id="apply-solution">تطبيق الحل</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-lightbulb"></i> فكرة الدرس</h2>
+                <p>أستخدم أولويات العمليات الحسابية وقوانين الأسبقية في تبسيط المقادير العدديّة.</p>
+                
+                <div class="term-card">
+                    <h3 class="term-title"><i class="fas fa-bookmark"></i> المصطلحات</h3>
+                    <p><span class="highlight">أولويات العمليات الحسابية:</span> قواعد تحدد الترتيب الذي يجب تنفيذ العمليات الحسابية به في تعبير رياضي.</p>
+                    <p><span class="highlight">المقدار العددي:</span> تعبير رياضي يتكون من أعداد وعلامات عمليات.</p>
+                    <p><span class="highlight">الأقواس:</span> تستخدم لتحديد أولوية العمليات داخل التعبير الرياضي.</p>
+                </div>
+            </div>
+            
+            <div class="section priority-section">
+                <h2 class="section-title"><i class="fas fa-list-ol"></i> ترتيب أولويات العمليات الحسابية</h2>
+                
+                <div class="priority-steps">
+                    <div class="priority-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <p><strong>أجد قيمة المقادير داخل الأقواس</strong></p>
+                            <p>ابدأ بحساب القيم الموجودة داخل الأقواس الداخلية أولاً</p>
+                            <p>مثال: في \( (3 + 5) \times 2 \)، نبدأ بحساب \( 3 + 5 = 8 \) أولاً</p>
+                        </div>
+                    </div>
+                    
+                    <div class="priority-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <p><strong>أجد قيمة المقادير الأسيّة جميعها</strong></p>
+                            <p>احسب القوى والأسس بعد حساب الأقواس</p>
+                            <p>مثال: في \( 2^{3} + 5 \times 2 \)، نبدأ بحساب \( 2^{3} = 8 \) أولاً</p>
+                        </div>
+                    </div>
+                    
+                    <div class="priority-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <p><strong>اضرب أو اقسم من اليسار إلى اليمين</strong></p>
+                            <p>نفذ عمليات الضرب والقسمة بالترتيب من اليسار إلى اليمين</p>
+                            <p>مثال: في \( 12 \div 4 \times 3 \)، نبدأ بحساب \( 12 \div 4 = 3 \) ثم \( 3 \times 3 = 9 \)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="priority-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <p><strong>اجمع أو اطرح من اليسار إلى اليمين</strong></p>
+                            <p>نفذ عمليات الجمع والطرح بالترتيب من اليسار إلى اليمين</p>
+                            <p>مثال: في \( 10 - 3 + 5 \)، نبدأ بحساب \( 10 - 3 = 7 \) ثم \( 7 + 5 = 12 \)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title"><i class="fas fa-info-circle"></i> ملاحظات هامة</h3>
+                    <ul style="padding-right: 20px;">
+                        <li>إذا وجد قوسان داخل بعضهما، فأحسب قيمة القوس الداخلي أولاً</li>
+                        <li>يمكن استخدام الأقواس أو الرمز × للدلالة على عملية الضرب</li>
+                        <li>تستخدم الأقواس لتغيير ترتيب العمليات عند الحاجة</li>
+                        <li>الأسس لها أولوية أعلى من الضرب والقسمة</li>
+                    </ul>
+                </div>
+                
+                <div class="priority-explanation">
+                    <h3><i class="fas fa-brain"></i> كيف نفكر في حل المسألة؟</h3>
+                    <p>لحل أي مسألة حسابية، نتبع هذه الخطوات:</p>
+                    <ol style="padding-right: 20px;">
+                        <li>تحديد جميع العمليات الموجودة في التعبير الرياضي</li>
+                        <li>تحديد الأقواس والأسس أولاً</li>
+                        <li>حساب الضرب والقسمة من اليسار إلى اليمين</li>
+                        <li>حساب الجمع والطرح من اليسار إلى اليمين</li>
+                        <li>التحقق من النتيجة النهائية</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="section examples">
+                <h2 class="section-title"><i class="fas fa-book"></i> أمثلة توضيحية</h2>
+                
+                <div class="example">
+                    <h3 class="example-title"><i class="fas fa-pen"></i> مثال 1</h3>
+                    <p class="example-content">أجد قيمة: \( 120 \div (20 - (8 - 3)) \)</p>
+                    <button class="toggle-btn">عرض الحل</button>
+                    <div class="solution">
+                        <p>الخطوات:</p>
+                        <p>1. حساب القوس الداخلي: \( 8 - 3 = 5 \)</p>
+                        <p>2. حساب القوس الخارجي: \( 20 - 5 = 15 \)</p>
+                        <p>3. تنفيذ عملية القسمة: \( 120 \div 15 = 8 \)</p>
+                        <p>\[
+                            120 \div (20 - (8 - 3)) = 120 \div (20 - 5) = 120 \div 15 = 8
+                        \]</p>
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h3 class="example-title"><i class="fas fa-pen"></i> مثال 2</h3>
+                    <p class="example-content">أجد قيمة: \( 5(-2)^3 + 10 \)</p>
+                    <button class="toggle-btn">عرض الحل</button>
+                    <div class="solution">
+                        <p>الخطوات:</p>
+                        <p>1. حساب الأس أولاً: \( (-2)^3 = -8 \)</p>
+                        <p>2. تنفيذ عملية الضرب: \( 5 \times -8 = -40 \)</p>
+                        <p>3. تنفيذ عملية الجمع: \( -40 + 10 = -30 \)</p>
+                        <p>\[
+                            5(-2)^3 + 10 = 5 \times -8 + 10 = -40 + 10 = -30
+                        \]</p>
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h3 class="example-title"><i class="fas fa-pen"></i> مثال 3: من قصة الغواص</h3>
+                    <p class="example-content">أجد قيمة: \( -5 + 3 \times (-13) + 20 \)</p>
+                    <button class="toggle-btn">عرض الحل</button>
+                    <div class="solution">
+                        <p>الخطوات:</p>
+                        <p>1. أولوية الضرب: \( 3 \times (-13) = -39 \)</p>
+                        <p>2. الجمع من اليسار إلى اليمين: \( -5 + (-39) = -44 \)</p>
+                        <p>3. ثم: \( -44 + 20 = -24 \)</p>
+                        <p>\[
+                            -5 + 3 \times (-13) + 20 = -5 + (-39) + 20 = -44 + 20 = -24
+                        \]</p>
+                        <p>النتيجة: الغواص على عمق 24 متراً تحت سطح البحر</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section practice">
+                <h2 class="section-title"><i class="fas fa-check-circle"></i> التمارين الجديدة</h2>
+                
+                <div class="exercise">
+                    <h3 class="exercise-title"><i class="fas fa-4"></i> التمرين 4</h3>
+                    <p class="exercise-content">أجد قيمة: \( 160 \div (25 - (7 - 2)) \)</p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة">
+                        <button class="check-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <h3 class="exercise-title"><i class="fas fa-5"></i> التمرين 5</h3>
+                    <p class="exercise-content">أجد قيمة: \( 60 \times (10 - (4 + 3)) \)</p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة">
+                        <button class="check-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <h3 class="exercise-title"><i class="fas fa-6"></i> التمرين 6</h3>
+                    <p class="exercise-content">أجد قيمة: \( 5(-3)^2 + 10 \)</p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة">
+                        <button class="check-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="exercise">
+                    <h3 class="exercise-title"><i class="fas fa-7"></i> التمرين 7</h3>
+                    <p class="exercise-content">أجد قيمة: \( 8(1 - 5)^2 - 7 \)</p>
+                    <div class="exercise-input">
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة">
+                        <button class="check-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p> الصف السابع _ الرياضيات </p>
+            <p>أولويات العمليات الحسابية - الدرس 2</p>
+            <a href="u2l2p2.html" class="next-page-btn">الصفحة التالية <i class="fas fa-arrow-left"></i></a>
+        </footer>
+    </div>
+    
+    <script>
+        // إنشاء فقاعات متحركة
+        function createBubbles() {
+            const bubblesContainer = document.querySelector('.bubbles-container');
+            // إزالة الفقاعات الموجودة لتجنب التكرار عند إعادة الإنشاء
+            bubblesContainer.innerHTML = ''; 
+            for (let i = 0; i < 35; i++) { // زيادة عدد الفقاعات
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // تحديد موقف عشوائي
+                const leftPos = Math.random() * 100;
+                bubble.style.left = `${leftPos}%`;
+                
+                // تحديد حجم عشوائي
+                const size = 8 + Math.random() * 20; // نطاق حجم أكبر
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                
+                // تحديد سرعة واتجاه
+                const duration = 4 + Math.random() * 8; // نطاق مدة أطول
+                bubble.style.animationDuration = `${duration}s`;
+                bubble.style.animationDelay = `${Math.random() * 6}s`; // نطاق تأخير أطول
+                bubble.style.setProperty('--x-offset', `${(Math.random() - 0.5) * 80}px`); // انحراف أفقي أكبر
+                
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+        
+        // تفعيل الأزرار التفاعلية
+        document.addEventListener('DOMContentLoaded', function() {
+            // إنشاء الفقاعات
+            createBubbles();
+            
+            // عناصر التحكم في العمق
+            const slider = document.getElementById('depth-slider');
+            const depthValue = document.getElementById('depth-value');
+            const diver = document.querySelector('.diver');
+            const applySolutionBtn = document.getElementById('apply-solution');
+            
+            // تحديث موقع الغواص وعرض العمق
+            function updateDiverPosition(depth) {
+                // العمق من 0 (سطح البحر) إلى -50 (أعمق نقطة)
+                const absDepth = Math.abs(depth);
+                // تحويل العمق إلى نسبة مئوية لموضع الغواص من الأسفل
+                // 0 متر (السطح) = 90% من الأسفل (قريب من الأعلى)
+                // -50 متر (العمق الأقصى) = 10% من الأسفل (قريب من الأسفل)
+                const bottomPercentage = 90 - (absDepth / 50) * 80; // نطاق حركة 80%
+                diver.style.bottom = `${bottomPercentage}%`;
+                
+                // تحديث نص العمق
+                if (depth < 0) {
+                    depthValue.textContent = `${Math.abs(depth)} متر تحت سطح البحر`;
+                } else {
+                    depthValue.textContent = "على السطح";
+                }
+                
+                // زيادة عدد الفقاعات عند الحركة (شفافية الفقاعات)
+                const bubblesContainer = document.querySelector('.bubbles-container');
+                if (absDepth > 5) { // إذا كان الغواص تحت 5 أمتار
+                    bubblesContainer.style.opacity = '1'; // فقاعات أكثر وضوحا
+                } else {
+                    bubblesContainer.style.opacity = '0.5'; // فقاعات أقل وضوحا
+                }
+            }
+            
+            // حدث تغيير شريط التمرير
+            slider.addEventListener('input', function() {
+                const depth = parseInt(this.value);
+                updateDiverPosition(depth);
+            });
+            
+            // تطبيق الحل (العمق الصحيح -24 متر)
+            applySolutionBtn.addEventListener('click', function() {
+                // تحريك الشريط إلى -24
+                slider.value = -24;
+                // تطبيق التغيير
+                updateDiverPosition(-24);
+                
+                // عرض رسالة نجاح
+                this.textContent = 'تم تطبيق الحل!';
+                this.style.background = 'linear-gradient(90deg, #ff9800, #ff5722)';
+                setTimeout(() => {
+                    this.textContent = 'تطبيق الحل';
+                    this.style.background = 'linear-gradient(90deg, #4caf50, #2e7d32)';
+                }, 2000);
+            });
+            
+            // تحديث أولي للغواص عند التحميل
+            updateDiverPosition(-5);
+            
+            // عرض حلول الأمثلة
+            const toggleButtons = document.querySelectorAll('.toggle-btn');
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const solution = this.nextElementSibling;
+                    if (solution.style.display === 'block') {
+                        solution.style.display = 'none';
+                        this.textContent = 'عرض الحل';
+                    } else {
+                        solution.style.display = 'block';
+                        this.textContent = 'إخفاء الحل';
+                    }
+                    
+                    // تطبيق حل الغواص عند عرض المثال 3
+                    if (this.parentElement.querySelector('.example-title').textContent.includes('مثال 3')) {
+                        slider.value = -24;
+                        updateDiverPosition(-24);
+                    }
+                });
+            });
+            
+            // التحقق من التمارين
+            const checkButtons = document.querySelectorAll('.check-btn');
+            const answers = {
+                0: '8',     // 160 ÷ (25 - (7-2)) = 160 ÷ (25-5) = 160 ÷ 20 = 8
+                1: '180',   // 60 × (10 - (4+3)) = 60 × (10-7) = 60 × 3 = 180
+                2: '55',    // 5(-3)² + 10 = 5×9 + 10 = 45 + 10 = 55
+                3: '121'    // 8(1-5)² - 7 = 8×(-4)² - 7 = 8×16 - 7 = 128 - 7 = 121
+            };
+            
+            const explanations = {
+                0: "الحل: \\( 160 \\div (25 - (7 - 2)) = 160 \\div (25 - 5) = 160 \\div 20 = 8 \\)",
+                1: "الحل: \\( 60 \\times (10 - (4 + 3)) = 60 \\times (10 - 7) = 60 \\times 3 = 180 \\)",
+                2: "الحل: \\( 5(-3)^2 + 10 = 5 \\times 9 + 10 = 45 + 10 = 55 \\)",
+                3: "الحل: \\( 8(1 - 5)^2 - 7 = 8 \\times (-4)^2 - 7 = 8 \\times 16 - 7 = 128 - 7 = 121 \\)"
+            };
+            
+            checkButtons.forEach((button, index) => {
+                button.addEventListener('click', function() {
+                    const input = this.parentElement.querySelector('.answer-input');
+                    const feedback = this.parentElement.nextElementSibling;
+                    const userAnswer = input.value.trim();
+                    
+                    if (userAnswer === answers[index]) {
+                        feedback.innerHTML = '<i class="fas fa-check-circle"></i> إجابة صحيحة! أحسنت!';
+                        feedback.className = 'feedback correct';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.innerHTML = `<i class="fas fa-times-circle"></i> الإجابة غير صحيحة. ${explanations[index]}`;
+                        feedback.className = 'feedback incorrect';
+                        feedback.style.display = 'block';
+                        // إعادة تهيئة MathJax للعرض الصحيح للمعادلات الجديدة
+                        if (typeof MathJax !== 'undefined') {
+                            MathJax.typesetPromise([feedback]).catch((err) => console.error(err));
+                        }
+                    }
+                });
+            });
+            
+            // دعم الإدخال بالضغط على Enter
+            const inputs = document.querySelectorAll('.answer-input');
+            inputs.forEach((input, index) => {
+                input.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        checkButtons[index].click();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
