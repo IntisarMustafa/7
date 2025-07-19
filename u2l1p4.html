@@ -6,25 +6,31 @@
     <title>متاهة الأسس الرياضية - الصف السابع</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* إعادة تعيين الأنماط الأساسية */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            touch-action: manipulation;
+            touch-action: manipulation; /* لتحسين استجابة اللمس */
         }
         
+        /* تعريف المتغيرات CSS للألوان */
         :root {
-            --primary: #ffd700;
-            --secondary: #1a2a6c;
-            --accent: #ff1744;
-            --success: #00e676;
-            --info: #29b6f6;
-            --dark: #0a0a1a;
-            --light: #f0f0ff;
-            --math: #4caf50;
+            --primary: #ffd700; /* ذهبي */
+            --secondary: #1a2a6c; /* أزرق داكن */
+            --accent: #ff1744; /* أحمر ساطع */
+            --success: #00e676; /* أخضر ساطع */
+            --info: #29b6f6; /* أزرق فاتح */
+            --dark: #0a0a1a; /* أسود شبه شفاف */
+            --light: #f0f0ff; /* أبيض مائل للزرقة */
+            --math: #4caf50; /* أخضر للرياضيات */
+            --enemy-hunter: #ff1744; /* أحمر للصياد */
+            --enemy-patrol: #ff9800; /* برتقالي للدورية */
+            --enemy-guard: #29b6f6; /* أزرق للحارس (تم التغيير) */
         }
         
+        /* أنماط الجسم والخلفية */
         body {
             background: linear-gradient(135deg, var(--secondary), #b21f1f, var(--secondary));
             min-height: 100vh;
@@ -35,15 +41,17 @@
             padding: 20px;
             color: var(--light);
             text-align: center;
-            overflow-x: hidden;
+            overflow-x: hidden; /* منع التمرير الأفقي */
         }
         
+        /* حاوية المحتوى الرئيسية */
         .container {
             max-width: 900px;
             width: 100%;
-            perspective: 1000px;
+            perspective: 1000px; /* لإضافة عمق ثلاثي الأبعاد */
         }
         
+        /* أنماط الرأس (Header) */
         header {
             background: rgba(10, 10, 26, 0.85);
             border-radius: 20px;
@@ -51,21 +59,23 @@
             margin-bottom: 25px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
             border: 3px solid var(--primary);
-            transform: translateZ(20px);
-            backdrop-filter: blur(5px);
+            transform: translateZ(20px); /* تأثير ثلاثي الأبعاد */
+            backdrop-filter: blur(5px); /* تأثير ضبابي */
         }
         
+        /* عنوان اللعبة */
         h1 {
             font-size: 3.2rem;
             margin-bottom: 15px;
             color: var(--primary);
             text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             background: linear-gradient(to right, var(--primary), #ff9800);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; /* لجعل الخلفية تتطبق على النص */
+            -webkit-text-fill-color: transparent; /* لجعل النص شفافًا ليظهر الخلفية */
             letter-spacing: 1px;
         }
         
+        /* إحصائيات اللعبة */
         .stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -102,6 +112,7 @@
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
         }
         
+        /* زر تبديل الصوت */
         .sound-toggle {
             position: absolute;
             top: 20px;
@@ -127,6 +138,7 @@
             transform: scale(1.1);
         }
         
+        /* حاوية اللعبة (المتاهة) */
         .game-container {
             position: relative;
             width: 100%;
@@ -136,7 +148,7 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
             border: 3px solid var(--primary);
             margin-bottom: 25px;
-            transform-style: preserve-3d;
+            transform-style: preserve-3d; /* للحفاظ على تأثيرات 3D داخلها */
             transform: translateZ(10px);
         }
         
@@ -144,7 +156,7 @@
             display: grid;
             grid-template-columns: repeat(15, 1fr);
             grid-template-rows: repeat(15, 1fr);
-            aspect-ratio: 1/1;
+            aspect-ratio: 1/1; /* للحفاظ على نسبة العرض إلى الارتفاع */
             margin: 0 auto;
             max-width: 650px;
             position: relative;
@@ -152,15 +164,16 @@
         
         .cell {
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05); /* حدود خفيفة بين الخلايا */
             transition: all 0.3s ease;
             overflow: hidden;
         }
         
         .wall {
-            background: linear-gradient(45deg, #1a237e, #311b92);
+            background: linear-gradient(45deg, #1a237e, #311b92); /* تدرج أزرق بنفسجي */
             box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
-            transform: translateZ(5px);
+            transform: translateZ(5px); /* تأثير عمق للجدران */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* حدود للجدران */
         }
         
         .path {
@@ -168,6 +181,7 @@
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
         }
         
+        /* اللاعب */
         .player {
             position: absolute;
             top: 50%;
@@ -187,16 +201,15 @@
             font-weight: bold;
             font-size: 0.8rem;
         }
-        
+
+        /* الأعداء - أنماط عامة */
         .enemy {
             position: absolute;
             top: 50%;
             left: 50%;
             width: 70%;
             height: 70%;
-            background: radial-gradient(circle, var(--accent), #b2102f);
             border-radius: 50%;
-            box-shadow: 0 0 20px var(--accent);
             z-index: 15;
             transform: translate(-50%, -50%);
             display: flex;
@@ -204,8 +217,30 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            font-size: 1.2rem; /* حجم أكبر للأيقونات */
+            transition: transform 0.3s ease-out; /* حركة سلسة للأعداء */
+        }
+
+        /* أنماط محددة لكل نوع عدو */
+        .enemy.hunter {
+            background: radial-gradient(circle, var(--enemy-hunter), #b2102f);
+            box-shadow: 0 0 20px var(--enemy-hunter);
+            animation: enemy-pulse 1.5s infinite;
+        }
+
+        .enemy.patrol {
+            background: radial-gradient(circle, var(--enemy-patrol), #e65100);
+            box-shadow: 0 0 20px var(--enemy-patrol);
+            animation: enemy-float 2s infinite ease-in-out;
+        }
+
+        .enemy.guard {
+            background: radial-gradient(circle, var(--enemy-guard), #0288d1); /* تم التغيير إلى تدرج أزرق */
+            box-shadow: 0 0 20px var(--enemy-guard);
+            animation: enemy-float 2s infinite ease-in-out; /* تم التغيير إلى حركة طفو */
         }
         
+        /* نقطة الخروج */
         .exit {
             position: absolute;
             top: 50%;
@@ -224,6 +259,7 @@
             color: #8e6000;
         }
         
+        /* العملات */
         .coin {
             position: absolute;
             top: 50%;
@@ -235,8 +271,10 @@
             box-shadow: 0 0 10px var(--info);
             transform: translate(-50%, -50%);
             z-index: 5;
+            animation: float 2s infinite ease-in-out; /* إضافة حركة للعملات */
         }
         
+        /* القوى الإضافية */
         .power-up {
             position: absolute;
             top: 50%;
@@ -253,8 +291,10 @@
             justify-content: center;
             font-size: 0.8rem;
             color: white;
+            animation: pulse-powerup 1.5s infinite ease-in-out; /* إضافة حركة للقوى */
         }
         
+        /* أزرار التحكم */
         .controls {
             display: flex;
             justify-content: center;
@@ -312,6 +352,7 @@
             color: white;
         }
         
+        /* أزرار التحكم باللمس (للجوال) */
         .touch-controls {
             display: flex;
             flex-direction: column;
@@ -352,6 +393,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         
+        /* لوحة الترقيات */
         .upgrades-panel {
             background: rgba(20, 20, 40, 0.9);
             border-radius: 20px;
@@ -408,32 +450,40 @@
             font-size: 1.2rem;
         }
         
-        /* الرسوم المتحركة */
+        /* الرسوم المتحركة للاعب */
         @keyframes pulse {
             0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px var(--success); }
             50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 30px var(--success); }
             100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px var(--success); }
         }
         
+        /* الرسوم المتحركة للأعداء */
         @keyframes enemy-pulse {
-            0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px var(--accent); }
-            50% { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 30px var(--accent); }
-            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px var(--accent); }
+            0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px var(--enemy-hunter); }
+            50% { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 30px var(--enemy-hunter); }
+            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px var(--enemy-hunter); }
         }
-        
-        @keyframes rotate {
+
+        @keyframes enemy-float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-10px); }
+        }
+
+        @keyframes enemy-rotate {
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
-        
+
+        /* الرسوم المتحركة للعملات والقوى */
         @keyframes float {
             0%, 100% { transform: translate(-50%, -50%) translateY(0); }
             50% { transform: translate(-50%, -50%) translateY(-8px); }
         }
-        
-        @keyframes particles {
-            0% { transform: translate(0, 0); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)); opacity: 0; }
+
+        @keyframes pulse-powerup {
+            0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 15px #aa00ff; }
+            50% { transform: translate(-50%, -50%) scale(1.05); box-shadow: 0 0 20px #aa00ff; }
+            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 15px #aa00ff; }
         }
         
         /* تأثيرات الجسيمات */
@@ -446,7 +496,12 @@
             z-index: 30;
         }
         
-        /* الرسائل */
+        @keyframes particles {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)); opacity: 0; }
+        }
+        
+        /* الرسائل العامة (فوز، خسارة، ترحيب) */
         .message {
             position: fixed;
             top: 0;
@@ -813,17 +868,17 @@
             cols: 15,
             level: 1,
             score: 0,
-            enemies: 3,
+            enemies: 3, // عدد الأعداء الأولي
             gameTime: 60,
             playerPos: {row: 1, col: 1},
             exitPos: {row: 13, col: 13},
             coins: [],
             powerUps: [],
-            enemiesPos: [],
+            enemiesPos: [], // يحتوي الآن على نوع العدو أيضًا
             gameActive: false,
             timerInterval: null,
             enemyMoveInterval: null,
-            playerSpeed: 200,
+            playerSpeed: 200, // سرعة حركة اللاعب
             upgrades: {
                 speed: { level: 0, cost: 100 },
                 vision: { level: 0, cost: 150 },
@@ -831,7 +886,8 @@
                 time: { level: 0, cost: 250 }
             },
             soundEnabled: true,
-            audioContext: null
+            audioContext: null,
+            isFrozen: false // حالة تجميد الأعداء
         };
 
         // إنشاء مؤثرات صوتية
@@ -841,6 +897,13 @@
             }
         }
         
+        /**
+         * تشغيل صوت بتردد ونوع معين.
+         * @param {number} frequency - تردد الصوت بالهرتز.
+         * @param {string} type - نوع الموجة (sine, square, sawtooth, triangle).
+         * @param {number} duration - مدة الصوت بالثواني.
+         * @param {number} volume - مستوى الصوت (0 إلى 1).
+         */
         function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
             if (!config.soundEnabled) return;
             if (!config.audioContext) initAudioContext();
@@ -867,19 +930,27 @@
                 '<i class="fas fa-volume-mute"></i>';
             
             if (config.soundEnabled) {
-                playSound(523.25, 'sine', 0.1, 0.3);
+                playSound(523.25, 'sine', 0.1, 0.3); // صوت عند تشغيل الصوت
             }
         }
 
-        // أنماط المتاهة لكل مستوى
+        // أنماط المتاهة لكل مستوى (يتم توليدها ديناميكيًا)
         const mazePatterns = Array(10).fill().map((_, level) => {
-            return generateMazePattern(15, 15, level + 1);
+            return generateMazePattern(config.rows, config.cols, level + 1);
         });
 
-        // وظيفة لإنشاء نمط متاهة ديناميكي
+        /**
+         * وظيفة لإنشاء نمط متاهة ديناميكي.
+         * تعتمد على مستوى اللعبة لزيادة التعقيد.
+         * @param {number} rows - عدد الصفوف.
+         * @param {number} cols - عدد الأعمدة.
+         * @param {number} level - مستوى اللعبة.
+         * @returns {Array<Array<number>>} مصفوفة تمثل المتاهة (0 للمسار، 1 للجدار).
+         */
         function generateMazePattern(rows, cols, level) {
             const grid = Array(rows).fill().map(() => Array(cols).fill(0));
             
+            // إنشاء حدود المتاهة
             for (let i = 0; i < rows; i++) {
                 grid[i][0] = 1;
                 grid[i][cols-1] = 1;
@@ -889,9 +960,11 @@
                 grid[rows-1][j] = 1;
             }
             
-            const complexity = Math.min(0.75, 0.3 + level * 0.05);
-            const density = Math.min(0.3, 0.1 + level * 0.02);
+            // تعقيد وكثافة الجدران بناءً على المستوى
+            const complexity = Math.min(0.75, 0.3 + level * 0.05); // زيادة تعقيد المتاهة
+            const density = Math.min(0.3, 0.1 + level * 0.02); // زيادة كثافة الجدران
             
+            // توليد جدران عشوائية
             for (let i = 2; i < rows-2; i += 2) {
                 for (let j = 2; j < cols-2; j += 2) {
                     if (Math.random() < density) {
@@ -911,9 +984,11 @@
                 }
             }
             
-            grid[1][1] = 0;
-            grid[rows-2][cols-2] = 0;
+            // ضمان وجود مسار للاعب ونقطة الخروج
+            grid[1][1] = 0; // موقع اللاعب
+            grid[rows-2][cols-2] = 0; // موقع الخروج
             
+            // إزالة بعض الجدران لضمان قابلية الحل (بناءً على التعقيد)
             for (let i = 1; i < rows-1; i++) {
                 for (let j = 1; j < cols-1; j++) {
                     if (grid[i][j] === 1 && Math.random() < complexity) {
@@ -928,45 +1003,48 @@
         // تهيئة اللعبة
         function initGame() {
             config.gameActive = true;
-            config.enemies = 2 + config.level;
-            config.gameTime = 60 - (config.level * 3);
+            config.enemies = 2 + config.level; // زيادة عدد الأعداء مع المستوى
+            config.gameTime = 60 + (config.level * 5); // زيادة الوقت مع المستوى
             config.playerPos = {row: 1, col: 1};
             config.exitPos = {row: config.rows - 2, col: config.cols - 2};
             config.coins = [];
             config.powerUps = [];
             config.enemiesPos = [];
-            
+            config.isFrozen = false; // إعادة تعيين حالة التجميد
+
+            // تحديث عناصر واجهة المستخدم
             levelElement.textContent = config.level;
             scoreElement.textContent = config.score;
             enemiesCountElement.textContent = config.enemies;
             timerElement.textContent = config.gameTime;
             
-            createMaze();
-            updatePlayerPosition();
-            
+            createMaze(); // بناء المتاهة
+            updatePlayerPosition(); // وضع اللاعب
+
+            // وضع نقطة الخروج
             const exitCell = getCell(config.exitPos.row, config.exitPos.col);
             const exitElement = document.createElement('div');
             exitElement.classList.add('exit');
             exitElement.innerHTML = '<i class="fas fa-flag"></i>';
             exitCell.appendChild(exitElement);
             
-            generateCoins();
-            generatePowerUps();
-            generateEnemies();
+            generateCoins(); // توليد العملات
+            generatePowerUps(); // توليد القوى الإضافية
+            generateEnemies(); // توليد الأعداء
             
-            startTimer();
-            startEnemyMovement();
+            startTimer(); // بدء المؤقت
+            startEnemyMovement(); // بدء حركة الأعداء
             
-            playSound(659.25, 'sine', 0.5, 0.3);
+            playSound(659.25, 'sine', 0.5, 0.3); // صوت بداية اللعبة
         }
 
-        // إنشاء المتاهة
+        // إنشاء المتاهة في DOM
         function createMaze() {
-            mazeElement.innerHTML = '';
+            mazeElement.innerHTML = ''; // مسح المتاهة القديمة
             mazeElement.style.gridTemplateColumns = `repeat(${config.cols}, 1fr)`;
             mazeElement.style.gridTemplateRows = `repeat(${config.rows}, 1fr)`;
             
-            const pattern = mazePatterns[config.level - 1] || mazePatterns[0];
+            const pattern = mazePatterns[config.level - 1] || mazePatterns[0]; // اختيار نمط المتاهة للمستوى الحالي
             
             for (let row = 0; row < config.rows; row++) {
                 for (let col = 0; col < config.cols; col++) {
@@ -974,9 +1052,9 @@
                     cell.classList.add('cell');
                     
                     if (pattern[row][col] === 1) {
-                        cell.classList.add('wall');
+                        cell.classList.add('wall'); // جدار
                     } else {
-                        cell.classList.add('path');
+                        cell.classList.add('path'); // مسار
                     }
                     
                     mazeElement.appendChild(cell);
@@ -984,53 +1062,55 @@
             }
         }
 
-        // تحديث موقع اللاعب
+        // تحديث موقع اللاعب في DOM
         function updatePlayerPosition() {
-            document.querySelectorAll('.player').forEach(el => el.remove());
+            document.querySelectorAll('.player').forEach(el => el.remove()); // إزالة اللاعب القديم
             
             const playerCell = getCell(config.playerPos.row, config.playerPos.col);
             const playerElement = document.createElement('div');
             playerElement.classList.add('player');
-            playerElement.innerHTML = '<i class="fas fa-user"></i>';
-            playerElement.style.animation = `pulse 1.5s infinite`;
+            playerElement.innerHTML = '<i class="fas fa-user-astronaut"></i>'; // أيقونة لاعب جديدة
+            playerElement.style.animation = `pulse 1.5s infinite`; // تأثير نبض
             playerCell.appendChild(playerElement);
         }
 
-        // توليد العملات
+        // توليد العملات في المتاهة
         function generateCoins() {
             const pattern = mazePatterns[config.level - 1] || mazePatterns[0];
             
-            for (let i = 0; i < 5 + config.level; i++) {
+            for (let i = 0; i < 5 + config.level; i++) { // زيادة عدد العملات مع المستوى
                 let row, col;
                 
+                // البحث عن موقع عشوائي فارغ
                 do {
                     row = Math.floor(Math.random() * config.rows);
                     col = Math.floor(Math.random() * config.cols);
                 } while (
-                    pattern[row][col] === 1 || 
-                    (row === config.playerPos.row && col === config.playerPos.col) ||
-                    (row === config.exitPos.row && col === config.exitPos.col) ||
-                    config.coins.some(coin => coin.row === row && coin.col === col)
+                    pattern[row][col] === 1 || // ليس جدارًا
+                    (row === config.playerPos.row && col === config.playerPos.col) || // ليس موقع اللاعب
+                    (row === config.exitPos.row && col === config.exitPos.col) || // ليس موقع الخروج
+                    config.coins.some(coin => coin.row === row && coin.col === col) // لا يوجد عملة أخرى هنا
                 );
                 
                 config.coins.push({row, col});
                 const coinCell = getCell(row, col);
                 const coinElement = document.createElement('div');
                 coinElement.classList.add('coin');
-                coinElement.style.animation = `float 2s infinite ease-in-out`;
+                coinElement.innerHTML = '<i class="fas fa-coins"></i>'; // أيقونة العملة
                 coinCell.appendChild(coinElement);
             }
         }
 
-        // توليد القوى الإضافية
+        // توليد القوى الإضافية في المتاهة
         function generatePowerUps() {
             const pattern = mazePatterns[config.level - 1] || mazePatterns[0];
             const powerUpTypes = ['speed', 'vision', 'freeze', 'time'];
             
-            for (let i = 0; i < Math.min(2, config.level); i++) {
+            for (let i = 0; i < Math.min(2, config.level); i++) { // عدد محدود من القوى
                 let row, col;
-                const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+                const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)]; // اختيار نوع عشوائي
                 
+                // البحث عن موقع عشوائي فارغ
                 do {
                     row = Math.floor(Math.random() * config.rows);
                     col = Math.floor(Math.random() * config.cols);
@@ -1047,6 +1127,7 @@
                 const powerUpElement = document.createElement('div');
                 powerUpElement.classList.add('power-up');
                 
+                // تعيين أيقونة بناءً على نوع القوة
                 switch(type) {
                     case 'speed':
                         powerUpElement.innerHTML = '<i class="fas fa-bolt"></i>';
@@ -1058,7 +1139,7 @@
                         powerUpElement.innerHTML = '<i class="fas fa-snowflake"></i>';
                         break;
                     case 'time':
-                        powerUpElement.innerHTML = '<i class="fas fa-clock"></i>';
+                        powerUpElement.innerHTML = '<i class="fas fa-hourglass-half"></i>'; // أيقونة ساعة رملية
                         break;
                 }
                 
@@ -1066,13 +1147,16 @@
             }
         }
 
-        // توليد الأعداء
+        // توليد الأعداء في المتاهة
         function generateEnemies() {
             const pattern = mazePatterns[config.level - 1] || mazePatterns[0];
+            const enemyTypes = ['hunter', 'patrol', 'guard']; // أنواع الأعداء المتاحة
             
             for (let i = 0; i < config.enemies; i++) {
                 let row, col;
+                const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)]; // اختيار نوع عشوائي
                 
+                // البحث عن موقع عشوائي فارغ للأعداء
                 do {
                     row = Math.floor(Math.random() * config.rows);
                     col = Math.floor(Math.random() * config.cols);
@@ -1084,21 +1168,39 @@
                     config.enemiesPos.some(enemy => enemy.row === row && enemy.col === col)
                 );
                 
-                config.enemiesPos.push({row, col, type: 'hunter'});
+                config.enemiesPos.push({row, col, type}); // تخزين نوع العدو أيضًا
                 const enemyCell = getCell(row, col);
                 const enemyElement = document.createElement('div');
-                enemyElement.classList.add('enemy');
-                enemyElement.style.animation = `enemy-pulse 1.5s infinite`;
+                enemyElement.classList.add('enemy', type); // إضافة فئة النوع للتحكم بالأنماط
+                
+                // تعيين أيقونة بناءً على نوع العدو
+                switch(type) {
+                    case 'hunter':
+                        enemyElement.innerHTML = '<i class="fas fa-skull"></i>'; // أيقونة جمجمة
+                        break;
+                    case 'patrol':
+                        enemyElement.innerHTML = '<i class="fas fa-robot"></i>'; // أيقونة روبوت
+                        break;
+                    case 'guard':
+                        enemyElement.innerHTML = '<i class="fas fa-ghost"></i>'; // أيقونة شبح
+                        break;
+                }
+                
                 enemyCell.appendChild(enemyElement);
             }
         }
 
-        // الحصول على خلية محددة
+        /**
+         * الحصول على عنصر الخلية في DOM بناءً على الصف والعمود.
+         * @param {number} row - رقم الصف.
+         * @param {number} col - رقم العمود.
+         * @returns {HTMLElement} عنصر الخلية.
+         */
         function getCell(row, col) {
             return mazeElement.children[row * config.cols + col];
         }
 
-        // بدء المؤقت
+        // بدء المؤقت التنازلي للعبة
         function startTimer() {
             if (config.timerInterval) {
                 clearInterval(config.timerInterval);
@@ -1109,29 +1211,31 @@
                 timerElement.textContent = config.gameTime;
                 
                 if (config.gameTime <= 0) {
-                    endGame(false);
+                    endGame(false); // انتهاء الوقت = خسارة
                 }
             }, 1000);
         }
         
-        // بدء حركة الأعداء
+        // بدء حركة الأعداء بناءً على سرعتهم المحددة
         function startEnemyMovement() {
             if (config.enemyMoveInterval) {
                 clearInterval(config.enemyMoveInterval);
             }
             
-            const speed = Math.max(300, 1200 - (config.level * 100));
+            // سرعة حركة الأعداء تزداد مع المستوى
+            const speed = Math.max(200, 1000 - (config.level * 80)); // أسرع قليلاً من السابق
             config.enemyMoveInterval = setInterval(() => {
-                if (config.gameActive) {
+                if (config.gameActive && !config.isFrozen) { // لا تتحرك إذا كانت مجمدة
                     moveEnemies();
                 }
             }, speed);
         }
 
-        // تحريك الأعداء بذكاء
+        // تحريك الأعداء بذكاء بناءً على نوعهم
         function moveEnemies() {
             const pattern = mazePatterns[config.level - 1] || mazePatterns[0];
             
+            // إزالة الأعداء من مواقعهم الحالية قبل تحريكهم
             document.querySelectorAll('.enemy').forEach(el => el.remove());
             
             config.enemiesPos.forEach((enemy, index) => {
@@ -1140,16 +1244,22 @@
                 
                 switch(enemy.type) {
                     case 'hunter':
+                        // يتحرك الصياد نحو اللاعب (أقرب مسافة)
                         const rowDiff = config.playerPos.row - enemy.row;
                         const colDiff = config.playerPos.col - enemy.col;
                         
-                        if (Math.abs(rowDiff) > Math.abs(colDiff)) {
+                        let moved = false;
+                        if (Math.abs(rowDiff) > Math.abs(colDiff)) { // تفضيل الحركة الرأسية
                             if (rowDiff > 0 && pattern[enemy.row + 1][enemy.col] === 0) {
                                 newRow++;
+                                moved = true;
                             } else if (rowDiff < 0 && pattern[enemy.row - 1][enemy.col] === 0) {
                                 newRow--;
+                                moved = true;
                             }
-                        } else {
+                        } 
+                        
+                        if (!moved) { // إذا لم يتحرك رأسياً، حاول أفقياً
                             if (colDiff > 0 && pattern[enemy.row][enemy.col + 1] === 0) {
                                 newCol++;
                             } else if (colDiff < 0 && pattern[enemy.row][enemy.col - 1] === 0) {
@@ -1158,17 +1268,16 @@
                         }
                         break;
                     
-                    case 'guard':
+                    case 'patrol':
+                        // يتحرك العدو الدورية بشكل عشوائي في اتجاهات صالحة
                         const directions = [
-                            {row: -1, col: 0},
-                            {row: 1, col: 0},
-                            {row: 0, col: -1},
-                            {row: 0, col: 1}
+                            {dr: -1, dc: 0}, {dr: 1, dc: 0},
+                            {dr: 0, dc: -1}, {dr: 0, dc: 1}
                         ];
                         
                         const validMoves = directions.filter(dir => {
-                            const nextRow = enemy.row + dir.row;
-                            const nextCol = enemy.col + dir.col;
+                            const nextRow = enemy.row + dir.dr;
+                            const nextCol = enemy.col + dir.dc;
                             return (
                                 nextRow >= 0 && nextRow < config.rows &&
                                 nextCol >= 0 && nextCol < config.cols &&
@@ -1178,47 +1287,75 @@
                         
                         if (validMoves.length > 0) {
                             const move = validMoves[Math.floor(Math.random() * validMoves.length)];
-                            newRow = enemy.row + move.row;
-                            newCol = enemy.col + move.col;
+                            newRow = enemy.row + move.dr;
+                            newCol = enemy.col + move.dc;
                         }
                         break;
                     
-                    case 'patrol':
-                        if (Math.random() > 0.7) {
-                            if (Math.random() > 0.5) {
-                                if (pattern[enemy.row][enemy.col + 1] === 0) newCol++;
-                                else if (pattern[enemy.row][enemy.col - 1] === 0) newCol--;
-                            } else {
-                                if (pattern[enemy.row + 1][enemy.col] === 0) newRow++;
-                                else if (pattern[enemy.row - 1][enemy.col] === 0) newRow--;
+                    case 'guard':
+                        // يتحرك الحارس بشكل عشوائي ولكن بتردد أقل
+                        // أو يبقى في مكانه مع فرصة بسيطة للحركة
+                        if (Math.random() < 0.3) { // 30% فرصة للحركة
+                            const guardDirections = [
+                                {dr: -1, dc: 0}, {dr: 1, dc: 0},
+                                {dr: 0, dc: -1}, {dr: 0, dc: 1}
+                            ];
+                            const guardValidMoves = guardDirections.filter(dir => {
+                                const nextRow = enemy.row + dir.dr;
+                                const nextCol = enemy.col + dir.dc;
+                                return (
+                                    nextRow >= 0 && nextRow < config.rows &&
+                                    nextCol >= 0 && nextCol < config.cols &&
+                                    pattern[nextRow][nextCol] === 0
+                                );
+                            });
+                            if (guardValidMoves.length > 0) {
+                                const move = guardValidMoves[Math.floor(Math.random() * guardValidMoves.length)];
+                                newRow = enemy.row + move.dr;
+                                newCol = enemy.col + move.dc;
                             }
                         }
                         break;
                 }
                 
+                // تحديث موقع العدو
                 config.enemiesPos[index].row = newRow;
                 config.enemiesPos[index].col = newCol;
                 
+                // إعادة رسم العدو في موقعه الجديد
                 const enemyCell = getCell(newRow, newCol);
                 const enemyElement = document.createElement('div');
-                enemyElement.classList.add('enemy');
-                enemyElement.style.animation = `enemy-pulse 1.5s infinite`;
+                enemyElement.classList.add('enemy', enemy.type); // إضافة فئة النوع
+                // تعيين أيقونة بناءً على نوع العدو
+                switch(enemy.type) {
+                    case 'hunter':
+                        enemyElement.innerHTML = '<i class="fas fa-skull"></i>';
+                        break;
+                    case 'patrol':
+                        enemyElement.innerHTML = '<i class="fas fa-robot"></i>';
+                        break;
+                    case 'guard':
+                        enemyElement.innerHTML = '<i class="fas fa-ghost"></i>'; // أيقونة شبح
+                        break;
+                }
                 enemyCell.appendChild(enemyElement);
                 
+                // التحقق من الاصطدام باللاعب
                 if (newRow === config.playerPos.row && newCol === config.playerPos.col) {
-                    endGame(false);
+                    endGame(false); // اصطدام = خسارة
                 }
             });
         }
 
         // تحريك اللاعب
         function movePlayer(direction) {
-            if (!config.gameActive) return;
+            if (!config.gameActive) return; // لا تتحرك إذا كانت اللعبة غير نشطة
             
             const pattern = mazePatterns[config.level - 1] || mazePatterns[0];
             let newRow = config.playerPos.row;
             let newCol = config.playerPos.col;
             
+            // تحديد الموقع الجديد بناءً على الاتجاه
             switch(direction) {
                 case 'up':
                     newRow--;
@@ -1234,6 +1371,7 @@
                     break;
             }
             
+            // التحقق من صلاحية الحركة (داخل الحدود وليس جدارًا)
             if (
                 newRow >= 0 && newRow < config.rows && 
                 newCol >= 0 && newCol < config.cols && 
@@ -1241,23 +1379,31 @@
             ) {
                 config.playerPos.row = newRow;
                 config.playerPos.col = newCol;
-                updatePlayerPosition();
+                updatePlayerPosition(); // تحديث موقع اللاعب في DOM
                 
-                playSound(261.63, 'sine', 0.05, 0.2);
+                playSound(261.63, 'sine', 0.05, 0.2); // صوت حركة اللاعب
                 
-                checkCoinCollection();
-                checkPowerUpCollection();
+                checkCoinCollection(); // التحقق من جمع العملات
+                checkPowerUpCollection(); // التحقق من جمع القوى الإضافية
                 
+                // التحقق من الوصول إلى نقطة الخروج
                 if (newRow === config.exitPos.row && newCol === config.exitPos.col) {
-                    endGame(true);
+                    endGame(true); // وصول إلى الخروج = فوز
                 }
             }
         }
 
-        // إنشاء تأثير جسيمات
+        /**
+         * إنشاء تأثير جسيمات عند جمع العملات أو القوى.
+         * @param {number} row - صف الخلية.
+         * @param {number} col - عمود الخلية.
+         * @param {string} color - لون الجسيمات.
+         * @param {number} count - عدد الجسيمات.
+         */
         function createParticles(row, col, color, count = 15) {
             const cell = getCell(row, col);
             const rect = cell.getBoundingClientRect();
+            // تحديد مركز الخلية على الشاشة
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
             
@@ -1268,6 +1414,7 @@
                 particle.style.left = `${centerX}px`;
                 particle.style.top = `${centerY}px`;
                 
+                // تحديد اتجاه وسرعة عشوائية للجسيمات
                 const angle = Math.random() * Math.PI * 2;
                 const speed = 2 + Math.random() * 4;
                 const tx = Math.cos(angle) * speed * 20;
@@ -1279,6 +1426,7 @@
                 
                 document.body.appendChild(particle);
                 
+                // إزالة الجسيم بعد انتهاء الرسوم المتحركة
                 setTimeout(() => {
                     particle.remove();
                 }, 800);
@@ -1294,14 +1442,14 @@
             );
             
             if (coinIndex !== -1) {
-                config.coins.splice(coinIndex, 1);
-                playerCell.querySelector('.coin')?.remove();
+                config.coins.splice(coinIndex, 1); // إزالة العملة من المصفوفة
+                playerCell.querySelector('.coin')?.remove(); // إزالة العملة من DOM
                 
-                config.score += 10;
+                config.score += 10; // زيادة النقاط
                 scoreElement.textContent = config.score;
                 
-                playSound(1046.50, 'sine', 0.2, 0.3);
-                createParticles(config.playerPos.row, config.playerPos.col, '#29b6f6');
+                playSound(1046.50, 'sine', 0.2, 0.3); // صوت جمع العملة
+                createParticles(config.playerPos.row, config.playerPos.col, '#29b6f6'); // تأثير جسيمات
             }
         }
 
@@ -1316,12 +1464,12 @@
             if (powerUpIndex !== -1) {
                 const powerUp = config.powerUps[powerUpIndex];
                 
-                config.powerUps.splice(powerUpIndex, 1);
-                playerCell.querySelector('.power-up')?.remove();
+                config.powerUps.splice(powerUpIndex, 1); // إزالة القوة من المصفوفة
+                playerCell.querySelector('.power-up')?.remove(); // إزالة القوة من DOM
                 
-                playSound(830.61, 'sine', 0.3, 0.3);
-                applyPowerUp(powerUp.type);
-                createParticles(config.playerPos.row, config.playerPos.col, '#aa00ff', 25);
+                playSound(830.61, 'sine', 0.3, 0.3); // صوت جمع القوة
+                applyPowerUp(powerUp.type); // تطبيق تأثير القوة
+                createParticles(config.playerPos.row, config.playerPos.col, '#aa00ff', 25); // تأثير جسيمات
             }
         }
 
@@ -1329,24 +1477,30 @@
         function applyPowerUp(type) {
             switch(type) {
                 case 'speed':
-                    config.playerSpeed = Math.max(50, config.playerSpeed - 30);
+                    config.playerSpeed = Math.max(50, config.playerSpeed - 30); // زيادة سرعة اللاعب
                     showPowerUpMessage('زيادة السرعة!');
                     break;
                 case 'vision':
+                    // يمكن إضافة تأثير رؤية مسارات الأعداء هنا (مثلاً، إظهار خطوط)
                     showPowerUpMessage('رؤية مسارات الأعداء!');
                     break;
                 case 'freeze':
+                    config.isFrozen = true;
                     showPowerUpMessage('تجميد الأعداء!');
+                    setTimeout(() => {
+                        config.isFrozen = false;
+                        showPowerUpMessage('عاد الأعداء للحركة!');
+                    }, 5000); // تجميد لمدة 5 ثواني
                     break;
                 case 'time':
-                    config.gameTime += 15;
+                    config.gameTime += 15; // إضافة وقت
                     timerElement.textContent = config.gameTime;
                     showPowerUpMessage('+15 ثانية!');
                     break;
             }
         }
 
-        // عرض رسالة القوة الإضافية
+        // عرض رسالة القوة الإضافية (تظهر وتختفي)
         function showPowerUpMessage(text) {
             const message = document.createElement('div');
             message.textContent = text;
@@ -1368,15 +1522,15 @@
             }, 2000);
         }
 
-        // إنهاء اللعبة
+        // إنهاء اللعبة (فوز أو خسارة)
         function endGame(isWin) {
             config.gameActive = false;
             clearInterval(config.timerInterval);
             clearInterval(config.enemyMoveInterval);
             
             if (isWin) {
-                config.score += config.gameTime * 2;
-                config.score += config.level * 50;
+                config.score += config.gameTime * 2; // نقاط إضافية للوقت المتبقي
+                config.score += config.level * 50; // نقاط إضافية للمستوى
                 scoreElement.textContent = config.score;
                 
                 // عرض سؤال الأسس بدلاً من نافذة الفوز مباشرة
@@ -1384,12 +1538,12 @@
             } else {
                 loseScoreElement.textContent = config.score;
                 loseMessage.classList.remove('hidden');
-                playSound(155.56, 'sine', 0.5, 0.3);
+                playSound(155.56, 'sine', 0.5, 0.3); // صوت خسارة
                 setTimeout(() => playSound(138.59, 'sine', 0.5, 0.3), 150);
             }
         }
 
-        // توليد سؤال في قوانين الأسس للصف السابع
+        // توليد سؤال في قوانين الأسس للصف السابع (لم يتم التعديل عليه بناءً على طلب المستخدم)
         function generateMathQuestion() {
             const questionTypes = [
                 'multiply_same_base', 
@@ -1663,7 +1817,7 @@
             }
         });
 
-        // تهيئة أحداث اللمس
+        // تهيئة أحداث اللمس (أزرار التحكم على الشاشة)
         upBtn.addEventListener('click', () => movePlayer('up'));
         downBtn.addEventListener('click', () => movePlayer('down'));
         leftBtn.addEventListener('click', () => movePlayer('left'));
@@ -1682,33 +1836,36 @@
                     config.score -= config.upgrades[upgrade].cost;
                     scoreElement.textContent = config.score;
                     config.upgrades[upgrade].level++;
-                    config.upgrades[upgrade].cost = Math.floor(config.upgrades[upgrade].cost * 1.5);
+                    config.upgrades[upgrade].cost = Math.floor(config.upgrades[upgrade].cost * 1.5); // زيادة تكلفة الترقية
                     
                     playSound(392.00, 'sine', 0.2, 0.3);
                     item.querySelector('.upgrade-cost').textContent = `${config.upgrades[upgrade].cost} نقطة`;
-                    applyUpgrade(upgrade);
+                    applyUpgrade(upgrade); // تطبيق تأثير الترقية
                 } else {
-                    playSound(220.00, 'sine', 0.2, 0.3);
+                    playSound(220.00, 'sine', 0.2, 0.3); // صوت خطأ
                 }
             });
         });
         
-        // تطبيق الترقية
+        // تطبيق الترقية المشتراة
         function applyUpgrade(upgrade) {
             switch(upgrade) {
                 case 'speed':
-                    config.playerSpeed = Math.max(50, config.playerSpeed - 30);
+                    config.playerSpeed = Math.max(50, config.playerSpeed - 30); // تقليل وقت حركة اللاعب
                     break;
                 case 'vision':
+                    // يمكن إضافة منطق رؤية الأعداء هنا
                     break;
                 case 'freeze':
+                    // منطق التجميد يتم تطبيقه مباشرة عند جمع القوة
                     break;
                 case 'time':
+                    // منطق إضافة الوقت يتم تطبيقه مباشرة عند جمع القوة
                     break;
             }
         }
 
-        // تهيئة الأحداث
+        // تهيئة الأحداث لأزرار التحكم الرئيسية
         startBtn.addEventListener('click', () => {
             playSound(261.63, 'sine', 0.1, 0.3);
             welcomeMessage.classList.add('hidden');
@@ -1740,8 +1897,9 @@
         // حدث تبديل الصوت
         soundToggle.addEventListener('click', toggleSound);
 
-        // تهيئة رسالة الترحيب
+        // إظهار رسالة الترحيب عند تحميل الصفحة
         welcomeMessage.classList.remove('hidden');
     </script>
 </body>
 </html>
+
