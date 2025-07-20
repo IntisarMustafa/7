@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أولويات العمليات الحسابية - تعلم بطريقة تفاعلية</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Inter for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax for mathematical expressions -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* Define a modern and vibrant color palette based on the provided template */
+        :root {
+            --primary-blue: #3a7bd5; /* From template header/buttons */
+            --secondary-blue: #00d2ff; /* Lighter blue from template header/buttons */
+            --primary-green: #4caf50; /* From template correct/check buttons */
+            --secondary-green: #2e7d32; /* Darker green from template correct/check buttons */
+            --primary-orange: #ff9800; /* From template example titles/toggle buttons */
+            --secondary-orange: #ff5722; /* Darker orange from template toggle buttons */
+            --accent-red: #f44336; /* From template incorrect feedback */
+            --dark-red: #d32f2f; /* Darker red from template incorrect feedback */
+            --gold-accent: #ffd700; /* Gold from template borders/highlights */
+            --dark-gold: #ff8c00; /* Darker gold from template next page button */
+
+            --body-background-start: #F0F4F8; /* Light blue-grey, keeping light theme */
+            --body-background-end: #FFFFFF; /* White, keeping light theme */
+            
+            --card-surface: #FFFFFF; /* Solid white for card backgrounds */
+            --card-background-alpha: rgba(255, 255, 255, 0.95); /* Slightly transparent white for container */
+
+            --text-dark: #333333; /* Dark text for readability on light backgrounds */
+            --text-medium: #555555; /* Medium grey for secondary info */
+            --text-light: white; /* White text for dark backgrounds/gradients */
+
+            --border-light: #e0e0e0; /* Subtle light border */
+            --shadow-subtle: 0 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            --shadow-elevated: 0 10px 30px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
+        }
+        
+        /* Basic reset and font application */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif; /* Apply Inter font */
+        }
+        
+        /* Body styling with a sophisticated gradient background */
+        body {
+            background: linear-gradient(135deg, var(--body-background-start) 0%, var(--body-background-end) 100%);
+            color: var(--text-dark); /* Dark text on light background */
+            line-height: 1.6;
+            padding: 20px; /* Default padding for larger screens */
+            min-height: 100vh;
+            display: flex; /* Use flexbox for centering content */
+            justify-content: center;
+            align-items: flex-start; /* Align to top, not center vertically */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        
+        /* Main container for content */
+        .container {
+            max-width: 1200px;
+            width: 100%; /* Ensure it takes full width on smaller screens */
+            margin: 0 auto;
+            padding: 0 15px; /* Add horizontal padding for mobile */
+            background-color: var(--card-background-alpha); /* Slightly transparent white */
+            border-radius: 20px;
+            box-shadow: var(--shadow-elevated);
+            overflow: hidden;
+        }
+        
+        /* Header styling */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue)); /* Blue gradient from template */
+            color: var(--text-light); /* White text */
+            border-radius: 20px 20px 0 0; /* Rounded top corners, flat bottom */
+            box-shadow: var(--shadow-elevated); /* More pronounced shadow */
+            animation: fadeIn 1s ease forwards; /* Use forwards to keep final state */
+            border-bottom: 5px solid var(--gold-accent); /* Gold border from template */
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent 70%); /* Subtle white glow */
+            animation: rotateBackground 20s linear infinite;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--text-light); /* White text for title */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Shadow from template */
+            position: relative; /* Ensure text is above pseudo-element */
+            z-index: 1;
+        }
+        
+        header p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-light); /* White text for description */
+            opacity: 0.95; /* Opacity from template */
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Priority steps section */
+        .priority-steps {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin: 50px 0;
+        }
+        
+        /* Individual step card styling */
+        .step-card {
+            background: var(--card-surface); /* Solid white background */
+            border-radius: 15px;
+            padding: 30px;
+            width: 240px; /* Default width */
+            text-align: center;
+            box-shadow: var(--shadow-subtle); /* Subtle shadow */
+            transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+            border: 1px solid var(--border-light); /* Subtle border */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(58, 123, 213, 0.05), rgba(0, 210, 255, 0.05)); /* Subtle blue gradient on hover */
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .step-card:hover::before {
+            opacity: 1;
+        }
+
+        .step-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: var(--shadow-elevated); /* More pronounced shadow on hover */
+            background: #F8F8F8; /* Slightly off-white on hover */
+        }
+        
+        .step-number {
+            background: linear-gradient(45deg, var(--primary-blue), var(--secondary-blue)); /* Blue gradient for numbers */
+            color: var(--text-light); /* White text */
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Darker shadow for numbers */
+            border: 2px solid rgba(255, 255, 255, 0.5); /* White border for numbers */
+        }
+        
+        .step-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--primary-blue); /* Primary blue for step titles */
+        }
+        
+        .step-card p {
+            font-size: 1.1rem;
+            color: var(--text-medium); /* Medium grey for step descriptions */
+        }
+        
+        /* Main content grid layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr; /* Default to single column for mobile */
+            gap: 30px;
+            padding: 20px; /* Padding for the content area */
+        }
+        
+        /* Section styling */
+        .section {
+            background: var(--card-surface); /* Solid white background */
+            border-radius: 15px; /* From template */
+            padding: 25px; /* From template */
+            box-shadow: var(--shadow-subtle); /* Subtle shadow from template */
+            animation: slideUp 0.8s ease forwards;
+            border: 1px solid var(--border-light); /* Subtle border from template */
+        }
+        
+        .section-title {
+            color: var(--primary-blue); /* Primary blue from template */
+            margin-bottom: 20px; /* From template */
+            padding-bottom: 10px; /* From template */
+            border-bottom: 2px solid var(--gold-accent); /* Gold border from template */
+            font-size: 1.7rem; /* From template */
+            display: flex;
+            align-items: center;
+            gap: 12px; /* From template */
+            text-align: right; /* Ensure RTL alignment */
+        }
+
+        .section-title i {
+            margin-left: 10px; /* Adjust margin for RTL */
+            color: var(--gold-accent); /* Gold icon from template */
+        }
+        
+        /* Example box styling */
+        .example {
+            background: linear-gradient(135deg, #fffde7, #fff9c4); /* Light yellow gradient from template examples */
+            border-radius: 10px; /* From template */
+            padding: 20px; /* From template */
+            margin-bottom: 20px; /* From template */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* From template */
+        }
+        
+        .example h3 {
+            font-size: 1.3rem; /* From template */
+            color: var(--primary-orange); /* Orange from template */
+            margin-bottom: 15px;
+            display: flex; /* To align icon */
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Mathematical expression display */
+        .expression {
+            font-size: 1.3rem; /* From template */
+            text-align: center;
+            margin: 20px 0; /* From template */
+            padding: 12px; /* From template */
+            background-color: #f9f9f9; /* From template */
+            border-radius: 10px; /* From template */
+            border: 2px dashed var(--primary-blue); /* Blue dashed border from template */
+            font-family: 'Cambria Math', serif; /* Keep specific math font */
+            color: var(--text-dark); /* Dark text for expressions */
+        }
+        
+        /* Solution box styling */
+        .solution {
+            padding: 15px; /* From template */
+            background-color: #f5f5f5; /* Light grey from template */
+            border-radius: 8px; /* From template */
+            margin-top: 15px; /* From template */
+            display: none; /* Hidden by default */
+            font-size: 1.05rem; /* From template */
+            border-right: 3px solid var(--primary-green); /* Green border from template */
+            color: var(--text-dark); /* Dark text */
+        }
+        
+        .solution-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 0; /* Remove padding here, it's on .solution */
+            background: none; /* No background for steps */
+            border-radius: 0;
+            transition: none;
+        }
+
+        .solution-step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .solution-step i {
+            color: var(--primary-green); /* Primary green for check icons */
+            font-size: 1.3rem;
+            margin-left: 15px; /* Adjust margin for RTL */
+            min-width: 20px; /* Ensure icon doesn't collapse */
+        }
+        
+        .solution-step span {
+            font-size: 1.1rem;
+            color: var(--text-medium); /* Medium grey for step text */
+        }
+
+        /* Toggle button for solutions */
+        .toggle-btn {
+            padding: 14px;
+            background: linear-gradient(90deg, var(--primary-orange), var(--secondary-orange)); /* Orange gradient from template */
+            color: var(--text-light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 10px; /* From template */
+        }
+        
+        .toggle-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(90deg, var(--secondary-orange), var(--primary-orange)); /* Reverse gradient on hover */
+        }
+        
+        /* Exercise container grid */
+        .exercise-container {
+            display: grid;
+            grid-template-columns: 1fr; /* Default to single column for mobile */
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        /* Individual exercise styling */
+        .exercise {
+            background: var(--card-surface); /* White background from template */
+            border-radius: 10px; /* From template */
+            padding: 15px; /* From template */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* From template */
+        }
+        
+        .exercise-title {
+            color: var(--primary-green); /* Primary green from template */
+            margin-bottom: 12px; /* From template */
+            font-size: 1.2rem; /* From template */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Input group for exercises */
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Stack input and button vertically */
+            gap: 12px; /* Gap from template */
+            margin: 20px 0;
+            border-radius: 0; /* No overall border radius for the group */
+            overflow: visible; /* Allow children to have their own rounded corners */
+            box-shadow: none; /* No shadow on the group */
+        }
+        
+        .input-group input {
+            flex: none; /* Remove flex grow */
+            padding: 14px; /* From template */
+            border: 2px solid var(--primary-blue); /* Blue border from template */
+            border-radius: 8px; /* From template */
+            background: var(--card-surface); /* White background */
+            color: var(--text-dark); /* Dark text */
+            font-size: 1.1rem; /* From template */
+            outline: none; /* Remove default outline */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            text-align: right; /* Align text to right for RTL */
+            width: 100%; /* Full width */
+        }
+        
+        .input-group input:focus {
+            border-color: var(--secondary-blue); /* Darker blue on focus */
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2); /* Subtle blue glow */
+        }
+        
+        .input-group input::placeholder {
+            color: var(--text-medium); /* Medium grey for placeholder */
+        }
+        
+        .input-group button {
+            padding: 14px; /* From template */
+            background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue)); /* Blue gradient from template */
+            color: var(--text-light); /* White text */
+            border: none;
+            border-radius: 8px; /* From template */
+            cursor: pointer;
+            font-size: 1.1rem; /* From template */
+            font-weight: bold;
+            transition: all 0.3s ease; /* From template */
+            width: 100%; /* Full width */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* From template */
+        }
+        
+        .input-group button:hover {
+            transform: translateY(-3px); /* From template */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* From template */
+            background: linear-gradient(90deg, var(--secondary-blue), var(--primary-blue)); /* Reverse gradient on hover */
+        }
+        
+        /* Result messages styling */
+        .result {
+            margin-top: 20px; /* From template */
+            padding: 15px; /* From template */
+            background-color: #e8f5e9; /* Light green from template */
+            border-radius: 8px; /* From template */
+            border-right: 5px solid var(--primary-green); /* Green border from template */
+            font-size: 1.1rem; /* From template */
+            display: none;
+            color: var(--text-dark); /* Dark text */
+        }
+        
+        .correct {
+            background-color: #e8f5e9; /* Light green from template */
+            border-right: 5px solid var(--primary-green); /* Green border from template */
+            color: var(--secondary-green); /* Dark green from template */
+        }
+        
+        .incorrect {
+            background-color: #ffebee; /* Light red from template */
+            border-right: 5px solid var(--accent-red); /* Red border from template */
+            color: var(--dark-red); /* Dark red from template */
+        }
+        
+        /* Hint text styling */
+        .hint {
+            color: var(--primary-orange); /* Orange from template */
+            margin-top: 15px;
+            font-size: 1rem;
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 152, 0, 0.05); /* Very light orange background */
+            border-radius: 8px;
+        }
+        
+        /* Footer note styling */
+        .footer-note {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            font-style: italic;
+            color: var(--text-medium); /* Medium grey for footer text */
+            background: var(--card-surface); /* Solid white background */
+            border-radius: 15px;
+            box-shadow: var(--shadow-subtle); /* Subtle shadow */
+            border: 1px solid var(--border-light); /* Subtle border */
+        }
+
+        /* Navigation buttons container */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between; /* Space out buttons */
+            margin-top: 40px;
+            padding: 0 15px; /* Match container padding */
+            gap: 20px; /* Gap between buttons */
+        }
+
+        .navigation-buttons a {
+            flex: 1; /* Make buttons take equal width */
+            padding: 15px 20px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue)); /* Blue gradient */
+            color: var(--text-light); /* White text */
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow-subtle);
+            display: flex; /* Use flex for icon and text alignment */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navigation-buttons a:hover {
+            background: linear-gradient(90deg, var(--secondary-blue), var(--primary-blue)); /* Reverse gradient on hover */
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .navigation-buttons a i {
+            margin: 0 10px; /* Space between icon and text */
+        }
+        
+        /* Keyframe animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes rotateBackground {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Highlight styling for final answer */
+        .highlight {
+            background: linear-gradient(120deg, rgba(255,215,0,0.3), rgba(255,215,0,0)); /* Gold transparent highlight from template */
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            color: var(--text-dark); /* Dark text on highlight */
+        }
+
+        /* MathJax specific styling to ensure colors blend */
+        .MathJax {
+            color: var(--text-dark) !important; /* Dark text for MathJax on light background */
+        }
+        .MathJax_Display {
+            color: var(--text-dark) !important; /* Dark text for MathJax on light background */
+        }
+
+        /* --- Mobile Responsiveness Adjustments --- */
+
+        /* For screens smaller than 768px (common tablet breakpoint) */
+        @media (max-width: 767px) {
+            body {
+                padding: 15px; /* Reduce overall padding */
+            }
+
+            header {
+                padding: 30px 15px; /* Adjust header padding */
+                margin-bottom: 30px;
+            }
+
+            header h1 {
+                font-size: 2.2rem; /* Smaller font for main title */
+            }
+
+            header p {
+                font-size: 1rem; /* Smaller font for header description */
+            }
+
+            .priority-steps {
+                gap: 15px; /* Reduce gap between step cards */
+                margin: 30px 0;
+            }
+
+            .step-card {
+                width: calc(50% - 15px); /* Two columns on smaller screens */
+                min-width: 150px; /* Ensure a minimum width */
+                padding: 20px;
+            }
+
+            .step-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.6rem;
+                margin-bottom: 15px;
+            }
+
+            .step-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .step-card p {
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                gap: 20px; /* Smaller gap between main sections */
+                padding: 15px; /* Adjust content padding */
+            }
+
+            .section {
+                padding: 20px; /* Reduce section padding */
+            }
+
+            .section-title {
+                font-size: 1.6rem; /* Smaller section titles */
+                margin-bottom: 20px;
+            }
+
+            .example, .solution, .exercise {
+                padding: 15px; /* Adjust padding for example/solution/exercise boxes */
+                margin-bottom: 15px;
+            }
+
+            .expression {
+                font-size: 1.4rem; /* Smaller font for expressions */
+                padding: 12px;
+                margin: 15px 0;
+            }
+
+            .solution-step span {
+                font-size: 1rem; /* Smaller font for solution steps */
+            }
+
+            .exercise-title {
+                font-size: 1.2rem;
+            }
+
+            .input-group input {
+                padding: 12px 15px; /* Smaller padding for input fields */
+                font-size: 1rem;
+            }
+
+            .input-group button {
+                padding: 12px 20px; /* Smaller padding for buttons */
+                font-size: 1rem;
+            }
+
+            .result {
+                padding: 12px; /* Smaller padding for result messages */
+                font-size: 1rem;
+            }
+
+            .hint {
+                font-size: 0.85rem; /* Smaller font for hints */
+                padding: 8px;
+            }
+
+            .footer-note {
+                margin-top: 30px;
+                padding: 20px;
+                font-size: 0.9rem;
+            }
+
+            .navigation-buttons {
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                gap: 15px; /* Adjust gap for vertical stacking */
+            }
+
+            .navigation-buttons a {
+                width: 100%; /* Full width for stacked buttons */
+            }
+        }
+
+        /* For very small screens (e.g., iPhone SE) */
+        @media (max-width: 480px) {
+            .step-card {
+                width: 90%; /* Single column for step cards */
+                max-width: 280px; /* Prevent it from becoming too wide */
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .expression {
+                font-size: 1.2rem;
+            }
+
+            .input-group input, .input-group button {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="animation-target">
+            <h1><i class="fas fa-calculator"></i> أولويات العمليات الحسابية</h1>
+            <p>تطبيق تفاعلي لتعلم أولويات العمليات الحسابية مع أمثلة وتمارين عملية</p>
+        </header>
+        
+        <div class="priority-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>الأقواس</h3>
+                <p>احسب القيم داخل الأقواس أولاً</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>الأسس</h3>
+                <p>احسب الأسس والقوى</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>الضرب والقسمة</h3>
+                <p>من اليسار إلى اليمين</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>الجمع والطرح</h3>
+                <p>من اليسار إلى اليمين</p>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-book-open"></i> أمثلة محلولة</h2>
+                
+                <div class="example">
+                    <h3><i class="fas fa-pen"></i> التمرين 1:</h3>
+                    <div class="expression">
+                        \( 192 \div (2^3)^2 + (9 - 4) \)
+                    </div>
+                    <button class="toggle-btn">عرض الحل</button>
+                    <div class="solution">
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>نبدأ بالأقواس الداخلية: \( (9 - 4) = 5 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>نحسب الأسس داخل القوس الآخر: \( 2^3 = 8 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>نكمل الأسس: \( (8)^2 = 64 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>الآن نقوم بالقسمة: \( 192 \div 64 = 3 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>وأخيراً نقوم بالجمع: \( 3 + 5 = 8 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-star"></i>
+                            <span><span class="highlight">الإجابة النهائية: 8</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h3><i class="fas fa-pen"></i> التمرين 2:</h3>
+                    <div class="expression">
+                        \( 2 \times \frac{(-3)^6}{(-3)^4} - 10 \)
+                    </div>
+                    <button class="toggle-btn">عرض الحل</button>
+                    <div class="solution">
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>نبدأ بتبسيط الكسر باستخدام قاعدة قسمة الأسس: \( \frac{(-3)^6}{(-3)^4} = (-3)^{6-4} = (-3)^2 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>نحسب قيمة الأس: \( (-3)^2 = 9 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>ثم نقوم بعملية الضرب: \( 2 \times 9 = 18 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>وأخيراً نقوم بعملية الطرح: \( 18 - 10 = 8 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-star"></i>
+                            <span><span class="highlight">الإجابة النهائية: 8</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h3><i class="fas fa-pen"></i> التمرين 3:</h3>
+                    <div class="expression">
+                        \( 5(7-2)^2 \div (-50) \)
+                    </div>
+                    <button class="toggle-btn">عرض الحل</button>
+                    <div class="solution">
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>نبدأ بالأقواس: \( (7 - 2) = 5 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>نحسب الأس: \( (5)^2 = 25 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>ثم نقوم بعملية الضرب: \( 5 \times 25 = 125 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-check-circle"></i>
+                            <span>وأخيراً نقوم بعملية القسمة: \( 125 \div (-50) = -2.5 \)</span>
+                        </div>
+                        <div class="solution-step">
+                            <i class="fas fa-star"></i>
+                            <span><span class="highlight">الإجابة النهائية: -2.5</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-pen-nib"></i> تحقق من فهمك</h2>
+                <p class="hint">حاول حل التمارين بنفسك ثم تحقق من إجاباتك</p>
+                
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين 5:</h3>
+                        <div class="expression">
+                            \( 243 \div (3^2)^2 \times (5 - 8) \)
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="answer5" placeholder="أدخل الإجابة">
+                            <button onclick="checkAnswer(5)">تحقق</button>
+                        </div>
+                        <div id="result5" class="result"></div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين 6:</h3>
+                        <div class="expression">
+                            \( 256 \div (2^3)^2 \times (2 - 7) \)
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="answer6" placeholder="أدخل الإجابة">
+                            <button onclick="checkAnswer(6)">تحقق</button>
+                        </div>
+                        <div id="result6" class="result"></div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين 7:</h3>
+                        <div class="expression">
+                            \( \frac{(-4)^5}{(-4)^3} \times 3 - 40 \)
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="answer7" placeholder="أدخل الإجابة">
+                            <button onclick="checkAnswer(7)">تحقق</button>
+                        </div>
+                        <div id="result7" class="result"></div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين 8:</h3>
+                        <div class="expression">
+                            \( \frac{6^7}{6^5} \div 3 - 10 \)
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="answer8" placeholder="أدخل الإجابة">
+                            <button onclick="checkAnswer(8)">تحقق</button>
+                        </div>
+                        <div id="result8" class="result"></div>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين الإضافي:</h3>
+                    <div class="expression">
+                        \( 100 - 4 \times 3^2 \div (4^2 - 2^3) \)
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="bonus" placeholder="أدخل الإجابة">
+                        <button onclick="checkBonus()">تحقق</button>
+                    </div>
+                    <div id="bonusResult" class="result"></div>
+                    <p class="hint">تلميح: ابدأ بحساب الأسس أولاً</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+            <a href="u2l2p1.html">
+                <i class="fas fa-arrow-right"></i> السابق
+            </a>
+            <a href="u2l2p3.html">
+                التالي <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        
+        <div class="footer-note">
+            <p>تذكر دائمًا: الأقواس أولاً، ثم الأسس، ثم الضرب والقسمة (من اليسار لليمين)، وأخيرًا الجمع والطرح (من اليسار لليمين)</p>
+        </div>
+    </div>
+
+    <script>
+        // الإجابات الصحيحة للتمارين
+        const correctAnswers = {
+            5: -9,
+            6: -20,
+            7: 8,
+            8: 2,
+            bonus: 11
+        };
+        
+        // دالة للتحقق من الإجابة
+        function checkAnswer(exerciseNum) {
+            const inputElement = document.getElementById(`answer${exerciseNum}`);
+            const resultElement = document.getElementById(`result${exerciseNum}`);
+            const userAnswer = inputElement.value.trim();
+            
+            // التحقق من الإدخال
+            if (!userAnswer) {
+                resultElement.textContent = "الرجاء إدخال إجابة";
+                resultElement.className = "result incorrect";
+                resultElement.style.display = "block";
+                return;
+            }
+            
+            // تحويل الإجابة إلى رقم
+            const numericAnswer = parseFloat(userAnswer);
+            
+            // التحقق من صحة الإجابة
+            if (!isNaN(numericAnswer)) { 
+                if (Math.abs(numericAnswer - correctAnswers[exerciseNum]) < 0.001) {
+                    resultElement.textContent = "✓ إجابة صحيحة! أحسنت!";
+                    resultElement.className = "result correct";
+                    resultElement.style.display = "block";
+                } else {
+                    resultElement.textContent = `✗ إجابة خاطئة. الإجابة الصحيحة هي: ${correctAnswers[exerciseNum]}`;
+                    resultElement.className = "result incorrect";
+                    resultElement.style.display = "block";
+                }
+            } else {
+                resultElement.textContent = "الرجاء إدخال رقم صحيح";
+                resultElement.className = "result incorrect";
+                resultElement.style.display = "block";
+            }
+        }
+        
+        // دالة للتحقق من التمرين الإضافي
+        function checkBonus() {
+            const inputElement = document.getElementById('bonus');
+            const resultElement = document.getElementById('bonusResult');
+            const userAnswer = inputElement.value.trim();
+            
+            // التحقق من الإدخال
+            if (!userAnswer) {
+                resultElement.textContent = "الرجاء إدخال إجابة";
+                resultElement.className = "result incorrect";
+                resultElement.style.display = "block";
+                return;
+            }
+            
+            // تحويل الإجابة إلى رقم
+            const numericAnswer = parseFloat(userAnswer);
+            
+            // التحقق من صحة الإجابة
+            if (!isNaN(numericAnswer)) {
+                if (Math.abs(numericAnswer - correctAnswers.bonus) < 0.001) {
+                    resultElement.textContent = "✓ إجابة صحيحة! ممتاز!";
+                    resultElement.className = "result correct";
+                    resultElement.style.display = "block";
+                } else {
+                    resultElement.textContent = `✗ إجابة خاطئة. الإجابة الصحيحة هي: ${correctAnswers.bonus}`;
+                    resultElement.className = "result incorrect";
+                    resultElement.style.display = "block";
+                }
+            } else {
+                resultElement.textContent = "الرجاء إدخال رقم صحيح";
+                resultElement.className = "result incorrect";
+                resultElement.style.display = "block";
+            }
+        }
+        
+        // تمكين MathJax لإعادة التصيير عند الحاجة
+        MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']]
+            }
+        };
+
+        // JavaScript to handle toggle buttons for solutions
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButtons = document.querySelectorAll('.toggle-btn');
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const solution = this.nextElementSibling; // The solution div is the next sibling
+                    if (solution.style.display === 'block') {
+                        solution.style.display = 'none';
+                        this.textContent = 'عرض الحل';
+                    } else {
+                        solution.style.display = 'block';
+                        this.textContent = 'إخفاء الحل';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
