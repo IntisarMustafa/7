@@ -1918,11 +1918,12 @@
                 case 'ArrowDown':
                     movePlayer('down');
                     break;
+                // تم تبديل وظيفة السهم الأيسر والأيمن هنا
                 case 'ArrowLeft':
-                    movePlayer('left');
+                    movePlayer('right'); // السهم الأيسر يحرك لليمين
                     break;
                 case 'ArrowRight':
-                    movePlayer('right');
+                    movePlayer('left'); // السهم الأيمن يحرك لليسار
                     break;
             }
         });
@@ -2028,4 +2029,3 @@
     </script>
 </body>
 </html>
-
