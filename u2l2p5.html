@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subway Surfers ثلاثية الأبعاد - كاميرا محسّنة</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MathJax for rendering LaTeX mathematical expressions -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* Reset default margins and paddings for all elements */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Body styling */
+        body {
+            overflow: hidden; /* Hide any content overflow */
+            background: linear-gradient(to bottom, #1a2980, #26d0ce); /* Gradient background */
+            height: 100vh; /* Full screen height */
+            perspective: 1000px; /* 3D perspective effect */
+            color: white; /* Default text color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Main game container */
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Three.js Canvas */
+        #game-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        /* Top UI */
+        #ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+        
+        /* Score and coins container */
+        #score-container, #coins-container {
+            font-size: 2.5vh;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1.5vh 3vh;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 1vh;
+            pointer-events: auto; /* Allow clicks on these elements */
+        }
+
+        /* Coin icon (SVG) */
+        .coin-icon {
+            width: 3.5vh;
+            height: 3.5vh;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .coin-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: gold;
+            filter: drop-shadow(0 0 5px gold);
+        }
+        
+        /* Start screen and game over screen */
+        #start-screen, #game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85); /* Semi-transparent background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* Game title */
+        h1 {
+            font-size: 8vh;
+            margin-bottom: 3vh;
+            color: #ffcc00; /* Gold color */
+            text-shadow: 0 0 15px #ff6600, 0 0 25px rgba(255, 102, 0, 0.7); /* Glowing text shadow */
+            letter-spacing: 0.3vh;
+            animation: pulse 2s infinite alternate; /* Pulse effect */
+        }
+
+        /* Pulse effect definition */
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+        
+        /* Game over screen title */
+        h2 {
+            font-size: 6vh;
+            margin-bottom: 4vh;
+            color: #ff9900; /* Orange-gold color */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Subtitle */
+        .subtitle {
+            font-size: 2.5vh;
+            margin-bottom: 5vh;
+            max-width: 80%;
+            line-height: 1.6;
+            color: #ddd;
+        }
+        
+        /* Game buttons */
+        .btn {
+            background: linear-gradient(to bottom, #ffcc00, #ff6600); /* Gradient color */
+            color: white;
+            font-size: 3vh;
+            font-weight: bold;
+            border: none;
+            padding: 2vh 6vh;
+            border-radius: 50px; /* Rounded buttons */
+            cursor: pointer;
+            margin: 1.5vh;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth transition */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4); /* Button shadow */
+            text-transform: uppercase;
+            letter-spacing: 0.1vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Button hover effects */
+        .btn:hover {
+            transform: translateY(-5px); /* Lift button slightly */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to bottom, #ffd633, #ff8533);
+        }
+        
+        /* Button click effects */
+        .btn:active {
+            transform: translateY(1px); /* Lower button slightly */
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Ripple effect on click */
+        .btn:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out forwards;
+        }
+
+        /* Ripple effect definition */
+        @keyframes ripple {
+            0% { transform: scale(0) translate(-50%, -50%); opacity: 0.5; }
+            100% { transform: scale(200) translate(-50%, -50%); opacity: 0; }
+        }
+        
+        /* Controls section (keyboard) */
+        #controls {
+            margin-top: 4vh;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3vh;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 90%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        #controls h3 {
+            font-size: 3vh;
+            margin-bottom: 2vh;
+            color: #ffcc00;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Individual key style */
+        .key {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 1vh 2vh;
+            margin: 0.5vh;
+            border-radius: 8px;
+            font-weight: bold;
+            border: 2px solid #ffcc00;
+            min-width: 5vh;
+        }
+        
+        /* Character selection container */
+        #characters {
+            display: flex;
+            margin: 4vh 0;
+            gap: 3vh;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        /* Individual character style */
+        .character {
+            width: 15vh;
+            height: 22vh;
+            background: linear-gradient(to bottom, #ff6600, #cc5200);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            border: 3px solid transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10vh; /* Large size for character representation */
+            /* Icons or images can be added here later */
+        }
+        
+        /* Different background colors for characters */
+        .character:nth-child(1) { background: linear-gradient(to bottom, #ff6600, #cc5200); }
+        .character:nth-child(2) { background: linear-gradient(to bottom, #3366ff, #0033cc); }
+        .character:nth-child(3) { background: linear-gradient(to bottom, #33cc33, #009900); }
+
+        /* Inner glow effect for character */
+        .character::before {
+            content: "";
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 30%;
+            background: rgba(255, 204, 0, 0.3);
+            border-radius: 50%;
+            opacity: 0.7;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        /* Selected character style */
+        .character.selected {
+            box-shadow: 0 0 25px #ffcc00, 0 0 40px rgba(255, 204, 0, 0.7); /* Glowing shadow */
+            transform: scale(1.15); /* Enlarge character */
+            border-color: #ffcc00;
+        }
+        .character.selected::before {
+            transform: scale(1);
+        }
+        
+        /* Final score style */
+        #final-score {
+            font-size: 7vh;
+            color: #ffcc00;
+            margin: 3vh 0;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* New addition: Swipe instructions */
+        .swipe-instructions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            color: #fff; /* Text color inside instructions */
+        }
+        
+        .swipe-row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .swipe-demo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        .swipe-arrow {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .swipe-text {
+            font-size: 16px;
+        }
+        
+        /* Math Question Modal Styles */
+        #math-question-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9); /* Darker overlay */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 30; /* Above game over screen */
+            text-align: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(to bottom, #2c3e50, #4a69bd); /* Dark blue to lighter blue gradient */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            width: 500px;
+            transform: scale(0.9);
+            animation: modalPopIn 0.3s forwards ease-out;
+            border: 2px solid #ffcc00; /* Gold border */
+        }
+
+        @keyframes modalPopIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        #math-question-modal h3 {
+            font-size: 4vh;
+            margin-bottom: 3vh;
+            color: #ffcc00;
+            text-shadow: 1px 1px 5px rgba(255, 204, 0, 0.5);
+        }
+
+        #question-text {
+            font-size: 3.5vh;
+            margin-bottom: 4vh;
+            color: #e0e0e0;
+            direction: ltr; /* Ensure math is left-to-right */
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #answer-input {
+            width: 80%;
+            padding: 2vh;
+            margin-bottom: 3vh;
+            border-radius: 10px;
+            border: 2px solid #ffcc00;
+            font-size: 2.5vh;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #answer-input:focus {
+            border-color: #ff6600;
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+        }
+
+        #feedback-message {
+            font-size: 2.5vh;
+            font-weight: bold;
+            margin-top: 2vh;
+            min-height: 3vh; /* Reserve space */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Responsive design for tablets (max-width 768px) */
+        @media (max-width: 768px) {
+            h1 { font-size: 6vh; }
+            h2 { font-size: 4.5vh; }
+            .subtitle { font-size: 2vh; }
+            .btn { padding: 1.5vh 4vh; font-size: 2.5vh; }
+            #characters { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 2vh; }
+            .character { width: 12vh; height: 18vh; }
+            #controls { display: none; /* Hide keyboard controls on small devices */ }
+            #score-container, #coins-container { font-size: 2vh; padding: 1vh 2vh; }
+            .coin-icon { width: 3vh; height: 3vh; }
+            #final-score { font-size: 5vh; }
+
+            /* Modal adjustments for tablets */
+            .modal-content { padding: 30px; }
+            #math-question-modal h3 { font-size: 3.5vh; }
+            #question-text { font-size: 3vh; }
+            #answer-input { font-size: 2vh; }
+            #feedback-message { font-size: 2vh; }
+        }
+
+        /* Responsive design for small mobile devices (max-width 480px) */
+        @media (max-width: 480px) {
+            h1 { font-size: 5vh; }
+            h2 { font-size: 4vh; }
+            .subtitle { font-size: 1.8vh; }
+            .btn { padding: 1.2vh 3.5vh; font-size: 2.2vh; }
+            .character { width: 10vh; height: 15vh; }
+            #score-container, #coins-container { font-size: 1.8vh; padding: 0.8vh 1.5vh; }
+            
+            /* Modal adjustments for mobile */
+            .modal-content { padding: 20px; border-radius: 15px; }
+            #math-question-modal h3 { font-size: 3vh; }
+            #question-text { font-size: 2.5vh; padding: 10px; }
+            #answer-input { font-size: 1.8vh; padding: 1.5vh; }
+            #feedback-message { font-size: 1.8vh; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="ui">
+            <div id="score-container">النقاط: <span id="score">0</span></div>
+            <div id="coins-container">
+                <span id="coins">0</span>
+                <div class="coin-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2h-2zm0 4h2v6h-2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <div id="start-screen">
+            <h1>SUBWAY SURFERS</h1>
+            <p class="subtitle">اللعبة ثلاثية الأبعاد الأكثر إثارة! اهرب من حارس المحطة واجمع العملات واكسر الأرقام القياسية!</p>
+            
+            <div id="characters">
+                <div class="character selected"></div>
+                <div class="character"></div>
+                <div class="character"></div>
+            </div>
+            
+            <!-- Updated swipe instructions -->
+            <div class="swipe-instructions">
+                <h3>إرشادات السحب</h3>
+                <div class="swipe-row">
+                    <div class="swipe-demo">
+                        <div class="swipe-arrow">⬅️</div>
+                        <div class="swipe-text">سحب لليسار للتحرك لليسار</div>
+                    </div>
+                    <div class="swipe-demo">
+                        <div class="swipe-arrow">➡️</div>
+                        <div class="swipe-text">سحب لليمين للتحرك لليمين</div>
+                    </div>
+                </div>
+                <div class="swipe-row">
+                    <div class="swipe-demo">
+                        <div class="swipe-arrow">⬆️</div>
+                        <div class="swipe-text">سحب لأعلى للقفز</div>
+                    </div>
+                    <div class="swipe-demo">
+                        <div class="swipe-arrow">⬇️</div>
+                        <div class="swipe-text">سحب لأسفل للانزلاق</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="start-btn" class="btn">ابدأ اللعبة</button>
+            
+            <div id="controls">
+                <h3>أزرار التحكم</h3>
+                <p>
+                    <span class="key">←</span> يسار
+                    <span class="key">→</span> يمين
+                    <span class="key">مسافة</span> قفز
+                    <span class="key">أسفل</span> انزل
+                </p>
+            </div>
+        </div>
+        
+        <div id="game-over">
+            <h2>انتهت اللعبة!</h2>
+            <div id="final-score">النقاط: 0</div>
+            <button id="restart-btn" class="btn">العب مرة أخرى</button>
+        </div>
+
+        <!-- Math Question Modal -->
+        <div id="math-question-modal" style="display: none;">
+            <div class="modal-content">
+                <h3>سؤال الرياضيات</h3>
+                <p id="question-text">سؤال عن أولويات العمليات الحسابية للصف السابع منهاج الأردن</p>
+                <input type="text" id="answer-input" placeholder="أدخل إجابتك هنا">
+                <button id="submit-answer-btn" class="btn">إرسال الإجابة</button>
+                <p id="feedback-message"></p>
+            </div>
+        </div>
+        
+        <canvas id="game-canvas"></canvas>
+    </div>
+
+    <script>
+        // UI elements
+        const startScreen = document.getElementById('start-screen');
+        const gameOverScreen = document.getElementById('game-over');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const scoreElement = document.getElementById('score');
+        const finalScoreElement = document.getElementById('final-score');
+        const coinsElement = document.getElementById('coins');
+        const characters = document.querySelectorAll('.character');
+        
+        // Math Question Modal elements
+        const mathQuestionModal = document.getElementById('math-question-modal');
+        const questionTextElement = document.getElementById('question-text');
+        const answerInputElement = document.getElementById('answer-input');
+        const submitAnswerBtn = document.getElementById('submit-answer-btn');
+        const feedbackMessageElement = document.getElementById('feedback-message');
+
+        // Game variables
+        let scene, camera, renderer; // Three.js scene, camera, and renderer
+        let player; // Player object (now a THREE.Group)
+        let playerBodyMesh; // Reference to the player's body mesh for color changes
+        let playerHeadMesh; // Reference to the player's head mesh
+        let playerHatMesh; // Reference to the player's hat mesh
+        let playerLeftLeg, playerRightLeg; // References to player's leg meshes
+        let playerLeftArm, playerRightArm; // References to player's arm meshes
+        let groundSegments = []; // Repeating ground segments (for the road)
+        let sideGroundSegments = []; // Repeating ground segments for the sides
+        let railSegments = []; // Rail segments
+        let buildingGroups = []; // Side building groups
+        let treeGroups = []; // Side tree groups
+        let obstacles = []; // Obstacles
+        let coins = []; // Coins
+        
+        let score = 0, coinsCount = 0; // Score and collected coins
+        let gameActive = false; // Game active state
+        let speed = 0.1; // Game speed - Initial speed
+        let lane = 1; // Current player lane (0: left, 1: center, 2: right)
+        const lanePositions = [-2, 0, 2]; // X positions for lanes
+        
+        const SEGMENT_LENGTH = 50; // Length of one ground segment
+        const NUM_SEGMENTS = 10; // Number of ground segments
+        const GROUND_Z_OFFSET = -SEGMENT_LENGTH * (NUM_SEGMENTS / 2); // Initial Z offset for ground
+        
+        // Constants for side elements positioning
+        const ROAD_HALF_WIDTH = 5; // نصف عرض الطريق
+        const SIDE_GROUND_WIDTH = 20; // عرض الأرض الجانبية
+        const SIDE_GROUND_OFFSET_X = ROAD_HALF_WIDTH + SIDE_GROUND_WIDTH / 2; // إزاحة X للأرض الجانبية
+        
+        const BUILDING_SPACING = 15; // المسافة بين المباني
+        const NUM_BUILDINGS_PER_SIDE = 20; // عدد المباني على كل جانب
+        const BUILDING_X_POSITION_ON_SIDE = ROAD_HALF_WIDTH + 3; // موضع X للمباني على الأرض الجانبية (أقرب للطريق)
+
+        const TREE_SPACING = 10; // المسافة بين الأشجار
+        const NUM_TREES_PER_SIDE = 30; // عدد الأشجار على كل جانب
+        const TREE_X_POSITION_ON_SIDE = ROAD_HALF_WIDTH + 8; // موضع X للأشجار على الأرض الجانبية (أبعد عن الطريق)
+        
+        // Player movement states
+        let playerBaseY = 0.85; // Base Y position (center of player model)
+        const playerActualHeight = 1.7; // Actual height of the new player model from feet to head top
+        let isJumping = false; // Is player jumping?
+        let jumpStartTime = 0; // Jump start time
+        const jumpDuration = 500; // Jump duration in milliseconds
+        const jumpHeight = 2; // Max jump height
+        
+        let isSliding = false; // Is player sliding?
+        let slideStartTime = 0; // Slide start time
+        const slideDuration = 800; // Slide duration in milliseconds
+
+        let runAnimationTime = 0; // Time for running animation
+        const runSpeedFactor = 0.1; // Controls how fast legs swing during run
+        const jumpLegRotationFactor = 0.8; // How much more legs rotate during jump
+        const armSwingAmplitude = 0.4; // Amplitude of arm swing during run
+        const armJumpRotation = 0.5; // Rotation of arms during jump
+        
+        // Touch control variables
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+        const swipeThreshold = 50; // Minimum distance for a swipe
+
+        // Math Question Variables
+        const mathQuestions = [
+            {
+                question: "$$ 5 + 3 \\times (8 - 2)^2 \\div 4 $$",
+                answer: 32,
+                explanation: "ترتيب العمليات: الأقواس أولاً، ثم الأسس، ثم الضرب والقسمة من اليسار لليمين، ثم الجمع والطرح من اليسار لليمين."
+            },
+            {
+                question: "$$ 10 - 2^3 + (6 \\div 2) \\times 5 $$",
+                answer: 17,
+                explanation: "ترتيب العمليات: الأقواس أولاً، ثم الأسس، ثم الضرب والقسمة من اليسار لليمين، ثم الجمع والطرح من اليسار لليمين."
+            },
+            {
+                question: "$$ (12 + 8) \\div 4 - 3^2 \\times 1 $$",
+                answer: -4,
+                explanation: "ترتيب العمليات: الأقواس أولاً، ثم الأسس، ثم الضرب والقسمة من اليسار لليمين، ثم الجمع والطرح من اليسار لليمين."
+            },
+            {
+                question: "$$ 7 \\times 2^2 - (15 \\div 3) + 1 $$",
+                answer: 24,
+                explanation: "ترتيب العمليات: الأقواس أولاً، ثم الأسس، ثم الضرب والقسمة من اليسار لليمين، ثم الجمع والطرح من اليسار لليمين."
+            },
+            {
+                question: "$$ 4^2 + (20 - 5) \\div 3 - 10 $$",
+                answer: 11,
+                explanation: "ترتيب العمليات: الأقواس أولاً، ثم الأسس، ثم الضرب والقسمة من اليسار لليمين، ثم الجمع والطرح من اليسار لليمين."
+            },
+            {
+                question: "$$ 100 \\div 5^2 + (10 - 2) \\times 3 $$",
+                answer: 28,
+                explanation: "ترتيب العمليات: الأقواس أولاً، ثم الأسس، ثم الضرب والقسمة من اليسار لليمين، ثم الجمع والطرح من اليسار لليمين."
+            },
+            {
+                question: "$$ (7 + 3)^2 - 5 \\times 4 + 1 $$",
+                answer: 81,
+                explanation: "ترتيب العمليات: الأقواس أولاً، ثم الأسس، ثم الضرب والقسمة من اليسار لليمين، ثم الجمع والطرح من اليسار لليمين."
+            },
+            {
+                question: "$$ 3 \\times (4^2 - 6) \\div 2 $$",
+                answer: 15,
+                explanation: "ترتيب العمليات: الأقواس أولاً، ثم الأسس، ثم الضرب والقسمة من اليسار لليمين، ثم الجمع والطرح من اليسار لليمين."
+            }
+        ];
+        let currentQuestion = null;
+        let collidedObstacle = null; // To keep track of the obstacle that caused the collision
+        
+        // Initialize Three.js scene
+        function initThreeJS() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB); // Sky blue background
+            scene.fog = new THREE.Fog(0x87CEEB, 50, 200); // Add fog for distance
+            
+            // Create camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 3, 5); // Set camera position
+            // camera.lookAt(0, 0, 0); // Point camera towards origin - This will be updated in animate loop
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: document.getElementById('game-canvas'),
+                antialias: true // Anti-aliasing
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight); // Set renderer size to fit window
+            renderer.setPixelRatio(window.devicePixelRatio); // Adjust device pixel ratio
+            
+            // Add lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Ambient light
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8); // Directional light (sun)
+            directionalLight.position.set(10, 20, 15);
+            scene.add(directionalLight);
+            
+            // Create player (now a group of meshes)
+            player = new THREE.Group(); // Player is now a group of shapes
+            player.name = 'playerGroup'; // Group name for easy tracking
+
+            // Material for fixed parts (head, arms, legs)
+            const limbMaterial = new THREE.MeshPhongMaterial({ color: 0xcccccc }); // Light gray color
+
+            // Body
+            const bodyGeometry = new THREE.BoxGeometry(0.5, 0.8, 0.5);
+            const playerMaterial = new THREE.MeshPhongMaterial({ color: 0xff6600 }); // Default orange body material
+            playerBodyMesh = new THREE.Mesh(bodyGeometry, playerMaterial); // Store reference to body mesh
+            playerBodyMesh.position.y = 0; // Center of the body relative to group origin
+            playerBodyMesh.name = 'playerBody'; // Name for easy retrieval
+            player.add(playerBodyMesh);
+
+            // Head
+            const headGeometry = new THREE.SphereGeometry(0.25, 32, 16);
+            playerHeadMesh = new THREE.Mesh(headGeometry, limbMaterial); // Store reference to head mesh
+            playerHeadMesh.position.y = playerBodyMesh.position.y + 0.4 + 0.25; // On top of the body
+            player.add(playerHeadMesh);
+
+            // Hat - Added a simple hat (cylinder)
+            const hatCylinderGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 32); // Top part of the hat
+            const hatBrimGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.05, 32); // Brim of the hat
+            const hatMaterial = new THREE.MeshPhongMaterial({ color: playerMaterial.color.getHex() }); // Match player body color
+            
+            const hatCylinder = new THREE.Mesh(hatCylinderGeometry, hatMaterial);
+            hatCylinder.position.y = playerHeadMesh.position.y + 0.15; // Position on top of the head
+
+            const hatBrim = new THREE.Mesh(hatBrimGeometry, hatMaterial);
+            hatBrim.position.y = playerHeadMesh.position.y + 0.05; // Position just above the head
+
+            playerHatMesh = new THREE.Group(); // Group hat parts
+            playerHatMesh.add(hatCylinder);
+            playerHatMesh.add(hatBrim);
+            playerHatMesh.name = 'playerHat';
+            player.add(playerHatMesh); // Add hat group to player group
+
+            // Arms - Store references for animation
+            const armGeometry = new THREE.BoxGeometry(0.2, 0.7, 0.2);
+            playerLeftArm = new THREE.Mesh(armGeometry, limbMaterial);
+            playerLeftArm.position.set(-0.35, playerBodyMesh.position.y, 0);
+            player.add(playerLeftArm);
+
+            playerRightArm = new THREE.Mesh(armGeometry, limbMaterial);
+            playerRightArm.position.set(0.35, playerBodyMesh.position.y, 0);
+            player.add(playerRightArm);
+
+            // Legs - Store references for animation
+            const legGeometry = new THREE.BoxGeometry(0.2, 0.8, 0.2);
+            playerLeftLeg = new THREE.Mesh(legGeometry, limbMaterial);
+            playerLeftLeg.position.set(-0.15, -0.45, 0); // Base of leg at -0.85 relative to group center
+            player.add(playerLeftLeg);
+
+            playerRightLeg = new THREE.Mesh(legGeometry, limbMaterial);
+            playerRightLeg.position.set(0.15, -0.45, 0); // Base of leg at -0.85 relative to group center
+            player.add(playerRightLeg);
+            
+            scene.add(player);
+            
+            // Create multiple ground segments for the road (black)
+            const roadGeometry = new THREE.PlaneGeometry(10, SEGMENT_LENGTH); 
+            const roadMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x000000, // لون أسود للطريق
+                side: THREE.DoubleSide // Display both sides
+            });
+            for (let i = 0; i < NUM_SEGMENTS; i++) {
+                const road = new THREE.Mesh(roadGeometry, roadMaterial);
+                road.rotation.x = Math.PI / 2; // Rotate road to be horizontal
+                road.position.z = GROUND_Z_OFFSET + i * SEGMENT_LENGTH; // Position each road piece
+                scene.add(road);
+                groundSegments.push(road);
+            }
+
+            // Create multiple side ground segments (brown)
+            const sideGroundGeometry = new THREE.PlaneGeometry(SIDE_GROUND_WIDTH, SEGMENT_LENGTH);
+            const sideGroundMaterial = new THREE.MeshPhongMaterial({
+                color: 0xA0522D, // لون بني للأرض الجانبية
+                side: THREE.DoubleSide
+            });
+            for (let i = 0; i < NUM_SEGMENTS; i++) {
+                // Left side ground
+                const leftSideGround = new THREE.Mesh(sideGroundGeometry, sideGroundMaterial);
+                leftSideGround.rotation.x = Math.PI / 2;
+                leftSideGround.position.set(-SIDE_GROUND_OFFSET_X, 0, GROUND_Z_OFFSET + i * SEGMENT_LENGTH);
+                scene.add(leftSideGround);
+                sideGroundSegments.push(leftSideGround);
+
+                // Right side ground
+                const rightSideGround = new THREE.Mesh(sideGroundGeometry, sideGroundMaterial);
+                rightSideGround.rotation.x = Math.PI / 2;
+                rightSideGround.position.set(SIDE_GROUND_OFFSET_X, 0, GROUND_Z_OFFSET + i * SEGMENT_LENGTH);
+                scene.add(rightSideGround);
+                sideGroundSegments.push(rightSideGround);
+            }
+            
+            // Create multiple rail segments
+            for (let j = 0; j < 3; j++) { // 3 lanes
+                for (let i = 0; i < NUM_SEGMENTS; i++) {
+                    const railGeometry = new THREE.BoxGeometry(0.1, 0.1, SEGMENT_LENGTH); // Rail shape
+                    const railMaterial = new THREE.MeshPhongMaterial({ color: 0xcccccc }); // Light gray color
+                    const rail = new THREE.Mesh(railGeometry, railMaterial);
+                    rail.position.set(lanePositions[j], 0.05, GROUND_Z_OFFSET + i * SEGMENT_LENGTH); // Position rail
+                    scene.add(rail);
+                    railSegments.push(rail);
+                }
+            }
+            
+            // Generate initial obstacles and coins
+            generateObstacles(25); // Reduced number of obstacles
+            generateCoins(60); 
+
+            // Generate buildings on the sides
+            generateBuildings(NUM_BUILDINGS_PER_SIDE); 
+
+            // Generate trees on the sides
+            generateTrees(NUM_TREES_PER_SIDE);
+            
+            // Start game loop
+            animate();
+        }
+        
+        // Generate obstacles
+        function generateObstacles(count) {
+            for (let i = 0; i < count; i++) {
+                // Changed obstacle height to be thinner
+                const obstacleGeometry = new THREE.BoxGeometry(1, 0.7, 1); // Cube shape for obstacle, thinner height
+                const obstacleMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 }); // Red color
+                const obstacle = new THREE.Mesh(obstacleGeometry, obstacleMaterial);
+                obstacle.name = 'obstacle'; // Object name
+                obstacle.visible = false; // Hide obstacle initially
+                scene.add(obstacle);
+                obstacles.push(obstacle);
+            }
+            resetObstacles(); // Reset obstacle positions
+        }
+        
+        // Generate coins
+        function generateCoins(count) {
+            for (let i = 0; i < count; i++) {
+                const coinGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.1, 32); // Cylinder shape for coin
+                const coinMaterial = new THREE.MeshPhongMaterial({ color: 0xffd700 }); // Gold color
+                const coin = new THREE.Mesh(coinGeometry, coinMaterial);
+                coin.rotation.x = Math.PI / 2; // Rotate coin to be horizontal
+                coin.name = 'coin'; // Object name
+                coin.visible = false; // Hide coin initially
+                scene.add(coin);
+                coins.push(coin);
+            }
+            resetCoins(); // Reset coin positions
+        }
+
+        // Generate buildings (houses) - Modified for new positioning and windows
+        function generateBuildings(count) {
+            for (let i = 0; i < count; i++) {
+                const buildingHeight = 2 + Math.random() * 4; // Random building height
+                const buildingWidth = 1 + Math.random() * 1; // Random building width
+                const buildingDepth = 10; // Depth of the building
+
+                const buildingGeometry = new THREE.BoxGeometry(buildingWidth, buildingHeight, buildingDepth);
+                const buildingMaterial = new THREE.MeshPhongMaterial({ 
+                    color: new THREE.Color(Math.random() * 0xffffff) // Random building color
+                });
+                const buildingMesh = new THREE.Mesh(buildingGeometry, buildingMaterial);
+                buildingMesh.position.y = buildingHeight / 2; // Position building on the ground
+
+                const roofGeometry = new THREE.ConeGeometry(buildingWidth * 0.7, buildingWidth * 0.5, 4); // Cone roof shape
+                const roofMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 }); // Brown roof color
+                const roofMesh = new THREE.Mesh(roofGeometry, roofMaterial);
+                roofMesh.position.y = buildingHeight + roofGeometry.parameters.height / 2; // Position roof above building
+
+                const buildingGroup = new THREE.Group(); // Group building and roof
+                buildingGroup.add(buildingMesh);
+                buildingGroup.add(roofMesh);
+
+                // Add blue rectangular windows
+                const windowMaterial = new THREE.MeshPhongMaterial({ color: 0x00BFFF }); // DeepSkyBlue color for windows
+                const windowDepth = 0.1; // Thin window
+                const windowWidth = buildingWidth * 0.2;
+                const windowHeight = buildingHeight * 0.15;
+
+                // Add multiple windows on the front face (positive Z)
+                const numWindowsX = Math.max(1, Math.floor(buildingWidth / (windowWidth * 1.5)));
+                const numWindowsY = Math.max(1, Math.floor(buildingHeight / (windowHeight * 1.5)));
+
+                for (let wx = 0; wx < numWindowsX; wx++) {
+                    for (let wy = 0; wy < numWindowsY; wy++) {
+                        if (Math.random() > 0.2) { // Randomly skip some windows for variety
+                            const windowGeometry = new THREE.BoxGeometry(windowWidth, windowHeight, windowDepth);
+                            const windowMeshFront = new THREE.Mesh(windowGeometry, windowMaterial);
+
+                            // Position windows on the front face of the building
+                            windowMeshFront.position.x = (wx - (numWindowsX - 1) / 2) * (buildingWidth / numWindowsX);
+                            windowMeshFront.position.y = (wy - (numWindowsY - 1) / 2) * (buildingHeight / numWindowsY) + buildingHeight / 2;
+                            windowMeshFront.position.z = buildingDepth / 2 + windowDepth / 2; // On the front face
+
+                            buildingGroup.add(windowMeshFront);
+
+                            // Add windows on the back face (negative Z)
+                            const windowMeshBack = new THREE.Mesh(windowGeometry, windowMaterial);
+                            windowMeshBack.position.x = (wx - (numWindowsX - 1) / 2) * (buildingWidth / numWindowsX);
+                            windowMeshBack.position.y = (wy - (numWindowsY - 1) / 2) * (buildingHeight / numWindowsY) + buildingHeight / 2;
+                            windowMeshBack.position.z = -buildingDepth / 2 - windowDepth / 2; // On the back face
+                            
+                            buildingGroup.add(windowMeshBack);
+                        }
+                    }
+                }
+
+                buildingGroup.name = 'building';
+                buildingGroup.visible = false; // Hide group initially
+                scene.add(buildingGroup);
+                buildingGroups.push(buildingGroup);
+            }
+            resetBuildings(); // Reset building positions
+        }
+
+        // Generate trees
+        function generateTrees(count) {
+            for (let i = 0; i < count; i++) {
+                const trunkHeight = 2 + Math.random() * 2; // Random trunk height
+                const trunkRadius = 0.2 + Math.random() * 0.1; // Random trunk radius
+
+                const trunkGeometry = new THREE.CylinderGeometry(trunkRadius, trunkRadius, trunkHeight, 8);
+                const trunkMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 }); // Brown trunk color
+
+                const leavesHeight = 1.5 + Math.random() * 1.5; // Random leaves height
+                const leavesRadius = 1 + Math.random() * 0.5; // Random leaves radius
+
+                const leavesGeometry = new THREE.ConeGeometry(leavesRadius, leavesHeight, 16); // Cone for tree leaves
+                const leavesMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 }); // Forest green leaves color
+
+                const trunkMesh = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                trunkMesh.position.y = trunkHeight / 2; // Position trunk on the ground
+
+                const leavesMesh = new THREE.Mesh(leavesGeometry, leavesMaterial);
+                leavesMesh.position.y = trunkHeight + leavesHeight / 2 - 0.2; // Position leaves above trunk
+
+                const treeGroup = new THREE.Group(); // Group trunk and leaves
+                treeGroup.add(trunkMesh);
+                treeGroup.add(leavesMesh);
+                treeGroup.name = 'tree';
+                treeGroup.visible = false; // Hide group initially
+                scene.add(treeGroup);
+                treeGroups.push(treeGroup);
+            }
+            resetTrees(); // Reset tree positions
+        }
+
+        // Reset obstacle positions - Increased initial spacing
+        function resetObstacles() {
+            obstacles.forEach((obstacle, i) => {
+                const laneIndex = Math.floor(Math.random() * 3); // Choose random lane
+                // Obstacle position adjusted for new thinner height
+                obstacle.position.set(lanePositions[laneIndex], 0.35, -50 - i * (10 + Math.random() * 10)); // Position obstacle with more spacing
+                obstacle.visible = true;
+            });
+        }
+
+        // Reset coin positions
+        function resetCoins() {
+            coins.forEach((coin, i) => {
+                const laneIndex = Math.floor(Math.random() * 3); // Choose random lane
+                coin.position.set(lanePositions[laneIndex], 1, -30 - i * (3 + Math.random() * 3)); // Position coin
+                coin.visible = true;
+            });
+        }
+
+        // Reset building positions - Modified to place buildings closer to the road on side ground
+        function resetBuildings() {
+            buildingGroups.forEach((building, i) => {
+                const side = Math.random() < 0.5 ? -1 : 1; // Choose random side (-1: left, 1: right)
+                // Position buildings on the brown side ground, closer to the road
+                const xPosition = side * (BUILDING_X_POSITION_ON_SIDE + Math.random() * 1); // إضافة عشوائية بسيطة للموضع
+                building.position.set(xPosition, 0, -50 - i * BUILDING_SPACING + Math.random() * 10); // Position building
+                building.visible = true;
+            });
+        }
+
+        // Reset tree positions - Modified to place trees further out on side ground
+        function resetTrees() {
+            treeGroups.forEach((tree, i) => {
+                const side = Math.random() < 0.5 ? -1 : 1; // Choose random side (-1: left, 1: right)
+                // Position trees on the brown side ground, further from the road
+                const xPosition = side * (TREE_X_POSITION_ON_SIDE + Math.random() * 2); // إضافة عشوائية بسيطة للموضع
+                tree.position.set(xPosition, 0, -50 - i * TREE_SPACING + Math.random() * 10); // Position tree
+                tree.visible = true;
+            });
+        }
+        
+        // Handle player movement (position and scale)
+        function handlePlayerMovement() {
+            // Horizontal movement (smooth lane change using Lerp)
+            player.position.x = THREE.MathUtils.lerp(player.position.x, lanePositions[lane], 0.2);
+            
+            // Jump movement
+            if (isJumping) {
+                const elapsed = performance.now() - jumpStartTime; // Time elapsed since jump start
+                let progress = elapsed / jumpDuration; // Jump progress (0 to 1)
+                
+                if (progress < 1) {
+                    // Calculate player height using a quadratic function for a smooth jump
+                    player.position.y = playerBaseY + jumpHeight * (4 * progress * (1 - progress));
+                } else {
+                    player.position.y = playerBaseY; // Return player to base height
+                    isJumping = false; // End jump state
+                }
+            }
+            
+            // Slide movement
+            if (isSliding) {
+                const elapsed = performance.now() - slideStartTime; // Time elapsed since slide start
+                let progress = elapsed / slideDuration; // Slide progress (0 to 1)
+
+                if (progress < 1) {
+                    // Change player's vertical scale for sliding
+                    player.scale.y = THREE.MathUtils.lerp(1, 0.5, Math.sin(progress * Math.PI));
+                    // Adjust player's Y position to keep its base on the ground
+                    player.position.y = playerBaseY - (playerActualHeight / 2) * (1 - player.scale.y);
+                } else {
+                    player.scale.y = 1; // Reset player's original scale
+                    player.position.y = playerBaseY; // Return player to base height
+                    isSliding = false; // End slide state
+                }
+            }
+        }
+
+        // Handle player leg and arm animation (running, jumping, sliding)
+        function handlePlayerAnimation(deltaTime) {
+            if (!playerLeftLeg || !playerRightLeg || !playerLeftArm || !playerRightArm) return; // Ensure all limbs exist
+
+            // Reset leg and arm rotations for normal state
+            playerLeftLeg.rotation.x = 0;
+            playerRightLeg.rotation.x = 0;
+            playerLeftArm.rotation.x = 0;
+            playerRightArm.rotation.x = 0;
+            playerLeftArm.position.y = playerBodyMesh.position.y;
+            playerRightArm.position.y = playerBodyMesh.position.y;
+
+            if (isJumping) {
+                const elapsed = performance.now() - jumpStartTime;
+                let progress = elapsed / jumpDuration;
+                // Legs extend more during jump
+                const jumpRotation = Math.sin(progress * Math.PI) * Math.PI * jumpLegRotationFactor;
+                playerLeftLeg.rotation.x = jumpRotation;
+                playerRightLeg.rotation.x = -jumpRotation;
+
+                // Arms raise slightly during jump
+                const armJumpRotationValue = Math.sin(progress * Math.PI) * armJumpRotation;
+                playerLeftArm.rotation.x = -armJumpRotationValue; // Arms might swing back
+                playerRightArm.rotation.x = armJumpRotationValue; // Arms might swing forward
+                playerLeftArm.position.y = playerBodyMesh.position.y + armJumpRotationValue * 0.5;
+                playerRightArm.position.y = playerBodyMesh.position.y + armJumpRotationValue * 0.5;
+
+            } else if (isSliding) {
+                // Legs go horizontal for sliding
+                playerLeftLeg.rotation.x = Math.PI / 2; // Rotate to be flat
+                playerRightLeg.rotation.x = Math.PI / 2; // Rotate to be flat
+                // Adjust position slightly to align with flattened body
+                playerLeftLeg.position.y = -0.45 - (0.8 * (1 - player.scale.y));
+                playerRightLeg.position.y = -0.45 - (0.8 * (1 - player.scale.y));
+
+                // Arms come closer to body for sliding
+                playerLeftArm.rotation.x = Math.PI / 4; // Arms forward
+                playerRightArm.rotation.x = Math.PI / 4;
+                playerLeftArm.position.y = playerBodyMesh.position.y - (0.8 * (1 - player.scale.y));
+                playerRightArm.position.y = playerBodyMesh.position.y - (0.8 * (1 - player.scale.y));
+
+            } else {
+                // Running animation
+                runAnimationTime += deltaTime * runSpeedFactor * speed * 10; // Speed up animation with game speed
+                const legSwing = Math.sin(runAnimationTime) * Math.PI * 0.2; // Swing amplitude
+                playerLeftLeg.rotation.x = legSwing;
+                playerRightLeg.rotation.x = -legSwing;
+                // Reset leg Y position if not sliding
+                playerLeftLeg.position.y = -0.45;
+                playerRightLeg.position.y = -0.45;
+
+                // Arm swing during run (opposite to legs for natural movement)
+                const armSwing = Math.sin(runAnimationTime + Math.PI) * armSwingAmplitude; // Opposite phase to legs
+                playerLeftArm.rotation.x = armSwing;
+                playerRightArm.rotation.x = -armSwing;
+                // Reset arm Y position if not sliding
+                playerLeftArm.position.y = playerBodyMesh.position.y;
+                playerRightArm.position.y = playerBodyMesh.position.y;
+            }
+        }
+        
+        // Update game state
+        function updateGame(deltaTime) {
+            if (!gameActive) {
+                return; // Do nothing if game is not active
+            }
+            
+            // Move ground segments (road)
+            groundSegments.forEach(segment => {
+                segment.position.z += speed; // Move towards camera
+                if (segment.position.z > camera.position.z + (SEGMENT_LENGTH * NUM_SEGMENTS / 2)) {
+                    segment.position.z -= SEGMENT_LENGTH * NUM_SEGMENTS; // Recycle segment after passing camera
+                }
+            });
+
+            // Move side ground segments
+            sideGroundSegments.forEach(segment => {
+                segment.position.z += speed; // Move towards camera
+                if (segment.position.z > camera.position.z + (SEGMENT_LENGTH * NUM_SEGMENTS / 2)) {
+                    segment.position.z -= SEGMENT_LENGTH * NUM_SEGMENTS; // Recycle segment after passing camera
+                }
+            });
+
+            // Move rail segments
+            railSegments.forEach(segment => {
+                segment.position.z += speed; // Move towards camera
+                if (segment.position.z > camera.position.z + (SEGMENT_LENGTH * NUM_SEGMENTS / 2)) {
+                    segment.position.z -= SEGMENT_LENGTH * NUM_SEGMENTS; // Recycle rail
+                }
+            });
+
+            // Move building groups
+            buildingGroups.forEach(group => {
+                group.position.z += speed; // Move towards camera
+                if (group.position.z > camera.position.z + (BUILDING_SPACING * NUM_BUILDINGS_PER_SIDE / 2)) {
+                    const side = group.position.x > 0 ? 1 : -1; // Determine current side
+                    group.position.z -= BUILDING_SPACING * NUM_BUILDINGS_PER_SIDE; // Recycle building
+                    // Reposition building on the same side, maintaining its X offset
+                    const xPosition = side * (BUILDING_X_POSITION_ON_SIDE + Math.random() * 1);
+                    group.position.x = xPosition; 
+                }
+            });
+
+            // Move tree groups
+            treeGroups.forEach(group => {
+                group.position.z += speed; // Move towards camera
+                if (group.position.z > camera.position.z + (TREE_SPACING * NUM_TREES_PER_SIDE / 2)) {
+                    const side = group.position.x > 0 ? 1 : -1; // Determine current side
+                    group.position.z -= TREE_SPACING * NUM_TREES_PER_SIDE; // Recycle tree
+                    // Reposition tree on the same side, maintaining its X offset
+                    const xPosition = side * (TREE_X_POSITION_ON_SIDE + Math.random() * 2);
+                    group.position.x = xPosition;
+                }
+            });
+            
+            // Move obstacles
+            obstacles.forEach(obstacle => {
+                obstacle.position.z += speed; // Move towards camera
+                
+                // If obstacle passed camera, recycle it - now appears further away
+                if (obstacle.position.z > player.position.z + 5) {
+                    const laneIndex = Math.floor(Math.random() * 3); // Choose new lane
+                    // Obstacle position adjusted for new thinner height
+                    obstacle.position.set(lanePositions[laneIndex], 0.35, camera.position.z - 150 - Math.random() * 100); // Position obstacle far away
+                    obstacle.visible = true;
+                }
+                
+                // Collision detection
+                if (obstacle.visible &&
+                    Math.abs(player.position.x - obstacle.position.x) < 0.7 && // Proximity in X axis
+                    Math.abs(player.position.z - obstacle.position.z) < 0.7) { // Proximity in Z axis
+                    
+                    // Calculate player's top and bottom based on its actual height and current scale
+                    const playerTop = player.position.y + playerActualHeight * player.scale.y / 2;
+                    const playerBottom = player.position.y - playerActualHeight * player.scale.y / 2;
+                    // Obstacle top and bottom adjusted for new thinner height
+                    const obstacleTop = obstacle.position.y + 0.35; // Assuming obstacle is 0.7 unit tall, centered at 0.35
+                    const obstacleBottom = obstacle.position.y - 0.35;
+
+                    // Check for Y-axis overlap (jumping or sliding)
+                    if (!(playerTop < obstacleBottom || playerBottom > obstacleTop)) {
+                        endGame(obstacle); // End game on collision, passing the collided obstacle
+                    }
+                }
+            });
+            
+            // Move coins
+            coins.forEach(coin => {
+                coin.position.z += speed; // Move towards camera
+                coin.rotation.y += 0.1; // Rotate coin
+                
+                // If coin passed camera, recycle it
+                if (coin.position.z > player.position.z + 5) {
+                    const laneIndex = Math.floor(Math.random() * 3); // Choose new lane
+                    coin.position.set(lanePositions[laneIndex], 1, camera.position.z - 80 - Math.random() * 40); // Position coin far away
+                    coin.visible = true;
+                }
+                
+                // Collect coins
+                if (coin.visible &&
+                    Math.abs(player.position.x - coin.position.x) < 0.7 && // Proximity in X axis
+                    Math.abs(player.position.z - coin.position.z) < 0.7 && // Proximity in Z axis
+                    Math.abs(player.position.y - coin.position.y) < 1) { // Proximity in Y axis
+                    coin.visible = false; // Hide collected coin
+                    coinsCount++;
+                    coinsElement.textContent = coinsCount; // Update coin counter
+                    score += 50; // Increase score
+                    scoreElement.textContent = score; // Update score counter
+                }
+            });
+            
+            // Increase score and speed
+            score++;
+            scoreElement.textContent = score;
+            // Adjusted speed increment for medium speed
+            speed = 0.1 + Math.floor(score / 1000) * 0.05; 
+        }
+        
+        // Start game
+        function startGame() {
+            gameActive = true;
+            startScreen.style.display = 'none'; // Hide start screen
+            gameOverScreen.style.display = 'none'; // Hide game over screen
+            mathQuestionModal.style.display = 'none'; // Hide question modal
+            score = 0;
+            coinsCount = 0;
+            speed = 0.1; // Reset speed to initial value
+            lane = 1; // Reset player to center lane
+            player.position.x = lanePositions[lane];
+            player.position.y = playerBaseY; // Set initial Y position for the group
+            player.scale.y = 1; // Reset player scale
+            isJumping = false;
+            isSliding = false;
+            runAnimationTime = 0; // Reset run animation time
+
+            scoreElement.textContent = score;
+            coinsElement.textContent = coinsCount;
+            
+            // Reset obstacle, coin, and building positions
+            resetObstacles();
+            resetCoins();
+            resetBuildings();
+            resetTrees(); 
+        }
+        
+        // End game
+        function endGame(obstacle = null) { // Pass the collided obstacle
+            gameActive = false; // Pause the game
+            if (obstacle) {
+                collidedObstacle = obstacle; // Store the collided obstacle
+                showQuestionModal();
+            } else {
+                // Normal game over (e.g., if player falls off the map, though not implemented here)
+                gameOverScreen.style.display = 'flex';
+                finalScoreElement.textContent = `النقاط: ${score}`;
+            }
+        }
+
+        // Show Math Question Modal
+        function showQuestionModal() {
+            const randomIndex = Math.floor(Math.random() * mathQuestions.length);
+            currentQuestion = mathQuestions[randomIndex];
+
+            questionTextElement.textContent = currentQuestion.question;
+            answerInputElement.value = '';
+            feedbackMessageElement.textContent = '';
+            mathQuestionModal.style.display = 'flex';
+
+            // Render LaTeX after setting the text
+            // MathJax.typesetPromise() is used to ensure rendering happens after the element is visible
+            MathJax.typesetPromise([questionTextElement]);
+        }
+
+        // Check Answer for Math Question
+        function checkAnswer() {
+            const userAnswer = parseFloat(answerInputElement.value);
+            
+            if (!isNaN(userAnswer) && userAnswer === currentQuestion.answer) {
+                feedbackMessageElement.textContent = 'إجابة صحيحة! استمر في اللعب.';
+                feedbackMessageElement.style.color = 'lightgreen';
+                setTimeout(() => {
+                    mathQuestionModal.style.display = 'none';
+                    gameActive = true; // Resume game
+                    if (collidedObstacle) {
+                        // Recycle the obstacle immediately upon correct answer
+                        const laneIndex = Math.floor(Math.random() * 3);
+                        collidedObstacle.position.set(lanePositions[laneIndex], 0.35, camera.position.z - 150 - Math.random() * 100);
+                        collidedObstacle.visible = true; // Make it visible again for future use
+                        collidedObstacle = null; // Clear reference
+                    }
+                    score += 100; // Bonus for correct answer
+                    scoreElement.textContent = score;
+                }, 1500); // Give player a moment to read feedback
+            } else {
+                feedbackMessageElement.textContent = `إجابة خاطئة. الإجابة الصحيحة هي: ${currentQuestion.answer}. انتهت اللعبة.`;
+                feedbackMessageElement.style.color = 'red';
+                setTimeout(() => {
+                    mathQuestionModal.style.display = 'none';
+                    // Game over if answer is incorrect
+                    gameOverScreen.style.display = 'flex';
+                    finalScoreElement.textContent = `النقاط: ${score}`;
+                    // Game state will be reset when restart button is clicked
+                }, 2000); // Give player a moment to read feedback before game over screen
+            }
+        }
+        
+        let lastFrameTime = 0;
+        // Animation loop
+        function animate(currentTime) {
+            requestAnimationFrame(animate); // Request next frame
+            
+            const deltaTime = currentTime - lastFrameTime; // Calculate time elapsed between frames
+            lastFrameTime = currentTime;
+
+            // Only update game and player animation if game is active
+            if (gameActive) {
+                handlePlayerMovement(); // Update player movement (position and scale)
+                handlePlayerAnimation(deltaTime); // Update player leg and arm animation
+                updateGame(deltaTime); // Update game state
+            }
+            
+            // --- Camera movement improvements ---
+            // Smoothly move camera's X position towards a target influenced by player's lane
+            // The 0.5 factor keeps the camera somewhat centered but still shifts with the player for a wider view
+            const targetCameraX = player.position.x * 0.5; 
+            camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetCameraX, 0.05); // Smooth transition speed
+
+            // Adjust camera's lookAt target to encompass more of the street
+            // Look slightly above the player and slightly ahead to see upcoming obstacles
+            const lookAtX = player.position.x; // Still focus on player's X for central alignment
+            const lookAtY = player.position.y + 0.5; // Look slightly above the player
+            const lookAtZ = player.position.z - 5; // Look slightly ahead of the player
+
+            camera.lookAt(lookAtX, lookAtY, lookAtZ);
+            // --- End camera movement improvements ---
+            
+            renderer.render(scene, camera); // Render scene
+        }
+        
+        // Handle keyboard input
+        function handleKeyDown(e) {
+            if (!gameActive) return; // Do nothing if game is not active
+            
+            switch(e.key) {
+                // For RTL: ArrowLeft moves player left (increase lane)
+                case 'ArrowLeft':
+                    if (lane > 0) lane--; // Move left
+                    break;
+                // For RTL: ArrowRight moves player right (decrease lane)
+                case 'ArrowRight':
+                    if (lane < 2) lane++; // Move right
+                    break;
+                case ' ': // Space key for jump
+                    if (!isJumping && !isSliding) {
+                        isJumping = true;
+                        jumpStartTime = performance.now();
+                    }
+                    break;
+                case 'ArrowDown': // Down arrow key for slide
+                    if (!isSliding && !isJumping) {
+                        isSliding = true;
+                        slideStartTime = performance.now();
+                    }
+                    break;
+            }
+        }
+
+        // Handle touch input for mobile devices
+        function handleTouchStart(e) {
+            touchStartX = e.touches[0].clientX; // Record touch start X position
+            touchStartY = e.touches[0].clientY; // Record touch start Y position
+        }
+
+        function handleTouchEnd(e) {
+            if (!gameActive) return; // Do nothing if game is not active
+
+            touchEndX = e.changedTouches[0].clientX; // Record touch end X position
+            touchEndY = e.changedTouches[0].clientY; // Record touch end Y position
+
+            const deltaX = touchEndX - touchStartX; // Distance difference in X axis
+            const deltaY = touchEndY - touchStartY; // Distance difference in Y axis
+
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+                // Horizontal swipe - corrected here
+                if (deltaX > 0) {
+                    // Swipe right - move right
+                    if (lane < 2) lane++;
+                } else {
+                    // Swipe left - move left
+                    if (lane > 0) lane--;
+                }
+            } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > swipeThreshold) {
+                // Vertical swipe
+                if (deltaY < 0) {
+                    // Swipe up (jump)
+                    if (!isJumping && !isSliding) {
+                        isJumping = true;
+                        jumpStartTime = performance.now();
+                    }
+                } else {
+                    // Swipe down (slide)
+                    if (!isSliding && !isJumping) {
+                        isSliding = true;
+                        slideStartTime = performance.now();
+                    }
+                }
+            }
+        }
+        
+        // Initialize game
+        function initGame() {
+            initThreeJS(); // Initialize Three.js
+            
+            // Event listeners for buttons
+            startBtn.addEventListener('click', startGame);
+            restartBtn.addEventListener('click', startGame);
+            submitAnswerBtn.addEventListener('click', checkAnswer); // Event listener for math question submit button
+            
+            // Event listeners for keyboard input
+            window.addEventListener('keydown', handleKeyDown);
+            
+            // Event listeners for touch input (for mobile devices)
+            window.addEventListener('touchstart', handleTouchStart);
+            window.addEventListener('touchend', handleTouchEnd);
+            
+            // Character selection
+            characters.forEach((char, index) => {
+                char.addEventListener('click', () => {
+                    characters.forEach(c => c.classList.remove('selected')); // Remove selection from all
+                    char.classList.add('selected'); // Select chosen character
+                    
+                    let color;
+                    switch(index) {
+                        case 0: color = 0xff6600; break; // Orange color
+                        case 1: color = 0x3366ff; break; // Blue color
+                        case 2: color = 0x33cc33; break; // Green color
+                    }
+                    // Change the color of the player's body mesh and hat
+                    if (playerBodyMesh) {
+                        playerBodyMesh.material.color.setHex(color); 
+                    }
+                    if (playerHatMesh) {
+                        // Access the hat meshes and update their material color
+                        playerHatMesh.children.forEach(mesh => {
+                            if (mesh.material) {
+                                mesh.material.color.setHex(color);
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight; // Update camera aspect ratio
+                camera.updateProjectionMatrix(); // Update camera projection matrix
+                renderer.setSize(window.innerWidth, window.innerHeight); // Update renderer size
+            });
+        }
+        
+        // Start game when window loads
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>
