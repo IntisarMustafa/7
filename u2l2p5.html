@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subway Surfers ثلاثية الأبعاد - كاميرا محسّنة وموسيقى</title>
+    <title>Subway Surfers ثلاثية الأبعاد - كاميرا محسّنة</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- MathJax for rendering LaTeX mathematical expressions -->
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <!-- Tone.js CDN for audio synthesis and sequencing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script> 
     <style>
         /* Reset default margins and paddings for all elements */
         * {
@@ -348,16 +346,16 @@
             align-items: center;
             z-index: 30; /* Above game over screen */
             text-align: center;
-            padding: 10px; /* Reduced padding for smaller screens */
+            padding: 20px;
         }
 
         .modal-content {
             background: linear-gradient(to bottom, #2c3e50, #4a69bd); /* Dark blue to lighter blue gradient */
-            padding: 20px; /* Reduced padding for smaller screens */
+            padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            max-width: 95%; /* Increased max-width for better use of space */
-            width: 500px; /* Still a target width for larger screens */
+            max-width: 90%;
+            width: 500px;
             transform: scale(0.9);
             animation: modalPopIn 0.3s forwards ease-out;
             border: 2px solid #ffcc00; /* Gold border */
@@ -369,33 +367,31 @@
         }
 
         #math-question-modal h3 {
-            font-size: 3.5vh; /* Adjusted for responsiveness */
-            margin-bottom: 2vh; /* Adjusted for responsiveness */
+            font-size: 4vh;
+            margin-bottom: 3vh;
             color: #ffcc00;
             text-shadow: 1px 1px 5px rgba(255, 204, 0, 0.5);
         }
 
         #question-text {
-            font-size: 3vh; /* Adjusted for responsiveness */
-            margin-bottom: 3vh; /* Adjusted for responsiveness */
+            font-size: 3.5vh;
+            margin-bottom: 4vh;
             color: #e0e0e0;
             direction: ltr; /* Ensure math is left-to-right */
             text-align: center;
             background: rgba(0, 0, 0, 0.3);
-            padding: 10px; /* Adjusted for responsiveness */
+            padding: 15px;
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            word-wrap: break-word; /* Ensure long equations wrap */
-            overflow-wrap: break-word; /* Modern equivalent */
         }
 
         #answer-input {
-            width: 90%; /* Increased width for better mobile usability */
-            padding: 1.5vh; /* Adjusted for responsiveness */
-            margin-bottom: 2.5vh; /* Adjusted for responsiveness */
+            width: 80%;
+            padding: 2vh;
+            margin-bottom: 3vh;
             border-radius: 10px;
             border: 2px solid #ffcc00;
-            font-size: 2.2vh; /* Adjusted for responsiveness */
+            font-size: 2.5vh;
             text-align: center;
             background-color: rgba(255, 255, 255, 0.9);
             color: #333;
@@ -409,9 +405,9 @@
         }
 
         #feedback-message {
-            font-size: 2.2vh; /* Adjusted for responsiveness */
+            font-size: 2.5vh;
             font-weight: bold;
-            margin-top: 1.5vh; /* Adjusted for responsiveness */
+            margin-top: 2vh;
             min-height: 3vh; /* Reserve space */
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
         }
@@ -430,9 +426,9 @@
             #final-score { font-size: 5vh; }
 
             /* Modal adjustments for tablets */
-            .modal-content { padding: 25px; max-width: 90%; } /* Slightly reduced padding */
-            #math-question-modal h3 { font-size: 3vh; }
-            #question-text { font-size: 2.5vh; }
+            .modal-content { padding: 30px; }
+            #math-question-modal h3 { font-size: 3.5vh; }
+            #question-text { font-size: 3vh; }
             #answer-input { font-size: 2vh; }
             #feedback-message { font-size: 2vh; }
         }
@@ -447,13 +443,11 @@
             #score-container, #coins-container { font-size: 1.8vh; padding: 0.8vh 1.5vh; }
             
             /* Modal adjustments for mobile */
-            #math-question-modal { padding: 5px; } /* Minimal padding for modal container */
-            .modal-content { padding: 15px; border-radius: 15px; max-width: 98%; } /* More aggressive adjustments */
-            #math-question-modal h3 { font-size: 2.8vh; margin-bottom: 1.5vh; }
-            #question-text { font-size: 2.2vh; padding: 8px; margin-bottom: 2vh; }
-            #answer-input { font-size: 1.6vh; padding: 1.2vh; margin-bottom: 2vh; }
-            #feedback-message { font-size: 1.6vh; margin-top: 1vh; }
-            .btn { font-size: 2vh; padding: 1vh 3vh; } /* Adjust button size within modal */
+            .modal-content { padding: 20px; border-radius: 15px; }
+            #math-question-modal h3 { font-size: 3vh; }
+            #question-text { font-size: 2.5vh; padding: 10px; }
+            #answer-input { font-size: 1.8vh; padding: 1.5vh; }
+            #feedback-message { font-size: 1.8vh; }
         }
     </style>
 </head>
@@ -667,396 +661,6 @@
         let currentQuestion = null;
         let collidedObstacle = null; // To keep track of the obstacle that caused the collision
         
-        // Global variables for Tone.js instruments and loops
-        let melodySynth;
-        let bassSynth;
-        let kickDrum;
-        let snareDrum;
-        let hiHat;
-        let padSynth;
-        let leadSynth;
-        let arpeggioSynth; 
-
-        // Tone.Channels for individual instrument mixing and routing to effects
-        let melodyChannel;
-        let bassChannel;
-        let drumChannel; // Shared for all drums (kick, snare, hi-hat)
-        let padChannel;
-        let leadChannel;
-        let arpeggioChannel; 
-
-        // Tone.Part instances for sequencing musical patterns
-        let melodyLoop;
-        let bassLoop;
-        let drumLoop;
-        let padLoop;
-        let leadLoop;
-        let arpeggioLoop; 
-
-        let isToneInitialized = false; // Flag to ensure Tone.js components are initialized only once 
-
-        /**
-         * Initializes all Tone.js instruments, effects, and musical loops.
-         * This function is designed to be called only once after the user's first interaction,
-         * ensuring the audio context is properly started by the browser.
-         */
-        function initializeToneComponents() {
-            if (isToneInitialized) return; // Prevent re-initialization if already done 
-
-            try {
-                console.log('Initializing Tone.js components...'); 
-
-                // --- Master Effects Chain for overall sound shaping and clarity ---
-                // All instruments will eventually route through this chain. 
-
-                // 1. Highpass Filter: Cuts out unwanted low-end rumble (below 120Hz) to clean up the mix.
-                // Adjusted from 80Hz to 120Hz for a cleaner low end.
-                const highpassFilter = new Tone.Filter(120, "highpass"); 
-
-                // 2. Compressor: Reduces the dynamic range, making the track sound louder and more cohesive ("glued").
-                const compressor = new Tone.Compressor({
-                    threshold: -24, // Softer threshold to catch more of the signal
-                    ratio: 4,      // Moderate compression ratio
-                    attack: 0.01,  // Fast attack to catch transients
-                    release: 0.2   // Moderate release
-                }); 
-
-                // 3. Lowpass Filter: Gently rolls off harsh high frequencies (above 8000Hz) for a smoother sound.
-                // Adjusted from 16000Hz to 8000Hz to reduce harsh highs.
-                const lowpassFilter = new Tone.Filter(8000, "lowpass"); 
-
-                // 4. Limiter: Prevents the master output from exceeding -1dB, avoiding digital clipping and distortion.
-                const limiter = new Tone.Limiter(-1).toDestination(); // Connects directly to your speakers/headphones 
-
-                // Connect the master effects chain in sequence:
-                // highpassFilter -> compressor -> lowpassFilter -> limiter -> Destination
-                highpassFilter.connect(compressor);
-                compressor.connect(lowpassFilter);
-                lowpassFilter.connect(limiter);
-                console.log('Master effects chain connected.');
-                
-                // --- Auxiliary Effects (Reverb, Chorus, Delay) ---
-                // These effects are sent to the highpassFilter, meaning their output also goes through the master chain. 
-
-                // Reverb: Adds spaciousness and depth to the sound.
-                // Decay and wetness reduced for a lighter, less muddy reverb.
-                const reverb = new Tone.Reverb({
-                    decay: 1.2,    // Shorter decay for a less muddy sound (was 2.0)
-                    preDelay: 0.005, // Small pre-delay (was 0.01)
-                    wet: 0.1       // Low wetness to keep the mix clear (was 0.2)
-                }).connect(highpassFilter); // Route reverb output to the master highpass filter
-                console.log('Reverb initialized and connected.');
-
-
-                // Chorus: Creates a thicker, richer sound by slightly detuning and delaying copies of the signal.
-                // Settings adjusted for a softer, less obtrusive effect.
-                const chorus = new Tone.Chorus(2, 1.5, 0.1).connect(highpassFilter); // (was 4, 2.5, 0.3)
-                console.log('Chorus initialized and connected.'); 
-
-                // Delay: Creates echoes.
-                const delay = new Tone.FeedbackDelay("8n", 0.3).connect(highpassFilter); // Short delay time, low feedback
-                console.log('Delay initialized and connected.'); 
-
-                // --- Instruments and their Tone.Channels ---
-                // Each instrument has its own Tone.Channel for volume control and sending to effects. 
-
-                // Melody Synth: Bright sawtooth wave for a clear, cutting melody.
-                melodySynth = new Tone.PolySynth(Tone.Synth, {
-                    oscillator: { type: "sawtooth" },
-                    envelope: { attack: 0.02, decay: 0.4, sustain: 0.1, release: 0.8 }
-                });
-                // Volume adjusted lower to sit better in the mix (was -7dB).
-                melodyChannel = new Tone.Channel(-10, 0).connect(highpassFilter); // Connect to master chain
-                melodySynth.connect(melodyChannel); // Synth -> Channel
-                melodyChannel.send(reverb, 0.2); // Send some melody to reverb
-                melodyChannel.send(chorus, 0.5); // Send some melody to chorus
-                console.log('Melody Synth initialized and connected.'); 
-
-                // Bass Synth: Smooth triangle wave for a solid, non-aggressive bassline.
-                bassSynth = new Tone.Synth({
-                    oscillator: { type: "triangle" },
-                    envelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1.2 }
-                });
-                // Volume adjusted lower for a more subtle bass presence (was -8dB).
-                bassChannel = new Tone.Channel(-12, 0).connect(highpassFilter); // Lower volume for bass
-                bassSynth.connect(bassChannel);
-                console.log('Bass Synth initialized and connected.'); 
-
-                // Drum Channel: A single channel for all drums to control their collective volume and send to effects.
-                drumChannel = new Tone.Channel(-4, 0).connect(highpassFilter); // Connect to master chain
-                console.log('Drum Channel initialized and connected.'); 
-
-                // Kick Drum: Deep, punchy kick sound.
-                kickDrum = new Tone.MembraneSynth({
-                    pitchDecay: 0.05, octaves: 8,
-                    envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 0.2, attackCurve: "exponential" }
-                });
-                kickDrum.connect(drumChannel); // Kick -> Drum Channel
-                console.log('Kick Drum initialized and connected.'); 
-
-                // Snare Drum: Sharp white noise snare.
-                snareDrum = new Tone.NoiseSynth({
-                    noise: { type: "white" },
-                    envelope: { attack: 0.005, decay: 0.1, sustain: 0.0, release: 0.12 }
-                });
-                snareDrum.connect(drumChannel); // Snare -> Drum Channel
-                console.log('Snare Drum initialized and connected.'); 
-
-                // Hi-Hat: Crisp metal synth for rhythmic accents. Parameters are tuned for less harshness.
-                hiHat = new Tone.MetalSynth({
-                    frequency: 180, // Slightly lower frequency for a softer sound
-                    envelope: { attack: 0.001, decay: 0.05, sustain: 0.0, release: 0.06 }, // Shorter release for tighter sound
-                    harmonicity: 4.5, // Reduced for less metallic harshness
-                    modulationIndex: 25, // Reduced for less metallic harshness
-                    resonance: 2500, // Reduced for less metallic harshness
-                    octaves: 1.2 // Reduced for a more focused sound
-                });
-                hiHat.connect(drumChannel); // Hi-Hat -> Drum Channel
-                console.log('Hi-Hat initialized and connected.'); 
-
-                // Pad Synth: FM synth for a sustained, atmospheric background.
-                padSynth = new Tone.FMSynth({
-                    harmonicity: 3.01, modulationIndex: 14,
-                    envelope: { attack: 2, decay: 0.3, sustain: 0.9, release: 3.0 }, // Long attack and release for a soft pad
-                    modulation: { type: "square" },
-                    modulationEnvelope: { attack: 0.5, decay: 0.01, sustain: 1, release: 0.5 }
-                });
-                padChannel = new Tone.Channel(-12, 0).connect(highpassFilter); // Very low volume for background
-                padSynth.connect(padChannel);
-                padChannel.send(reverb, 0.7); // More reverb for an airy pad sound
-                console.log('Pad Synth initialized and connected.'); 
-
-                // Lead Synth: DuoSynth for a rich, expressive lead melody.
-                leadSynth = new Tone.DuoSynth({
-                    vibratoAmount: 0.5, vibratoRate: 5, harmonicity: 1.5,
-                    voice0: { volume: -10, oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.4, sustain: 0.5, release: 0.8 } },
-                    voice1: { volume: -15, oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.1, sustain: 0.3, release: 0.6 } },
-                    filterEnvelope: { baseFrequency: 200, octaves: 2, attack: 0.01, decay: 0.2, sustain: 1, release: 0.7 }
-                });
-                // Volume adjusted lower for a more balanced lead (was -5dB).
-                leadChannel = new Tone.Channel(-8, 0).connect(highpassFilter);
-                leadSynth.connect(leadChannel);
-                leadChannel.send(delay, 0.4); // Send to delay
-                leadChannel.send(reverb, 0.4); // Send to reverb
-                console.log('Lead Synth initialized and connected.'); 
-
-                // Arpeggio Synth: Triangle wave for a clean, rhythmic arpeggio.
-                arpeggioSynth = new Tone.Synth({
-                    oscillator: { type: "triangle" },
-                    envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.4 }
-                });
-                arpeggioChannel = new Tone.Channel(-11, 0).connect(highpassFilter);
-                arpeggioSynth.connect(arpeggioChannel); 
-                arpeggioChannel.send(reverb, 0.5);
-                console.log('Arpeggio Synth initialized and connected.');
-
-
-                // --- Musical Composition: Defining the patterns and tempo --- 
-
-                // Set a fast tempo for an energetic feel
-                Tone.Transport.bpm.value = 140; // Beats Per Minute
-                console.log('Tempo set to 140 BPM.'); 
-
-                // Define a common chord progression (C Major, G Major, A minor, F Major) for 4 measures
-                const chordsProgression = [
-                    ['C4', 'E4', 'G4', 'C5'], // C Major chord
-                    ['G4', 'B4', 'D5', 'G5'], // G Major chord
-                    ['A4', 'C5', 'E5', 'A5'], // A minor chord
-                    ['F4', 'A4', 'C5', 'F5']  // F Major chord
-                ]; 
-
-                // Melody notes pattern, following the chord progression
-                const melodyNotesPattern = [
-                    // Measure 1 - Revised for a more active, higher-pitched feel
-                    { time: '0:0:0', notes: ['C5'] }, // Start strong and high
-                    { time: '0:0:2', notes: ['E5'] },
-                    { time: '0:1:0', notes: ['G5'] },
-                    { time: '0:1:2', notes: ['C6'] }, // Even higher for impact
-                    { time: '0:2:0', notes: ['G5'] }, // Descend into the next chord
-                    { time: '0:2:2', notes: ['B4'] },
-                    { time: '0:3:0', notes: ['D5'] },
-                    { time: '0:3:2', notes: ['C5'] }, 
-
-                    // Measure 2 (unchanged, as it was successful)
-                    { time: '1:0:0', notes: chordsProgression[2] },
-                    { time: '1:1:2', notes: ['E5', 'D5'] },
-                    { time: '1:2:0', notes: chordsProgression[3] },
-                    { time: '1:3:2', notes: ['C5', 'A4'] }, 
-
-                    // Measure 3 (unchanged)
-                    { time: '2:0:0', notes: chordsProgression[0] },
-                    { time: '2:1:2', notes: ['G4', 'A4'] },
-                    { time: '2:2:0', notes: chordsProgression[1] },
-                    { time: '2:3:2', notes: ['B4', 'C5'] }, 
-
-                    // Measure 4 (unchanged)
-                    { time: '3:0:0', notes: chordsProgression[2] },
-                    { time: '3:1:2', notes: ['G4', 'F4'] },
-                    { time: '3:2:0', notes: chordsProgression[3] },
-                    { time: '3:3:2', notes: ['E4', 'D4'] }
-                ]; 
-
-                // Bass line pattern, playing the root notes of the progression
-                const bassNotesPattern = [
-                    { time: '0:0:0', note: 'C2' }, { time: '0:2:0', note: 'G2' },
-                    { time: '1:0:0', note: 'A2' }, { time: '1:2:0', note: 'F2' },
-                    { time: '2:0:0', note: 'C2' }, { time: '2:2:0', note: 'G2' },
-                    { time: '3:0:0', note: 'A2' }, { time: '3:2:0', note: 'F2' }
-                ]; 
-
-                // Pad chords pattern, sustained for harmony
-                const padChordsPattern = [
-                    { time: '0:0:0', chords: ['C3', 'E3', 'G3'] },
-                    { time: '1:0:0', chords: ['G3', 'B3', 'D4'] },
-                    { time: '2:0:0', chords: ['A3', 'C4', 'E4'] },
-                    { time: '3:0:0', chords: ['F3', 'A3', 'C4'] }
-                ]; 
-
-                // Lead melody pattern, expressive and varied
-                const leadMelodyNotesPattern = [
-                    { time: '0:0:0', note: 'C5' },
-                    { time: '0:1:0', note: 'D5' },
-                    { time: '0:2:0', note: 'E5' },
-                    { time: '0:3:0', note: 'G5' }, 
-
-                    { time: '1:0:0', note: 'A5' },
-                    { time: '1:1:0', note: 'G5' },
-                    { time: '1:2:0', note: 'E5' },
-                    { time: '1:3:0', note: 'D5' }, 
-
-                    { time: '2:0:0', note: 'C5' },
-                    { time: '2:1:0', note: 'E5' },
-                    { time: '2:2:0', note: 'G5' },
-                    { time: '2:3:0', note: 'A5' }, 
-
-                    { time: '3:0:0', note: 'G5' },
-                    { time: '3:1:0', note: 'F5' },
-                    { time: '3:2:0', note: 'E5' },
-                    { time: '3:3:0', note: 'D4' }
-                ]; 
-
-                // Arpeggio pattern, based on the chord progression, played quickly
-                const arpeggioPattern = [
-                    { time: '0:0:0', notes: ['C4', 'E4', 'G4', 'C5'] },
-                    { time: '0:1:0', notes: ['G4', 'B4', 'D5', 'G5'] },
-                    { time: '0:2:0', notes: ['A4', 'C5', 'E5', 'A5'] },
-                    { time: '0:3:0', notes: ['F4', 'A4', 'C5', 'F5'] }
-                ]; 
-
-                // Drum pattern, providing a dynamic beat with a simple fill at the end of the 4th measure
-                const drumPattern = [
-                    // Measure 1
-                    { time: '0:0:0', instrument: 'kick' },
-                    { time: '0:0:2', instrument: 'hihat' },
-                    { time: '0:1:0', instrument: 'snare' },
-                    { time: '0:1:2', instrument: 'hihat' },
-                    { time: '0:2:0', instrument: 'kick' },
-                    { time: '0:2:2', instrument: 'hihat' },
-                    { time: '0:3:0', instrument: 'snare' },
-                    { time: '0:3:2', instrument: 'hihat' }, 
-
-                    // Measure 2
-                    { time: '1:0:0', instrument: 'kick' },
-                    { time: '1:0:2', instrument: 'hihat' },
-                    { time: '1:1:0', instrument: 'snare' },
-                    { time: '1:1:2', instrument: 'hihat' },
-                    { time: '1:2:0', instrument: 'kick' },
-                    { time: '1:2:2', instrument: 'hihat' },
-                    { time: '1:3:0', instrument: 'snare' },
-                    { time: '1:3:2', instrument: 'hihat' }, 
-
-                    // Measure 3
-                    { time: '2:0:0', instrument: 'kick' },
-                    { time: '2:0:2', instrument: 'hihat' },
-                    { time: '2:1:0', instrument: 'snare' },
-                    { time: '2:1:2', instrument: 'hihat' },
-                    { time: '2:2:0', instrument: 'kick' },
-                    { time: '2:2:2', instrument: 'hihat' },
-                    { time: '2:3:0', instrument: 'snare' },
-                    { time: '2:3:2', instrument: 'hihat' }, 
-
-                    // Measure 4 (with a simple fill)
-                    { time: '3:0:0', instrument: 'kick' },
-                    { time: '3:0:2', instrument: 'hihat' },
-                    { time: '3:1:0', instrument: 'snare' },
-                    { time: '3:1:2', instrument: 'hihat' },
-                    { time: '3:2:0', instrument: 'kick' },
-                    { time: '3:2:2', instrument: 'hihat' },
-                    { time: '3:3:0', instrument: 'snare' },
-                    { time: '3:3:1', instrument: 'hihat' }, // Faster hi-hat for fill
-                    { time: '3:3:2', instrument: 'kick' },  // Quick kick for fill
-                    { time: '3:3:3', instrument: 'snare' }  // Quick snare for fill
-                ];
-
-
-                // Create Tone.Part instances for each musical section
-                // These parts loop continuously once started with Tone.Transport 
-
-                melodyLoop = new Tone.Part((time, value) => {
-                    melodySynth.triggerAttackRelease(value.notes, '8n', time);
-                }, melodyNotesPattern);
-                melodyLoop.loop = true; // Loop the pattern indefinitely
-                melodyLoop.start(0); // Start at the beginning of the transport
-                console.log('Melody loop created and started.'); 
-
-                bassLoop = new Tone.Part((time, value) => {
-                    bassSynth.triggerAttackRelease(value.note, '4n', time);
-                }, bassNotesPattern);
-                bassLoop.loop = true;
-                bassLoop.start(0);
-                console.log('Bass loop created and started.'); 
-
-                padLoop = new Tone.Part((time, value) => {
-                    padSynth.triggerAttackRelease(value.chords, '2n', time);
-                }, padChordsPattern);
-                padLoop.loop = true;
-                padLoop.start(0);
-                console.log('Pad loop created and started.'); 
-
-                leadLoop = new Tone.Part((time, value) => {
-                    leadSynth.triggerAttackRelease(value.note, '8n', time);
-                }, leadMelodyNotesPattern);
-                leadLoop.loop = true;
-                leadLoop.start(0);
-                console.log('Lead loop created and started.'); 
-
-                arpeggioLoop = new Tone.Part((time, value) => {
-                    const chord = value.notes;
-                    if (chord && chord.length > 0) {
-                        const duration = '16n'; // Play each note as a 16th note
-                        // Trigger each note in the chord sequentially to create the arpeggio effect
-                        for (let i = 0; i < chord.length; i++) {
-                            arpeggioSynth.triggerAttackRelease(chord[i], duration, time + Tone.Time(duration).toSeconds() * i);
-                        }
-                    }
-                }, arpeggioPattern);
-                arpeggioLoop.loop = true;
-                arpeggioLoop.start(0);
-                console.log('Arpeggio loop created and started.'); 
-
-                drumLoop = new Tone.Part((time, value) => {
-                    // Trigger the appropriate drum sound based on the pattern
-                    if (value.instrument === 'kick') {
-                        kickDrum.triggerAttackRelease('C2', '8n', time);
-                    } else if (value.instrument === 'snare') {
-                        snareDrum.triggerAttackRelease('8n', time);
-                    } else if (value.instrument === 'hihat') {
-                        hiHat.triggerAttackRelease('C5', '16n', time, 0.5); // C5 is a common arbitrary note for hi-hats
-                    }
-                }, drumPattern);
-                drumLoop.loop = true;
-                drumLoop.start(0);
-                console.log('Drum loop created and started.'); 
-
-                isToneInitialized = true; // Mark components as initialized
-                console.log('Tone.js components initialized successfully.'); 
-
-            } catch (error) {
-                console.error('Error initializing Tone.js components:', error);
-                // No need for showMessage here, as it's an internal error.
-            }
-        }
-
         // Initialize Three.js scene
         function initThreeJS() {
             // Create scene
@@ -1591,7 +1195,7 @@
         }
         
         // Start game
-        async function startGame() {
+        function startGame() {
             gameActive = true;
             startScreen.style.display = 'none'; // Hide start screen
             gameOverScreen.style.display = 'none'; // Hide game over screen
@@ -1615,24 +1219,11 @@
             resetCoins();
             resetBuildings();
             resetTrees(); 
-
-            // Initialize Tone.js components and start music
-            if (Tone.context.state !== 'running') {
-                await Tone.start(); // Ensure audio context is running
-            }
-            if (!isToneInitialized) {
-                initializeToneComponents();
-            }
-            Tone.Transport.start(); // Start all scheduled music events
-            console.log('Music started with game.');
         }
         
         // End game
         function endGame(obstacle = null) { // Pass the collided obstacle
             gameActive = false; // Pause the game
-            Tone.Transport.stop(); // Stop the music
-            console.log('Music stopped due to game over.');
-
             if (obstacle) {
                 collidedObstacle = obstacle; // Store the collided obstacle
                 showQuestionModal();
@@ -1668,7 +1259,6 @@
                 setTimeout(() => {
                     mathQuestionModal.style.display = 'none';
                     gameActive = true; // Resume game
-                    Tone.Transport.start(); // Resume music
                     if (collidedObstacle) {
                         // Recycle the obstacle immediately upon correct answer
                         const laneIndex = Math.floor(Math.random() * 3);
@@ -1810,18 +1400,6 @@
             // Event listeners for touch input (for mobile devices)
             window.addEventListener('touchstart', handleTouchStart);
             window.addEventListener('touchend', handleTouchEnd);
-
-            // Add a listener to resume audio context if tab becomes visible again
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible' && Tone.context.state !== 'running' && gameActive) {
-                    console.log('Tab became visible. Attempting to resume Tone.js audio context...');
-                    Tone.start().then(() => {
-                        console.log('Tone.js audio context resumed successfully on visibility change.');
-                    }).catch(error => {
-                        console.error('Failed to resume Tone.js audio context on visibility change:', error);
-                    });
-                }
-            });
             
             // Character selection
             characters.forEach((char, index) => {
@@ -1863,4 +1441,3 @@
     </script>
 </body>
 </html>
-
