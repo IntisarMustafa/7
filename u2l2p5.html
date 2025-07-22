@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subway Surfers ثلاثية الأبعاد - كاميرا محسّنة</title>
+    <title>Subway Surfers ثلاثية الأبعاد - كاميرا محسّنة وموسيقى</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Tailwind CSS CDN for general UI styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- MathJax for rendering LaTeX mathematical expressions -->
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
@@ -412,6 +414,76 @@
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
         }
 
+        /* Music Player Controls Styling */
+        #music-controls {
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin-top: 3vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #music-controls .music-btn {
+            background: linear-gradient(to bottom, #66bb6a, #43a047); /* Green gradient */
+            color: white;
+            font-size: 2.2vh;
+            font-weight: bold;
+            border: none;
+            padding: 1.5vh 4vh;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 100%; /* Make buttons full width within their container */
+            max-width: 250px;
+        }
+
+        #music-controls .music-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to bottom, #81c784, #66bb6a);
+        }
+
+        #music-controls .music-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #music-controls #stopButton {
+            background: linear-gradient(to bottom, #ef5350, #d32f2f); /* Red gradient */
+        }
+        #music-controls #stopButton:hover {
+            background: linear-gradient(to bottom, #ef9a9a, #ef5350);
+        }
+
+        #music-controls #toggleSoundButton {
+            background: #9e9e9e; /* Gray for toggle */
+            font-size: 1.8vh;
+            padding: 1vh 2vh;
+            border-radius: 20px;
+            max-width: 180px;
+        }
+        #music-controls #toggleSoundButton:hover {
+            background: #bdbdbd;
+        }
+        #music-controls #toggleSoundButton.bg-red-300 {
+            background: #ef9a9a; /* Lighter red when sound is off */
+        }
+        #music-controls #toggleSoundButton.bg-red-300:hover {
+            background: #e57373;
+        }
+
+        #music-controls p {
+            font-size: 1.8vh;
+            color: #e0e0e0;
+            margin-bottom: 5px;
+        }
+
         /* Responsive design for tablets (max-width 768px) */
         @media (max-width: 768px) {
             h1 { font-size: 6vh; }
@@ -431,6 +503,12 @@
             #question-text { font-size: 3vh; }
             #answer-input { font-size: 2vh; }
             #feedback-message { font-size: 2vh; }
+
+            /* Music controls adjustments for tablets */
+            #music-controls { padding: 10px 20px; }
+            #music-controls .music-btn { font-size: 2vh; padding: 1.2vh 3.5vh; }
+            #music-controls #toggleSoundButton { font-size: 1.6vh; padding: 0.8vh 1.8vh; }
+            #music-controls p { font-size: 1.6vh; }
         }
 
         /* Responsive design for small mobile devices (max-width 480px) */
@@ -448,6 +526,12 @@
             #question-text { font-size: 2.5vh; padding: 10px; }
             #answer-input { font-size: 1.8vh; padding: 1.5vh; }
             #feedback-message { font-size: 1.8vh; }
+
+            /* Music controls adjustments for mobile */
+            #music-controls { padding: 8px 15px; }
+            #music-controls .music-btn { font-size: 1.8vh; padding: 1vh 3vh; }
+            #music-controls #toggleSoundButton { font-size: 1.4vh; padding: 0.6vh 1.5vh; }
+            #music-controls p { font-size: 1.4vh; }
         }
     </style>
 </head>
@@ -511,6 +595,23 @@
                     <span class="key">أسفل</span> انزل
                 </p>
             </div>
+
+            <!-- Music Player Controls - Integrated into Start Screen -->
+            <div id="music-controls">
+                <h3 class="text-2xl font-bold text-white mb-2">موسيقى اللعبة</h3>
+                <div class="flex flex-wrap justify-center gap-3 w-full">
+                    <button id="playMusicButton" class="music-btn">
+                        تشغيل الموسيقى
+                    </button>
+                    <button id="stopMusicButton" class="music-btn">
+                        إيقاف الموسيقى
+                    </button>
+                </div>
+                <p id="soundStatus" class="mt-2">الصوت مفعل.</p>
+                <button id="toggleSoundButton" class="music-btn bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm py-2 px-4 rounded-full transition-colors duration-200">
+                    تعطيل الصوت
+                </button>
+            </div>
         </div>
         
         <div id="game-over">
@@ -550,6 +651,12 @@
         const answerInputElement = document.getElementById('answer-input');
         const submitAnswerBtn = document.getElementById('submit-answer-btn');
         const feedbackMessageElement = document.getElementById('feedback-message');
+
+        // Music Player elements
+        const playMusicButton = document.getElementById('playMusicButton');
+        const stopMusicButton = document.getElementById('stopMusicButton');
+        const soundStatusElement = document.getElementById('soundStatus'); // Renamed from soundStatus to avoid conflict
+        const toggleSoundButton = document.getElementById('toggleSoundButton');
 
         // Game variables
         let scene, camera, renderer; // Three.js scene, camera, and renderer
@@ -660,6 +767,94 @@
         ];
         let currentQuestion = null;
         let collidedObstacle = null; // To keep track of the obstacle that caused the collision
+        
+        // Music Player Variables and Functions
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let soundEnabled = true;
+        let musicIntervalId = null;
+
+        const notes = {
+            'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46,
+            'G5': 783.99, 'A5': 880.00, 'B5': 987.77, 'C6': 1046.50,
+            'G4': 391.00
+        };
+
+        /**
+         * Plays a sound at a given frequency.
+         * @param {number} frequency - The frequency of the sound in Hz.
+         * @param {string} type - The waveform type ('sine', 'square', 'triangle', 'sawtooth').
+         * @param {number} duration - The duration of the sound in seconds.
+         * @param {number} volume - The volume of the sound (0.0 to 1.0).
+         */
+        function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = type;
+            oscillator.frequency.value = frequency;
+            gainNode.gain.value = volume;
+            
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        /**
+         * Plays one full sequence of the enthusiastic melody.
+         */
+        function playMelodySequence() {
+            let delay = 0;
+            const tempo = 80;
+
+            setTimeout(() => playSound(notes['C5'], 'triangle', 0.1, 0.4), delay); delay += tempo;
+            setTimeout(() => playSound(notes['E5'], 'triangle', 0.1, 0.4), delay); delay += tempo;
+            setTimeout(() => playSound(notes['G5'], 'triangle', 0.1, 0.4), delay); delay += tempo;
+            setTimeout(() => playSound(notes['C6'], 'sine', 0.2, 0.5), delay); delay += tempo * 2;
+
+            setTimeout(() => playSound(notes['G5'], 'sine', 0.1, 0.4), delay); delay += tempo;
+            setTimeout(() => playSound(notes['E5'], 'sine', 0.1, 0.4), delay); delay += tempo;
+            setTimeout(() => playSound(notes['C5'], 'sine', 0.1, 0.4), delay); delay += tempo;
+            setTimeout(() => playSound(notes['G4'], 'square', 0.2, 0.4), delay); delay += tempo * 2;
+
+            setTimeout(() => playSound(notes['A5'], 'triangle', 0.08, 0.45), delay); delay += tempo * 0.75;
+            setTimeout(() => playSound(notes['G5'], 'triangle', 0.08, 0.45), delay); delay += tempo * 0.75;
+            setTimeout(() => playSound(notes['E5'], 'triangle', 0.08, 0.45), delay); delay += tempo * 0.75;
+            setTimeout(() => playSound(notes['C5'], 'sine', 0.15, 0.5), delay);
+        }
+
+        /**
+         * Starts the continuous music loop.
+         */
+        function startMusicLoop() {
+            if (musicIntervalId !== null) {
+                clearInterval(musicIntervalId);
+            }
+            const totalSequenceDuration = (5 * 80) + (5 * 80) + (3 * 0.75 * 80) + (0.15 * 1000);
+            const loopInterval = totalSequenceDuration + 50;
+
+            playMelodySequence();
+            musicIntervalId = setInterval(playMelodySequence, loopInterval);
+
+            playMusicButton.disabled = true;
+            stopMusicButton.disabled = false;
+        }
+
+        /**
+         * Stops the continuous music loop.
+         */
+        function stopMusicLoop() {
+            if (musicIntervalId !== null) {
+                clearInterval(musicIntervalId);
+                musicIntervalId = null;
+            }
+            playMusicButton.disabled = false;
+            stopMusicButton.disabled = true;
+        }
         
         // Initialize Three.js scene
         function initThreeJS() {
@@ -1219,11 +1414,17 @@
             resetCoins();
             resetBuildings();
             resetTrees(); 
+
+            // Start music when game starts
+            if (soundEnabled) {
+                startMusicLoop();
+            }
         }
         
         // End game
         function endGame(obstacle = null) { // Pass the collided obstacle
             gameActive = false; // Pause the game
+            stopMusicLoop(); // Stop music when game ends
             if (obstacle) {
                 collidedObstacle = obstacle; // Store the collided obstacle
                 showQuestionModal();
@@ -1268,6 +1469,9 @@
                     }
                     score += 100; // Bonus for correct answer
                     scoreElement.textContent = score;
+                    if (soundEnabled) { // Restart music if sound is enabled
+                        startMusicLoop();
+                    }
                 }, 1500); // Give player a moment to read feedback
             } else {
                 feedbackMessageElement.textContent = `إجابة خاطئة. الإجابة الصحيحة هي: ${currentQuestion.answer}. انتهت اللعبة.`;
@@ -1389,7 +1593,7 @@
         function initGame() {
             initThreeJS(); // Initialize Three.js
             
-            // Event listeners for buttons
+            // Event listeners for game buttons
             startBtn.addEventListener('click', startGame);
             restartBtn.addEventListener('click', startGame);
             submitAnswerBtn.addEventListener('click', checkAnswer); // Event listener for math question submit button
@@ -1434,6 +1638,39 @@
                 camera.updateProjectionMatrix(); // Update camera projection matrix
                 renderer.setSize(window.innerWidth, window.innerHeight); // Update renderer size
             });
+
+            // Music Player Event Listeners
+            playMusicButton.addEventListener('click', () => {
+                if (soundEnabled) {
+                    startMusicLoop();
+                }
+            });
+
+            stopMusicButton.addEventListener('click', () => {
+                stopMusicLoop();
+            });
+
+            toggleSoundButton.addEventListener('click', () => {
+                soundEnabled = !soundEnabled; // Toggle the soundEnabled flag
+                if (soundEnabled) {
+                    soundStatusElement.textContent = 'الصوت مفعل.';
+                    toggleSoundButton.textContent = 'تعطيل الصوت';
+                    toggleSoundButton.classList.remove('bg-red-300', 'hover:bg-red-400');
+                    toggleSoundButton.classList.add('bg-gray-300', 'hover:bg-gray-400');
+                    // If sound is re-enabled, ensure music is stopped so user can choose to play again
+                    stopMusicLoop(); 
+                } else {
+                    soundStatusElement.textContent = 'الصوت معطل.';
+                    toggleSoundButton.textContent = 'تفعيل الصوت';
+                    toggleSoundButton.classList.remove('bg-gray-300', 'hover:bg-gray-400');
+                    toggleSoundButton.classList.add('bg-red-300', 'hover:bg-red-400');
+                    // If sound is disabled, stop the music loop
+                    stopMusicLoop();
+                }
+            });
+
+            // Initialize music button states
+            stopMusicButton.disabled = true;
         }
         
         // Start game when window loads
@@ -1441,3 +1678,4 @@
     </script>
 </body>
 </html>
+
