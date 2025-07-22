@@ -348,16 +348,16 @@
             align-items: center;
             z-index: 30; /* Above game over screen */
             text-align: center;
-            padding: 20px;
+            padding: 10px; /* Reduced padding for smaller screens */
         }
 
         .modal-content {
             background: linear-gradient(to bottom, #2c3e50, #4a69bd); /* Dark blue to lighter blue gradient */
-            padding: 40px;
+            padding: 20px; /* Reduced padding for smaller screens */
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            max-width: 90%;
-            width: 500px;
+            max-width: 95%; /* Increased max-width for better use of space */
+            width: 500px; /* Still a target width for larger screens */
             transform: scale(0.9);
             animation: modalPopIn 0.3s forwards ease-out;
             border: 2px solid #ffcc00; /* Gold border */
@@ -369,31 +369,33 @@
         }
 
         #math-question-modal h3 {
-            font-size: 4vh;
-            margin-bottom: 3vh;
+            font-size: 3.5vh; /* Adjusted for responsiveness */
+            margin-bottom: 2vh; /* Adjusted for responsiveness */
             color: #ffcc00;
             text-shadow: 1px 1px 5px rgba(255, 204, 0, 0.5);
         }
 
         #question-text {
-            font-size: 3.5vh;
-            margin-bottom: 4vh;
+            font-size: 3vh; /* Adjusted for responsiveness */
+            margin-bottom: 3vh; /* Adjusted for responsiveness */
             color: #e0e0e0;
             direction: ltr; /* Ensure math is left-to-right */
             text-align: center;
             background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
+            padding: 10px; /* Adjusted for responsiveness */
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            word-wrap: break-word; /* Ensure long equations wrap */
+            overflow-wrap: break-word; /* Modern equivalent */
         }
 
         #answer-input {
-            width: 80%;
-            padding: 2vh;
-            margin-bottom: 3vh;
+            width: 90%; /* Increased width for better mobile usability */
+            padding: 1.5vh; /* Adjusted for responsiveness */
+            margin-bottom: 2.5vh; /* Adjusted for responsiveness */
             border-radius: 10px;
             border: 2px solid #ffcc00;
-            font-size: 2.5vh;
+            font-size: 2.2vh; /* Adjusted for responsiveness */
             text-align: center;
             background-color: rgba(255, 255, 255, 0.9);
             color: #333;
@@ -407,9 +409,9 @@
         }
 
         #feedback-message {
-            font-size: 2.5vh;
+            font-size: 2.2vh; /* Adjusted for responsiveness */
             font-weight: bold;
-            margin-top: 2vh;
+            margin-top: 1.5vh; /* Adjusted for responsiveness */
             min-height: 3vh; /* Reserve space */
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
         }
@@ -428,9 +430,9 @@
             #final-score { font-size: 5vh; }
 
             /* Modal adjustments for tablets */
-            .modal-content { padding: 30px; }
-            #math-question-modal h3 { font-size: 3.5vh; }
-            #question-text { font-size: 3vh; }
+            .modal-content { padding: 25px; max-width: 90%; } /* Slightly reduced padding */
+            #math-question-modal h3 { font-size: 3vh; }
+            #question-text { font-size: 2.5vh; }
             #answer-input { font-size: 2vh; }
             #feedback-message { font-size: 2vh; }
         }
@@ -445,11 +447,13 @@
             #score-container, #coins-container { font-size: 1.8vh; padding: 0.8vh 1.5vh; }
             
             /* Modal adjustments for mobile */
-            .modal-content { padding: 20px; border-radius: 15px; }
-            #math-question-modal h3 { font-size: 3vh; }
-            #question-text { font-size: 2.5vh; padding: 10px; }
-            #answer-input { font-size: 1.8vh; padding: 1.5vh; }
-            #feedback-message { font-size: 1.8vh; }
+            #math-question-modal { padding: 5px; } /* Minimal padding for modal container */
+            .modal-content { padding: 15px; border-radius: 15px; max-width: 98%; } /* More aggressive adjustments */
+            #math-question-modal h3 { font-size: 2.8vh; margin-bottom: 1.5vh; }
+            #question-text { font-size: 2.2vh; padding: 8px; margin-bottom: 2vh; }
+            #answer-input { font-size: 1.6vh; padding: 1.2vh; margin-bottom: 2vh; }
+            #feedback-message { font-size: 1.6vh; margin-top: 1vh; }
+            .btn { font-size: 2vh; padding: 1vh 3vh; } /* Adjust button size within modal */
         }
     </style>
 </head>
