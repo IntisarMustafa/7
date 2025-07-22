@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أولويات العمليات الحسابية - مثال من الحياة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* إعادة تعيين أساسي */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* جسم الصفحة */
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.7;
+            padding: 10px;
+            min-height: 100vh;
+        }
+        
+        /* الحاوية الرئيسية */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        /* رأس الصفحة */
+        header {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #ffd700;
+        }
+        
+        h1 {
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        
+        /* محتوى الصفحة */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        /* الأقسام العامة */
+        .section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            border: 1px solid #e0e0e0;
+            width: 100%;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .section-title {
+            color: #3a7bd5;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffd700;
+            font-size: 1.7rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* قسم المثال */
+        .example {
+            background: linear-gradient(135deg, #fffde7, #fff9c4);
+        }
+        
+        .example-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .example-text {
+            width: 100%;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            text-align: justify;
+            /* إضافة overflow-x: auto هنا للتعامل مع التمرير الأفقي إذا كان النص طويلاً جداً */
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch; /* لتحسين التمرير على iOS */
+        }
+        
+        /* قسم الجدول */
+        .table-section {
+            background: linear-gradient(135deg, #f0f9ff, #e0f7fa);
+            overflow-x: auto; /* لضمان تمرير الجدول أفقياً إذا كان عريضاً */
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        th {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            font-size: 1.1rem;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+        
+        /* التعبيرات الرياضية - تم التعديل هنا */
+        .math-expression {
+            font-family: 'Cambria Math', serif;
+            font-size: 1.3rem;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border: 2px dashed #3a7bd5;
+            width: 100%;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            white-space: nowrap; /* لجعل النص يبقى على سطر واحد */
+            overflow-x: auto; /* للسماح بالتمرير الأفقي إذا كان المحتوى طويلاً */
+            -webkit-overflow-scrolling: touch; /* لتحسين التمرير على iOS */
+            direction: ltr; /* لفرض اتجاه الكتابة من اليسار إلى اليمين */
+            unicode-bidi: embed; /* لدعم اتجاه الكتابة في سياق RTL */
+        }
+        
+        /* خطوات الحل */
+        .solution-step {
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            font-size: 1.1rem;
+            border-radius: 8px;
+        }
+        
+        /* قسم التدريب */
+        .practice {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        }
+        
+        .exercise {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .exercise-title {
+            color: #4caf50;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .exercise-content {
+            font-size: 1.15rem;
+            margin-bottom: 15px;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #4caf50;
+        }
+        
+        /* عناصر التحكم التفاعلية */
+        .interactive-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .expression-input {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        input {
+            padding: 14px;
+            border: 2px solid #3a7bd5;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            width: 100%;
+            font-family: 'Cambria Math', serif;
+        }
+        
+        button {
+            padding: 14px;
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+        }
+        
+        .check-btn {
+            background: linear-gradient(90deg, #4caf50, #2e7d32);
+        }
+        
+        .feedback {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            color: #2e7d32;
+        }
+        
+        .incorrect {
+            background-color: #ffebee;
+            border-left: 5px solid #f44336;
+            color: #d32f2f;
+        }
+        
+        /* تسليط الضوء */
+        .highlight {
+            background: linear-gradient(120deg, rgba(255,215,0,0.3), rgba(255,215,0,0));
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            white-space: nowrap; /* لجعل النص يبقى على سطر واحد */
+        }
+        
+        /* تذييل الصفحة */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* أزرار التنقل - تم التعديل هنا */
+        .navigation-buttons {
+            display: flex;
+            justify-content: center; /* تم تغييرها من space-between إلى center */
+            width: 100%;
+            max-width: 600px;
+            margin-top: 15px;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 25px;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(90deg, #ff8c00, #ffd700);
+            color: white;
+        }
+        
+        /* خطوات الحل المفصلة */
+        .step-by-step {
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 1.05rem;
+            border-left: 3px solid #ff9800;
+        }
+        
+        .step {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            white-space: nowrap; /* لجعل محتوى الخطوة يبقى على سطر واحد */
+            overflow-x: auto; /* للسماح بالتمرير الأفقي إذا كان المحتوى طويلاً */
+            -webkit-overflow-scrolling: touch; /* لتحسين التمرير على iOS */
+        }
+
+        /* تنسيق الأجزاء الرياضية داخل الخطوات */
+        .math-inline {
+            direction: ltr; /* لفرض اتجاه الكتابة من اليسار إلى اليمين */
+            unicode-bidi: embed; /* لدعم اتجاه الكتابة في سياق RTL */
+            display: inline-block; /* لضمان تطبيق الخصائص بشكل صحيح */
+            text-align: left; /* لمحاذاة النص الرياضي إلى اليسار */
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .math-expression {
+                font-size: 1.1rem;
+            }
+            
+            table {
+                font-size: 1rem;
+            }
+            
+            th, td {
+                padding: 10px;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            /* تعديل محاذاة النص لـ .example-text على الشاشات الصغيرة */
+            .example-text {
+                text-align: right; /* تغيير من justify لتحسين القراءة على الشاشات الصغيرة */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> أولويات العمليات الحسابية</h1>
+            <p class="subtitle">تطبيق أولويات العمليات في مواقف حياتية</p>
+        </header>
+        
+        <div class="content">
+            <div class="section example">
+                <h2 class="section-title"><i class="fas fa-shopping-cart"></i> مثال من الحياة (مثال ٣)</h2>
+                <div class="example-content">
+                    <div class="example-text">
+                        <p>يمثِّلُ الجدولُ الآتي أسعارَ بعضِ الخضارِ والفواكه:</p>
+                    </div>
+                    
+                    <div class="table-section">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الصنف</th>
+                                    <th>السعر (دينار/كجم)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>تفاح 🍎</td>
+                                    <td>1.00</td>
+                                </tr>
+                                <tr>
+                                    <td>برتقال 🍊</td>
+                                    <td>0.75</td>
+                                </tr>
+                                <tr>
+                                    <td>منجا 🥭</td>
+                                    <td>2.50</td>
+                                </tr>
+                                <tr>
+                                    <td>بندورة 🍅</td>
+                                    <td>0.40</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="example-text">
+                        <!-- العبارة التي تم تعديلها لتظهر على سطر واحد -->
+                        <p class="highlight">المطلوب: كتابة عبارتين عدديتين مختلفتين لإيجاد ثمن ما اشتراه حسّان.</p>
+                    </div>
+                    
+                    <div class="math-expression">
+                        العبارة الأولى: 2 × 1 + 2 × 2.5 + 5 × 0.4
+                    </div>
+                    
+                    <div class="step-by-step">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <span>أكتب العبارة العددية</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <span>أضرب من اليسار إلى اليمين: <span class="math-inline">2 × 1 = 2، 2 × 2.5 = 5، 5 × 0.4 = 2</span></span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <span>أجمع النتائج: <span class="math-inline">2 + 5 + 2 = 9</span> دينار</span>
+                        </div>
+                    </div>
+                    
+                    <div class="math-expression">
+                        العبارة الثانية: 5 × 0.4 + 2 × (2.5 + 1)
+                    </div>
+                    
+                    <div class="step-by-step">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <span>أكتب العبارة العددية</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <span>أوجد قيمة ما داخل القوس: <span class="math-inline">(2.5 + 1) = 3.5</span></span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <span>أضرب من اليسار إلى اليمين: <span class="math-inline">5 × 0.4 = 2، 2 × 3.5 = 7</span></span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <span>أجمع النتائج: <span class="math-inline">2 + 7 = 9</span> دينار</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section practice">
+                <h2 class="section-title"><i class="fas fa-check-circle"></i> أتحقق من فهمي</h2>
+                
+                <div class="exercise">
+                    <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين</h3>
+                    <p class="exercise-content">إذا اشترى حسّان 4 كجم بندورة، وكيلوغرامًا واحدًا من كل صنف، فأكتب عبارتين عدديتين مختلفتين لإيجاد ثمن ما اشتراه حسّان.</p>
+                    
+                    <div class="table-section">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الصنف</th>
+                                    <th>السعر (دينار/كجم)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>تفاح 🍎</td>
+                                    <td>1.00</td>
+                                </tr>
+                                <tr>
+                                    <td>برتقال 🍊</td>
+                                    <td>0.75</td>
+                                </tr>
+                                <tr>
+                                    <td>منجا 🥭</td>
+                                    <td>2.50</td>
+                                </tr>
+                                <tr>
+                                    <td>بندورة 🍅</td>
+                                    <td>0.40</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="expression-input">
+                        <p>العبارة الأولى:</p>
+                        <input type="text" id="expression1" placeholder="أدخل العبارة العددية الأولى">
+                        
+                        <p>العبارة الثانية:</p>
+                        <input type="text" id="expression2" placeholder="أدخل العبارة العددية الثانية">
+                        
+                        <button class="check-btn" id="verify-btn">تحقق من الإجابات</button>
+                    </div>
+                    
+                    <div id="feedback" class="feedback">
+                        <!-- سيتم ملء هذا القسم بالنتيجة -->
+                    </div>
+                    
+                    <div class="interactive-controls">
+                        <button id="show-answer-btn">عرض الإجابة الصحيحة</button>
+                        <div id="correct-answer" style="display: none; margin-top: 20px;">
+                            <div class="math-expression">
+                                العبارة الأولى: (1×1) + (1×0.75) + (1×2.5) + (4×0.4)
+                            </div>
+                            <div class="step-by-step">
+                                <div class="step">
+                                    <span class="step-number">1</span>
+                                    <span>ثمن التفاح: <span class="math-inline">1 × 1 = 1</span> دينار</span>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">2</span>
+                                    <span>ثمن البرتقال: <span class="math-inline">1 × 0.75 = 0.75</span> دينار</span>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">3</span>
+                                    <span>ثمن المنجا: <span class="math-inline">1 × 2.5 = 2.5</span> دينار</span>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">4</span>
+                                    <span>ثمن البندورة: <span class="math-inline">4 × 0.4 = 1.6</span> دينار</span>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">5</span>
+                                    <span>المجموع: <span class="math-inline">1 + 0.75 + 2.5 + 1.6 = 5.85</span> دينار</span>
+                                </div>
+                            </div>
+                            
+                            <div class="math-expression">
+                                العبارة الثانية: (1×1 + 1×0.75 + 1×2.5) + (4×0.4)
+                            </div>
+                            <div class="step-by-step">
+                                <div class="step">
+                                    <span class="step-number">1</span>
+                                    <span>ثمن الفواكه: <span class="math-inline">1 + 0.75 + 2.5 = 4.25</span> دينار</span>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">2</span>
+                                    <span>ثمن البندورة: <span class="math-inline">4 × 0.4 = 1.6</span> دينار</span>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">3</span>
+                                    <span>المجموع: <span class="math-inline">4.25 + 1.6 = 5.85</span> دينار</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>أولويات العمليات الحسابية - مثال من الحياة</p>
+            <p>الصف السابع - الرياضيات</p>
+            <div class="navigation-buttons">
+                <a href="u2l2p2.html" class="nav-btn"><i class="fas fa-arrow-right"></i> الصفحة السابقة</a>
+                <a href="u2l2p4.html" class="nav-btn">الصفحة التالية <i class="fas fa-arrow-left"></i></a>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // إظهار الإجابة الصحيحة
+            const showAnswerBtn = document.getElementById('show-answer-btn');
+            const correctAnswerDiv = document.getElementById('correct-answer');
+            
+            showAnswerBtn.addEventListener('click', function() {
+                if (correctAnswerDiv.style.display === 'none') {
+                    correctAnswerDiv.style.display = 'block';
+                    showAnswerBtn.textContent = 'إخفاء الإجابة';
+                } else {
+                    correctAnswerDiv.style.display = 'none';
+                    showAnswerBtn.textContent = 'عرض الإجابة الصحيحة';
+                }
+            });
+            
+            // التحقق من الإجابات
+            const verifyBtn = document.getElementById('verify-btn');
+            const feedbackDiv = document.getElementById('feedback');
+            
+            verifyBtn.addEventListener('click', function() {
+                const expr1 = document.getElementById('expression1').value.trim();
+                const expr2 = document.getElementById('expression2').value.trim();
+                
+                // الإجابات الصحيحة المقبولة
+                const correctExprs = [
+                    "(1*1) + (1*0.75) + (1*2.5) + (4*0.4)",
+                    "(1*1 + 1*0.75 + 1*2.5) + (4*0.4)",
+                    "1*1 + 1*0.75 + 1*2.5 + 4*0.4",
+                    "4*0.4 + 1*1 + 1*0.75 + 1*2.5"
+                ];
+                
+                // التحقق من أن العبارتين مختلفتين
+                if (expr1 === expr2) {
+                    feedbackDiv.textContent = "يجب أن تكون العبارتان مختلفتين!";
+                    feedbackDiv.className = "feedback incorrect";
+                    feedbackDiv.style.display = 'block';
+                    return;
+                }
+                
+                // التحقق من صحة العبارات
+                const isExpr1Correct = correctExprs.includes(expr1);
+                const isExpr2Correct = correctExprs.includes(expr2);
+                
+                if (isExpr1Correct && isExpr2Correct) {
+                    feedbackDiv.textContent = "إجابتك صحيحة! أحسنت!";
+                    feedbackDiv.className = "feedback correct";
+                } else if (isExpr1Correct || isExpr2Correct) {
+                    feedbackDiv.textContent = "إحدى العبارتين صحيحة والأخرى خطأ، حاول مرة أخرى";
+                    feedbackDiv.className = "feedback incorrect";
+                } else {
+                    feedbackDiv.textContent = "الإجابتان غير صحيحتين، حاول مرة أخرى";
+                    feedbackDiv.className = "feedback incorrect";
+                }
+                
+                feedbackDiv.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
