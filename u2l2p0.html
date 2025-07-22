@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار التعلم السابق: أولويات العمليات الحسابية</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- MathJax configuration and script -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS styles remain the same as previous versions for consistent design */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e6e9ff, #d6dcff, #e0e0ff);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(180, 180, 255, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(150, 150, 220, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 30% 60%, rgba(200, 200, 250, 0.2) 0%, transparent 25%);
+            z-index: -1;
+            animation: waterEffect 15s infinite alternate;
+        }
+        
+        @keyframes waterEffect {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(80, 80, 180, 0.2);
+            overflow: hidden;
+            margin: 20px 0;
+            border: 1px solid rgba(180, 180, 255, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4a6fdc, #6a5acd);
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+            transform: rotate(30deg);
+            animation: shine 8s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% {
+                transform: rotate(30deg) translateX(-100%);
+            }
+            100% {
+                transform: rotate(30deg) translateX(100%);
+            }
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            color: #fff;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 15px auto 0;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+        }
+        
+        .instructions {
+            background: linear-gradient(to bottom, #eef2ff, #e0e7ff);
+            padding: 25px;
+            border-bottom: 1px solid #d1d9ff;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        .instructions h3 {
+            color: #4a6fdc;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-right: 25px;
+            margin: 20px 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.6;
+        }
+        
+        .instructions li i {
+            margin-left: 12px;
+            color: #4a6fdc;
+            margin-top: 6px;
+            font-size: 1.2rem;
+        }
+        
+        .question-container {
+            padding: 20px;
+        }
+        
+        .question {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(74, 109, 220, 0.1);
+            border-left: 5px solid #4a6fdc;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(74, 109, 220, 0.2);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+        
+        .question-number {
+            background: linear-gradient(to bottom, #4a6fdc, #3a5fcc);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-left: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(74, 109, 220, 0.3);
+        }
+        
+        .question-title {
+            font-size: 1.35rem;
+            color: #4a6fdc;
+            font-weight: 700;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 22px;
+            padding: 0 12px;
+            color: #4a5568;
+        }
+        
+        .math {
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #edf2ff;
+            border-radius: 10px;
+            font-weight: bold;
+            border: 1px solid #d1d9ff;
+            color: #4a6fdc;
+            box-shadow: inset 0 0 10px rgba(74, 109, 220, 0.1);
+        }
+        
+        .number-line {
+            width: 100%;
+            height: 70px;
+            background: #edf2ff;
+            border-radius: 10px;
+            position: relative;
+            margin: 25px 0;
+            border: 1px solid #d1d9ff;
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(74, 109, 220, 0.1);
+        }
+        
+        .line {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            width: 90%;
+            height: 3px;
+            background: #4a6fdc;
+            transform: translateY(-50%);
+        }
+        
+        .tick {
+            position: absolute;
+            top: 30%;
+            width: 3px;
+            height: 18px;
+            background: #4a6fdc;
+        }
+        
+        .tick-label {
+            position: absolute;
+            top: 65%;
+            font-size: 1.1rem;
+            transform: translateX(-50%);
+            color: #4a6fdc;
+            font-weight: 600;
+        }
+        
+        .point {
+            position: absolute;
+            top: 50%;
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(to bottom, #5b7cff, #4a6fdc);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(74, 109, 220, 0.3);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .point:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: linear-gradient(to bottom, #6a5acd, #5a4acd);
+        }
+        
+        .options {
+            margin: 25px 0;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            margin-bottom: 15px;
+            background: #f0f4ff;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #d1d9ff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option:hover {
+            background: #e6edff;
+            border-color: #b3c1ff;
+            transform: translateX(5px);
+        }
+        
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: #4a6fdc;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover::before {
+            opacity: 1;
+        }
+        
+        .option input {
+            margin-left: 12px;
+            transform: scale(1.4);
+            cursor: pointer;
+            accent-color: #4a6fdc;
+        }
+        
+        .option label {
+            flex: 1;
+            font-size: 1.15rem;
+            cursor: pointer;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 16px 36px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 15px rgba(80, 80, 180, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+        
+        button:hover::before {
+            transform: translateX(100%);
+        }
+        
+        #submit-btn {
+            background: linear-gradient(to right, #4a6fdc, #6a5acd);
+            color: white;
+        }
+        
+        #submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 109, 220, 0.4);
+        }
+        
+        #reset-btn {
+            background: linear-gradient(to right, #5b7cff, #6a5acd);
+            color: white;
+        }
+        
+        #reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(91, 124, 255, 0.4);
+        }
+        
+        .start-btn {
+            background: linear-gradient(to right, #4a6fdc, #6a5acd);
+            color: white;
+            margin: 25px auto;
+            display: none;
+            padding: 16px 45px;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 109, 220, 0.4);
+        }
+        
+        .result {
+            text-align: center;
+            padding: 35px;
+            background: #f0f4ff;
+            border-radius: 16px;
+            margin: 25px;
+            display: none;
+            border: 1px solid #d1d9ff;
+            box-shadow: 0 5px 15px rgba(74, 109, 220, 0.1);
+        }
+        
+        .result h2 {
+            font-size: 2.2rem;
+            color: #4a6fdc;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        
+        .score {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #4a6fdc, #6a5acd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 25px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .feedback {
+            font-size: 1.4rem;
+            margin: 25px 0;
+            line-height: 1.7;
+            color: #4a6fdc;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+        
+        .correct-answers {
+            text-align: right;
+            margin-top: 35px;
+            padding: 25px;
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #d1d9ff;
+        }
+        
+        .correct-answers h3 {
+            color: #4a6fdc;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #4a6fdc;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .answer-item {
+            margin-bottom: 22px;
+            padding-bottom: 22px;
+            border-bottom: 2px dashed #d1d9ff;
+        }
+        
+        .answer-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .answer-item p {
+            margin-bottom: 10px;
+            line-height: 1.7;
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+        
+        .answer-item strong {
+            color: #4a6fdc;
+            font-weight: 600;
+        }
+        
+        .correct {
+            color: #38a169;
+            font-weight: bold;
+        }
+        
+        .incorrect {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: rgba(74, 85, 104, 0.8);
+            font-size: 1.1rem;
+            width: 100%;
+            max-width: 800px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: linear-gradient(to right, #e0e7ff, #d1d9ff);
+            color: #4a6fdc;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 8px 5px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question-title {
+                font-size: 1.2rem;
+            }
+            
+            .question-text {
+                font-size: 1.05rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .math {
+                font-size: 1.2rem;
+                padding: 12px;
+            }
+            
+            .number-line {
+                height: 60px;
+            }
+            
+            .tick-label {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin: 15px 0;
+            }
+            
+            .question {
+                padding: 20px;
+            }
+            
+            .result h2 {
+                font-size: 1.8rem;
+            }
+            
+            .score {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>اختبار التعلم السابق: أولويات العمليات الحسابية</h1>
+            <p class="subtitle">اختبر معلوماتك الأساسية قبل البدء بدرس أولويات العمليات</p>
+        </header>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> تعليمات الاختبار:</h3>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> يتكون الاختبار من 5 أسئلة</li>
+                <li><i class="fas fa-check-circle"></i> قم باختيار الإجابة الصحيحة لكل سؤال من الخيارات المتاحة</li>
+                <li><i class="fas fa-check-circle"></i> بعد الانتهاء، اضغط على زر "تصحيح الإجابات" لمعرفة نتيجتك</li>
+                <li><i class="fas fa-check-circle"></i> يمكنك إعادة الاختبار باستخدام زر "إعادة الاختبار"</li>
+            </ul>
+        </div>
+        
+        <div class="question-container">
+            <!-- Question 1 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div class="question-title">حساب القوى (الأسس)</div>
+                </div>
+                <div class="question-text">
+                    ما قيمة $4^3$؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1a" value="a">
+                        <label for="q1a">12</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1b" value="b">
+                        <label for="q1b">16</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1c" value="c">
+                        <label for="q1c">64</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1d" value="d">
+                        <label for="q1d">8</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: حساب الأسس</span>
+                </div>
+            </div>
+            
+            <!-- Question 2 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div class="question-title">الضرب والطرح</div>
+                </div>
+                <div class="question-text">
+                    ما قيمة $5 \times 6 - 10$؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2a" value="a">
+                        <label for="q2a">20</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2b" value="b">
+                        <label for="q2b">30</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2c" value="c">
+                        <label for="q2c">40</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2d" value="d">
+                        <label for="q2d">50</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: أولويات العمليات (ضرب وطرح)</span>
+                </div>
+            </div>
+            
+            <!-- Question 3 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div class="question-title">قوة الكسر</div>
+                </div>
+                <div class="question-text">
+                    ما قيمة $\left(\frac{2}{3}\right)^3$؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3a" value="a">
+                        <label for="q3a">$\frac{6}{9}$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3b" value="b">
+                        <label for="q3b">$\frac{8}{27}$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3c" value="c">
+                        <label for="q3c">$\frac{2}{27}$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3d" value="d">
+                        <label for="q3d">$\frac{8}{9}$</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: حساب قوة الكسر</span>
+                </div>
+            </div>
+            
+            <!-- Question 4 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div class="question-title">ضرب القوى</div>
+                </div>
+                <div class="question-text">
+                    ما قيمة $2^3 \times 2$؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4a" value="a">
+                        <label for="q4a">8</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4b" value="b">
+                        <label for="q4b">16</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4c" value="c">
+                        <label for="q4c">4</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4d" value="d">
+                        <label for="q4d">6</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: ضرب القوى</span>
+                </div>
+            </div>
+            
+            <!-- Question 5 -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div class="question-title">الجمع والضرب</div>
+                </div>
+                <div class="question-text">
+                    ما قيمة $4 + 3 \times 4$؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5a" value="a">
+                        <label for="q5a">28</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5b" value="b">
+                        <label for="q5b">16</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5c" value="c">
+                        <label for="q5c">24</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5d" value="d">
+                        <label for="q5d">12</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: أولويات العمليات (جمع وضرب)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="submit-btn">
+                <i class="fas fa-check-circle"></i>
+                <span>تصحيح الإجابات</span>
+            </button>
+            <button id="reset-btn">
+                <i class="fas fa-redo-alt"></i>
+                <span>إعادة الاختبار</span>
+            </button>
+        </div>
+        
+        <div class="result" id="result">
+            <h2>نتيجة اختبار الاستعداد</h2>
+            <div class="score" id="score">0/5</div>
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="correct-answers">
+                <h3><i class="fas fa-check-square"></i> التصحيح:</h3>
+                <div class="answer-item">
+                    <p><strong>السؤال 1:</strong> $4^3 = 4 \times 4 \times 4 = 64$</p>
+                    <p>التفسير: الأس يعني تكرار ضرب العدد في نفسه بعدد مرات الأس.</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 2:</strong> $5 \times 6 - 10 = 30 - 10 = 20$</p>
+                    <p>التفسير: الأولوية للضرب قبل الطرح.</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 3:</strong> $\left(\frac{2}{3}\right)^3 = \frac{2^3}{3^3} = \frac{8}{27}$</p>
+                    <p>التفسير: يتم رفع البسط والمقام للقوة.</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 4:</strong> $2^3 \times 2 = 8 \times 2 = 16$</p>
+                    <p>التفسير: يتم حساب القوة أولاً ثم الضرب.</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 5:</strong> $4 + 3 \times 4 = 4 + 12 = 16$</p>
+                    <p>التفسير: الأولوية للضرب قبل الجمع.</p>
+                </div>
+            </div>
+            
+            <button id="start-lesson-btn" class="start-btn">
+                <i class="fas fa-book"></i>
+                <span>بدء الدرس</span>
+            </button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>اختبار التعلم السابق - أولويات العمليات الحسابية</p>
+        <p>© 2025 - جميع الحقوق محفوظة</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitBtn = document.getElementById('submit-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const startLessonBtn = document.getElementById('start-lesson-btn');
+            const resultSection = document.getElementById('result');
+            const scoreElement = document.getElementById('score');
+            const feedbackElement = document.getElementById('feedback');
+            
+            // الإجابات الصحيحة
+            const correctAnswers = {
+                q1: 'c', // 4^3 = 64
+                q2: 'a', // 5 * 6 - 10 = 30 - 10 = 20
+                q3: 'b', // (2/3)^3 = 8/27
+                q4: 'b', // 2^3 * 2 = 8 * 2 = 16
+                q5: 'b'  // 4 + 3 * 4 = 4 + 12 = 16
+            };
+            
+            submitBtn.addEventListener('click', function() {
+                let score = 0;
+                const userAnswers = {};
+                
+                // جمع الإجابات من المستخدم
+                for(let i = 1; i <= 5; i++) {
+                    const qSelected = document.querySelector(`input[name="q${i}"]:checked`);
+                    userAnswers[`q${i}`] = qSelected ? qSelected.value : '';
+                    if (userAnswers[`q${i}`] === correctAnswers[`q${i}`]) {
+                        score++;
+                    }
+                }
+                
+                // عرض النتيجة
+                scoreElement.textContent = `${score}/5`;
+                
+                // تقديم التغذية الراجعة
+                if (score === 5) {
+                    feedbackElement.innerHTML = '<p class="correct">ممتاز! أنت جاهز لبدء درس أولويات العمليات الحسابية.</p>';
+                } else if (score >= 3) {
+                    feedbackElement.innerHTML = '<p>جيد! لديك أساس جيد لكن ننصح بمراجعة بعض المفاهيم قبل البدء.</p>';
+                } else {
+                    feedbackElement.innerHTML = '<p class="incorrect">يحتاج إلى تحسين. ننصحك بمراجعة المهارات الأساسية قبل بدء الدرس.</p>';
+                }
+                
+                // إظهار زر بدء الدرس
+                startLessonBtn.style.display = 'flex';
+                
+                resultSection.style.display = 'block';
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            });
+            
+            resetBtn.addEventListener('click', function() {
+                // مسح جميع الإجابات
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // إخفاء النتيجة
+                resultSection.style.display = 'none';
+                
+                // إخفاء زر بدء الدرس
+                startLessonBtn.style.display = 'none';
+                
+                // إزالة تأثيرات التحديد
+                document.querySelectorAll('.option').forEach(option => {
+                    option.style.background = '#f0f4ff';
+                    option.style.borderColor = '#d1d9ff';
+                });
+                
+                // التمرير إلى الأعلى
+                window.scrollTo(0, 0);
+            });
+            
+            // إضافة تأثير عند اختيار الإجابة
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    // إزالة التحديد من جميع الخيارات
+                    this.parentElement.querySelectorAll('.option').forEach(opt => {
+                        opt.style.background = '#f0f4ff';
+                        opt.style.borderColor = '#d1d9ff';
+                    });
+                    
+                    // تمييز الخيار المحدد
+                    this.style.background = '#e6edff';
+                    this.style.borderColor = '#b3c1ff';
+                });
+            });
+            
+            // زر بدء الدرس - تم تحديث الرابط هنا
+            startLessonBtn.addEventListener('click', function() {
+                window.location.href = 'u2l2p1.html'; 
+            });
+        });
+    </script>
+</body>
+</html>
