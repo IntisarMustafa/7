@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>مدينة ثلاثية الأبعاد مع متجر خضار - للهاتف</title>
+    <!-- Three.js library for 3D rendering -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         /* Basic reset and font */
@@ -11,29 +12,37 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif; /* Using Inter as requested */
+            font-family: 'Inter', sans-serif; /* Using Inter font */
         }
         
         /* Body styling with gradient background */
         body {
-            overflow: hidden;
+            overflow: hidden; /* Prevent scrolling */
             background: linear-gradient(to bottom, #1a2980, #26d0ce); /* Blue gradient */
             color: #fff;
             height: 100vh;
-            perspective: 1000px; /* For 3D effects if needed on elements */
+            perspective: 1000px; /* For potential 3D effects on UI elements */
+            display: flex; /* Use flexbox for main layout */
+            flex-direction: column; /* Stack elements vertically on small screens */
+            align-items: center; /* Center content horizontally */
+            justify-content: center; /* Center content vertically */
         }
         
         /* Main container for layout */
         .container {
             display: flex;
-            height: 100vh;
+            flex-direction: row; /* Default to row for larger screens */
+            height: 100vh; /* Full viewport height */
+            width: 100%; /* Full viewport width */
             padding: 20px;
             gap: 20px; /* Space between info panel and scene */
+            justify-content: center; /* Center content */
+            align-items: flex-start; /* Align items to the start */
         }
         
         /* Info panel styling */
         .info-panel {
-            width: 300px;
+            width: 350px; /* Slightly wider for better content display */
             background: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
             border-radius: 15px; /* Rounded corners */
             padding: 20px;
@@ -41,16 +50,17 @@
             border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Soft shadow */
             overflow-y: auto; /* Enable vertical scrolling if content overflows */
-            /* Hidden by default, will be shown by JS when near store */
-            display: none; 
+            display: none; /* Hidden by default, will be shown by JS when near store */
             opacity: 0; /* Start with 0 opacity for fade effect */
-            transition: opacity 0.5s ease-in-out; /* Smooth transition for showing/hiding */
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* Smooth transition for showing/hiding */
+            transform: translateX(-20px); /* Start slightly off-screen for animation */
         }
 
         /* Class to show the info panel */
         .info-panel.show {
             opacity: 1;
             display: block; /* Ensure it's block when shown */
+            transform: translateX(0); /* Slide into view */
         }
 
         /* Custom Scrollbar Styles (for Webkit browsers like Chrome, Safari) */
@@ -76,10 +86,12 @@
         /* Scene container styling */
         .scene-container {
             flex: 1; /* Takes remaining space */
+            min-width: 300px; /* Minimum width for the scene */
             border-radius: 15px; /* Rounded corners */
             overflow: hidden; /* Hide overflow */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Stronger shadow for scene */
             position: relative;
+            height: 100%; /* Ensure it takes full height of container */
         }
         
         /* Canvas styling - Apply touch-action: none here */
@@ -88,6 +100,10 @@
             height: 100%;
             display: block;
             touch-action: none; /* Disable default touch actions specifically for the canvas */
+            cursor: grab; /* Default cursor for camera interaction */
+        }
+        #cityScene:active {
+            cursor: grabbing; /* Cursor when dragging */
         }
         
         /* Heading styles */
@@ -104,6 +120,7 @@
             margin: 15px 0 10px;
             border-bottom: 2px solid #4CAF50; /* Underline effect */
             padding-bottom: 5px;
+            font-size: 22px; /* Slightly larger for headings */
         }
         
         /* Controls section styling */
@@ -119,6 +136,7 @@
             align-items: center;
             margin: 8px 0;
             justify-content: space-between; /* Space out text and key */
+            font-size: 15px; /* Slightly larger text */
         }
         
         .key {
@@ -129,13 +147,14 @@
             min-width: 40px;
             text-align: center;
             font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Small shadow for keys */
         }
         
         /* Vegetable list grid */
         .vegetable-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Responsive grid */
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Responsive grid, slightly wider min */
+            gap: 12px; /* Slightly more gap */
             margin-top: 10px;
         }
         
@@ -145,25 +164,28 @@
             border-radius: 8px;
             display: flex;
             align-items: center;
-            transition: transform 0.2s ease; /* Smooth hover effect */
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effect */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Initial shadow */
         }
         
         .vegetable-item:hover {
             transform: translateY(-3px); /* Lift on hover */
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
         }
         
         .veg-icon {
-            width: 24px; /* Slightly larger icon */
-            height: 24px;
+            width: 28px; /* Larger icon */
+            height: 28px;
             border-radius: 50%;
             margin-right: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px; /* Emoji size */
+            font-size: 20px; /* Emoji size */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); /* Inner shadow for icons */
         }
         
-        /* Specific vegetable icon colors */
+        /* Specific vegetable icon colors (kept as is) */
         .apple { background: #FF3B30; } /* Red */
         .orange { background: #FF9500; } /* Orange */
         .mango { background: #FFCC00; } /* Yellow-Orange */
@@ -184,21 +206,24 @@
             background: rgba(0, 0, 0, 0.4);
             padding: 10px;
             border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
         
         .stat-item {
             text-align: center;
+            padding: 5px;
         }
         
         .stat-value {
-            font-size: 24px;
+            font-size: 26px; /* Slightly larger */
             font-weight: bold;
             color: #4CAF50;
+            text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
         }
         
         .stat-label {
-            font-size: 12px;
-            opacity: 0.8;
+            font-size: 13px; /* Slightly larger */
+            opacity: 0.9;
         }
         
         /* Overlay for title and subtitle */
@@ -211,51 +236,63 @@
             border-radius: 10px;
             z-index: 10;
             pointer-events: none; /* Allow clicks to pass through */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            text-align: right; /* Align text to the right for Arabic */
         }
         
         .title {
-            font-size: 24px;
+            font-size: 26px; /* Slightly larger */
             margin-bottom: 10px;
             color: #4CAF50;
+            text-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
         }
         
         .subtitle {
             font-size: 16px;
             opacity: 0.8;
+            line-height: 1.5;
         }
         
         /* Loading screen */
         .loading {
-            position: absolute;
+            position: fixed; /* Use fixed to cover entire viewport */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95); /* Darker overlay */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 26px; /* Larger text */
             color: white;
             text-align: center;
-            z-index: 999; /* On top of everything */
+            z-index: 9999; /* On top of everything */
+            animation: fadeIn 0.5s ease-out; /* Fade in animation */
         }
         
         .progress-bar {
             width: 300px;
-            height: 10px;
+            height: 12px; /* Slightly thicker */
             background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            margin-top: 20px;
+            border-radius: 6px;
+            margin-top: 25px;
             overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
         }
         
         .progress {
             height: 100%;
-            background: #4CAF50;
+            background: linear-gradient(to right, #4CAF50, #8BC34A); /* Green gradient for progress */
             width: 0%;
-            transition: width 0.3s;
+            transition: width 0.3s ease-out;
+            border-radius: 6px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         /* Mobile Controls */
@@ -284,76 +321,64 @@
         }
         
         .control-btn {
-            width: 70px;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            width: 75px; /* Slightly larger buttons */
+            height: 75px;
+            background: rgba(255, 255, 255, 0.25); /* More visible background */
+            border: 2px solid rgba(255, 255, 255, 0.6); /* Stronger border */
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 0 10px;
             color: white;
-            font-size: 24px;
+            font-size: 28px; /* Larger icon */
             cursor: pointer;
             user-select: none;
-            backdrop-filter: blur(5px);
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px); /* More blur */
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Text shadow for better visibility */
         }
         
         .control-btn:active {
-            background: rgba(76, 175, 80, 0.5);
-            transform: scale(0.95);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            background: rgba(76, 175, 80, 0.6); /* More opaque green on active */
+            transform: scale(0.92); /* More noticeable press effect */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
         }
         
         /* Joystick base */
         .joystick {
-            width: 120px;
-            height: 120px;
-            background: rgba(0, 0, 0, 0.3);
+            width: 130px; /* Slightly larger joystick */
+            height: 130px;
+            background: rgba(0, 0, 0, 0.35); /* More visible background */
             border-radius: 50%;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 5px 15px rgba(0, 0, 0, 0.5); /* Inner and outer shadow */
         }
         
         /* Joystick handle */
         .joystick-handle {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.8);
+            width: 55px; /* Slightly larger handle */
+            height: 55px;
+            background: rgba(255, 255, 255, 0.9); /* Brighter handle */
             border-radius: 50%;
             position: absolute;
             cursor: move;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6); /* Stronger handle shadow */
             transition: transform 0.1s ease-out; /* Smooth reset */
         }
         
         /* Camera joystick (same styling as movement joystick) */
         .camera-joystick {
-            background: rgba(0, 0, 0, 0.3);
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            position: relative;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            /* Inherits from .joystick */
         }
         
         .camera-handle {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            position: absolute;
-            cursor: move;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-            transition: transform 0.1s ease-out; /* Smooth reset */
+            /* Inherits from .joystick-handle */
         }
         
         /* Mobile info text */
@@ -361,29 +386,32 @@
             position: absolute;
             bottom: 180px; /* Position above controls */
             left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-size: 14px;
+            background: rgba(0, 0, 0, 0.75); /* Darker background */
+            padding: 12px 18px; /* More padding */
+            border-radius: 12px; /* More rounded */
+            font-size: 15px; /* Slightly larger font */
             display: none; /* Hidden by default */
-            max-width: 80%;
+            max-width: 85%; /* Wider for text */
             z-index: 100;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: right; /* Align text to the right for Arabic */
         }
         
         /* Calculator Section Styling */
         .calculator-section {
             background: rgba(0, 30, 0, 0.4);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
+            padding: 18px; /* More padding */
+            border-radius: 12px; /* More rounded */
+            margin-top: 25px; /* More margin */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .calculator-section h2 {
             margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 18px; /* More margin */
             border-bottom: 2px solid #4CAF50;
-            padding-bottom: 5px;
-            font-size: 22px;
+            padding-bottom: 8px; /* More padding */
+            font-size: 24px; /* Larger font */
             text-align: center;
         }
 
@@ -391,42 +419,44 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
-            gap: 10px; /* Increased space between elements in the row */
+            margin-bottom: 12px; /* More margin */
+            gap: 15px; /* Increased space between elements in the row */
         }
 
         .item-name {
-            flex-basis: 35%; /* Allocate more space for the name */
-            font-size: 16px;
+            flex-basis: 35%;
+            font-size: 17px; /* Larger font */
             color: #fff;
-            white-space: nowrap; /* Prevent wrapping */
-            overflow: hidden; /* Hide overflow */
-            text-overflow: ellipsis; /* Add ellipsis for overflow */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: right; /* Align text to the right */
         }
 
         .input-group {
             display: flex;
-            flex-direction: column; /* Stack label and input vertically */
-            flex-basis: 30%; /* Equal space for each input group */
-            gap: 3px; /* Small gap between label and input */
+            flex-direction: column;
+            flex-basis: 30%;
+            gap: 5px; /* Small gap between label and input */
         }
 
         .input-group label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px; /* Slightly larger label */
+            color: rgba(255, 255, 255, 0.85); /* More visible label */
             text-align: center;
-            margin-bottom: 2px; /* Space between label and input */
+            margin-bottom: 3px;
         }
 
         .quantity-input, .price-input {
-            padding: 8px;
+            padding: 10px; /* More padding */
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.5); /* More prominent border */
-            background: rgba(255, 255, 255, 0.2); /* Slightly lighter background */
+            border: 1px solid rgba(255, 255, 255, 0.4); /* More prominent border */
+            background: rgba(255, 255, 255, 0.15); /* Slightly lighter background */
             color: #fff;
-            font-size: 14px;
+            font-size: 15px; /* Larger font */
             text-align: center;
-            -moz-appearance: textfield; /* Hide arrows for Firefox */
+            -moz-appearance: textfield;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         /* Hide arrows for Chrome, Safari, Edge */
         .quantity-input::-webkit-outer-spin-button,
@@ -437,61 +467,85 @@
             margin: 0;
         }
         .quantity-input::placeholder, .price-input::placeholder {
-            color: rgba(255, 255, 255, 0.8); /* More visible placeholder */
+            color: rgba(255, 255, 255, 0.7); /* More visible placeholder */
+        }
+        .quantity-input:focus, .price-input:focus {
+            outline: none;
+            border-color: #4CAF50; /* Highlight on focus */
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3); /* Glow effect on focus */
         }
 
         .total-section {
-            margin-top: 20px;
+            margin-top: 25px; /* More margin */
             text-align: center;
-            padding-top: 15px;
+            padding-top: 18px; /* More padding */
             border-top: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .action-button {
             background: linear-gradient(to right, #4CAF50, #8BC34A); /* Green gradient button */
             color: white;
-            padding: 12px 25px;
+            padding: 14px 30px; /* More padding */
             border: none;
-            border-radius: 25px;
+            border-radius: 30px; /* More rounded */
             cursor: pointer;
-            font-size: 18px;
+            font-size: 19px; /* Larger font */
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35); /* Stronger shadow */
             transition: all 0.3s ease;
-            margin-bottom: 15px;
+            margin-bottom: 18px; /* More margin */
             width: 100%; /* Full width button */
+            letter-spacing: 0.5px; /* Slight letter spacing */
         }
 
         .action-button:hover {
             background: linear-gradient(to right, #8BC34A, #4CAF50);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transform: translateY(-3px); /* More noticeable lift */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        .action-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .total-display {
-            font-size: 24px;
+            font-size: 26px; /* Larger font */
             font-weight: bold;
             color: #FFEB3B; /* Yellow for total amount */
-            text-shadow: 0 0 8px rgba(255, 235, 59, 0.5);
+            text-shadow: 0 0 10px rgba(255, 235, 59, 0.6); /* Stronger glow */
+        }
+
+        /* Store Sign Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.03); opacity: 0.95; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .store-sign-animated {
+            animation: pulse 2s infinite ease-in-out;
         }
 
         /* Responsive adjustments for smaller screens */
         @media (max-width: 900px) {
             .container {
                 flex-direction: column; /* Stack info panel and scene */
-                padding: 15px; /* Slightly less padding */
+                padding: 15px;
                 gap: 15px;
+                height: auto; /* Allow container to grow based on content */
             }
             
             .info-panel {
                 width: 100%;
                 margin-right: 0;
-                margin-bottom: 0; /* No bottom margin, gap handles it */
                 max-height: 45vh; /* Adjusted max-height to make scrollbar appear more readily */
-                /* Ensure it's always displayed on smaller screens */
-                /* display: block !important;  -- Removed this, JS will handle visibility */
+                transform: translateX(0); /* No initial transform on mobile */
             }
             
+            .scene-container {
+                height: 55vh; /* Give more height to the scene on mobile */
+                min-height: 300px; /* Ensure a minimum height */
+            }
+
             .mobile-controls {
                 display: flex; /* Show mobile controls */
             }
@@ -502,13 +556,14 @@
             
             .overlay {
                 font-size: 14px;
-                max-width: 80%;
+                max-width: 90%; /* Wider overlay */
                 left: 15px;
                 top: 15px;
+                padding: 12px; /* Slightly less padding */
             }
             
             .overlay .title {
-                font-size: 18px;
+                font-size: 20px;
             }
             
             .overlay .subtitle {
@@ -518,46 +573,66 @@
         
         @media (max-width: 600px) {
             .info-panel {
-                /* display: block !important; -- Removed this, JS will handle visibility */
-                max-height: 45vh; /* Adjusted max-height for very small screens as well */
+                max-height: 40vh; /* Further adjust max-height for very small screens */
             }
             
             .container {
                 padding: 10px;
+                gap: 10px;
             }
             
             .mobile-info {
                 bottom: 160px; /* Adjust position */
-                font-size: 12px;
+                font-size: 13px;
                 left: 10px;
+                padding: 10px 12px;
             }
             
             .control-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 20px;
+                width: 65px; /* Smaller buttons */
+                height: 65px;
+                font-size: 24px;
+                margin: 0 8px;
             }
             
             .joystick, .camera-joystick {
-                width: 100px;
-                height: 100px;
+                width: 110px; /* Smaller joysticks */
+                height: 110px;
             }
             
             .joystick-handle, .camera-handle {
-                width: 40px;
-                height: 40px;
+                width: 45px; /* Smaller handles */
+                height: 45px;
             }
             .item-row {
                 flex-direction: column; /* Stack items vertically on small screens */
                 align-items: flex-start;
-                gap: 8px;
+                gap: 6px; /* Reduced gap */
             }
-            .item-name, .input-group { /* Target input-group instead of individual inputs */
+            .item-name, .input-group {
                 flex-basis: 100%; /* Take full width */
                 width: 100%;
             }
             .quantity-input, .price-input {
-                text-align: left; /* Align text left for better readability on small screens */
+                text-align: right; /* Align text right for better readability on small screens */
+                font-size: 14px;
+                padding: 8px;
+            }
+            .input-group label {
+                text-align: right; /* Align labels right */
+            }
+            h1 {
+                font-size: 24px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+            .action-button {
+                font-size: 17px;
+                padding: 12px 20px;
+            }
+            .total-display {
+                font-size: 22px;
             }
         }
     </style>
@@ -737,31 +812,35 @@
         }, 200);
         
         function initScene() {
-            // Scene setup
+            // --- Three.js Scene Setup ---
             const scene = new THREE.Scene();
             scene.background = new THREE.Color(0x87CEEB); // Sky blue background
             scene.fog = new THREE.Fog(0x87CEEB, 20, 100); // Fog for depth perception
             
             const canvas = document.getElementById('cityScene');
-            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); // Antialiasing for smoother edges
+            // WebGLRenderer with antialiasing for smoother edges
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); 
             renderer.setSize(canvas.clientWidth, canvas.clientHeight);
             renderer.shadowMap.enabled = true; // Enable shadows
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadows
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadows for better realism
             renderer.setPixelRatio(window.devicePixelRatio); // Adjust for high-DPI screens
             
-            // Camera setup
+            // Camera setup: PerspectiveCamera for 3D view
             const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-            // Camera position reverted to original
-            camera.position.set(0, 5, 10); // Initial camera position
+            // Initial camera position: facing the store (store is at Z = -20)
+            camera.position.set(0, 5, 20); 
             
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Soft ambient light
+            // --- Lighting ---
+            // Soft ambient light to illuminate all objects
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); 
             scene.add(ambientLight);
             
-            const sunLight = new THREE.DirectionalLight(0xffffff, 0.8); // Directional light (sun)
+            // Directional light (simulating the sun)
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.8); 
             sunLight.position.set(100, 100, 50); // Position of the sun
             sunLight.castShadow = true; // Sun casts shadows
-            sunLight.shadow.mapSize.width = 2048; // Higher resolution shadows
+            // Configure shadow map resolution for sharper shadows
+            sunLight.shadow.mapSize.width = 2048; 
             sunLight.shadow.mapSize.height = 2048;
             sunLight.shadow.camera.near = 0.5;
             sunLight.shadow.camera.far = 200;
@@ -771,11 +850,11 @@
             sunLight.shadow.camera.bottom = -50;
             scene.add(sunLight);
             
-            // Ground
+            // --- Ground ---
             const groundGeometry = new THREE.PlaneGeometry(100, 100);
             const groundMaterial = new THREE.MeshStandardMaterial({ 
                 color: 0x32CD32, // Brighter green for grass
-                roughness: 0.8,
+                roughness: 0.8, // Less shiny
                 metalness: 0.2
             });
             const ground = new THREE.Mesh(groundGeometry, groundMaterial);
@@ -783,16 +862,16 @@
             ground.receiveShadow = true; // Ground receives shadows
             scene.add(ground);
             
-            // Road
+            // --- Road ---
             const roadGeometry = new THREE.PlaneGeometry(20, 100);
             const roadMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 }); // Darker grey for road
             const road = new THREE.Mesh(roadGeometry, roadMaterial);
             road.rotation.x = -Math.PI / 2;
-            road.position.y = 0.01; // Slightly above ground to avoid z-fighting
+            road.position.y = 0.01; // Slightly above ground to avoid z-fighting (flickering)
             road.receiveShadow = true;
             scene.add(road);
             
-            // Road markings
+            // Road markings (yellow dashed lines)
             for (let i = -45; i < 50; i += 5) {
                 const markingGeometry = new THREE.PlaneGeometry(1, 0.2);
                 const markingMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFF00 }); // Yellow markings
@@ -803,34 +882,54 @@
                 scene.add(marking);
             }
             
-            // Function to create buildings
+            // Function to create generic buildings
             function createBuilding(width, height, depth, color, x, z) {
                 const geometry = new THREE.BoxGeometry(width, height, depth);
                 const material = new THREE.MeshStandardMaterial({ color });
                 const building = new THREE.Mesh(geometry, material);
                 building.position.set(x, height/2, z);
-                building.castShadow = true;
-                building.receiveShadow = true;
+                building.castShadow = true; // Building casts shadows
+                building.receiveShadow = true; // Building receives shadows
                 scene.add(building);
                 
-                // Add windows for realism
+                // Add windows for realism (only for taller buildings)
                 if (height > 5) {
                     const windowColor = 0xADD8E6; // Light blue for windows
-                    const windowSpacing = 2;
+                    const windowSpacing = 2; // Vertical spacing between windows
+                    const windowWidth = 0.5;
+                    const windowHeight = 1;
+                    const windowDepth = 0.1;
+                    const windowMaterial = new THREE.MeshStandardMaterial({ color: windowColor, roughness: 0.2, metalness: 0.5 });
                     
+                    // Add windows to front and back faces
                     for (let y = 2; y < height - 1; y += windowSpacing) {
+                        // Front windows (positive Z side of building)
                         for (let offset of [-width/4, width/4]) {
-                            // Front windows (positive Z side of building)
-                            const windowGeometry = new THREE.BoxGeometry(0.5, 1, 0.1);
-                            const windowMaterial = new THREE.MeshStandardMaterial({ color: windowColor, roughness: 0.2, metalness: 0.5 });
-                            const window = new THREE.Mesh(windowGeometry, windowMaterial);
-                            window.position.set(x + offset, y, z + depth/2 + 0.1);
+                            const window = new THREE.Mesh(new THREE.BoxGeometry(windowWidth, windowHeight, windowDepth), windowMaterial);
+                            window.position.set(x + offset, y, z + depth/2 + windowDepth/2);
                             scene.add(window);
-                            
-                            // Back windows (negative Z side of building)
-                            const window2 = new THREE.Mesh(windowGeometry, windowMaterial);
-                            window2.position.set(x + offset, y, z - depth/2 - 0.1);
-                            scene.add(window2);
+                        }
+                        // Back windows (negative Z side of building)
+                        for (let offset of [-width/4, width/4]) {
+                            const window = new THREE.Mesh(new THREE.BoxGeometry(windowWidth, windowHeight, windowDepth), windowMaterial);
+                            window.position.set(x + offset, y, z - depth/2 - windowDepth/2);
+                            scene.add(window);
+                        }
+                    }
+
+                    // Add windows to left and right faces
+                    for (let y = 2; y < height - 1; y += windowSpacing) {
+                        // Left windows (negative X side of building)
+                        for (let offset of [-depth/4, depth/4]) {
+                            const window = new THREE.Mesh(new THREE.BoxGeometry(windowDepth, windowHeight, windowWidth), windowMaterial);
+                            window.position.set(x - width/2 - windowDepth/2, y, z + offset);
+                            scene.add(window);
+                        }
+                        // Right windows (positive X side of building)
+                        for (let offset of [-depth/4, depth/4]) {
+                            const window = new THREE.Mesh(new THREE.BoxGeometry(windowDepth, windowHeight, windowWidth), windowMaterial);
+                            window.position.set(x + width/2 + windowDepth/2, y, z + offset);
+                            scene.add(window);
                         }
                     }
                 }
@@ -863,7 +962,7 @@
             
             // Function to create the vegetable store with specific fruits/vegetables
             function createVegetableStore() {
-                // Main store building
+                // Main store building dimensions
                 const storeWidth = 20;
                 const storeHeight = 10;
                 const storeDepth = 15;
@@ -872,44 +971,44 @@
                 
                 // Define Z positions for front and back of the store
                 const storeFrontZ = store.position.z + storeDepth / 2; // Front of the store (facing positive Z)
-                const storeBackZ = store.position.z - storeDepth / 2;   // Back of the store (facing negative Z)
-
+                
                 // Store roof (pitched roof for a more distinct look)
                 const roofGeometry = new THREE.ConeGeometry(storeWidth * 0.7, 5, 4); // Wider base, taller
                 const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xA0522D }); // Sienna brown
                 const roof = new THREE.Mesh(roofGeometry, roofMaterial);
                 roof.position.set(0, storeHeight + 2.5, store.position.z); // Center the roof over the building
-                roof.rotation.y = Math.PI / 4;
+                roof.rotation.y = Math.PI / 4; // Rotate for a diamond-like appearance
                 roof.castShadow = true;
                 scene.add(roof);
                 
-                // Entrance Arch/Awning
+                // Entrance Awning
                 const awningGeometry = new THREE.BoxGeometry(storeWidth * 0.6, 1, 3);
                 const awningMaterial = new THREE.MeshStandardMaterial({ color: 0xFFD700 }); // Gold color
                 const awning = new THREE.Mesh(awningGeometry, awningMaterial);
-                // Position awning on the new front face (positive Z side of the store)
                 awning.position.set(0, storeHeight * 0.7, storeFrontZ + 1.5);
                 awning.castShadow = true;
                 scene.add(awning);
             
-                // Store Sign
+                // Store Sign (animated)
                 const signGeometry = new THREE.BoxGeometry(12, 2, 0.5);
                 const signMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF }); // White sign background
                 const sign = new THREE.Mesh(signGeometry, signMaterial);
-                // Position sign on the new front face (positive Z side of the store)
                 sign.position.set(0, storeHeight + 0.5, storeFrontZ + 0.2);
                 sign.castShadow = true;
+                // Add a class to the sign's material for CSS animation (handled in CSS)
+                sign.material.name = 'store-sign-animated'; // A custom property to identify for animation
                 scene.add(sign);
             
                 // Text for the sign (simple placeholder, actual text rendering is complex in Three.js)
+                // For a more advanced text, you'd typically use TextGeometry with a FontLoader.
+                // Here, we'll just add a simple plane that *looks* like text is on it.
                 const textGeo = new THREE.PlaneGeometry(10, 1.5);
                 const textMaterial = new THREE.MeshBasicMaterial({ color: 0x4CAF50, transparent: true, opacity: 0.9 });
                 const textMesh = new THREE.Mesh(textGeo, textMaterial);
-                // Position text slightly in front of the sign
                 textMesh.position.set(0, storeHeight + 0.5, storeFrontZ + 0.25);
                 scene.add(textMesh);
 
-                // Glass Door (reverted to original size)
+                // Glass Door
                 const doorWidth = 3; 
                 const doorHeight = 6; 
                 const doorDepth = 0.1; // Thinness of the glass
@@ -928,7 +1027,6 @@
                     new THREE.BoxGeometry(doorWidth, doorHeight, doorDepth),
                     glassMaterial
                 );
-                // Position the glass door at the center of the new front face of the store (positive Z side)
                 glassDoor.position.set(0, doorHeight / 2, storeFrontZ + doorDepth / 2);
                 glassDoor.castShadow = true;
                 scene.add(glassDoor);
@@ -1110,14 +1208,14 @@
                 }
             }
             
-            // Camera controls state
+            // --- Camera controls state ---
             const moveState = { forward: false, backward: false, left: false, right: false };
             const velocity = new THREE.Vector3();
             const direction = new THREE.Vector3();
             const movementSpeed = 0.2; // Speed of camera movement
             const rotationSpeed = 0.005; // Speed of camera rotation
             
-            // Keyboard controls for desktop
+            // --- Keyboard controls for desktop movement ---
             document.addEventListener('keydown', (e) => {
                 switch(e.key.toLowerCase()) {
                     case 'w': moveState.forward = true; break;
@@ -1136,9 +1234,9 @@
                 }
             });
             
-            // Mobile movement buttons (touchstart/touchend for continuous movement)
+            // --- Mobile movement buttons (touchstart/touchend for continuous movement) ---
             document.getElementById('forwardBtn').addEventListener('touchstart', (e) => {
-                e.preventDefault(); // Prevent default browser touch behavior
+                e.preventDefault(); // Prevent default browser touch behavior (e.g., scrolling)
                 moveState.forward = true;
             });
             document.getElementById('forwardBtn').addEventListener('touchend', () => moveState.forward = false);
@@ -1161,7 +1259,7 @@
             });
             document.getElementById('rightBtn').addEventListener('touchend', () => moveState.right = false);
             
-            // Mouse and touch camera controls for rotation
+            // --- Mouse and touch camera controls for rotation ---
             let previousMouseX = 0;
             let previousMouseY = 0;
             let mouseMoved = false;
@@ -1184,6 +1282,7 @@
             canvas.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
                 
+                // Skip first move to prevent jump
                 if (!mouseMoved) {
                     previousMouseX = e.clientX;
                     previousMouseY = e.clientY;
@@ -1196,25 +1295,27 @@
                 
                 // Rotate camera around Y (yaw) and X (pitch) axes
                 camera.rotation.y -= deltaX * rotationSpeed;
-                camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - deltaY * rotationSpeed)); // Limit vertical rotation
+                // Limit vertical rotation to prevent flipping
+                camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - deltaY * rotationSpeed)); 
                 
                 previousMouseX = e.clientX;
                 previousMouseY = e.clientY; 
             });
             
             // Touch controls for camera rotation (single touch for rotation)
-            let touchId = null;
+            let touchId = null; // To track a single touch for camera rotation
             let previousTouchX = 0;
             let previousTouchY = 0;
             
             canvas.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 1 && touchId === null) { // Only track one touch for camera
+                // Only track the first touch if no touch is currently tracked
+                if (e.touches.length === 1 && touchId === null) { 
                     const touch = e.touches[0];
                     touchId = touch.identifier;
                     previousTouchX = touch.clientX;
                     previousTouchY = touch.clientY;
                 }
-            }, { passive: false }); 
+            }, { passive: false }); // Use passive: false to allow e.preventDefault()
             
             canvas.addEventListener('touchmove', (e) => {
                 for (let i = 0; i < e.touches.length; i++) {
@@ -1228,6 +1329,7 @@
                         
                         previousTouchX = touch.clientX;
                         previousTouchY = touch.clientY;
+                        e.preventDefault(); // Prevent scrolling/zooming
                         break;
                     }
                 }
@@ -1236,13 +1338,13 @@
             canvas.addEventListener('touchend', (e) => {
                 for (let i = 0; i < e.changedTouches.length; i++) {
                     if (e.changedTouches[i].identifier === touchId) {
-                        touchId = null; // Reset tracked touch
+                        touchId = null; // Reset tracked touch when it ends
                         break;
                     }
                 }
             });
             
-            // Camera joystick for mobile (alternative to direct screen drag)
+            // --- Camera joystick for mobile (alternative to direct screen drag) ---
             const cameraJoystick = document.getElementById('cameraJoystick');
             const cameraHandle = document.getElementById('cameraHandle');
             let joystickActive = false;
@@ -1255,7 +1357,7 @@
                 const rect = cameraJoystick.getBoundingClientRect();
                 joystickCenterX = rect.left + rect.width / 2;
                 joystickCenterY = rect.top + rect.height / 2;
-                joystickRadius = rect.width / 2;
+                joystickRadius = rect.width / 2 - cameraHandle.clientWidth / 2; // Radius for handle movement
             }
             
             window.addEventListener('resize', initJoystick); // Re-initialize on resize
@@ -1272,7 +1374,8 @@
                 for (let i = 0; i < e.touches.length; i++) {
                     const touch = e.touches[i];
                     // Check if this touch is within the joystick area or the one that started the drag
-                    if (cameraJoystick.contains(touch.target) || touch.identifier === touchId) {
+                    // This allows dragging the handle even if touch moves outside its initial bounds
+                    if (touch.identifier === e.touches[0].identifier) { // Track the first touch
                         const touchX = touch.clientX;
                         const touchY = touch.clientY;
                         
@@ -1290,17 +1393,27 @@
                         cameraHandle.style.transform = `translate(${handleX}px, ${handleY}px)`;
                         
                         // Rotate camera based on joystick handle position
-                        camera.rotation.y -= dx * rotationSpeed * 0.5; // Slower rotation for joystick
-                        camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - dy * rotationSpeed * 0.5));
+                        // Scale rotation speed for joystick to make it less sensitive
+                        camera.rotation.y -= dx * rotationSpeed * 0.2; 
+                        camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - dy * rotationSpeed * 0.2));
                         
-                        e.preventDefault();
+                        e.preventDefault(); // Prevent scrolling
                         break;
                     }
                 }
             }, { passive: false });
             
-            document.addEventListener('touchend', () => {
-                if (joystickActive) {
+            document.addEventListener('touchend', (e) => {
+                // Ensure the touch that started the joystick drag has ended
+                let touchEnded = false;
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].target === cameraHandle) {
+                        touchEnded = true;
+                        break;
+                    }
+                }
+
+                if (joystickActive && touchEnded) {
                     joystickActive = false;
                     cameraHandle.style.transform = 'translate(0, 0)'; // Reset handle position
                 }
@@ -1308,7 +1421,9 @@
             
             // Get reference to the info panel
             const infoPanel = document.querySelector('.info-panel');
-
+            // Get reference to the store sign for animation
+            const storeSignMesh = scene.children.find(obj => obj.material && obj.material.name === 'store-sign-animated');
+            
             // Define the store door's approximate position (center of the door)
             const storeDepth = 15;
             const storeZ = -20;
@@ -1318,15 +1433,15 @@
             const doorTriggerPosition = new THREE.Vector3(0, 5, storeFrontZ + doorDepth / 2); 
             const doorTriggerRadius = 7; // Radius around the door to activate the panel
 
-            // Animation and rendering loop
+            // --- Animation and rendering loop ---
             function animate() {
                 requestAnimationFrame(animate);
                 
-                // Reset velocity
+                // Reset velocity for current frame
                 velocity.x = 0;
                 velocity.z = 0;
                 
-                // Apply movement based on moveState
+                // Apply movement based on moveState (keyboard/mobile buttons)
                 if (moveState.forward) {
                     velocity.z -= movementSpeed;
                 }
@@ -1343,12 +1458,12 @@
                 // Apply camera's current rotation to the movement direction
                 direction.set(velocity.x, 0, velocity.z);
                 direction.applyQuaternion(camera.quaternion);
-                direction.y = 0; // Keep movement on the horizontal plane
+                direction.y = 0; // Keep movement on the horizontal plane (prevent flying up/down)
                 
                 // Update camera position
                 camera.position.add(direction);
                 
-                // Keep camera above ground level
+                // Keep camera above ground level (fixed height)
                 camera.position.y = 5;
                 
                 // Boundary checks to keep camera within the city limits
@@ -1362,6 +1477,15 @@
                 } else {
                     infoPanel.classList.remove('show'); // Remove 'show' class to fade out and hide
                 }
+
+                // Apply pulsating animation to the store sign
+                if (storeSignMesh) {
+                    // This is a simple JS-driven animation. For more complex CSS animations,
+                    // you'd typically apply CSS classes to HTML elements.
+                    // Here, we simulate the CSS 'pulse' animation by scaling the mesh.
+                    const scale = 1 + Math.sin(Date.now() * 0.002) * 0.03; // Scale between 0.97 and 1.03
+                    storeSignMesh.scale.set(scale, scale, 1);
+                }
                 
                 renderer.render(scene, camera); // Render the scene
             }
@@ -1371,7 +1495,7 @@
                 camera.aspect = canvas.clientWidth / canvas.clientHeight;
                 camera.updateProjectionMatrix(); // Update camera projection
                 renderer.setSize(canvas.clientWidth, canvas.clientHeight); // Resize renderer
-                initJoystick(); // Re-initialize joystick position
+                initJoystick(); // Re-initialize joystick position and size
             });
             
             // Start the animation loop when the scene is initialized
@@ -1429,6 +1553,7 @@
                     const quantityInput = row.querySelector('.quantity-input');
                     const priceInput = row.querySelector('.price-input');
 
+                    // Ensure values are parsed as floats, default to 0 if invalid
                     const quantity = parseFloat(quantityInput.value) || 0;
                     const price = parseFloat(priceInput.value) || 0;
 
@@ -1442,6 +1567,7 @@
             calculateTotalBtn.addEventListener('click', calculateTotal);
 
             // Optional: Automatically calculate total when input values change
+            // This provides real-time feedback as the user types
             itemsContainer.addEventListener('input', (event) => {
                 if (event.target.classList.contains('quantity-input') || event.target.classList.contains('price-input')) {
                     calculateTotal();
@@ -1454,3 +1580,4 @@
     </script>
 </body>
 </html>
+
