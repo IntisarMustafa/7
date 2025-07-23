@@ -310,6 +310,7 @@
         .nav-btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center; /* Added to center content horizontally */
             padding: 12px 25px;
             background: linear-gradient(90deg, #ffd700, #ff8c00);
             color: #333;
@@ -319,6 +320,7 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            gap: 8px; /* Added gap for icon and text */
         }
 
         .nav-btn:hover {
@@ -369,6 +371,39 @@
             margin-right: 10px;
             font-weight: bold;
         }
+
+        /* New styles for the store button */
+        .store-button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px; /* Added margin for spacing */
+            margin-bottom: 20px;
+        }
+
+        .store-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center; /* Added to center content horizontally */
+            padding: 15px 30px; /* Larger padding for a bigger button */
+            background: linear-gradient(90deg, #ff6b6b, #ee4c7c); /* Attractive gradient */
+            color: white;
+            text-decoration: none;
+            border-radius: 12px; /* More rounded corners */
+            font-weight: bold;
+            font-size: 1.3rem; /* Larger font size */
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* More prominent shadow */
+            gap: 10px; /* Space between icon and text */
+            border: 2px solid #fff; /* White border for emphasis */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .store-btn:hover {
+            transform: translateY(-5px); /* More pronounced lift effect */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); /* Deeper shadow on hover */
+            background: linear-gradient(90deg, #ee4c7c, #ff6b6b); /* Reverse gradient on hover */
+            color: #f0f0f0; /* Slight color change on hover */
+        }
         
         /* تحسينات للهواتف */
         @media (max-width: 768px) {
@@ -409,6 +444,11 @@
             .example-text {
                 text-align: right; /* تغيير من justify لتحسين القراءة على الشاشات الصغيرة */
             }
+
+            .store-btn {
+                padding: 12px 20px;
+                font-size: 1.1rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -441,6 +481,11 @@
             }
 
             .nav-btn {
+                padding: 10px 15px;
+                font-size: 1rem;
+            }
+
+            .store-btn {
                 padding: 10px 15px;
                 font-size: 1rem;
             }
@@ -491,6 +536,13 @@
                         </table>
                     </div>
                     
+                    <!-- Moved store button here, under the first table -->
+                    <div class="store-button-container">
+                        <a href="u2l2p6.html" class="store-btn">
+                            <i class="fas fa-store"></i> انتقل للمتجر الافتراضي
+                        </a>
+                    </div>
+
                     <div class="example-text">
                         <!-- العبارة التي تم تعديلها لتظهر على سطر واحد -->
                         <p class="highlight">المطلوب: كتابة عبارتين عدديتين مختلفتين لإيجاد ثمن ما اشتراه حسّان.</p>
@@ -713,3 +765,4 @@
     </script>
 </body>
 </html>
+
