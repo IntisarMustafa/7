@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>مدينة ثلاثية الأبعاد مع متجر خضار - للهاتف</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* Basic reset and font */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif; /* Using Inter as requested */
+        }
+        
+        /* Body styling with gradient background */
+        body {
+            overflow: hidden;
+            background: linear-gradient(to bottom, #1a2980, #26d0ce); /* Blue gradient */
+            color: #fff;
+            height: 100vh;
+            perspective: 1000px; /* For 3D effects if needed on elements */
+        }
+        
+        /* Main container for layout */
+        .container {
+            display: flex;
+            height: 100vh;
+            padding: 20px;
+            gap: 20px; /* Space between info panel and scene */
+        }
+        
+        /* Info panel styling */
+        .info-panel {
+            width: 300px;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
+            border-radius: 15px; /* Rounded corners */
+            padding: 20px;
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Soft shadow */
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+            /* Hidden by default, will be shown by JS when near store */
+            display: none; 
+            opacity: 0; /* Start with 0 opacity for fade effect */
+            transition: opacity 0.5s ease-in-out; /* Smooth transition for showing/hiding */
+        }
+
+        /* Class to show the info panel */
+        .info-panel.show {
+            opacity: 1;
+            display: block; /* Ensure it's block when shown */
+        }
+
+        /* Custom Scrollbar Styles (for Webkit browsers like Chrome, Safari) */
+        .info-panel::-webkit-scrollbar {
+            width: 8px; /* Width of the scrollbar */
+        }
+
+        .info-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1); /* Track color */
+            border-radius: 10px;
+        }
+
+        .info-panel::-webkit-scrollbar-thumb {
+            background-color: rgba(76, 175, 80, 0.6); /* Scrollbar color */
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, 0.2); /* Border around the thumb */
+        }
+
+        .info-panel::-webkit-scrollbar-thumb:hover {
+            background-color: #4CAF50; /* Darker on hover */
+        }
+        
+        /* Scene container styling */
+        .scene-container {
+            flex: 1; /* Takes remaining space */
+            border-radius: 15px; /* Rounded corners */
+            overflow: hidden; /* Hide overflow */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Stronger shadow for scene */
+            position: relative;
+        }
+        
+        /* Canvas styling - Apply touch-action: none here */
+        #cityScene {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none; /* Disable default touch actions specifically for the canvas */
+        }
+        
+        /* Heading styles */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4CAF50; /* Green color */
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.5); /* Glowing effect */
+        }
+        
+        h2 {
+            color: #4CAF50;
+            margin: 15px 0 10px;
+            border-bottom: 2px solid #4CAF50; /* Underline effect */
+            padding-bottom: 5px;
+        }
+        
+        /* Controls section styling */
+        .controls {
+            background: rgba(0, 30, 0, 0.4); /* Dark green semi-transparent */
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .control-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            justify-content: space-between; /* Space out text and key */
+        }
+        
+        .key {
+            background: rgba(255, 255, 255, 0.2); /* Light semi-transparent background */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+            padding: 5px 10px;
+            border-radius: 5px;
+            min-width: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        /* Vegetable list grid */
+        .vegetable-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Responsive grid */
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .vegetable-item {
+            background: rgba(76, 175, 80, 0.2); /* Green semi-transparent */
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s ease; /* Smooth hover effect */
+        }
+        
+        .vegetable-item:hover {
+            transform: translateY(-3px); /* Lift on hover */
+        }
+        
+        .veg-icon {
+            width: 24px; /* Slightly larger icon */
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px; /* Emoji size */
+        }
+        
+        /* Specific vegetable icon colors */
+        .apple { background: #FF3B30; } /* Red */
+        .orange { background: #FF9500; } /* Orange */
+        .mango { background: #FFCC00; } /* Yellow-Orange */
+        .tomato { background: #FF3B30; } /* Red */
+        .cucumber { background: #34C759; } /* Green */
+        .carrot { background: #FF9500; } /* Orange */
+        .pepper { background: #FF2D55; } /* Red-Pink */
+        .potato { background: #C69C6D; } /* Brown */
+        .eggplant { background: #5856D6; } /* Purple */
+        .cabbage { background: #34C759; } /* Green */
+        .onion { background: #FFD60A; } /* Yellow */
+        
+        /* Stats section */
+        .stats {
+            display: flex;
+            justify-content: space-around; /* Evenly spaced */
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        /* Overlay for title and subtitle */
+        .overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 10;
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+        
+        .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+        
+        /* Loading screen */
+        .loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            text-align: center;
+            z-index: 999; /* On top of everything */
+        }
+        
+        .progress-bar {
+            width: 300px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #4CAF50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        /* Mobile Controls */
+        .mobile-controls {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            display: none; /* Hidden by default, shown on mobile */
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 100;
+            pointer-events: none; /* Allow interaction with canvas behind */
+        }
+        
+        .movement-controls, .camera-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: auto; /* Re-enable pointer events for controls */
+        }
+        
+        .control-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .control-btn {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-btn:active {
+            background: rgba(76, 175, 80, 0.5);
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Joystick base */
+        .joystick {
+            width: 120px;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Joystick handle */
+        .joystick-handle {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            position: absolute;
+            cursor: move;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease-out; /* Smooth reset */
+        }
+        
+        /* Camera joystick (same styling as movement joystick) */
+        .camera-joystick {
+            background: rgba(0, 0, 0, 0.3);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .camera-handle {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            position: absolute;
+            cursor: move;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease-out; /* Smooth reset */
+        }
+        
+        /* Mobile info text */
+        .mobile-info {
+            position: absolute;
+            bottom: 180px; /* Position above controls */
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none; /* Hidden by default */
+            max-width: 80%;
+            z-index: 100;
+        }
+        
+        /* Calculator Section Styling */
+        .calculator-section {
+            background: rgba(0, 30, 0, 0.4);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .calculator-section h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            gap: 10px; /* Increased space between elements in the row */
+        }
+
+        .item-name {
+            flex-basis: 35%; /* Allocate more space for the name */
+            font-size: 16px;
+            color: #fff;
+            white-space: nowrap; /* Prevent wrapping */
+            overflow: hidden; /* Hide overflow */
+            text-overflow: ellipsis; /* Add ellipsis for overflow */
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Stack label and input vertically */
+            flex-basis: 30%; /* Equal space for each input group */
+            gap: 3px; /* Small gap between label and input */
+        }
+
+        .input-group label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            margin-bottom: 2px; /* Space between label and input */
+        }
+
+        .quantity-input, .price-input {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.5); /* More prominent border */
+            background: rgba(255, 255, 255, 0.2); /* Slightly lighter background */
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+            -moz-appearance: textfield; /* Hide arrows for Firefox */
+        }
+        /* Hide arrows for Chrome, Safari, Edge */
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button,
+        .price-input::-webkit-outer-spin-button,
+        .price-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .quantity-input::placeholder, .price-input::placeholder {
+            color: rgba(255, 255, 255, 0.8); /* More visible placeholder */
+        }
+
+        .total-section {
+            margin-top: 20px;
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-button {
+            background: linear-gradient(to right, #4CAF50, #8BC34A); /* Green gradient button */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            width: 100%; /* Full width button */
+        }
+
+        .action-button:hover {
+            background: linear-gradient(to right, #8BC34A, #4CAF50);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .total-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFEB3B; /* Yellow for total amount */
+            text-shadow: 0 0 8px rgba(255, 235, 59, 0.5);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column; /* Stack info panel and scene */
+                padding: 15px; /* Slightly less padding */
+                gap: 15px;
+            }
+            
+            .info-panel {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 0; /* No bottom margin, gap handles it */
+                max-height: 45vh; /* Adjusted max-height to make scrollbar appear more readily */
+                /* Ensure it's always displayed on smaller screens */
+                /* display: block !important;  -- Removed this, JS will handle visibility */
+            }
+            
+            .mobile-controls {
+                display: flex; /* Show mobile controls */
+            }
+            
+            .mobile-info {
+                display: block; /* Show mobile info */
+            }
+            
+            .overlay {
+                font-size: 14px;
+                max-width: 80%;
+                left: 15px;
+                top: 15px;
+            }
+            
+            .overlay .title {
+                font-size: 18px;
+            }
+            
+            .overlay .subtitle {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .info-panel {
+                /* display: block !important; -- Removed this, JS will handle visibility */
+                max-height: 45vh; /* Adjusted max-height for very small screens as well */
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .mobile-info {
+                bottom: 160px; /* Adjust position */
+                font-size: 12px;
+                left: 10px;
+            }
+            
+            .control-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 20px;
+            }
+            
+            .joystick, .camera-joystick {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .joystick-handle, .camera-handle {
+                width: 40px;
+                height: 40px;
+            }
+            .item-row {
+                flex-direction: column; /* Stack items vertically on small screens */
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .item-name, .input-group { /* Target input-group instead of individual inputs */
+                flex-basis: 100%; /* Take full width */
+                width: 100%;
+            }
+            .quantity-input, .price-input {
+                text-align: left; /* Align text left for better readability on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="title">مدينة الخضار ثلاثية الأبعاد</div>
+        <div class="subtitle">تجول في المدينة وتفقد متجر الخضار! استخدم عناصر التحكم بالأسفل للحركة</div>
+    </div>
+    
+    <div class="mobile-info">
+        اسحب بإصبعك على الشاشة للنظر حولك، واستخدم أزرار التحكم للحركة
+    </div>
+    
+    <div class="loading">
+        جارٍ تحميل المدينة...
+        <div class="progress-bar">
+            <div class="progress" id="loadingProgress"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="info-panel">
+            <h1>متجر الخضار الافتراضي</h1>
+            
+            <h2>عن المتجر</h2>
+            <p>مرحبًا بكم في متجر الخضار الافتراضي! هنا يمكنك العثور على أفضل أنواع الخضروات والفواكه الطازجة مباشرة من المزارع المحلية. نتعهد بجودة المنتجات وأسعار مناسبة للجميع.</p>
+            
+            <h2>الخضروات والفواكه المتوفرة</h2>
+            <div class="vegetable-list">
+                <div class="vegetable-item">
+                    <div class="veg-icon apple">🍎</div>
+                    <span>تفاح</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon orange">🍊</div>
+                    <span>برتقال</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon mango">🥭</div>
+                    <span>مانجو</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon tomato">🍅</div>
+                    <span>طماطم</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon cucumber">🥒</div>
+                    <span>خيار</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon carrot">🥕</div>
+                    <span>جزر</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon pepper">🌶️</div>
+                    <span>فلفل</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon potato">🥔</div>
+                    <span>بطاطس</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon eggplant">🍆</div>
+                    <span>باذنجان</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon cabbage">🥬</div>
+                    <span>كرنب</span>
+                </div>
+                <div class="vegetable-item">
+                    <div class="veg-icon onion">🧅</div>
+                    <span>بصل</span>
+                </div>
+            </div>
+
+            <!-- New Calculator Section -->
+            <div class="calculator-section">
+                <h2>حاسبة المشتريات</h2>
+                <div id="itemsContainer">
+                    <!-- Item rows will be dynamically generated by JavaScript -->
+                </div>
+                <div class="total-section">
+                    <button id="calculateTotalBtn" class="action-button">احسب المجموع</button>
+                    <div class="total-display">
+                        المجموع الكلي: <span id="totalAmount">0.00</span> د.أ
+                    </div>
+                </div>
+            </div>
+            
+            <h2>تحكم في التجول</h2>
+            <div class="controls">
+                <div class="control-item">
+                    <span>التجول للأمام</span>
+                    <div class="key">W</div>
+                </div>
+                <div class="control-item">
+                    <span>التجول للخلف</span>
+                    <div class="key">S</div>
+                </div>
+                <div class="control-item">
+                    <span>التحرك لليسار</span>
+                    <div class="key">A</div>
+                </div>
+                <div class="control-item">
+                    <span>التحرك لليمين</span>
+                    <div class="key">D</div>
+                </div>
+                <div class="control-item">
+                    <span>النظر حولك</span>
+                    <div class="key">ماوس</div>
+                </div>
+                <div class="control-item">
+                    <span>التحكم بالهاتف</span>
+                    <div class="key">لمس الشاشة</div>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value">11</div>
+                    <div class="stat-label">نوع خضار/فاكهة</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">متوفر</div>
+                    <div class="stat-label">الآن</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">365</div>
+                    <div class="stat-label">يوم فتح</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scene-container">
+            <canvas id="cityScene"></canvas>
+        </div>
+    </div>
+    
+    <!-- Mobile Controls -->
+    <div class="mobile-controls">
+        <div class="movement-controls">
+            <div class="control-row">
+                <div class="control-btn" id="forwardBtn">↑</div>
+            </div>
+            <div class="control-row">
+                <div class="control-btn" id="leftBtn">←</div>
+                <div class="control-btn" id="backwardBtn">↓</div>
+                <div class="control-btn" id="rightBtn">→</div>
+            </div>
+        </div>
+        
+        <div class="camera-controls">
+            <div class="joystick" id="cameraJoystick">
+                <div class="joystick-handle" id="cameraHandle"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Simulate loading progress for better user experience
+        const loadingProgress = document.getElementById('loadingProgress');
+        const loadingElement = document.querySelector('.loading');
+        
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 10; // Increment progress randomly
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                setTimeout(() => {
+                    loadingElement.style.display = 'none'; // Hide loading screen
+                    initScene(); // Initialize the 3D scene
+                }, 500); // Short delay before hiding
+            }
+            loadingProgress.style.width = `${progress}%`; // Update progress bar width
+        }, 200);
+        
+        function initScene() {
+            // Scene setup
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB); // Sky blue background
+            scene.fog = new THREE.Fog(0x87CEEB, 20, 100); // Fog for depth perception
+            
+            const canvas = document.getElementById('cityScene');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); // Antialiasing for smoother edges
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.shadowMap.enabled = true; // Enable shadows
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadows
+            renderer.setPixelRatio(window.devicePixelRatio); // Adjust for high-DPI screens
+            
+            // Camera setup
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            // Camera position reverted to original
+            camera.position.set(0, 5, 10); // Initial camera position
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Soft ambient light
+            scene.add(ambientLight);
+            
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.8); // Directional light (sun)
+            sunLight.position.set(100, 100, 50); // Position of the sun
+            sunLight.castShadow = true; // Sun casts shadows
+            sunLight.shadow.mapSize.width = 2048; // Higher resolution shadows
+            sunLight.shadow.mapSize.height = 2048;
+            sunLight.shadow.camera.near = 0.5;
+            sunLight.shadow.camera.far = 200;
+            sunLight.shadow.camera.left = -50;
+            sunLight.shadow.camera.right = 50;
+            sunLight.shadow.camera.top = 50;
+            sunLight.shadow.camera.bottom = -50;
+            scene.add(sunLight);
+            
+            // Ground
+            const groundGeometry = new THREE.PlaneGeometry(100, 100);
+            const groundMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x32CD32, // Brighter green for grass
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2; // Rotate to be flat
+            ground.receiveShadow = true; // Ground receives shadows
+            scene.add(ground);
+            
+            // Road
+            const roadGeometry = new THREE.PlaneGeometry(20, 100);
+            const roadMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 }); // Darker grey for road
+            const road = new THREE.Mesh(roadGeometry, roadMaterial);
+            road.rotation.x = -Math.PI / 2;
+            road.position.y = 0.01; // Slightly above ground to avoid z-fighting
+            road.receiveShadow = true;
+            scene.add(road);
+            
+            // Road markings
+            for (let i = -45; i < 50; i += 5) {
+                const markingGeometry = new THREE.PlaneGeometry(1, 0.2);
+                const markingMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFF00 }); // Yellow markings
+                const marking = new THREE.Mesh(markingGeometry, markingMaterial);
+                marking.rotation.x = -Math.PI / 2;
+                marking.position.set(0, 0.02, i); // Slightly above road
+                marking.receiveShadow = true;
+                scene.add(marking);
+            }
+            
+            // Function to create buildings
+            function createBuilding(width, height, depth, color, x, z) {
+                const geometry = new THREE.BoxGeometry(width, height, depth);
+                const material = new THREE.MeshStandardMaterial({ color });
+                const building = new THREE.Mesh(geometry, material);
+                building.position.set(x, height/2, z);
+                building.castShadow = true;
+                building.receiveShadow = true;
+                scene.add(building);
+                
+                // Add windows for realism
+                if (height > 5) {
+                    const windowColor = 0xADD8E6; // Light blue for windows
+                    const windowSpacing = 2;
+                    
+                    for (let y = 2; y < height - 1; y += windowSpacing) {
+                        for (let offset of [-width/4, width/4]) {
+                            // Front windows (positive Z side of building)
+                            const windowGeometry = new THREE.BoxGeometry(0.5, 1, 0.1);
+                            const windowMaterial = new THREE.MeshStandardMaterial({ color: windowColor, roughness: 0.2, metalness: 0.5 });
+                            const window = new THREE.Mesh(windowGeometry, windowMaterial);
+                            window.position.set(x + offset, y, z + depth/2 + 0.1);
+                            scene.add(window);
+                            
+                            // Back windows (negative Z side of building)
+                            const window2 = new THREE.Mesh(windowGeometry, windowMaterial);
+                            window2.position.set(x + offset, y, z - depth/2 - 0.1);
+                            scene.add(window2);
+                        }
+                    }
+                }
+                
+                return building;
+            }
+            
+            // Create city buildings
+            const buildings = [];
+            
+            // Left side buildings
+            for (let i = -40; i < 40; i += 8) {
+                const width = 6 + Math.random() * 4;
+                const height = 5 + Math.random() * 10;
+                const depth = 6 + Math.random() * 4;
+                const color = new THREE.Color(Math.random() * 0x888888 + 0x777777); // Greyish random colors
+                
+                buildings.push(createBuilding(width, height, depth, color, -15, i));
+            }
+            
+            // Right side buildings
+            for (let i = -40; i < 40; i += 8) {
+                const width = 6 + Math.random() * 4;
+                const height = 5 + Math.random() * 10;
+                const depth = 6 + Math.random() * 4;
+                const color = new THREE.Color(Math.random() * 0x888888 + 0x777777);
+                
+                buildings.push(createBuilding(width, height, depth, color, 15, i));
+            }
+            
+            // Function to create the vegetable store with specific fruits/vegetables
+            function createVegetableStore() {
+                // Main store building
+                const storeWidth = 20;
+                const storeHeight = 10;
+                const storeDepth = 15;
+                const storeColor = 0x66BB6A; // A more vibrant green for the store
+                const store = createBuilding(storeWidth, storeHeight, storeDepth, storeColor, 0, -20);
+                
+                // Define Z positions for front and back of the store
+                const storeFrontZ = store.position.z + storeDepth / 2; // Front of the store (facing positive Z)
+                const storeBackZ = store.position.z - storeDepth / 2;   // Back of the store (facing negative Z)
+
+                // Store roof (pitched roof for a more distinct look)
+                const roofGeometry = new THREE.ConeGeometry(storeWidth * 0.7, 5, 4); // Wider base, taller
+                const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xA0522D }); // Sienna brown
+                const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+                roof.position.set(0, storeHeight + 2.5, store.position.z); // Center the roof over the building
+                roof.rotation.y = Math.PI / 4;
+                roof.castShadow = true;
+                scene.add(roof);
+                
+                // Entrance Arch/Awning
+                const awningGeometry = new THREE.BoxGeometry(storeWidth * 0.6, 1, 3);
+                const awningMaterial = new THREE.MeshStandardMaterial({ color: 0xFFD700 }); // Gold color
+                const awning = new THREE.Mesh(awningGeometry, awningMaterial);
+                // Position awning on the new front face (positive Z side of the store)
+                awning.position.set(0, storeHeight * 0.7, storeFrontZ + 1.5);
+                awning.castShadow = true;
+                scene.add(awning);
+            
+                // Store Sign
+                const signGeometry = new THREE.BoxGeometry(12, 2, 0.5);
+                const signMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF }); // White sign background
+                const sign = new THREE.Mesh(signGeometry, signMaterial);
+                // Position sign on the new front face (positive Z side of the store)
+                sign.position.set(0, storeHeight + 0.5, storeFrontZ + 0.2);
+                sign.castShadow = true;
+                scene.add(sign);
+            
+                // Text for the sign (simple placeholder, actual text rendering is complex in Three.js)
+                const textGeo = new THREE.PlaneGeometry(10, 1.5);
+                const textMaterial = new THREE.MeshBasicMaterial({ color: 0x4CAF50, transparent: true, opacity: 0.9 });
+                const textMesh = new THREE.Mesh(textGeo, textMaterial);
+                // Position text slightly in front of the sign
+                textMesh.position.set(0, storeHeight + 0.5, storeFrontZ + 0.25);
+                scene.add(textMesh);
+
+                // Glass Door (reverted to original size)
+                const doorWidth = 3; 
+                const doorHeight = 6; 
+                const doorDepth = 0.1; // Thinness of the glass
+                
+                // Glass material: transparent, slightly blue/green tint, reflective
+                const glassMaterial = new THREE.MeshStandardMaterial({
+                    color: 0xAADDFF, // Light blue tint for glass
+                    transparent: true,
+                    opacity: 0.5, // Semi-transparent
+                    roughness: 0.1, // Very smooth for reflective quality
+                    metalness: 0.9, // Highly metallic for reflections
+                    side: THREE.DoubleSide // Render both sides of the plane
+                });
+
+                const glassDoor = new THREE.Mesh(
+                    new THREE.BoxGeometry(doorWidth, doorHeight, doorDepth),
+                    glassMaterial
+                );
+                // Position the glass door at the center of the new front face of the store (positive Z side)
+                glassDoor.position.set(0, doorHeight / 2, storeFrontZ + doorDepth / 2);
+                glassDoor.castShadow = true;
+                scene.add(glassDoor);
+
+                // Door Frame (simple thin boxes around the glass)
+                const frameThickness = 0.2;
+                const frameColor = 0x333333; // Dark grey for the frame
+
+                // Top Frame
+                const topFrame = new THREE.Mesh(
+                    new THREE.BoxGeometry(doorWidth + frameThickness * 2, frameThickness, doorDepth),
+                    new THREE.MeshStandardMaterial({ color: frameColor })
+                );
+                topFrame.position.set(0, doorHeight + frameThickness / 2, storeFrontZ + doorDepth / 2);
+                scene.add(topFrame);
+
+                // Bottom Frame
+                const bottomFrame = new THREE.Mesh(
+                    new THREE.BoxGeometry(doorWidth + frameThickness * 2, frameThickness, doorDepth),
+                    new THREE.MeshStandardMaterial({ color: frameColor })
+                );
+                bottomFrame.position.set(0, frameThickness / 2, storeFrontZ + doorDepth / 2);
+                scene.add(bottomFrame);
+
+                // Left Frame
+                const leftFrame = new THREE.Mesh(
+                    new THREE.BoxGeometry(frameThickness, doorHeight, doorDepth),
+                    new THREE.MeshStandardMaterial({ color: frameColor })
+                );
+                leftFrame.position.set(-doorWidth / 2 - frameThickness / 2, doorHeight / 2, storeFrontZ + doorDepth / 2);
+                scene.add(leftFrame);
+
+                // Right Frame
+                const rightFrame = new THREE.Mesh(
+                    new THREE.BoxGeometry(frameThickness, doorHeight, doorDepth),
+                    new THREE.MeshStandardMaterial({ color: frameColor })
+                );
+                rightFrame.position.set(doorWidth / 2 + frameThickness / 2, doorHeight / 2, storeFrontZ + doorDepth / 2);
+                scene.add(rightFrame);
+            
+                // Display Stands (simple boxes)
+                function createStand(x, z, width, depth, height, color) {
+                    const standGeometry = new THREE.BoxGeometry(width, height, depth);
+                    const standMaterial = new THREE.MeshStandardMaterial({ color: color });
+                    const stand = new THREE.Mesh(standGeometry, standMaterial);
+                    stand.position.set(x, height / 2, z);
+                    stand.castShadow = true;
+                    stand.receiveShadow = true;
+                    scene.add(stand);
+                    return stand;
+                }
+            
+                // Create specific fruits/vegetables with more distinct shapes
+                const fruitsAndVeggies = [];
+            
+                // Apple (Red sphere with a small brown stem)
+                function createApple(x, y, z) {
+                    const appleBody = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.6, 16, 16),
+                        new THREE.MeshStandardMaterial({ color: 0xFF3B30, roughness: 0.5 })
+                    );
+                    appleBody.position.set(x, y, z);
+                    appleBody.castShadow = true;
+                    
+                    const stem = new THREE.Mesh(
+                        new THREE.CylinderGeometry(0.08, 0.08, 0.4, 8),
+                        new THREE.MeshStandardMaterial({ color: 0x8B4513 })
+                    );
+                    stem.position.set(x, y + 0.6, z);
+                    stem.castShadow = true;
+                    
+                    fruitsAndVeggies.push(appleBody, stem);
+                    scene.add(appleBody, stem);
+                }
+            
+                // Orange (Orange sphere, slightly squashed)
+                function createOrange(x, y, z) {
+                    const orange = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.65, 16, 16),
+                        new THREE.MeshStandardMaterial({ color: 0xFF9500, roughness: 0.6 })
+                    );
+                    orange.scale.y = 0.9; // Slightly squashed
+                    orange.position.set(x, y, z);
+                    orange.castShadow = true;
+                    fruitsAndVeggies.push(orange);
+                    scene.add(orange);
+                }
+            
+                // Mango (Elongated shape - approximated with a stretched sphere)
+                function createMango(x, y, z) {
+                    const mango = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.7, 16, 16),
+                        new THREE.MeshStandardMaterial({ color: 0xFFCC00, roughness: 0.5 }) // Yellowish
+                    );
+                    mango.scale.set(0.8, 1.2, 0.8); // Elongated
+                    mango.rotation.z = Math.PI / 8; // Slight tilt
+                    mango.position.set(x, y, z);
+                    mango.castShadow = true;
+                    fruitsAndVeggies.push(mango);
+                    scene.add(mango);
+                }
+            
+                // Tomato (Red sphere)
+                function createTomato(x, y, z) {
+                    const tomato = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.55, 16, 16),
+                        new THREE.MeshStandardMaterial({ color: 0xFF3B30, roughness: 0.4 })
+                    );
+                    tomato.position.set(x, y, z);
+                    tomato.castShadow = true;
+                    fruitsAndVeggies.push(tomato);
+                    scene.add(tomato);
+                }
+            
+                // Positioning fruits/vegetables on stands
+                const standY = 0.5; // Height of the stand
+                const vegYOffset = standY + 0.6; // Position above the stand
+                
+                // New Z position for the stands, further back inside the store
+                const standZPosition = store.position.z - 6; 
+                
+                const stand1 = createStand(-4, standZPosition, 3, 3, standY, 0x8B4513);
+                for (let i = 0; i < 5; i++) {
+                    createApple(stand1.position.x + Math.random() * 1.5 - 0.75, vegYOffset, stand1.position.z + Math.random() * 1.5 - 0.75);
+                }
+            
+                const stand2 = createStand(0, standZPosition, 3, 3, standY, 0x8B4513);
+                for (let i = 0; i < 5; i++) {
+                    createOrange(stand2.position.x + Math.random() * 1.5 - 0.75, vegYOffset, stand2.position.z + Math.random() * 1.5 - 0.75);
+                }
+            
+                const stand3 = createStand(4, standZPosition, 3, 3, standY, 0x8B4513);
+                for (let i = 0; i < 5; i++) {
+                    createMango(stand3.position.x + Math.random() * 1.5 - 0.75, vegYOffset, stand3.position.z + Math.random() * 1.5 - 0.75);
+                }
+            
+                const stand4 = createStand(8, standZPosition, 3, 3, standY, 0x8B4513);
+                for (let i = 0; i < 5; i++) {
+                    createTomato(stand4.position.x + Math.random() * 1.5 - 0.75, vegYOffset, stand4.position.z + Math.random() * 1.5 - 0.75);
+                }
+            
+                return store;
+            }
+            
+            const vegetableStore = createVegetableStore();
+            
+            // Add trees
+            function createTree(x, z) {
+                // Trunk
+                const trunkGeometry = new THREE.CylinderGeometry(0.4, 0.5, 3, 8);
+                const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+                const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                trunk.position.set(x, 1.5, z);
+                trunk.castShadow = true;
+                scene.add(trunk);
+                
+                // Leaves (more detailed shape using a Dodecahedron)
+                const leavesGeometry = new THREE.DodecahedronGeometry(2); // More organic shape
+                const leavesMaterial = new THREE.MeshStandardMaterial({ color: 0x228B22, roughness: 0.7 }); // Forest green
+                const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+                leaves.position.set(x, 4.5, z);
+                leaves.castShadow = true;
+                scene.add(leaves);
+                
+                return { trunk, leaves };
+            }
+            
+            // Create trees along the road, avoiding the store's Z-range
+            const trees = [];
+            // Store's Z-range: -20 (center) +/- 15/2 (depth/2) = -27.5 to -12.5
+            const storeMinZ = -27.5;
+            const storeMaxZ = -12.5;
+
+            for (let i = -35; i < 35; i += 7) {
+                // Check if the current Z position is outside the store's Z range
+                if (i < storeMinZ || i > storeMaxZ) {
+                    trees.push(createTree(-8, i));
+                    trees.push(createTree(8, i));
+                }
+            }
+            
+            // Camera controls state
+            const moveState = { forward: false, backward: false, left: false, right: false };
+            const velocity = new THREE.Vector3();
+            const direction = new THREE.Vector3();
+            const movementSpeed = 0.2; // Speed of camera movement
+            const rotationSpeed = 0.005; // Speed of camera rotation
+            
+            // Keyboard controls for desktop
+            document.addEventListener('keydown', (e) => {
+                switch(e.key.toLowerCase()) {
+                    case 'w': moveState.forward = true; break;
+                    case 's': moveState.backward = true; break;
+                    case 'a': moveState.left = true; break;
+                    case 'd': moveState.right = true; break;
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                switch(e.key.toLowerCase()) {
+                    case 'w': moveState.forward = false; break;
+                    case 's': moveState.backward = false; break;
+                    case 'a': moveState.left = false; break;
+                    case 'd': moveState.right = false; break;
+                }
+            });
+            
+            // Mobile movement buttons (touchstart/touchend for continuous movement)
+            document.getElementById('forwardBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault(); // Prevent default browser touch behavior
+                moveState.forward = true;
+            });
+            document.getElementById('forwardBtn').addEventListener('touchend', () => moveState.forward = false);
+            
+            document.getElementById('backwardBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.backward = true;
+            });
+            document.getElementById('backwardBtn').addEventListener('touchend', () => moveState.backward = false);
+            
+            document.getElementById('leftBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.left = true;
+            });
+            document.getElementById('leftBtn').addEventListener('touchend', () => moveState.left = false);
+            
+            document.getElementById('rightBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.right = true;
+            });
+            document.getElementById('rightBtn').addEventListener('touchend', () => moveState.right = false);
+            
+            // Mouse and touch camera controls for rotation
+            let previousMouseX = 0;
+            let previousMouseY = 0;
+            let mouseMoved = false;
+            let isDragging = false;
+            
+            // Mouse controls for desktop camera rotation
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMouseX = e.clientX;
+                previousMouseY = e.clientY;
+                mouseMoved = false;
+                canvas.style.cursor = 'grabbing'; // Change cursor to indicate dragging
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                canvas.style.cursor = 'grab'; // Reset cursor
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                if (!mouseMoved) {
+                    previousMouseX = e.clientX;
+                    previousMouseY = e.clientY;
+                    mouseMoved = true;
+                    return;
+                }
+                
+                const deltaX = e.clientX - previousMouseX;
+                const deltaY = e.clientY - previousMouseY;
+                
+                // Rotate camera around Y (yaw) and X (pitch) axes
+                camera.rotation.y -= deltaX * rotationSpeed;
+                camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - deltaY * rotationSpeed)); // Limit vertical rotation
+                
+                previousMouseX = e.clientX;
+                previousMouseY = e.clientY; 
+            });
+            
+            // Touch controls for camera rotation (single touch for rotation)
+            let touchId = null;
+            let previousTouchX = 0;
+            let previousTouchY = 0;
+            
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1 && touchId === null) { // Only track one touch for camera
+                    const touch = e.touches[0];
+                    touchId = touch.identifier;
+                    previousTouchX = touch.clientX;
+                    previousTouchY = touch.clientY;
+                }
+            }, { passive: false }); 
+            
+            canvas.addEventListener('touchmove', (e) => {
+                for (let i = 0; i < e.touches.length; i++) {
+                    const touch = e.touches[i];
+                    if (touch.identifier === touchId) { // Only process the tracked touch
+                        const deltaX = touch.clientX - previousTouchX;
+                        const deltaY = touch.clientY - previousTouchY;
+                        
+                        camera.rotation.y -= deltaX * rotationSpeed;
+                        camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - deltaY * rotationSpeed));
+                        
+                        previousTouchX = touch.clientX;
+                        previousTouchY = touch.clientY;
+                        break;
+                    }
+                }
+            }, { passive: false });
+            
+            canvas.addEventListener('touchend', (e) => {
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === touchId) {
+                        touchId = null; // Reset tracked touch
+                        break;
+                    }
+                }
+            });
+            
+            // Camera joystick for mobile (alternative to direct screen drag)
+            const cameraJoystick = document.getElementById('cameraJoystick');
+            const cameraHandle = document.getElementById('cameraHandle');
+            let joystickActive = false;
+            let joystickCenterX = 0;
+            let joystickCenterY = 0;
+            let joystickRadius = 0;
+            
+            // Initialize joystick position and size
+            function initJoystick() {
+                const rect = cameraJoystick.getBoundingClientRect();
+                joystickCenterX = rect.left + rect.width / 2;
+                joystickCenterY = rect.top + rect.height / 2;
+                joystickRadius = rect.width / 2;
+            }
+            
+            window.addEventListener('resize', initJoystick); // Re-initialize on resize
+            initJoystick(); // Initial setup
+            
+            cameraHandle.addEventListener('touchstart', (e) => {
+                joystickActive = true;
+                e.preventDefault(); // Prevent default touch behavior
+            }, { passive: false });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!joystickActive) return;
+                
+                for (let i = 0; i < e.touches.length; i++) {
+                    const touch = e.touches[i];
+                    // Check if this touch is within the joystick area or the one that started the drag
+                    if (cameraJoystick.contains(touch.target) || touch.identifier === touchId) {
+                        const touchX = touch.clientX;
+                        const touchY = touch.clientY;
+                        
+                        // Calculate distance from center
+                        const dx = touchX - joystickCenterX;
+                        const dy = touchY - joystickCenterY;
+                        const distance = Math.min(Math.sqrt(dx*dx + dy*dy), joystickRadius);
+                        
+                        // Calculate angle
+                        const angle = Math.atan2(dy, dx);
+                        
+                        // Position handle within the joystick boundary
+                        const handleX = Math.cos(angle) * distance;
+                        const handleY = Math.sin(angle) * distance;
+                        cameraHandle.style.transform = `translate(${handleX}px, ${handleY}px)`;
+                        
+                        // Rotate camera based on joystick handle position
+                        camera.rotation.y -= dx * rotationSpeed * 0.5; // Slower rotation for joystick
+                        camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - dy * rotationSpeed * 0.5));
+                        
+                        e.preventDefault();
+                        break;
+                    }
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchend', () => {
+                if (joystickActive) {
+                    joystickActive = false;
+                    cameraHandle.style.transform = 'translate(0, 0)'; // Reset handle position
+                }
+            });
+            
+            // Get reference to the info panel
+            const infoPanel = document.querySelector('.info-panel');
+
+            // Define the store door's approximate position (center of the door)
+            const storeDepth = 15;
+            const storeZ = -20;
+            const storeFrontZ = storeZ + storeDepth / 2; // -12.5
+            const doorDepth = 0.1;
+            // Using camera's fixed Y (5) for simpler 2D distance calculation in XZ plane
+            const doorTriggerPosition = new THREE.Vector3(0, 5, storeFrontZ + doorDepth / 2); 
+            const doorTriggerRadius = 7; // Radius around the door to activate the panel
+
+            // Animation and rendering loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Reset velocity
+                velocity.x = 0;
+                velocity.z = 0;
+                
+                // Apply movement based on moveState
+                if (moveState.forward) {
+                    velocity.z -= movementSpeed;
+                }
+                if (moveState.backward) {
+                    velocity.z += movementSpeed;
+                }
+                if (moveState.left) {
+                    velocity.x -= movementSpeed;
+                }
+                if (moveState.right) {
+                    velocity.x += movementSpeed;
+                }
+                
+                // Apply camera's current rotation to the movement direction
+                direction.set(velocity.x, 0, velocity.z);
+                direction.applyQuaternion(camera.quaternion);
+                direction.y = 0; // Keep movement on the horizontal plane
+                
+                // Update camera position
+                camera.position.add(direction);
+                
+                // Keep camera above ground level
+                camera.position.y = 5;
+                
+                // Boundary checks to keep camera within the city limits
+                camera.position.x = Math.max(-45, Math.min(45, camera.position.x));
+                camera.position.z = Math.max(-45, Math.min(45, camera.position.z));
+
+                // Check distance to store door and toggle info panel visibility
+                const distanceToDoor = camera.position.distanceTo(doorTriggerPosition);
+                if (distanceToDoor < doorTriggerRadius) {
+                    infoPanel.classList.add('show'); // Add 'show' class to fade in and display
+                } else {
+                    infoPanel.classList.remove('show'); // Remove 'show' class to fade out and hide
+                }
+                
+                renderer.render(scene, camera); // Render the scene
+            }
+            
+            // Handle window resize for responsiveness
+            window.addEventListener('resize', () => {
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix(); // Update camera projection
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight); // Resize renderer
+                initJoystick(); // Re-initialize joystick position
+            });
+            
+            // Start the animation loop when the scene is initialized
+            animate();
+
+            // --- Calculator Logic ---
+            const itemsContainer = document.getElementById('itemsContainer');
+            const calculateTotalBtn = document.getElementById('calculateTotalBtn');
+            const totalAmountSpan = document.getElementById('totalAmount');
+
+            // Define the fruits/vegetables for the calculator
+            const products = [
+                { name: 'تفاح', emoji: '🍎', id: 'apple' },
+                { name: 'برتقال', emoji: '🍊', id: 'orange' },
+                { name: 'مانجو', emoji: '🥭', id: 'mango' },
+                { name: 'طماطم', emoji: '🍅', id: 'tomato' },
+                { name: 'خيار', emoji: '🥒', id: 'cucumber' },
+                { name: 'جزر', emoji: '🥕', id: 'carrot' },
+                { name: 'فلفل', emoji: '🌶️', id: 'pepper' },
+                { name: 'بطاطس', emoji: '🥔', id: 'potato' },
+                { name: 'باذنجان', emoji: '🍆', id: 'eggplant' },
+                { name: 'كرنب', emoji: '🥬', id: 'cabbage' },
+                { name: 'بصل', emoji: '🧅', id: 'onion' }
+            ];
+
+            // Function to create an item row for the calculator
+            function createItemRow(product) {
+                const itemRow = document.createElement('div');
+                itemRow.className = 'item-row';
+                itemRow.setAttribute('data-item-id', product.id);
+
+                itemRow.innerHTML = `
+                    <span class="item-name">${product.name} ${product.emoji}</span>
+                    <div class="input-group">
+                        <label for="${product.id}-quantity">الكمية (كجم)</label>
+                        <input type="number" id="${product.id}-quantity" class="quantity-input" placeholder="0.0" min="0" step="0.1" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="${product.id}-price">السعر/كجم</label>
+                        <input type="number" id="${product.id}-price" class="price-input" placeholder="0.00" min="0" step="0.01" value="0.00">
+                    </div>
+                `;
+                itemsContainer.appendChild(itemRow);
+            }
+
+            // Populate the calculator with all products
+            products.forEach(product => createItemRow(product));
+
+            // Function to calculate the total amount
+            function calculateTotal() {
+                let total = 0;
+                const itemRows = itemsContainer.querySelectorAll('.item-row');
+
+                itemRows.forEach(row => {
+                    const quantityInput = row.querySelector('.quantity-input');
+                    const priceInput = row.querySelector('.price-input');
+
+                    const quantity = parseFloat(quantityInput.value) || 0;
+                    const price = parseFloat(priceInput.value) || 0;
+
+                    total += quantity * price;
+                });
+
+                totalAmountSpan.textContent = total.toFixed(2); // Display total with 2 decimal places
+            }
+
+            // Attach event listener to the calculate button
+            calculateTotalBtn.addEventListener('click', calculateTotal);
+
+            // Optional: Automatically calculate total when input values change
+            itemsContainer.addEventListener('input', (event) => {
+                if (event.target.classList.contains('quantity-input') || event.target.classList.contains('price-input')) {
+                    calculateTotal();
+                }
+            });
+
+            // Initial calculation when the page loads
+            calculateTotal();
+        }
+    </script>
+</body>
+</html>
