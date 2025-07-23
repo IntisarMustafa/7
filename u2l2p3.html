@@ -105,9 +105,8 @@
             font-size: 1.15rem;
             line-height: 1.8;
             text-align: justify;
-            /* إضافة overflow-x: auto هنا للتعامل مع التمرير الأفقي إذا كان النص طويلاً جداً */
-            overflow-x: auto; 
-            -webkit-overflow-scrolling: touch; /* لتحسين التمرير على iOS */
+            /* تم إزالة overflow-x: auto هنا للتعامل مع التمرير الأفقي إذا كان النص طويلاً جداً */
+            /* -webkit-overflow-scrolling: touch; تم إزالته لتحسين التمرير على iOS */
         }
         
         /* قسم الجدول */
@@ -282,7 +281,7 @@
             padding: 4px 8px;
             border-radius: 6px;
             font-weight: bold;
-            white-space: nowrap; /* لجعل النص يبقى على سطر واحد */
+            /* تم إزالة white-space: nowrap; هنا */
         }
         
         /* تذييل الصفحة */
@@ -544,7 +543,7 @@
                     </div>
 
                     <div class="example-text">
-                        <!-- العبارة التي تم تعديلها لتظهر على سطر واحد -->
+                        <p>اشترى حسّان <span class="highlight">2 كجم تفاحًا</span>، و <span class="highlight">2 كجم منجا</span>، و <span class="highlight">5 كجم بندورة</span>.</p>
                         <p class="highlight">المطلوب: كتابة عبارتين عدديتين مختلفتين لإيجاد ثمن ما اشتراه حسّان.</p>
                     </div>
                     
