@@ -482,28 +482,31 @@
 
         /* New style for the main info panel toggle button */
         #infoPanelToggleButton {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            position: absolute; /* Keep absolute positioning relative to body */
+            top: 120px; /* Position below the overlay */
+            left: 20px; /* Align with the overlay on the left */
             z-index: 101; /* Above other overlays */
             /* Distinct color: vibrant green gradient */
             background: linear-gradient(to right, #4CAF50, #2E8B57); 
             color: white;
-            padding: 15px 30px; 
-            font-size: 20px; 
+            padding: 20px 40px; /* Make it bigger */
+            font-size: 24px; /* Make text larger */
             border: none;
-            border-radius: 25px;
+            border-radius: 30px; /* Slightly more rounded */
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Stronger shadow */
             transition: all 0.3s ease;
             display: none; /* Hidden by default, will be shown by JS */
+            width: auto; /* Adjust width to content */
+            max-width: 350px; /* Max width to prevent it from being too wide on desktop */
+            text-align: center; /* Center text if button is wider than text */
         }
 
         #infoPanelToggleButton:hover {
             background: linear-gradient(to right, #2E8B57, #4CAF50);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transform: translateY(-3px); /* More pronounced lift on hover */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5); /* Even stronger shadow on hover */
         }
 
 
@@ -546,10 +549,11 @@
             }
 
             #infoPanelToggleButton {
-                top: 15px;
-                right: 15px;
-                padding: 10px 20px; /* Adjust padding for smaller screens */
-                font-size: 16px; /* Adjust font size for smaller screens */
+                top: 100px; /* Adjusted top for mobile */
+                left: 15px; /* Align with overlay on mobile */
+                padding: 15px 30px; /* Adjust padding for smaller screens */
+                font-size: 18px; /* Adjust font size for smaller screens */
+                max-width: 90%; /* Ensure it doesn't overflow */
             }
         }
         
@@ -604,6 +608,11 @@
         <div class="subtitle">تجول في المدينة وتفقد متجر الخضار! استخدم عناصر التحكم بالأسفل للحركة</div>
     </div>
     
+    <!-- New Info Panel Toggle Button - Moved here to be below the overlay -->
+    <button id="infoPanelToggleButton" class="action-button">
+        إظهار لوحة المعلومات وحاسبة الأسعار
+    </button>
+
     <div class="mobile-info">
         اسحب بإصبعك على الشاشة للنظر حولك، واستخدم أزرار التحكم للحركة
     </div>
@@ -614,11 +623,6 @@
             <div class="progress" id="loadingProgress"></div>
         </div>
     </div>
-
-    <!-- New Info Panel Toggle Button -->
-    <button id="infoPanelToggleButton" class="action-button">
-        إظهار لوحة المعلومات وحاسبة الأسعار
-    </button>
     
     <div class="container">
         <div class="info-panel">
