@@ -645,34 +645,6 @@
                     <div class="veg-icon tomato">🍅</div>
                     <span>طماطم</span>
                 </div>
-                <div class="vegetable-item">
-                    <div class="veg-icon cucumber">🥒</div>
-                    <span>خيار</span>
-                </div>
-                <div class="vegetable-item">
-                    <div class="veg-icon carrot">🥕</div>
-                    <span>جزر</span>
-                </div>
-                <div class="vegetable-item">
-                    <div class="veg-icon pepper">🌶️</div>
-                    <span>فلفل</span>
-                </div>
-                <div class="vegetable-item">
-                    <div class="veg-icon potato">🥔</div>
-                    <span>بطاطس</span>
-                </div>
-                <div class="vegetable-item">
-                    <div class="veg-icon eggplant">🍆</div>
-                    <span>باذنجان</span>
-                </div>
-                <div class="vegetable-item">
-                    <div class="veg-icon cabbage">🥬</div>
-                    <span>كرنب</span>
-                </div>
-                <div class="vegetable-item">
-                    <div class="veg-icon onion">🧅</div>
-                    <span>بصل</span>
-                </div>
             </div>
 
             <!-- Calculator Section -->
@@ -727,7 +699,7 @@
             
             <div class="stats">
                 <div class="stat-item">
-                    <div class="stat-value">11</div>
+                    <div class="stat-value">4</div> <!-- Updated count to 4 -->
                     <div class="stat-label">نوع خضار/فاكهة</div>
                 </div>
                 <div class="stat-item">
@@ -1440,19 +1412,12 @@
             const totalAmountSpan = document.getElementById('totalAmount');
 
             // Define the fruits/vegetables for the calculator
-            // Reversed the order of the products array as requested
+            // Updated to only include items present in the 3D scene (Apple, Orange, Mango, Tomato)
             const products = [
-                { name: 'بصل', emoji: '🧅', id: 'onion' },
-                { name: 'كرنب', emoji: '🥬', id: 'cabbage' },
-                { name: 'باذنجان', emoji: '🍆', id: 'eggplant' },
-                { name: 'بطاطس', emoji: '🥔', id: 'potato' },
-                { name: 'فلفل', emoji: '🌶️', id: 'pepper' },
-                { name: 'جزر', emoji: '🥕', id: 'carrot' },
-                { name: 'خيار', emoji: '🥒', id: 'cucumber' },
-                { name: 'طماطم', emoji: '🍅', id: 'tomato' },
-                { name: 'مانجو', emoji: '🥭', id: 'mango' },
+                { name: 'تفاح', emoji: '🍎', id: 'apple' },
                 { name: 'برتقال', emoji: '🍊', id: 'orange' },
-                { name: 'تفاح', emoji: '🍎', id: 'apple' }
+                { name: 'مانجو', emoji: '🥭', id: 'mango' },
+                { name: 'طماطم', emoji: '🍅', id: 'tomato' }
             ];
 
             // Function to create an item row for the calculator
