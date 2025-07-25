@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>لعبة الطائر الجبري - الحدود والمقادير الجبرية</title>
+    <style>
+        /* Global styles and reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+            touch-action: manipulation; /* Prevent default browser touch actions like double-tap zoom */
+        }
+
+        /* Body background with a vibrant gradient */
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); /* Deep blue to red to yellow gradient */
+            overflow: hidden; /* Hide scrollbars */
+            height: 100vh; /* Full viewport height */
+            width: 100vw; /* Full viewport width */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Game container - the main game area */
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Limit max width for desktop, but fluid for mobile */
+            height: 100vh;
+            background: linear-gradient(to bottom, #70c5ce, #8fd8e0, #a8e6cf); /* Sky gradient */
+            overflow: hidden;
+            touch-action: none; /* Disable touch gestures on the container */
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Bird styling */
+        #bird {
+            position: absolute;
+            top: 50%;
+            left: 20%; /* Adjusted for better visibility on various screens */
+            width: 50px;
+            height: 40px;
+            z-index: 10;
+            transition: transform 0.05s ease-out; /* Smoother rotation transition */
+        }
+
+        .bird-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ffd700; /* Gold color */
+            border-radius: 50% 50% 40% 40%;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+            transition: transform 0.1s ease; /* For squash/stretch effect */
+        }
+
+        .bird-eye {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #000;
+            border-radius: 50%;
+            top: 12px;
+            right: 10px;
+            box-shadow: 0 0 2px white;
+        }
+
+        .bird-pupil {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+        }
+
+        .bird-beak {
+            position: absolute;
+            width: 18px;
+            height: 12px;
+            background: #ff6600; /* Orange */
+            border-radius: 50% 0 0 50%;
+            top: 14px;
+            right: -14px;
+            z-index: 2;
+        }
+
+        .bird-beak-top {
+            position: absolute;
+            width: 10px;
+            height: 4px;
+            background: #e55d00; /* Darker orange */
+            top: 0;
+            left: 0;
+            border-radius: 5px 0 0 0;
+        }
+
+        .bird-wing {
+            position: absolute;
+            width: 35px;
+            height: 20px;
+            background: #ffaa00; /* Darker gold */
+            border-radius: 50%;
+            top: 20px;
+            left: 4px;
+            z-index: -1;
+            transform-origin: top center;
+            animation: wingFlap 0.3s infinite alternate; /* Default flapping */
+        }
+
+        .bird-crest {
+            position: absolute;
+            width: 15px;
+            height: 8px;
+            background: #ff6b6b; /* Reddish */
+            border-radius: 50% 50% 0 0;
+            top: 0;
+            right: 10px;
+        }
+
+        /* Pipe styling */
+        .pipe {
+            position: absolute;
+            width: 80px;
+            background: linear-gradient(to right, #2ecc71, #27ae60); /* Green gradient */
+            border: 2px solid #1e8449;
+            border-radius: 5px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+        }
+
+        .pipe-top {
+            border-bottom: 3px solid #1e8449;
+        }
+
+        .pipe-bottom {
+            border-top: 3px solid #1e8449;
+        }
+
+        /* Ground styling */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(#d2691e, #8b4513); /* Brown gradient */
+            border-top: 2px solid #5d2906;
+            z-index: 10;
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Cloud styling */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            opacity: 0.8;
+            animation: cloudFloat 20s linear infinite; /* Subtle floating animation */
+        }
+
+        /* Score and difficulty indicators */
+        .score-container, .difficulty-indicator {
+            position: absolute;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+
+        .score-container {
+            top: 20px;
+            left: 20px;
+            font-size: 3rem;
+        }
+
+        .difficulty-indicator {
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            border-radius: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Game Over screen */
+        .game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            display: none;
+        }
+
+        .game-over h2 {
+            color: #e74c3c; /* Red */
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            animation: pulse 1s infinite;
+        }
+
+        .game-over p {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 35px;
+        }
+
+        /* Start Screen */
+        .start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
+        }
+
+        .start-screen h2 {
+            color: white;
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 0 20px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        .start-screen p {
+            color: #ffd700; /* Gold */
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-align: center;
+            padding: 0 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Restart button */
+        #restart {
+            padding: 18px 35px;
+            font-size: 2rem;
+            background: linear-gradient(to bottom, #e74c3c, #c0392b); /* Red gradient */
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            min-width: 180px;
+            border: 2px solid #fff;
+        }
+
+        #restart:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Instructions text */
+        .instructions {
+            position: absolute;
+            bottom: 60px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            padding: 0 20px;
+            z-index: 150;
+        }
+
+        /* Jump effect visual - MODIFIED */
+        .jump-effect {
+            position: absolute;
+            width: 40px; /* Smaller initial size */
+            height: 40px; /* Smaller initial size */
+            background: rgba(255, 255, 255, 0.2); /* More subtle background */
+            border-radius: 50%;
+            z-index: 9;
+            pointer-events: none;
+            transform: scale(0);
+            opacity: 0.5; /* More subtle initial opacity */
+        }
+
+        /* Tap to start indicator for mobile */
+        .tap-to-start-indicator {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+            animation: bounce 1.5s infinite;
+            display: none; /* Hidden by default, shown on start screen for mobile */
+            z-index: 301;
+        }
+
+        /* Audio permission prompt */
+        .audio-permission {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffd700;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.3rem;
+            text-align: center;
+            max-width: 90%;
+            z-index: 302;
+            display: none;
+            animation: pulse 2s infinite;
+            border: 2px solid #ffd700;
+        }
+
+        /* Question Modal Styles */
+        .question-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 400;
+            display: none; /* Hidden by default */
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #3498db, #2980b9); /* Blue gradient */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            border: 3px solid #fff;
+        }
+
+        #question-text {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            padding: 15px 25px;
+            font-size: 1.6rem;
+            background: linear-gradient(to right, #f1c40f, #f39c12); /* Yellow/Orange gradient */
+            color: #333;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid #fff;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to right, #f39c12, #e67e22);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(to right, #27ae60, #2ecc71); /* Green */
+            color: white;
+        }
+
+        .option-btn.incorrect {
+            background: linear-gradient(to right, #c0392b, #e74c3c); /* Red */
+            color: white;
+        }
+
+        #feedback-message {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        .continue-btn {
+            padding: 15px 30px;
+            font-size: 1.8rem;
+            background: linear-gradient(to bottom, #2ecc71, #27ae60); /* Green gradient */
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border: 2px solid #fff;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Keyframe Animations */
+        @keyframes wingFlap {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(20deg); }
+        }
+
+        @keyframes wingFlapJump {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-25deg); } /* More pronounced upward flap */
+            100% { transform: rotate(15deg); } /* Slight downward after peak */
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Jump effect animation - MODIFIED */
+        @keyframes jumpEffect {
+            0% { transform: scale(0); opacity: 0.5; background: rgba(255, 255, 255, 0.2); }
+            50% { transform: scale(0.8); opacity: 0.3; background: rgba(255, 255, 255, 0.1); }
+            100% { transform: scale(1.2); opacity: 0; background: rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes cloudFloat {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #game-container {
+                width: 100%;
+                max-width: none; /* Full width on smaller screens */
+                height: 100vh;
+                border-radius: 0;
+            }
+            .score-container {
+                font-size: 2.5rem;
+                top: 15px;
+                left: 15px;
+            }
+            .difficulty-indicator {
+                font-size: 1.2rem;
+                top: 15px;
+                right: 15px;
+                padding: 4px 12px;
+            }
+            .game-over h2 {
+                font-size: 2.8rem;
+            }
+            .game-over p {
+                font-size: 2rem;
+            }
+            .start-screen h2 {
+                font-size: 2.5rem;
+            }
+            .start-screen p {
+                font-size: 1.8rem;
+            }
+            #restart {
+                font-size: 1.7rem;
+                padding: 15px 30px;
+            }
+            .instructions {
+                font-size: 1.2rem;
+                bottom: 50px;
+            }
+            .tap-to-start-indicator {
+                display: block; /* Show on mobile */
+            }
+            .audio-permission {
+                font-size: 1.1rem;
+                padding: 8px 15px;
+                bottom: 80px;
+            }
+            /* Question Modal Responsive */
+            #question-text {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+            .option-btn {
+                font-size: 1.4rem;
+                padding: 12px 20px;
+            }
+            #feedback-message {
+                font-size: 1.5rem;
+            }
+            .continue-btn {
+                font-size: 1.5rem;
+                padding: 12px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .score-container {
+                font-size: 2rem;
+                top: 10px;
+                left: 10px;
+            }
+            .difficulty-indicator {
+                font-size: 1rem;
+                top: 10px;
+                right: 10px;
+                padding: 3px 10px;
+            }
+            .game-over h2 {
+                font-size: 2.2rem;
+            }
+            .game-over p {
+                font-size: 1.6rem;
+            }
+            .start-screen h2 {
+                font-size: 2rem;
+            }
+            .start-screen p {
+                font-size: 1.5rem;
+            }
+            #bird {
+                width: 45px;
+                height: 35px;
+            }
+            .pipe {
+                width: 70px;
+            }
+            .tap-to-start-indicator {
+                font-size: 1rem;
+                bottom: 100px;
+            }
+            .audio-permission {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+                bottom: 70px;
+            }
+            /* Question Modal Responsive */
+            #question-text {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            .option-btn {
+                font-size: 1.2rem;
+                padding: 10px 15px;
+            }
+            #feedback-message {
+                font-size: 1.2rem;
+            }
+            .continue-btn {
+                font-size: 1.3rem;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$','$'], ['\\(','\\)']],
+                displayMath: [['$$','$$'], ['\\[','\\]']],
+                processEscapes: true
+            },
+            "HTML-CSS": {
+                linebreaks: { automatic: true }
+            },
+            SVG: {
+                linebreaks: { automatic: true }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div id="game-container">
+        <div id="bird">
+            <div class="bird-crest"></div>
+            <div class="bird-body"></div>
+            <div class="bird-eye">
+                <div class="bird-pupil"></div>
+            </div>
+            <div class="bird-beak">
+                <div class="bird-beak-top"></div>
+            </div>
+            <div class="bird-wing"></div>
+        </div>
+        <div class="ground"></div>
+        <div class="score-container">النتيجة: <span id="display-score">0</span></div>
+        <div class="difficulty-indicator">الصعوبة: <span id="difficulty-level">سهلة</span></div>
+        <div class="game-over">
+            <h2>انتهت اللعبة!</h2>
+            <p>النتيجة النهائية: <span id="final-score">0</span></p>
+            <button id="restart">العب مرة أخرى</button>
+        </div>
+
+        <div class="start-screen" id="start-screen">
+            <h2>لعبة الطائر الجبري</h2>
+            <p>انقر على الشاشة للبدء</p>
+            <div class="tap-to-start-indicator">🫳 انقر أو المس للقفز!</div>
+        </div>
+
+        <div class="instructions">اضغط على الشاشة أو المسها لتحليق الطائر!</div>
+        
+        <!-- New element for audio permission prompt -->
+        <div class="audio-permission" id="audio-permission">لتفعيل الصوت، انقر على الشاشة مرة واحدة</div>
+
+        <!-- Question Modal -->
+        <div id="question-modal" class="question-modal">
+            <div class="modal-content">
+                <h3 id="question-text"></h3>
+                <div id="options-container" class="options-container">
+                    <button class="option-btn" data-index="0"></button>
+                    <button class="option-btn" data-index="1"></button>
+                    <button class="option-btn" data-index="2"></button>
+                    <button class="option-btn" data-index="3"></button>
+                </div>
+                <p id="feedback-message" class="feedback-message" style="display: none;"></p>
+                <button id="continue-btn" class="continue-btn" style="display: none;">استمر</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements for sound effects -->
+    <audio id="jumpSound" src="https://www.soundjay.com/misc/sounds/whoosh-1.mp3" preload="auto"></audio>
+    <audio id="scoreSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+    <audio id="gameOverSound" src="https://www.soundjay.com/misc/sounds/fail-trombone-02.mp3" preload="auto"></audio>
+    <audio id="correctAnswerSound" src="https://www.soundjay.com/misc/sounds/success-sound-02.mp3" preload="auto"></audio>
+    <audio id="wrongAnswerSound" src="https://www.soundjay.com/misc/sounds/wrong-answer-01.mp3" preload="auto"></audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM elements
+            const gameContainer = document.getElementById('game-container');
+            const bird = document.getElementById('bird');
+            const restartBtn = document.getElementById('restart');
+            const scoreDisplay = document.getElementById('display-score');
+            const finalScore = document.getElementById('final-score');
+            const gameOverScreen = document.querySelector('.game-over');
+            const birdWing = document.querySelector('.bird-wing');
+            const startScreen = document.getElementById('start-screen');
+            const difficultyLevel = document.getElementById('difficulty-level');
+            const birdBody = document.querySelector('.bird-body');
+            const tapToStartIndicator = document.querySelector('.tap-to-start-indicator');
+            const audioPermission = document.getElementById('audio-permission');
+
+            // Question Modal elements
+            const questionModal = document.getElementById('question-modal');
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackMessage = document.getElementById('feedback-message');
+            const continueBtn = document.getElementById('continue-btn');
+
+            // Audio elements
+            const jumpSound = document.getElementById('jumpSound');
+            const scoreSound = document.getElementById('scoreSound');
+            const gameOverSound = document.getElementById('gameOverSound');
+            const correctAnswerSound = document.getElementById('correctAnswerSound');
+            const wrongAnswerSound = document.getElementById('wrongAnswerSound');
+
+            // Game variables
+            let gameRunning = false;
+            let gamePaused = false;
+            let score = 0;
+            let audioUnlocked = false; // Flag to track if audio playback is generally allowed
+            let audioPermissionShown = false; // Track if we've shown the audio permission prompt
+            let audioPermissionTimeout; // Timeout for hiding the audio permission message
+
+            // Difficulty settings with shorter intervals and increased gravity/speed
+            // Adjusted pipeGap values to reduce the space between top and bottom pipes
+            const difficultySettings = [
+                { level: "سهلة", pipeSpeed: 2.5, pipeGap: 280, pipeInterval: 1800, gravity: 0.22, jumpPower: -5.5 },
+                { level: "متوسطة", pipeSpeed: 3.0, pipeGap: 270, pipeInterval: 1600, gravity: 0.27, jumpPower: -6.0 },
+                { level: "صعبة", pipeSpeed: 3.5, pipeGap: 220, pipeInterval: 1400, gravity: 0.32, jumpPower: -6.5 },
+                { level: "متقدمة", pipeSpeed: 4.0, pipeGap: 200, pipeInterval: 1200, gravity: 0.37, jumpPower: -7.0 },
+                { level: "خبير", pipeSpeed: 4.5, pipeGap: 180, pipeInterval: 1000, gravity: 0.42, jumpPower: -7.5 }
+            ];
+
+            let currentDifficultyIndex = 0;
+            let gravity = difficultySettings[currentDifficultyIndex].gravity;
+            let birdVelocity = 0;
+            let birdPosition = 200;
+            let pipeIntervalId;
+            let pipes = [];
+            let pipeSpeed = difficultySettings[currentDifficultyIndex].pipeSpeed;
+            let wingFlapActive = true;
+            let animationFrameId;
+            let isMobile = window.innerWidth <= 768;
+            let pipeWidth = 80;
+            let jumpPower = difficultySettings[currentDifficultyIndex].jumpPower;
+
+            // Algebraic Questions for 7th Grade (Jordanian Curriculum)
+            const questions = [
+                {
+                    question: "أي مقدار جبري يمثل العبارة: 'ضعف عدد مضافًا إليه خمسة'؟",
+                    options: ["$x + 5$", "$2x + 5$", "$5x + 2$", "$2x - 5$"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "إذا كانت قيمة $y = 7$، فما القيمة العددية للمقدار $3y - 4$؟",
+                    options: ["17", "21", "25", "29"],
+                    correctAnswerIndex: 0 // 3*7 - 4 = 21 - 4 = 17
+                },
+                {
+                    question: "أي مقدار جبري يمثل العبارة: 'عدد مطروحًا منه ثلاثة'؟",
+                    options: ["$3 - x$", "$x + 3$", "$x - 3$", "$3x$"],
+                    correctAnswerIndex: 2
+                },
+                {
+                    question: "إذا كانت قيمة $a = 4$، فما القيمة العددية للمقدار $2(a + 1)$؟",
+                    options: ["8", "9", "10", "12"],
+                    correctAnswerIndex: 2 // 2*(4+1) = 2*5 = 10
+                },
+                {
+                    question: "إذا كانت قيمة $b = 5$، فما القيمة العددية للمقدار $b^2 - 7$؟",
+                    options: ["18", "25", "32", "13"],
+                    correctAnswerIndex: 0 // Corrected from 3 to 0 (25 - 7 = 18)
+                },
+                {
+                    question: "أي مقدار جبري يمثل العبارة: 'عدد نقص بمقدار خمسة'؟", // Updated phrasing
+                    options: ["$5 - x$", "$x - 5$", "$5x$", "$x/5$"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "أي مقدار جبري يمثل العبارة: 'إضافة ٥ إلى عدد ما'؟", // NEW QUESTION - updated phrasing
+                    options: ["$5 - x$", "$x - 5$", "$x + 5$", "$5x$"],
+                    correctAnswerIndex: 2 // x + 5
+                },
+                {
+                    question: "إذا كانت قيمة $c = 3$ و $d = 2$، فما القيمة العددية للمقدار $c + 2d$؟",
+                    options: ["5", "7", "8", "10"],
+                    correctAnswerIndex: 1 // 3 + 2*2 = 3 + 4 = 7
+                },
+                {
+                    question: "أي مقدار جبري يمثل العبارة: 'مجموع عدد وسبعة مضروبًا في أربعة'؟",
+                    options: ["$x + 7 \\times 4$", "$4x + 7$", "$4(x + 7)$", "$x(4 + 7)$"],
+                    correctAnswerIndex: 2
+                },
+                {
+                    question: "إذا كانت قيمة $m = 6$، فما القيمة العددية للمقدار $10 - m/2$؟",
+                    options: ["4", "7", "13", "16"],
+                    correctAnswerIndex: 1 // 10 - 6/2 = 10 - 3 = 7
+                },
+                {
+                    question: "أي مقدار جبري يمثل العبارة: 'نصف عدد مطروحًا منه واحد'؟",
+                    options: ["$2x - 1$", "$x/2 - 1$", "$1 - x/2$", "$x - 1/2$"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "إذا كانت قيمة $k = 9$، فما القيمة العددية للمقدار $k/3 + 5$؟",
+                    options: ["3", "8", "14", "18"],
+                    correctAnswerIndex: 1 // 9/3 + 5 = 3 + 5 = 8
+                }
+            ];
+            let currentQuestion = null; // Stores the currently displayed question object
+            let questionActive = false; // True when a question modal is displayed
+
+            // Function to attempt to "unlock" audio playback on first user interaction
+            function unlockAudioOnFirstInteraction() {
+                if (audioUnlocked) return; // Already unlocked
+
+                // Show audio permission prompt if not shown before
+                if (!audioPermissionShown) {
+                    audioPermission.style.display = 'block';
+                    audioPermissionShown = true;
+                    
+                    // Hide after 5 seconds
+                    audioPermissionTimeout = setTimeout(() => {
+                        audioPermission.style.display = 'none';
+                    }, 5000);
+                }
+
+                // Attempt to play a silent sound for each audio element
+                const sounds = [jumpSound, scoreSound, gameOverSound, correctAnswerSound, wrongAnswerSound];
+                let playPromises = [];
+
+                sounds.forEach(sound => {
+                    if (sound.readyState >= 2) { // Ensure sound is loaded
+                        sound.volume = 0; // Mute it
+                        sound.currentTime = 0; // Reset to start
+                        playPromises.push(sound.play().catch(e => {
+                            console.warn("Silent play failed for sound:", sound.id, e);
+                        }));
+                    }
+                });
+
+                Promise.all(playPromises).then(() => {
+                    // If at least one play attempt succeeded, consider audio unlocked
+                    audioUnlocked = true;
+                    sounds.forEach(sound => {
+                        sound.pause(); // Pause after silent play
+                        sound.volume = 1; // Reset volume
+                        sound.currentTime = 0; // Reset current time
+                    });
+                    console.log("Audio playback unlocked on first user interaction.");
+
+                    // Remove the permission message if shown
+                    if (audioPermissionShown) {
+                        audioPermission.style.display = 'none';
+                        clearTimeout(audioPermissionTimeout);
+                    }
+
+                    // Remove these listeners once audio is unlocked
+                    document.body.removeEventListener('click', unlockAudioOnFirstInteraction);
+                    document.body.removeEventListener('touchstart', unlockAudioOnFirstInteraction);
+                    document.body.removeEventListener('keydown', unlockAudioOnFirstInteraction);
+                }).catch(e => {
+                    console.error("Error during initial audio unlock promises:", e);
+                });
+            }
+
+            // Initialize game state and start screen
+            function initGame() {
+                if (isMobile) {
+                    tapToStartIndicator.style.display = 'block';
+                } else {
+                    tapToStartIndicator.style.display = 'none';
+                }
+                startScreen.style.display = 'flex';
+                gameOverScreen.style.display = 'none';
+                questionModal.style.display = 'none'; // Ensure question modal is hidden
+                birdPosition = gameContainer.offsetHeight / 2 - bird.offsetHeight / 2;
+                bird.style.top = birdPosition + 'px';
+                bird.style.transform = 'rotate(0deg)';
+                birdWing.style.animation = 'wingFlap 0.3s infinite alternate';
+                
+                // Hide audio permission message on start
+                audioPermission.style.display = 'none';
+                clearTimeout(audioPermissionTimeout);
+            }
+
+            // Start the game
+            function startGame() {
+                if (gameRunning) {
+                    endGame(); // End previous game if running
+                }
+
+                gameRunning = true;
+                gamePaused = false;
+                questionActive = false; // No question active at start
+                score = 0;
+                scoreDisplay.textContent = score;
+                birdPosition = gameContainer.offsetHeight / 2 - bird.offsetHeight / 2;
+                birdVelocity = 0;
+                bird.style.top = birdPosition + 'px';
+                bird.style.transform = 'rotate(0deg)';
+                wingFlapActive = true;
+                pipes = [];
+                currentDifficultyIndex = 0;
+                updateDifficulty();
+
+                document.querySelectorAll('.pipe').forEach(pipe => pipe.remove());
+                document.querySelectorAll('.cloud').forEach(cloud => cloud.remove());
+
+                startScreen.style.display = 'none';
+                gameOverScreen.style.display = 'none';
+                questionModal.style.display = 'none';
+
+                createClouds();
+
+                clearInterval(pipeIntervalId);
+                pipeIntervalId = setInterval(createPipe, difficultySettings[currentDifficultyIndex].pipeInterval);
+
+                gameLoop();
+            }
+
+            // Pause the game and show a question
+            function pauseGame() {
+                gamePaused = true;
+                cancelAnimationFrame(animationFrameId);
+                clearInterval(pipeIntervalId);
+                displayQuestion();
+            }
+
+            // Resume the game after a correct answer
+            function resumeGame() {
+                questionModal.style.display = 'none';
+                gamePaused = false;
+                questionActive = false; // Question is no longer active
+
+                // Remove all existing pipes to ensure no immediate re-collision
+                pipes.forEach(pipe => {
+                    pipe.top.remove();
+                    pipe.bottom.remove();
+                });
+                pipes = []; // Clear the pipes array
+
+                // Reset bird position to a safe starting point (e.g., initial game start position)
+                birdPosition = gameContainer.offsetHeight / 2 - bird.offsetHeight / 2;
+                birdVelocity = 0; // Reset bird velocity
+                bird.style.top = birdPosition + 'px';
+                bird.style.transform = 'rotate(0deg)'; // Reset bird rotation
+                birdWing.style.animation = 'wingFlap 0.3s infinite alternate'; // Restart wing animation
+
+                // Re-establish pipe creation interval
+                clearInterval(pipeIntervalId); // Clear any old interval
+                pipeIntervalId = setInterval(createPipe, difficultySettings[currentDifficultyIndex].pipeInterval);
+                
+                // Explicitly request a new animation frame to restart the game loop
+                animationFrameId = requestAnimationFrame(gameLoop); 
+            }
+
+            // Update difficulty based on score
+            function updateDifficulty() {
+                let newDifficultyIndex = currentDifficultyIndex;
+                if (score >= 20) {
+                    newDifficultyIndex = 4;
+                } else if (score >= 12) {
+                    newDifficultyIndex = 3;
+                } else if (score >= 6) {
+                    newDifficultyIndex = 2;
+                } else if (score >= 2) {
+                    newDifficultyIndex = 1;
+                } else {
+                    newDifficultyIndex = 0;
+                }
+
+                if (newDifficultyIndex !== currentDifficultyIndex) {
+                    currentDifficultyIndex = newDifficultyIndex;
+                    pipeSpeed = difficultySettings[currentDifficultyIndex].pipeSpeed;
+                    gravity = difficultySettings[currentDifficultyIndex].gravity;
+                    jumpPower = difficultySettings[currentDifficultyIndex].jumpPower;
+                    difficultyLevel.textContent = difficultySettings[currentDifficultyIndex].level;
+
+                    clearInterval(pipeIntervalId);
+                    if (gameRunning && !gamePaused) { // Only restart if game is running and not paused by a question
+                        pipeIntervalId = setInterval(createPipe, difficultySettings[currentDifficultyIndex].pipeInterval);
+                    }
+                }
+            }
+
+            // Create clouds for background
+            function createClouds() {
+                document.querySelectorAll('.cloud').forEach(cloud => cloud.remove());
+
+                for (let i = 0; i < 10; i++) {
+                    const cloud = document.createElement('div');
+                    cloud.classList.add('cloud');
+
+                    const size = Math.random() * 80 + 40;
+                    cloud.style.width = size + 'px';
+                    cloud.style.height = size * 0.6 + 'px';
+
+                    cloud.style.top = Math.random() * (gameContainer.offsetHeight * 0.7) + 'px';
+                    cloud.style.left = Math.random() * gameContainer.offsetWidth + 'px';
+
+                    cloud.style.animationDelay = `${Math.random() * 20}s`;
+                    cloud.style.animationDuration = `${20 + Math.random() * 10}s`;
+
+                    gameContainer.appendChild(cloud);
+                }
+            }
+
+            // Create a new pipe pair
+            function createPipe() {
+                if (!gameRunning || gamePaused) return;
+
+                const pipeGap = difficultySettings[currentDifficultyIndex].pipeGap;
+                const minHeight = 80;
+                // Ensure the max height leaves enough space for the ground and the pipe gap
+                const maxHeight = gameContainer.offsetHeight - pipeGap - 40 - minHeight; // Subtract ground height (40) and min bottom pipe height (minHeight)
+
+                // Calculate the height of the top pipe randomly
+                const topPipeHeight = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
+
+                const topPipe = document.createElement('div');
+                topPipe.classList.add('pipe', 'pipe-top');
+                topPipe.style.height = topPipeHeight + 'px';
+                topPipe.style.top = '0';
+                topPipe.style.right = `-${pipeWidth}px`;
+                gameContainer.appendChild(topPipe);
+
+                const bottomPipe = document.createElement('div');
+                bottomPipe.classList.add('pipe', 'pipe-bottom');
+                // Calculate bottom pipe height: total container height - top pipe height - pipe gap - ground height
+                bottomPipe.style.height = (gameContainer.offsetHeight - topPipeHeight - pipeGap - 40) + 'px';
+                bottomPipe.style.bottom = '40px'; // Position above the ground
+                bottomPipe.style.right = `-${pipeWidth}px`;
+                gameContainer.appendChild(bottomPipe);
+
+                pipes.push({
+                    top: topPipe,
+                    bottom: bottomPipe,
+                    passed: false
+                });
+            }
+
+            // Move pipes across the screen
+            function movePipes() {
+                if (!gameRunning || gamePaused) return;
+
+                const birdXPosition = bird.offsetLeft + bird.offsetWidth / 2;
+
+                for (let i = pipes.length - 1; i >= 0; i--) {
+                    const pipe = pipes[i];
+                    const topPipe = pipe.top;
+                    const bottomPipe = pipe.bottom;
+
+                    let pipePosition = parseInt(topPipe.style.right);
+                    pipePosition += pipeSpeed;
+
+                    topPipe.style.right = pipePosition + 'px';
+                    bottomPipe.style.right = pipePosition + 'px';
+
+                    if (pipePosition > gameContainer.offsetWidth) {
+                        topPipe.remove();
+                        bottomPipe.remove();
+                        pipes.splice(i, 1);
+                        continue;
+                    }
+
+                    const pipeCurrentLeftX = gameContainer.offsetWidth - pipePosition - pipeWidth;
+                    const pipeCenterX = pipeCurrentLeftX + pipeWidth / 2;
+
+                    // Only score when passing a pipe, do not pause or ask question here
+                    if (!pipe.passed && birdXPosition > pipeCenterX) {
+                        score++;
+                        scoreDisplay.textContent = score;
+                        pipe.passed = true;
+                        // Play score sound immediately
+                        if (gameRunning && audioUnlocked) {
+                            scoreSound.volume = 1;
+                            scoreSound.currentTime = 0;
+                            scoreSound.play().catch(e => console.error("Score sound play error:", e));
+                        }
+                        updateDifficulty();
+                    }
+                }
+            }
+
+            // Check for collisions with pipes or ground/ceiling
+            function checkCollision(topPipe, bottomPipe) {
+                const birdRect = bird.getBoundingClientRect();
+                const topPipeRect = topPipe.getBoundingClientRect();
+                const bottomPipeRect = bottomPipe.getBoundingClientRect();
+                const groundRect = document.querySelector('.ground').getBoundingClientRect();
+                const containerRect = gameContainer.getBoundingClientRect();
+
+                const birdTop = birdRect.top - containerRect.top;
+                const birdBottom = birdRect.bottom - containerRect.top;
+                const birdLeft = birdRect.left - containerRect.left;
+                const birdRight = birdRect.right - containerRect.left;
+
+                const topPipeTop = topPipeRect.top - containerRect.top;
+                const topPipeBottom = topPipeRect.bottom - containerRect.top;
+                const topPipeLeft = topPipeRect.left - containerRect.left;
+                const topPipeRight = topPipeRect.right - containerRect.left;
+
+                const bottomPipeTop = bottomPipeRect.top - containerRect.top;
+                const bottomPipeLeft = bottomPipeRect.left - containerRect.left;
+                const bottomPipeRight = bottomPipeRect.right - containerRect.left;
+
+                const groundTop = groundRect.top - containerRect.top;
+
+                if (
+                    birdRight > topPipeLeft &&
+                    birdLeft < topPipeRight &&
+                    birdBottom > topPipeTop &&
+                    birdTop < topPipeBottom
+                ) {
+                    return true;
+                }
+
+                if (
+                    birdRight > bottomPipeLeft &&
+                    birdLeft < bottomPipeRight &&
+                    birdBottom > bottomPipeTop
+                ) {
+                    return true;
+                }
+
+                if (birdBottom >= groundTop || birdTop <= 0) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            // Make the bird jump
+            function jump() {
+                if (!gameRunning) {
+                    startGame();
+                    return;
+                }
+
+                if (gamePaused || questionActive) return; // Prevent jumping while game is paused or question is active
+
+                birdVelocity = jumpPower;
+                bird.style.transform = 'rotate(-25deg)';
+
+                if (audioUnlocked) {
+                    jumpSound.currentTime = 0;
+                    jumpSound.play().catch(e => console.error("Jump sound play error:", e));
+                }
+
+                createJumpEffect();
+
+                birdWing.style.animation = 'wingFlapJump 0.2s forwards';
+                setTimeout(() => {
+                    if (gameRunning && !gamePaused) { // Only reset animation if game is running and not paused
+                        birdWing.style.animation = 'wingFlap 0.3s infinite alternate';
+                    }
+                }, 200);
+
+                birdBody.style.transform = 'scale(1.05, 0.95)';
+                setTimeout(() => {
+                    birdBody.style.transform = 'scale(1)';
+                }, 100);
+            }
+
+            // Create a visual effect when the bird jumps
+            function createJumpEffect() {
+                const jumpEffect = document.createElement('div');
+                jumpEffect.classList.add('jump-effect');
+                jumpEffect.style.left = (bird.offsetLeft + bird.offsetWidth / 2 - 20) + 'px';
+                jumpEffect.style.top = (bird.offsetTop + bird.offsetHeight / 2 - 5) + 'px';
+                gameContainer.appendChild(jumpEffect);
+
+                jumpEffect.style.animation = 'jumpEffect 0.5s forwards';
+
+                setTimeout(() => {
+                    jumpEffect.remove();
+                }, 500);
+            }
+
+            // Main game loop
+            function gameLoop() {
+                if (!gameRunning || gamePaused) {
+                    cancelAnimationFrame(animationFrameId);
+                    return;
+                }
+
+                birdVelocity += gravity;
+                birdPosition += birdVelocity;
+
+                let rotation = birdVelocity * 2;
+                rotation = Math.max(-25, Math.min(rotation, 90));
+                bird.style.transform = `rotate(${rotation}deg)`;
+
+                if (birdVelocity > 4 && wingFlapActive) {
+                    birdWing.style.animation = 'none';
+                    wingFlapActive = false;
+                } else if (birdVelocity <= 4 && !wingFlapActive) {
+                    birdWing.style.animation = 'wingFlap 0.3s infinite alternate';
+                    wingFlapActive = true;
+                }
+
+                if (birdPosition <= 0) {
+                    birdPosition = 0;
+                    birdVelocity = 0;
+                }
+
+                bird.style.top = birdPosition + 'px';
+
+                movePipes();
+
+                // Check for collisions with pipes, ground, or ceiling
+                if (!gamePaused) {
+                    for (let i = pipes.length - 1; i >= 0; i--) {
+                        const pipe = pipes[i];
+                        if (checkCollision(pipe.top, pipe.bottom)) {
+                            pauseGame(); // Pause and show question on pipe collision
+                            return; // Stop the current frame to prevent further game logic until resumed
+                        }
+                    }
+
+                    if (birdPosition + bird.offsetHeight >= gameContainer.offsetHeight - 40 || birdPosition <= 0) {
+                        pauseGame(); // Pause and show question on ground/ceiling collision
+                        return; // Stop the current frame to prevent further game logic until resumed
+                    }
+                }
+                
+                animationFrameId = requestAnimationFrame(gameLoop);
+            }
+
+            // End the game
+            function endGame() {
+                gameRunning = false;
+                gamePaused = false; // Ensure game is no longer paused
+                questionActive = false; // No question active
+                clearInterval(pipeIntervalId);
+                cancelAnimationFrame(animationFrameId);
+
+                if (audioUnlocked) {
+                    gameOverSound.currentTime = 0;
+                    gameOverSound.play().catch(e => console.error("Game over sound play error:", e));
+                }
+
+                birdWing.style.animation = 'none';
+                bird.style.transform = 'rotate(90deg)';
+
+                pipes.forEach(pipe => {
+                    pipe.top.remove();
+                    pipe.bottom.remove();
+                });
+                pipes = [];
+
+                finalScore.textContent = score;
+                gameOverScreen.style.display = 'flex';
+                questionModal.style.display = 'none'; // Ensure question modal is hidden
+            }
+
+            // Function to display a random question
+            function displayQuestion() {
+                questionActive = true;
+                // Randomly select a question
+                const randomIndex = Math.floor(Math.random() * questions.length);
+                currentQuestion = questions[randomIndex];
+
+                questionText.textContent = currentQuestion.question;
+                optionsContainer.innerHTML = ''; // Clear previous options
+
+                currentQuestion.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.classList.add('option-btn');
+                    button.textContent = option;
+                    button.dataset.index = index;
+                    // Remove existing event listeners to prevent duplicates
+                    button.removeEventListener('click', checkAnswer); 
+                    button.addEventListener('click', () => checkAnswer(index));
+                    optionsContainer.appendChild(button);
+                });
+
+                // Ensure all option buttons are enabled and have no correct/incorrect classes
+                Array.from(optionsContainer.children).forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('correct', 'incorrect');
+                });
+
+                feedbackMessage.style.display = 'none';
+                continueBtn.style.display = 'none';
+                questionModal.style.display = 'flex';
+
+                // Re-render MathJax after content is updated
+                if (typeof MathJax !== 'undefined') {
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, questionModal]);
+                }
+            }
+
+            // Function to check the user's answer
+            function checkAnswer(selectedIndex) {
+                // Disable all option buttons after selection
+                Array.from(optionsContainer.children).forEach(btn => {
+                    btn.disabled = true; // Disable buttons
+                    if (parseInt(btn.dataset.index) === currentQuestion.correctAnswerIndex) {
+                        btn.classList.add('correct');
+                    } else if (parseInt(btn.dataset.index) === selectedIndex) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+
+                if (selectedIndex === currentQuestion.correctAnswerIndex) {
+                    feedbackMessage.textContent = "إجابة صحيحة! أحسنت.";
+                    feedbackMessage.style.color = '#2ecc71'; // Green
+                    feedbackMessage.style.display = 'block';
+                    continueBtn.style.display = 'block'; // Show continue button
+                    if (audioUnlocked) {
+                        correctAnswerSound.currentTime = 0;
+                        correctAnswerSound.play().catch(e => console.error("Correct answer sound play error:", e));
+                    }
+                } else {
+                    feedbackMessage.textContent = "إجابة خاطئة. حاول مرة أخرى!";
+                    feedbackMessage.style.color = '#e74c3c'; // Red
+                    feedbackMessage.style.display = 'block';
+                    if (audioUnlocked) {
+                        wrongAnswerSound.currentTime = 0;
+                        wrongAnswerSound.play().catch(e => console.error("Wrong answer sound play error:", e));
+                    }
+                    // Game ends if answer is wrong
+                    setTimeout(() => { // Give a moment for feedback message to be seen
+                        endGame();
+                    }, 1500);
+                }
+            }
+
+            // Event Listeners for game control and audio unlock
+            restartBtn.addEventListener('click', startGame);
+            continueBtn.addEventListener('click', resumeGame); // Listen for continue button on modal
+
+            // Global listeners for first interaction to unlock audio
+            document.body.addEventListener('click', unlockAudioOnFirstInteraction);
+            document.body.addEventListener('touchstart', unlockAudioOnFirstInteraction);
+            document.body.addEventListener('keydown', unlockAudioOnFirstInteraction);
+
+            // Game specific interaction listeners (jump, start game)
+            document.addEventListener('click', (e) => {
+                // Only jump if click is not on restart button, start screen, or question modal
+                if (e.target.id !== 'restart' && 
+                    e.target.closest('#start-screen') === null && 
+                    e.target.closest('#question-modal') === null) {
+                    jump();
+                }
+            });
+
+            document.addEventListener('touchstart', function(e) {
+                // Only prevent default and jump if the touch is for jumping (not on the restart button, start screen, or question modal)
+                if (e.target.id !== 'restart' && 
+                    e.target.closest('#start-screen') === null && 
+                    e.target.closest('#question-modal') === null) {
+                    e.preventDefault();
+                    jump();
+                }
+            }, { passive: false });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' || e.key === ' ') {
+                    jump();
+                }
+            });
+
+            // Start screen interaction
+            startScreen.addEventListener('click', startGame);
+            startScreen.addEventListener('touchstart', function(e) {
+                e.preventDefault(); // Prevent default touch behavior for the entire start screen
+                startGame();
+            }, { passive: false });
+
+            // Initialize the game when the page loads
+            initGame();
+        });
+    </script>
+</body>
+</html>
