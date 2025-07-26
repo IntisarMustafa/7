@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الحدود والمقدار الجبري - الصف السابع</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Define a modern and cohesive color palette */
+        :root {
+            --primary: #4A90E2; /* A vibrant, friendly blue */
+            --secondary: #34495E; /* A deep, professional charcoal */
+            --accent: #E74C3C; /* Retaining red for actions/errors */
+            --light: #F8F9FA; /* Very light grey for backgrounds */
+            --success: #2ECC71; /* Standard green for success */
+            --info: #5BC0DE; /* Light blue for hints/info */
+            --text-color: #333; /* Dark text for readability */
+            --border-color: #E0E0E0; /* Light border color */
+            
+            /* Game specific colors - Adjusted for better harmony */
+            --game-bg-dark: #1a2a6c; /* Dark blue */
+            --game-bg-mid: #3B0B7D; /* Deep, muted purple for better gradient blend */
+            --game-hoop-color: #ff9800; /* Orange */
+            --game-court-color: #ff8c00; /* Darker Orange */
+            --game-court-border: #8B4513; /* Brown */
+            --game-player-color: #2196F3; /* Blue */
+            --game-ball-color: #ff5722; /* Red-Orange */
+            --game-score-color: #ffeb3b; /* Yellow */
+            --game-btn-green: #4CAF50; /* Green */
+            --game-btn-red: #f44336; /* Red */
+            --game-btn-purple: #9C27B0; /* Purple */
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Subtle gradient background for depth */
+            background: linear-gradient(135deg, #f9fbfd 0%, #e6f0ff 100%);
+            color: var(--text-color);
+            line-height: 1.8;
+            padding-bottom: 50px;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            font-size: 1.1rem; /* Base font size for better readability */
+        }
+        
+        /* Header Section Styling */
+        .header {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 2.5rem 0; /* Increased padding */
+            border-radius: 0 0 25px 25px; /* More pronounced rounded corners */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+            margin-bottom: 2.5rem; /* Consistent margin */
+            animation: fadeInDown 0.8s ease-out; /* Simple fade-in animation */
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            font-size: 3rem; /* Slightly larger font */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); /* Enhanced text shadow */
+        }
+        
+        .header p.lead {
+            font-size: 1.35rem; /* Slightly larger font */
+            opacity: 0.9;
+        }
+        
+        /* Card Styling */
+        .card {
+            border-radius: 18px; /* More rounded corners */
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Softer, wider shadow */
+            margin-bottom: 2rem; /* Consistent margin */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            background-color: white; /* Ensure white background */
+        }
+        
+        .card:hover {
+            transform: translateY(-7px); /* More noticeable lift */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18); /* Enhanced hover shadow */
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, var(--primary), #6AAAF7); /* Lighter gradient for header */
+            color: white;
+            font-weight: 700;
+            font-size: 1.6rem; /* Slightly larger font */
+            border-radius: 18px 18px 0 0 !important;
+            padding: 1.2rem 1.8rem; /* Consistent padding */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+        }
+        
+        .card-body {
+            padding: 2rem; /* Consistent padding */
+        }
+        
+        /* Specific Section Styles */
+        .explore-box {
+            background: linear-gradient(135deg, #1ABC9C, #16A085); /* Keeping the green for exploration */
+            color: white;
+            border-radius: 18px;
+            padding: 2rem; /* Consistent padding */
+            margin: 2rem 0; /* Consistent margin */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            animation: fadeInUp 0.7s ease-out;
+        }
+        
+        .term-highlight {
+            background-color: rgba(74, 144, 226, 0.1); /* Lighter primary tint */
+            border-left: 5px solid var(--primary); /* Thicker border */
+            padding: 1.2rem; /* Consistent padding */
+            border-radius: 0 10px 10px 0;
+            margin: 1.2rem 0; /* Consistent margin */
+            transition: background-color 0.3s ease;
+        }
+        
+        .term-highlight:hover {
+            background-color: rgba(74, 144, 226, 0.2);
+        }
+        
+        .example-box {
+            background-color: var(--light); /* Using light variable */
+            border-radius: 15px;
+            padding: 1.8rem; /* Consistent padding */
+            margin: 1.8rem 0; /* Consistent margin */
+            border: 2px dashed var(--primary); /* Stronger dashed border */
+        }
+        
+        .interactive-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 2.5rem; /* Increased padding */
+            margin-top: 2.5rem; /* Consistent margin */
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+            border: 3px solid var(--primary); /* More prominent border */
+            animation: scaleIn 0.6s ease-out;
+        }
+        
+        .question-box {
+            background-color: #FDFDFD; /* Slightly off-white */
+            border-radius: 15px;
+            padding: 1.8rem; /* Consistent padding */
+            margin: 1.5rem 0; /* Consistent margin */
+            border-left: 5px solid var(--accent); /* Thicker accent border */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .expression-input {
+            width: 100%;
+            padding: 0.9rem 1.2rem; /* More padding */
+            border: 2px solid var(--border-color); /* Lighter border */
+            border-radius: 10px; /* More rounded */
+            font-size: 1.1rem; /* Adjusted font size */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .expression-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.3); /* Stronger focus shadow */
+        }
+        
+        .check-btn {
+            background: linear-gradient(90deg, var(--accent), #C0392B);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.8rem; /* More padding */
+            border-radius: 10px; /* More rounded */
+            font-weight: 600;
+            font-size: 1.05rem; /* Adjusted font size */
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .check-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.5);
+            filter: brightness(1.1); /* Slightly brighter on hover */
+        }
+        
+        .result-box {
+            padding: 1.2rem; /* Consistent padding */
+            border-radius: 12px;
+            margin-top: 1.2rem; /* Consistent margin */
+            display: none;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease-out;
+            font-size: 1rem; /* Adjusted font size */
+        }
+        
+        .success {
+            background-color: rgba(46, 204, 113, 0.18); /* Slightly more opaque */
+            border: 2px solid var(--success);
+            color: #27AE60;
+        }
+        
+        .error {
+            background-color: rgba(231, 76, 60, 0.18); /* Slightly more opaque */
+            border: 2px solid var(--accent);
+            color: #C0392B;
+        }
+        
+        .math-expression {
+            font-family: 'Cambria Math', serif;
+            font-size: 1.8rem; /* Larger for prominence */
+            color: var(--secondary);
+            margin: 1rem 0; /* Consistent margin */
+            padding: 1rem; /* Consistent padding */
+            background-color: rgba(236, 240, 241, 0.6); /* Slightly more opaque */
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05); /* Inner shadow */
+        }
+        
+        .definition-table {
+            width: 100%;
+            border-collapse: separate; /* Use separate for rounded corners */
+            border-spacing: 0; /* Remove default spacing */
+            margin: 1.8rem 0; /* Consistent margin */
+            border-radius: 15px; /* Apply border-radius to the table */
+            overflow: hidden; /* Hide overflow for rounded corners */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .definition-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem; /* Consistent padding */
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem; /* Adjusted font size */
+        }
+        
+        .definition-table td {
+            padding: 1rem; /* Consistent padding */
+            border: 1px solid var(--border-color); /* Lighter border */
+            text-align: center;
+            font-size: 1rem; /* Adjusted font size */
+        }
+        
+        .definition-table tr:nth-child(even) {
+            background-color: #F2F4F6; /* Slightly darker stripe */
+        }
+
+        /* Ensure rounded corners for the entire table (LTR) */
+        .definition-table tr:first-child th:first-child { border-top-left-radius: 15px; border-top-right-radius: 0; }
+        .definition-table tr:first-child th:last-child { border-top-right-radius: 15px; border-top-left-radius: 0; }
+        .definition-table tr:last-child td:first-child { border-bottom-left-radius: 15px; border-bottom-right-radius: 0; }
+        .definition-table tr:last-child td:last-child { border-bottom-right-radius: 15px; border-bottom-left-radius: 0; }
+        
+        .hint {
+            background-color: rgba(91, 192, 222, 0.15); /* Using --info color */
+            border-left: 5px solid var(--info); /* Thicker border */
+            padding: 1.2rem; /* Consistent padding */
+            border-radius: 0 10px 10px 0;
+            margin: 1.2rem 0; /* Consistent margin */
+            color: #2F7C9B; /* Darker text for contrast */
+            font-size: 1rem; /* Adjusted font size */
+        }
+        
+        .footer {
+            background: var(--secondary);
+            color: white;
+            text-align: center;
+            padding: 1.8rem; /* Consistent padding */
+            margin-top: 3rem; /* Consistent margin */
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 1rem; /* Adjusted font size */
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive Design for main page */
+        @media (max-width: 992px) {
+            body {
+                font-size: 1rem; /* Base font size for medium screens */
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .header p.lead {
+                font-size: 1.2rem;
+            }
+            .card-header {
+                font-size: 1.4rem;
+            }
+            .math-expression {
+                font-size: 1.6rem;
+            }
+            .card-body, .interactive-section {
+                padding: 1.5rem;
+            }
+            .explore-box, .question-box, .term-highlight, .example-box, .hint {
+                padding: 1rem;
+            }
+            .expression-input {
+                font-size: 1rem;
+            }
+            .check-btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 1rem;
+            }
+            .result-box {
+                font-size: 0.95rem;
+            }
+            .definition-table th, .definition-table td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+            .footer {
+                padding: 1.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 0.95rem; /* Base font size for small screens */
+            }
+            .header {
+                padding: 1.5rem 0;
+                border-radius: 0 0 15px 15px;
+                margin-bottom: 1.5rem;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .header p.lead {
+                font-size: 1.1rem;
+            }
+            .card {
+                margin-bottom: 1.2rem;
+                border-radius: 12px;
+            }
+            .card-header {
+                font-size: 1.2rem;
+                padding: 1rem 1.2rem;
+                border-radius: 12px 12px 0 0 !important;
+            }
+            .card-body {
+                padding: 1rem;
+            }
+            .explore-box {
+                margin: 1.2rem 0;
+                border-radius: 12px;
+                padding: 1.5rem;
+            }
+            .term-highlight {
+                padding: 1rem;
+                margin: 0.8rem 0;
+                border-radius: 0 8px 8px 0;
+            }
+            .example-box {
+                padding: 1.2rem;
+                margin: 1.2rem 0;
+                border-radius: 10px;
+            }
+            .interactive-section {
+                padding: 1.8rem;
+                margin-top: 1.8rem;
+                border-radius: 15px;
+            }
+            .question-box {
+                padding: 1.2rem;
+                margin: 0.8rem 0;
+                border-radius: 10px;
+            }
+            .expression-input {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                border-radius: 8px;
+            }
+            .check-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+                border-radius: 8px;
+            }
+            .result-box {
+                padding: 0.8rem;
+                margin-top: 0.8rem;
+                border-radius: 8px;
+                font-size: 0.85rem;
+            }
+            .math-expression {
+                font-size: 1.4rem;
+                padding: 0.8rem;
+                margin: 0.8rem 0;
+                border-radius: 8px;
+            }
+            .definition-table {
+                margin: 1rem 0;
+                border-radius: 10px;
+            }
+            .definition-table th, .definition-table td {
+                padding: 0.6rem;
+                font-size: 0.8rem;
+            }
+            .hint {
+                padding: 1rem;
+                margin: 0.8rem 0;
+                border-radius: 0 8px 8px 0;
+            }
+            .footer {
+                padding: 1rem;
+                margin-top: 1.8rem;
+                border-radius: 15px 15px 0 0;
+            }
+        }
+
+        /* --- Game Specific Styles --- */
+        .game-section {
+            /* Changed background to a very light, almost white, subtle gradient */
+            background: linear-gradient(135deg, #fdfefe 0%, #eef5ff 100%);
+            color: var(--text-color); /* Text color for content inside */
+            padding: 1.5rem; /* Consistent padding */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            margin-top: 2.5rem; /* Consistent margin */
+            border: 1px solid var(--border-color); /* Subtle border for the entire section */
+        }
+
+        .game-section .card-header {
+            /* Keep existing header style for the game section */
+            background: linear-gradient(90deg, var(--primary), #6AAAF7);
+            border-radius: 18px 18px 0 0 !important;
+            color: white;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem; /* Consistent gap */
+            padding-top: 1.5rem; /* Add padding to separate from header */
+        }
+        
+        .court-container {
+            flex: 2; /* Give court more space */
+            min-width: 300px;
+            background: transparent; /* Make background transparent to blend with game-section */
+            border-radius: 15px;
+            padding: 0; /* Remove internal padding, rely on court styling */
+            box-shadow: none; /* Remove shadow */
+            border: none; /* Remove border */
+            display: flex;
+            flex-direction: column;
+            position: relative; /* Keep for absolute positioning of court elements */
+        }
+        
+        .court-title {
+            display: none; /* Hidden as per user request */
+        }
+        
+        /* Basketball Court - Responsive Layout (Wider than tall) */
+        .basketball-court {
+            position: relative;
+            width: 100%;
+            /* Increased aspect ratio to make court larger */
+            aspect-ratio: 1.86 / 1; 
+            background: var(--game-court-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 4px solid var(--game-court-border);
+            perspective: 1000px;
+        }
+        
+        /* Court lines - Scaled with percentages */
+        .court-line {
+            position: absolute;
+            background: #fff;
+        }
+        
+        .mid-line {
+            top: 0;
+            left: 50%;
+            width: 0.5%; /* Relative to court width */
+            height: 100%;
+            transform: translateX(-50%);
+        }
+        
+        .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8%; /* Relative to court width */
+            height: 15%; /* Relative to court height to maintain circle */
+            border: min(0.5vw, 4px) solid #fff; /* Responsive border width */
+            border-radius: 50%;
+        }
+        
+        /* Hoop - Scaled with percentages, positioned on the right side */
+        .hoop {
+            position: absolute;
+            top: 40%; /* Relative to court height, adjusted for new aspect ratio */
+            right: 5%; /* Relative to court width, closer to the edge */
+            width: 6%; /* Increased from 5% */
+            height: 12%; /* Increased from 10% */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+        }
+        
+        .backboard {
+            width: 10%; /* Relative to hoop width */
+            height: 50%; /* Relative to hoop height */
+            background: #fff;
+        }
+        
+        .rim {
+            width: 80%; /* Relative to hoop width */
+            height: 10%; /* Relative to rim height */
+            background: var(--game-ball-color);
+            border-radius: 5%; /* Relative to rim dimensions */
+            position: relative;
+        }
+        
+        .rim::before {
+            content: "";
+            position: absolute;
+            width: 80%; /* Relative to rim width */
+            height: 60%; /* Relative to rim height */
+            border: min(0.3vw, 3px) solid var(--game-ball-color); /* Responsive border width */
+            border-radius: 50% 50% 0 0;
+            bottom: 10%; /* Relative to rim height */
+            left: 10%; /* Relative to rim width */
+        }
+        
+        .net {
+            position: absolute;
+            width: 60%; /* Relative to hoop width */
+            height: 40%; /* Relative to hoop height */
+            top: 60%; /* Relative to hoop height */
+            left: 20%; /* Relative to hoop width */
+            background: linear-gradient(90deg, transparent 49%, rgba(255,255,255,0.7) 50%), 
+                        linear-gradient(0deg, transparent 49%, rgba(255,255,255,0.7) 50%);
+            background-size: min(1.5vw, 15px) min(1.5vw, 15px); /* Responsive background pattern size */
+        }
+        
+        /* Player - Scaled with percentages, positioned on the left side */
+        .player {
+            position: absolute;
+            bottom: 10%; /* Relative to court height */
+            left: 20%; /* Initial left position, will be updated by JS */
+            width: 6%; /* Increased from 5% */
+            height: 18%; /* Increased from 15% */
+            transition: left 0.3s ease;
+            z-index: 10;
+        }
+        
+        .player-body {
+            position: absolute;
+            width: 80%; /* Relative to player width */
+            height: 60%; /* Relative to player height */
+            background: var(--game-player-color);
+            border-radius: 20% 20% 10% 10%; /* Relative to player body dimensions */
+            bottom: 0;
+            left: 10%; /* Relative to player width */
+            transition: transform 0.2s;
+        }
+        
+        .player-head {
+            position: absolute;
+            width: 60%; /* Relative to player width */
+            height: 30%; /* Relative to player height */
+            background: #ffccbc;
+            border-radius: 50%;
+            bottom: 60%; /* Relative to player height */
+            left: 20%; /* Relative to player width */
+        }
+        
+        .player-arm {
+            position: absolute;
+            width: 30%; /* Relative to player width */
+            height: 50%; /* Relative to player height */
+            background: var(--game-player-color);
+            border-radius: 10%; /* Relative to arm dimensions */
+            bottom: 45%; /* Relative to player height */
+            transition: transform 0.3s;
+            transform-origin: bottom center;
+        }
+        
+        .left-arm {
+            left: -10%; /* Relative to player width */
+            transform: rotate(-30deg);
+        }
+        
+        .right-arm {
+            right: -10%; /* Relative to player width */
+            transform: rotate(30deg);
+        }
+        
+        /* Ball - Scaled with percentages */
+        .ball {
+            position: absolute;
+            width: 3.5%; /* Increased from 2.5% */
+            height: 3.5%; /* To maintain circular shape */
+            background: var(--game-ball-color);
+            border-radius: 50%;
+            bottom: 17.5%; /* Initial bottom position, will be updated by JS */
+            left: 22.5%; /* Initial left position, will be updated by JS */
+            z-index: 15;
+            transition: transform 0.3s;
+            box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.3);
+            background-image: 
+                radial-gradient(circle at 30% 30%, var(--game-hoop-color), var(--game-ball-color)),
+                linear-gradient(to right, transparent 48%, var(--game-court-border) 49%, var(--game-court-border) 51%, transparent 52%),
+                linear-gradient(to bottom, transparent 48%, var(--game-court-border) 49%, var(--game-court-border) 51%, transparent 52%);
+            background-blend-mode: multiply;
+            transform-origin: center;
+            cursor: grab; /* Indicate draggable */
+        }
+        
+        .ball.held {
+            transform: translateY(-40px); /* This will be handled by JS dynamically */
+        }
+        
+        .ball.pulling {
+            transition: none; /* Transition handled by JS for smooth drag */
+        }
+        
+        .ball.shooting {
+            transition: none; /* Transition handled by JS for smooth animation */
+        }
+        
+        /* Controls - already responsive */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem; /* Consistent gap */
+            margin-top: 1.5rem; /* Consistent margin */
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem; /* Consistent padding */
+            font-size: 1rem; /* Adjusted font size */
+            background: var(--game-btn-green);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Consistent gap */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-shoot {
+            background: var(--game-btn-red);
+        }
+        
+        .btn-shoot:hover {
+            background: #d32f2f;
+        }
+        
+        /* Updated math-container styling */
+        .math-container {
+            flex: 1; /* Math problem takes less space */
+            min-width: 300px;
+            background: transparent; /* Make background transparent to blend with game-section */
+            color: var(--text-color);
+            padding: 0; /* Remove internal padding, rely on problem/solution styling */
+            border-radius: 15px;
+            box-shadow: none; /* Remove shadow */
+            border: none; /* Ensure no extra borders */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .math-title {
+            display: none; /* Hidden as per user request */
+        }
+        
+        /* Styling for the problem text directly */
+        .problem-text { /* New class for the problem text */
+            font-size: 1.3rem; /* Adjusted font size */
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 1rem; /* Consistent margin */
+            padding: 1rem; /* Add padding directly to the text block */
+            background-color: rgba(74, 144, 226, 0.05); /* Very subtle primary tint */
+            border-radius: 10px;
+            border: 1px solid rgba(74, 144, 226, 0.1); /* Very subtle border */
+        }
+
+        /* Solution container styling - now transparent and no extra spacing */
+        .solution {
+            background: transparent; /* Make it transparent to blend with parent */
+            padding: 0; /* Remove padding */
+            margin-top: 0; /* Remove margin-top */
+            border-radius: 0; /* Remove border-radius */
+            display: none;
+            border: none; /* Ensure no extra borders */
+            box-shadow: none; /* Ensure no extra shadows */
+        }
+        
+        .solution.show {
+            display: block;
+            animation: fadeIn 0.8s ease;
+            padding-top: 1.5rem; /* Add padding to the top when shown, to separate from button */
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .solution h3 {
+            color: var(--primary); /* Use primary blue for solution title */
+            margin-bottom: 1rem; /* Consistent margin */
+            text-align: center;
+            font-size: 1.4rem; /* Adjusted font size */
+        }
+        
+        .steps {
+            margin-bottom: 1rem; /* Consistent margin */
+            line-height: 1.8;
+            color: var(--text-color); /* Ensure text is readable */
+            padding: 1rem; /* Add padding to steps */
+            background-color: rgba(91, 192, 222, 0.05); /* Subtle info tint */
+            border-radius: 10px;
+            border: 1px solid rgba(91, 192, 222, 0.1);
+            font-size: 1rem; /* Adjusted font size */
+        }
+        
+        .final-expression {
+            text-align: center;
+            font-size: 1.7rem; /* Adjusted font size */
+            padding: 1rem; /* Consistent padding */
+            background: rgba(74, 144, 226, 0.2); /* Use primary color tint */
+            border-radius: 10px;
+            margin-top: 1rem; /* Consistent margin */
+            font-weight: bold;
+            color: var(--primary); /* Use primary color for final expression */
+            border: 2px solid var(--primary);
+        }
+        
+        .toggle-solution {
+            margin-top: 1rem; /* Consistent margin */
+            background: var(--primary); /* Use primary blue for button */
+        }
+        
+        .toggle-solution:hover {
+            background: #3A7AD1; /* Slightly darker primary on hover */
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem; /* Consistent padding */
+            border-radius: 10px;
+            margin-top: 1.5rem; /* Consistent margin */
+            text-align: center;
+            font-size: 1rem; /* Adjusted font size */
+        }
+        
+        /* Score and Variable Display - Responsive */
+        .score-display {
+            display: none; /* Hidden as per user request */
+        }
+        
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2% 4%; /* Relative padding */
+            border-radius: min(1vw, 10px); /* Responsive border radius */
+            font-size: min(5vw, 32px); /* Larger font */
+            font-weight: bold;
+            color: var(--game-btn-green);
+            display: none;
+            z-index: 20;
+            border: min(0.2vw, 2px) solid var(--game-btn-green); /* Responsive border width */
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.7);
+            text-align: center;
+        }
+        
+        .message.show {
+            display: block;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        /* Court Dimensions Labels - Responsive */
+        .court-label {
+            position: absolute;
+            font-weight: bold;
+            color: #1a237e;
+            text-shadow: 0 0 3px white;
+            font-size: min(3vw, 20px); /* Larger font */
+            z-index: 10;
+        }
+
+        .court-width-label { /* Vertical label on the left */
+            top: 50%;
+            left: 2%; 
+            transform: translateY(-50%) rotate(-90deg); /* Rotate for vertical display */
+        }
+        
+        .court-length-label { /* Horizontal label on the bottom */
+            bottom: 5%; 
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .variable-display {
+            display: none; /* Hidden as per user request */
+        }
+
+        .variable-display i {
+            margin-bottom: 0.5vw; /* Space for the icon */
+        }
+        
+        /* Pull Indicator - Responsive */
+        .pull-indicator {
+            position: absolute;
+            bottom: 30%; /* Relative to court height */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%; /* Relative to court width */
+            height: 5%; /* Relative to court height */
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: min(1vw, 10px); /* Responsive border radius */
+            display: none;
+            z-index: 15;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .pull-indicator-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--game-btn-green), var(--game-score-color), var(--game-btn-red));
+            border-radius: min(1vw, 10px); /* Responsive border radius */
+            transition: width 0.1s;
+        }
+        
+        .pull-indicator-text {
+            position: absolute;
+            top: -30%; /* Relative to pull indicator height */
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            color: var(--game-score-color);
+            text-shadow: 0 0 3px #000;
+            font-size: min(3vw, 20px); /* Larger font */
+        }
+        
+        /* Ball Trail - Responsive */
+        .ball-trail {
+            position: absolute;
+            width: min(0.8vw, 8px); /* Responsive size */
+            height: min(0.8vw, 8px); /* Responsive size */
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 2;
+        }
+        
+        /* Drag Instruction - Responsive */
+        .drag-instruction {
+            display: none; /* Hidden by default */
+        }
+        
+        /* Next Button Styling */
+        .next-lesson-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 2.5rem; /* Consistent margin */
+            margin-bottom: 2.5rem; /* Consistent margin */
+        }
+
+        .next-lesson-btn {
+            background: linear-gradient(90deg, #1ABC9C, #16A085); /* Green gradient */
+            border: none;
+            color: white;
+            padding: 1rem 2.5rem; /* Consistent padding */
+            border-radius: 50px; /* Fully rounded */
+            font-weight: 700;
+            font-size: 1.2rem; /* Adjusted font size */
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(26, 188, 156, 0.4);
+            text-decoration: none; /* Remove underline for links */
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem; /* Consistent gap */
+        }
+
+        .next-lesson-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(26, 188, 156, 0.6);
+            filter: brightness(1.1);
+        }
+
+        .next-lesson-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(26, 188, 156, 0.3);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+            100% { transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Media queries for game section responsiveness */
+        @media (max-width: 992px) {
+            .game-section h1.game-title {
+                font-size: 1.8rem;
+            }
+            .court-title, .math-title {
+                font-size: 1.4rem;
+            }
+            .problem-text { /* Adjusted for new class */
+                font-size: 1.2rem;
+            }
+            .final-expression {
+                font-size: 1.5rem;
+            }
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.95rem;
+            }
+            .score-display, .variable-display, .drag-instruction, .pull-indicator-text, .court-label {
+                font-size: min(2.8vw, 18px);
+            }
+            .message {
+                font-size: min(4vw, 28px);
+            }
+            .next-lesson-btn {
+                padding: 0.8rem 2rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-section {
+                padding: 1rem;
+            }
+            .game-section h1.game-title {
+                font-size: 1.6rem;
+            }
+            .game-section .game-description {
+                font-size: 0.95rem;
+            }
+            .main-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding-top: 1rem;
+            }
+            .court-title, .math-title {
+                font-size: 1.2rem;
+            }
+            .problem-text { /* Adjusted for new class */
+                font-size: 1rem;
+            }
+            .final-expression {
+                font-size: 1.3rem;
+            }
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+            .score-display, .variable-display, .drag-instruction, .pull-indicator-text, .court-label {
+                font-size: min(3.5vw, 16px);
+            }
+            .message {
+                font-size: min(5vw, 24px);
+            }
+            .center-circle {
+                border-width: min(0.7vw, 6px);
+            }
+            .rim::before {
+                border-width: min(0.5vw, 4px);
+            }
+            .net {
+                background-size: min(2vw, 18px) min(2vw, 18px);
+            }
+            .ball-trail {
+                width: min(1vw, 10px);
+                height: min(1vw, 10px);
+            }
+            .next-lesson-btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .score-display, .variable-display, .drag-instruction, .pull-indicator-text, .court-label {
+                font-size: min(4.5vw, 14px);
+            }
+            .message {
+                font-size: min(6vw, 20px);
+            }
+            .next-lesson-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header text-center">
+        <div class="container">
+            <h1><i class="fas fa-calculator me-3"></i>الحدود والمقدار الجبري</h1>
+            <p class="lead">الصف السابع - الرياضيات</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Exploration Section -->
+        <div class="explore-box">
+            <h3><i class="fas fa-lightbulb me-2"></i>استكشف</h3>
+            
+            <!-- New Game and Math Problem Section -->
+            <div class="card game-section">
+                <div class="card-header">
+                    <!-- Removed the game title and description as requested -->
+                </div>
+                    
+                <div class="main-content">
+                    <div class="court-container">
+                        <!-- Removed the court title as requested -->
+                        <div class="basketball-court">
+                            <div class="court-line mid-line"></div>
+                            <div class="center-circle"></div>
+                            
+                            <div class="hoop">
+                                <div class="backboard"></div>
+                                <div class="rim"></div>
+                                <div class="net"></div>
+                            </div>
+                            
+                            <div class="player">
+                                <div class="player-head"></div>
+                                <div class="player-body"></div>
+                                <div class="player-arm left-arm"></div>
+                                <div class="player-arm right-arm"></div>
+                            </div>
+                            
+                            <div class="ball" id="basketball"></div>
+                            
+                            <!-- Removed the drag-instruction div from here -->
+                            
+                            <!-- Removed the score-display div from here -->
+                            
+                            <!-- Removed the variable-display div from here -->
+                            
+                            <div class="court-label court-width-label">
+                                x m
+                            </div>
+                            <div class="court-label court-length-label">
+                                m (x + 13)
+                            </div>
+                            
+                            <div class="message" id="message">🎯 سجّلت نقطة! 🎯</div>
+                            
+                            <div class="pull-indicator" id="pull-indicator">
+                                <div class="pull-indicator-bar" id="pull-bar"></div>
+                                <div class="pull-indicator-text">قوة الرمي</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- The math-container now has the sky blue styling and directly contains the problem and solution content -->
+                    <div class="math-container">
+                        <!-- Removed the math title as requested -->
+                        <div class="problem-text">
+                            <p>إذا كان طول ملعب كرة السلة <span style="font-weight: bold; color: var(--accent);">يزيد</span> 13 m على عرضه، فكيف أعبر عن محيطه بمقدار جبري؟</p>
+                            <p>افترض أن عرض الملعب = x</p>
+                        </div>
+                        
+                        <button class="btn toggle-solution" id="solution-btn">
+                            <i class="fas fa-lightbulb"></i> عرض الحل
+                        </button>
+                        
+                        <div class="solution" id="solution">
+                            <h3><i class="fas fa-brain"></i> خطوات الحل: </h3>
+                            <div class="steps">
+                                <p>1. نفترض أن عرض الملعب = x متر</p>
+                                <p>2. بما أن الطول <span style="font-weight: bold; color: var(--accent);">يزيد</span> العرض بمقدار 13 متراً، فالطول = x + 13 متر</p>
+                                <p>3. محيط المستطيل = 2 × (الطول + العرض)</p>
+                                <p>4. نعوض: المحيط = 2 × ( (x + 13) + x )</p>
+                                <p>5. نبسط: المحيط = 2 × (2x + 13)</p>
+                                <p>6. المحيط = 4x + 26</p>
+                            </div>
+                            
+                            <div class="final-expression">
+                                المحيط = 4x + 26
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lesson Objectives -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-bullseye me-2"></i>أهداف الدرس
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">أتعرف الحدود والمعاملات والثوابت في المقدار الجبري</li>
+                    <li class="list-group-item">أميز بين المتغيرات والثوابت في المقادير الجبرية</li>
+                    <li class="list-group-item">أستطيع كتابة مقادير جبرية تعبر عن مواقف حياتية</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Key Terms -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-book me-2"></i>المصطلحات الأساسية
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="term-highlight">
+                            <h5>المتغير</h5>
+                            <p class="mb-0">رمز للتعبير عن قيم مجهولة</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="term-highlight">
+                            <h5>المقدار الجبري</h5>
+                            <p class="mb-0">عبارة تحتوي متغيــرات وأعداداً تفصل بينها عمليات</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="term-highlight">
+                            <h5>الحد الجبري</h5>
+                            <p class="mb-0">أي عدد أو متغير أو عدد مضروب في متغير</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="term-highlight">
+                            <h5>المعامل</h5>
+                            <p class="mb-0">العدد المضروب في المتغير</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Definitions -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-info-circle me-2"></i>المفاهيم الأساسية
+            </div>
+            <div class="card-body">
+                <p>المتغير (variable) هو رمز للتعبير عن قيم مجهولة، والمقدار الجبري (algebraic expression) هو عبارة تحتوي متغيــرات وأعداداً تفصل بينها عمليات. ويسمى أي عدد أو متغير أو عدد مضروب في متغيــر أو أكثر حداً جبرياً (algebraic term).</p>
+                
+                <div class="example-box">
+                    <div class="math-expression">$$2y + 6$$</div>
+                    <p>الحد الثابت (constant term) هو حد لا يحتوي أي متغير (مثل 6 في المثال)</p>
+                    <p>يسمى العدد المضروب في المتغير المعامل (coefficient) (مثل 2 في المثال)</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Example 1 -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-book-open me-2"></i>مثال 1: تحديد الحدود والمعاملات والثوابت
+            </div>
+            <div class="card-body">
+                <p>اميز الحدود والمعاملات، والثوابت في كل مقدار جبري مما يلي:</p>
+                
+                <table class="definition-table" dir="ltr">
+                    <thead>
+                        <tr>
+                            <th>المقدار الجبري</th>
+                            <th>الحدود</th>
+                            <th>المعاملات</th>
+                            <th>الثوابت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$17s + t + 3$</td>
+                            <td>$17s, t, 3$</td>
+                            <td>$17, 1$</td>
+                            <td>$3$</td>
+                        </tr>
+                        <tr>
+                            <td>$6xy + \frac{y}{4} - 10$</td>
+                            <td>$6xy, \frac{1}{4}y, -10$</td>
+                            <td>$6, \frac{1}{4}$</td>
+                            <td>$-10$</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Interactive Check Your Understanding -->
+        <div class="interactive-section">
+            <h3 class="text-center mb-4" style="color: var(--primary);">
+                <i class="fas fa-check-circle me-2"></i>أتحقق من فهمي
+            </h3>
+            <p class="text-center mb-4">أميز الحدود، والمعاملات، والثوابت في كل مقدار جبري مما يلي:</p>
+            
+            <div class="hint">
+                <h5><i class="fas fa-lightbulb me-2"></i>تلميح:</h5>
+                <p class="mb-0">تذكر أن الحدود هي الأجزاء المنفصلة في المقدار، المعاملات هي الأرقام المضروبة في المتغيرات، والثوابت هي الأرقام دون متغيرات.</p>
+            </div>
+            
+            <!-- Question 1 -->
+            <div class="question-box">
+                <h5>1. $-18y$</h5>
+                <div class="mb-3">
+                    <label class="form-label">الحدود:</label>
+                    <input type="text" class="expression-input" id="q1-terms">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">المعاملات:</label>
+                    <input type="text" class="expression-input" id="q1-coefficients">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">الثوابت:</label>
+                    <input type="text" class="expression-input" id="q1-constants">
+                </div>
+                <button class="check-btn" onclick="checkAnswer(1)">تحقق من الإجابة</button>
+                <div class="result-box" id="result1"></div>
+            </div>
+            
+            <!-- Question 2 -->
+            <div class="question-box">
+                <h5>2. $3 - u^3$</h5>
+                <div class="mb-3">
+                    <label class="form-label">الحدود:</label>
+                    <input type="text" class="expression-input" id="q2-terms">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">المعاملات:</label>
+                    <input type="text" class="expression-input" id="q2-coefficients">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">الثوابت:</label>
+                    <input type="text" class="expression-input" id="q2-constants">
+                </div>
+                <button class="check-btn" onclick="checkAnswer(2)">تحقق من الإجابة</button>
+                <div class="result-box" id="result2"></div>
+            </div>
+            
+            <!-- Question 3 -->
+            <div class="question-box">
+                <h5>3. $xy^2$</h5>
+                <div class="mb-3">
+                    <label class="form-label">الحدود:</label>
+                    <input type="text" class="expression-input" id="q3-terms">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">المعاملات:</label>
+                    <input type="text" class="expression-input" id="q3-coefficients">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">الثوابت:</label>
+                    <input type="text" class="expression-input" id="q3-constants">
+                </div>
+                <button class="check-btn" onclick="checkAnswer(3)">تحقق من الإجابة</button>
+                <div class="result-box" id="result3"></div>
+            </div>
+            
+            <!-- Question 4 -->
+            <div class="question-box">
+                <h5>4. $5$</h5>
+                <div class="mb-3">
+                    <label class="form-label">الحدود:</label>
+                    <input type="text" class="expression-input" id="q4-terms">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">المعاملات:</label>
+                    <input type="text" class="expression-input" id="q4-coefficients">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">الثوابت:</label>
+                    <input type="text" class="expression-input" id="q4-constants">
+                </div>
+                <button class="check-btn" onclick="checkAnswer(4)">تحقق من الإجابة</button>
+                <div class="result-box" id="result4"></div>
+            </div>
+            
+            <!-- Question 5 -->
+            <div class="question-box">
+                <h5>5. $9x - 5y$</h5>
+                <div class="mb-3">
+                    <label class="form-label">الحدود:</label>
+                    <input type="text" class="expression-input" id="q5-terms">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">المعاملات:</label>
+                    <input type="text" class="expression-input" id="q5-coefficients">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">الثوابت:</label>
+                    <input type="text" class="expression-input" id="q5-constants">
+                </div>
+                <button class="check-btn" onclick="checkAnswer(5)">تحقق من الإجابة</button>
+                <div class="result-box" id="result5"></div>
+            </div>
+            
+            <!-- Question 6 -->
+            <div class="question-box">
+                <h5>6. $124$</h5>
+                <div class="mb-3">
+                    <label class="form-label">الحدود:</label>
+                    <input type="text" class="expression-input" id="q6-terms">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">المعاملات:</label>
+                    <input type="text" class="expression-input" id="q6-coefficients">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">الثوابت:</label>
+                    <input type="text" class="expression-input" id="q6-constants">
+                </div>
+                <button class="check-btn" onclick="checkAnswer(6)">تحقق من الإجابة</button>
+                <div class="result-box" id="result6"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Next Lesson Button -->
+    <div class="container next-lesson-section">
+        <a href="u2l3p1.html" class="next-lesson-btn">
+            الدرس التالي <i class="fas fa-arrow-left me-2"></i>
+        </a>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>الرياضيات للصف السابع - كتاب الطالب | وحدة الجبر</p>
+            <p class="mb-0"> الصفحة 1</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script>
+        // Existing checkAnswer function for the first set of questions
+        function checkAnswer(questionNum) {
+            const termsInput = document.getElementById(`q${questionNum}-terms`);
+            const coefficientsInput = document.getElementById(`q${questionNum}-coefficients`);
+            const constantsInput = document.getElementById(`q${questionNum}-constants`);
+            const resultDiv = document.getElementById(`result${questionNum}`);
+            
+            let correctTerms, correctCoefficients, correctConstants;
+            
+            // Define correct answers for each question
+            switch(questionNum) {
+                case 1:
+                    correctTerms = "-18y";
+                    correctCoefficients = "-18";
+                    correctConstants = "لا يوجد";
+                    break;
+                case 2:
+                    correctTerms = "3, -u^3"; // Corrected to match MathJax input
+                    correctCoefficients = "لا يوجد, -1";
+                    correctConstants = "3";
+                    break;
+                case 3:
+                    correctTerms = "xy^2"; // Corrected to match MathJax input
+                    correctCoefficients = "1";
+                    correctConstants = "لا يوجد";
+                    break;
+                case 4:
+                    correctTerms = "5";
+                    correctCoefficients = "لا يوجد";
+                    correctConstants = "5";
+                    break;
+                case 5:
+                    correctTerms = "9x, -5y";
+                    correctCoefficients = "9, -5";
+                    correctConstants = "لا يوجد";
+                    break;
+                case 6:
+                    correctTerms = "124";
+                    correctCoefficients = "لا يوجد";
+                    correctConstants = "124";
+                    break;
+            }
+            
+            // Normalize input for comparison (e.g., remove spaces, convert to lowercase if needed)
+            const normalizeInput = (str) => str.replace(/\s+/g, '').toLowerCase();
+
+            const termsCorrect = normalizeInput(termsInput.value) === normalizeInput(correctTerms);
+            const coefficientsCorrect = normalizeInput(coefficientsInput.value) === normalizeInput(correctCoefficients);
+            const constantsCorrect = normalizeInput(constantsInput.value) === normalizeInput(correctConstants);
+            
+            if (termsCorrect && coefficientsCorrect && constantsCorrect) {
+                resultDiv.className = "result-box success";
+                resultDiv.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>
+                    إجابة صحيحة! أحسنت!
+                    <div class="mt-2">الإجابات الصحيحة: الحدود (${correctTerms}), المعاملات (${correctCoefficients}), الثوابت (${correctConstants})</div>
+                `;
+            } else {
+                resultDiv.className = "result-box error";
+                resultDiv.innerHTML = `
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    يوجد خطأ في الإجابة. حاول مرة أخرى!
+                    <div class="mt-2">الإجابات الصحيحة: الحدود (${correctTerms}), المعاملات (${correctCoefficients}), الثوابت (${correctConstants})</div>
+                `;
+            }
+            
+            resultDiv.style.display = "block";
+        }
+        
+        // Initialize MathJax rendering
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']] // Added display math delimiters
+            },
+            options: {
+                renderActions: {
+                    /* This is the property that MathJax uses to configure its rendering.
+                     * The 'add' method is used to add custom actions to the rendering process.
+                     * The first argument is the name of the action.
+                     * The second argument is a function that will be called when the action is performed.
+                     * The third argument is the priority of the action.
+                     * The fourth argument is an array of actions that must be completed before this action can be performed.
+                     * The fifth argument is a boolean indicating whether the action should be performed once or multiple times.
+                     */
+                    add: [
+                        // This action ensures that MathJax re-renders expressions when the window is resized.
+                        [
+                            'rerenderOnResize',
+                            (doc) => {
+                                window.addEventListener('resize', () => {
+                                    doc.rerender();
+                                });
+                            },
+                            10,
+                            ['postProcess'],
+                            true
+                        ]
+                    ]
+                }
+            }
+        };
+
+        // --- Game Logic ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const player = document.querySelector('.player');
+            const ball = document.getElementById('basketball');
+            const solutionBtn = document.getElementById('solution-btn');
+            const solutionDiv = document.getElementById('solution');
+            // const scoreDisplay = document.getElementById('score'); // Removed this line
+            const messageDiv = document.getElementById('message');
+            const pullIndicator = document.getElementById('pull-indicator');
+            const pullBar = document.getElementById('pull-bar');
+            const court = document.querySelector('.basketball-court');
+            const hoop = document.querySelector('.hoop'); // Get hoop element
+            const leftArm = document.querySelector('.left-arm');
+            const rightArm = document.querySelector('.right-arm');
+            const playerBody = document.querySelector('.player-body');
+            // const dragInstruction = document.getElementById('dragInstruction'); // Removed this line
+
+            // Game state variables
+            let ballHeld = true;
+            let score = 0; // Keep score variable for game logic
+            let isPulling = false;
+            let pullStrength = 0;
+            let pullInterval;
+            let isDragging = false;
+            let startX, startY; // For mouse/touch start coordinates
+            let ballStartX, ballStartY; // Ball's pixel position when drag starts
+
+            // Initial positions as percentages (relative to court width/height)
+            // These percentages define the initial layout and are converted to pixels dynamically.
+            const playerInitialLeftPercent = 20; // Adjusted for wider court
+            const ballInitialLeftOffsetFromPlayerPercent = 2.5; // Ball's offset from player's left edge
+            const ballInitialBottomPercent = 17.5; // Adjusted for new aspect ratio and player height
+
+            // Function to get current court dimensions in pixels
+            function getCourtDimensions() {
+                return {
+                    width: court.offsetWidth,
+                    height: court.offsetHeight
+                };
+            }
+
+            // Function to set initial positions based on percentages and current court dimensions
+            function setInitialPositions() {
+                const { width: courtWidth, height: courtHeight } = getCourtDimensions();
+                const playerWidth = player.offsetWidth;
+
+                // Set player's initial left position
+                player.style.left = (playerInitialLeftPercent / 100 * courtWidth) + 'px';
+                
+                // Set ball's initial position relative to player
+                ball.style.left = (parseFloat(player.style.left) + (playerWidth * ballInitialLeftOffsetFromPlayerPercent / 100)) + 'px';
+                ball.style.bottom = (ballInitialBottomPercent / 100 * courtHeight) + 'px';
+
+                // Update ballStartX and ballStartY for drag calculations
+                ballStartX = parseFloat(ball.style.left);
+                ballStartY = parseFloat(ball.style.bottom);
+            }
+
+            // Adjust positions on window resize
+            window.addEventListener('resize', setInitialPositions);
+
+            // Function to start the ball pulling/dragging action
+            function startPulling() {
+                if (!ballHeld) return; // Only pull if ball is held
+                
+                isPulling = true;
+                ball.classList.add('pulling'); // Add class for pulling animation/style
+                pullIndicator.style.display = 'block'; // Show pull strength indicator
+                pullStrength = 0; // Reset pull strength
+                pullBar.style.width = '0%'; // Reset pull bar width
+                
+                // Store current ball position in pixels for drag calculations
+                ballStartX = parseFloat(ball.style.left);
+                ballStartY = parseFloat(ball.style.bottom);
+
+                // Player arm animation for pulling pose
+                leftArm.style.transform = 'rotate(-70deg)';
+                rightArm.style.transform = 'rotate(70deg)';
+                playerBody.style.transform = 'rotate(-5deg)'; // Slight body lean
+                
+                // Start increasing pull strength over time if not user-controlled drag
+                // This interval is primarily for visual feedback if drag isn't active
+                pullInterval = setInterval(() => {
+                    if (pullStrength < 100) {
+                        pullStrength += 2;
+                        pullBar.style.width = pullStrength + '%';
+                        
+                        // Dynamically adjust ball position based on pull strength
+                        const { width: courtWidth, height: courtHeight } = getCourtDimensions();
+                        const pullDistanceX = (pullStrength / 100) * (0.1 * courtWidth); // Max 10% of court width pull
+                        const pullDistanceY = (pullStrength / 100) * (0.05 * courtHeight); // Max 5% of court height pull
+                        
+                        ball.style.left = (ballStartX - pullDistanceX) + 'px';
+                        ball.style.bottom = (ballStartY + pullDistanceY) + 'px';
+                    }
+                }, 50);
+            }
+            
+            // Function to shoot the ball
+            function shootBall() {
+                if (!ballHeld || !isPulling) return; // Only shoot if ball is held and pulling is active
+                
+                clearInterval(pullInterval); // Stop pull strength increase
+                isPulling = false;
+                ball.classList.add('shooting'); // Add class for shooting animation/style
+                ballHeld = false; // Ball is no longer held
+                pullIndicator.style.display = 'none'; // Hide pull indicator
+                
+                // Reset player arm animation to normal pose
+                leftArm.style.transform = 'rotate(-30deg)';
+                rightArm.style.transform = 'rotate(30deg)';
+                playerBody.style.transform = 'rotate(0deg)';
+                
+                // Calculate strength factor based on pull strength (0.5 to 2.0)
+                const strengthFactor = 0.5 + (pullStrength / 100) * 1.5; 
+                
+                const { width: courtWidth, height: courtHeight } = getCourtDimensions();
+
+                // Get current ball position in pixels (where the drag ended)
+                const currentBallX = parseFloat(ball.style.left);
+                const currentBallY = parseFloat(ball.style.bottom);
+
+                // Get hoop position in pixels (center of the hoop)
+                const hoopX = hoop.offsetLeft + hoop.offsetWidth / 2;
+                const hoopYFromTop = hoop.offsetTop + hoop.offsetHeight / 2; // Hoop Y from top of court
+
+                // Convert all Y coordinates to be from the top of the court for consistent parabolic math
+                const startAnimX = currentBallX;
+                const startAnimY = courtHeight - currentBallY; // Convert ball's bottom-based Y to top-based Y
+
+                const targetAnimX = hoopX;
+                const targetAnimY = hoopYFromTop;
+
+                // Calculate control point for parabolic trajectory (Bezier curve)
+                const controlAnimX = (startAnimX + targetAnimX) / 2;
+                // Adjust arc height based on court height and strength factor. Control point Y should be *smaller* (higher on screen) than start/target Y.
+                const controlAnimY = Math.min(startAnimY, targetAnimY) - (0.5 * courtHeight * strengthFactor); 
+                
+                let rotation = 0; // For ball rotation animation
+                
+                // Clear any old ball trails
+                document.querySelectorAll('.ball-trail').forEach(el => el.remove());
+                
+                let t = 0; // Time parameter for animation (0 to 1)
+                const animate = () => {
+                    t += 0.02 * strengthFactor; // Increment time, faster with more strength
+                    
+                    if (t > 1) {
+                        // Animation finished, check score
+                        checkScore(targetAnimX, targetAnimY, strengthFactor);
+                        return;
+                    }
+                    
+                    // Bezier curve calculation for ball position
+                    const x = (1 - t) * (1 - t) * startAnimX + 
+                               2 * (1 - t) * t * controlAnimX + 
+                               t * t * targetAnimX;
+                    
+                    const y = (1 - t) * (1 - t) * startAnimY + 
+                               2 * (1 - t) * t * controlAnimY + 
+                               t * t * targetAnimY;
+                    
+                    // Convert back to bottom-based Y for CSS styling
+                    ball.style.left = x + 'px';
+                    ball.style.bottom = (courtHeight - y) + 'px';
+                    
+                    // Add ball trail effect
+                    if (t % 0.1 < 0.02) { // Create a trail dot every 0.1 time unit
+                        const trail = document.createElement('div');
+                        trail.className = 'ball-trail';
+                        trail.style.left = x + 'px';
+                        trail.style.bottom = (courtHeight - y) + 'px';
+                        court.appendChild(trail);
+                        
+                        // Fade in and then fade out the trail dot
+                        setTimeout(() => { trail.style.opacity = '0.7'; }, 10);
+                        setTimeout(() => {
+                            if (court.contains(trail)) {
+                                trail.style.opacity = '0';
+                                setTimeout(() => {
+                                    if (court.contains(trail)) court.removeChild(trail);
+                                }, 300);
+                            }
+                        }, 500);
+                    }
+                    
+                    // Ball rotation animation
+                    rotation += 20 * strengthFactor;
+                    ball.style.transform = `rotate(${rotation}deg)`;
+                    
+                    requestAnimationFrame(animate); // Continue animation loop
+                };
+                
+                animate(); // Start the animation
+            }
+            
+            // Function to stop pulling without shooting (e.g., if drag is cancelled)
+            function stopPulling() {
+                if (isPulling) {
+                    clearInterval(pullInterval); // Stop pull strength increase
+                    isPulling = false;
+                    pullIndicator.style.display = 'none'; // Hide pull indicator
+                    
+                    // Reset ball to its initial position
+                    setInitialPositions();
+                    
+                    // Reset player arm animation
+                    leftArm.style.transform = 'rotate(-30deg)';
+                    rightArm.style.transform = 'rotate(30deg)';
+                    playerBody.style.transform = 'rotate(0deg)';
+                }
+            }
+            
+            // Function to check if the shot was successful and update score
+            function checkScore(targetX, targetY, strengthFactor) {
+                // Remove shooting/held classes and reset ball rotation
+                ball.classList.remove('shooting');
+                ball.classList.remove('held');
+                ball.style.transform = 'rotate(0deg)';
+                
+                const { width: courtWidth } = getCourtDimensions();
+                const playerLeftPx = parseFloat(player.style.left);
+                const playerWidth = player.offsetWidth;
+
+                // Calculate accuracy based on player's horizontal position relative to court center
+                const idealPlayerCenter = courtWidth / 2;
+                const playerCenter = playerLeftPx + (playerWidth / 2);
+                const positionAccuracy = 1 - (Math.abs(playerCenter - idealPlayerCenter) / idealPlayerCenter); // Value from 0 to 1
+
+                // Calculate accuracy based on how close strengthFactor is to an ideal value (e.g., 1.2)
+                const strengthAccuracy = 1 - Math.abs(strengthFactor - 1.2) / 0.8; 
+
+                // Combined accuracy for shot success probability
+                const accuracy = (positionAccuracy + strengthAccuracy) / 2;
+                
+                // Random chance of scoring based on accuracy
+                if (Math.random() < accuracy + 0.2) { // Adding a small constant to increase success chance
+                    score++;
+                    // scoreDisplay.textContent = score; // Removed this line
+                    
+                    // Show success message
+                    messageDiv.textContent = '🎯 سجّلت نقطة! 🎯';
+                    messageDiv.style.color = 'var(--game-btn-green)';
+                    messageDiv.classList.add('show');
+                    
+                    setTimeout(() => { messageDiv.classList.remove('show'); }, 2000);
+                    
+                } else {
+                    // Show failure message
+                    messageDiv.textContent = '⛔ أخطأت التسديد! ⛔';
+                    messageDiv.style.color = 'var(--game-btn-red)';
+                    messageDiv.classList.add('show');
+                    
+                    setTimeout(() => { messageDiv.classList.remove('show'); }, 2000);
+                }
+                
+                // Reset ball to initial position after a short delay
+                setTimeout(() => {
+                    setInitialPositions();
+                    ball.classList.remove('pulling');
+                    ballHeld = true; // Ball is held again
+                }, 1000);
+            }
+            
+            // Function to reset the entire game
+            function resetGame() {
+                score = 0;
+                // scoreDisplay.textContent = score; // Removed this line
+                ballHeld = true;
+                isPulling = false;
+                
+                setInitialPositions(); // Reset player and ball to initial positions
+                
+                // Reset player arm animation
+                leftArm.style.transform = 'rotate(-30deg)';
+                rightArm.style.transform = 'rotate(30deg)';
+                playerBody.style.transform = 'rotate(0deg)';
+                
+                pullIndicator.style.display = 'none'; // Hide pull indicator
+                messageDiv.classList.remove('show'); // Hide any messages
+            }
+            
+            // Event Listeners for buttons
+            solutionBtn.addEventListener('click', () => {
+                solutionDiv.classList.toggle('show');
+                solutionBtn.innerHTML = solutionDiv.classList.contains('show') ? 
+                    '<i class="fas fa-eye-slash"></i> إخفاء الحل' : 
+                    '<i class="fas fa-lightbulb"></i> عرض الحل';
+            });
+            
+            // Mouse event handlers for drag and drop functionality
+            ball.addEventListener('mousedown', (e) => {
+                e.preventDefault(); // Prevent default browser drag behavior
+                isDragging = true;
+                startPulling(); // Start the pulling process
+                startX = e.clientX; // Store initial mouse X
+                startY = e.clientY; // Store initial mouse Y
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging || !isPulling) return; // Only process if dragging and pulling are active
+                
+                const { width: courtWidth, height: courtHeight } = getCourtDimensions();
+
+                const dx = startX - e.clientX; // Change in X from start
+                const dy = startY - e.clientY; // Change in Y from start
+                const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 100); // Calculate distance, cap at 100
+                pullStrength = distance; // Update pull strength
+                pullBar.style.width = pullStrength + '%'; // Update pull bar visual
+                
+                // Calculate ball's new position based on drag distance
+                const pullDistanceX = (pullStrength / 100) * (0.1 * courtWidth); // Max 10% of court width pull
+                const pullDistanceY = (pullStrength / 100) * (0.05 * courtHeight); // Max 5% of court height pull
+                
+                ball.style.left = (ballStartX - pullDistanceX) + 'px';
+                ball.style.bottom = (ballStartY + pullDistanceY) + 'px';
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging && isPulling) {
+                    isDragging = false;
+                    shootBall(); // Shoot the ball if drag ended and pulling was active
+                } else if (isDragging && !isPulling) { 
+                    // If drag started but pulling state wasn't fully engaged (e.g., too short a drag)
+                    isDragging = false;
+                    stopPulling(); // Reset ball position
+                }
+            });
+            
+            // Touch event handlers for mobile devices
+            ball.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // Prevent default touch behavior (e.g., scrolling)
+                isDragging = true;
+                startPulling();
+                const touch = e.touches[0]; // Get the first touch point
+                startX = touch.clientX;
+                startY = touch.clientY;
+            });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging || !isPulling) return;
+                e.preventDefault(); // Prevent scrolling during drag
+                
+                const { width: courtWidth, height: courtHeight } = getCourtDimensions();
+
+                const touch = e.touches[0];
+                const dx = startX - touch.clientX;
+                const dy = startY - touch.clientY;
+                const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 100);
+                pullStrength = distance;
+                pullBar.style.width = pullStrength + '%';
+                
+                const pullDistanceX = (pullStrength / 100) * (0.1 * courtWidth);
+                const pullDistanceY = (pullStrength / 100) * (0.05 * courtHeight);
+                
+                ball.style.left = (ballStartX - pullDistanceX) + 'px';
+                ball.style.bottom = (ballStartY + pullDistanceY) + 'px';
+            });
+            
+            document.addEventListener('touchend', () => {
+                if (isDragging && isPulling) {
+                    isDragging = false;
+                    shootBall();
+                } else if (isDragging && !isPulling) {
+                    isDragging = false;
+                    stopPulling();
+                }
+            });
+
+            // Initial setup for player and ball positions when the page loads
+            resetGame(); 
+        });
+    </script>
+</body>
+</html>
