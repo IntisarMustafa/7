@@ -97,15 +97,21 @@
         
         /* Specific Section Styles */
         .explore-box {
-            background: linear-gradient(135deg, #1ABC9C, #16A085); /* Keeping the green for exploration */
-            color: white;
+            /* Removed background gradient as requested */
+            color: var(--text-color); /* Changed text color to inherit from body or specific elements */
             border-radius: 18px;
             padding: 2rem; /* Consistent padding */
             margin: 2rem 0; /* Consistent margin */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            box-shadow: none; /* Removed box-shadow to make it blend more */
             animation: fadeInUp 0.7s ease-out;
         }
         
+        .explore-box h3 {
+            color: var(--primary); /* Ensure the heading color is primary blue */
+            text-align: center;
+            margin-bottom: 1.5rem; /* Add some space below the heading */
+        }
+
         .term-highlight {
             background-color: rgba(74, 144, 226, 0.1); /* Lighter primary tint */
             border-left: 5px solid var(--primary); /* Thicker border */
@@ -177,6 +183,10 @@
             transform: translateY(-4px);
             box-shadow: 0 8px 20px rgba(231, 76, 60, 0.5);
             filter: brightness(1.1); /* Slightly brighter on hover */
+        }
+        
+        .check-btn:active {
+            transform: translateY(1px);
         }
         
         .result-box {
@@ -912,10 +922,10 @@
             background: linear-gradient(90deg, #1ABC9C, #16A085); /* Green gradient */
             border: none;
             color: white;
-            padding: 1rem 2.5rem; /* Consistent padding */
+            padding: 1.2rem 3rem; /* Increased padding for larger button */
             border-radius: 50px; /* Fully rounded */
             font-weight: 700;
-            font-size: 1.2rem; /* Adjusted font size */
+            font-size: 1.35rem; /* Increased font size for larger button */
             transition: all 0.3s ease;
             box-shadow: 0 8px 20px rgba(26, 188, 156, 0.4);
             text-decoration: none; /* Remove underline for links */
@@ -966,8 +976,8 @@
                 font-size: min(4vw, 28px);
             }
             .next-lesson-btn {
-                padding: 0.8rem 2rem;
-                font-size: 1.1rem;
+                padding: 1rem 2.5rem; /* Adjusted padding for medium screens */
+                font-size: 1.2rem; /* Adjusted font size for medium screens */
             }
         }
 
@@ -1019,8 +1029,8 @@
                 height: min(1vw, 10px);
             }
             .next-lesson-btn {
-                padding: 0.7rem 1.5rem;
-                font-size: 1rem;
+                padding: 0.8rem 2rem; /* Adjusted padding for small screens */
+                font-size: 1.1rem; /* Adjusted font size for small screens */
             }
         }
 
@@ -1032,8 +1042,8 @@
                 font-size: min(6vw, 20px);
             }
             .next-lesson-btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.9rem;
+                padding: 0.7rem 1.5rem; /* Adjusted padding for extra small screens */
+                font-size: 1rem; /* Adjusted font size for extra small screens */
             }
         }
 
@@ -1043,7 +1053,7 @@
     <!-- Header Section -->
     <div class="header text-center">
         <div class="container">
-            <h1><i class="fas fa-calculator me-3"></i>الحدود والمقدار الجبري</h1>
+            <h1><i class="fas fa-calculator me-3"></i>الحدود والمقادير الجبرية</h1>
             <p class="lead">الصف السابع - الرياضيات</p>
         </div>
     </div>
@@ -1365,7 +1375,7 @@
     
     <!-- Next Lesson Button -->
     <div class="container next-lesson-section">
-        <a href="u2l3p1.html" class="next-lesson-btn">
+        <a href="u2l3p2.html" class="next-lesson-btn">
              التالي <i class="fas fa-arrow-left me-2"></i>
         </a>
     </div>
@@ -1861,3 +1871,4 @@
     </script>
 </body>
 </html>
+
