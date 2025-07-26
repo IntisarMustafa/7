@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إيجاد قيمة المقادير الجبرية - مثال 3</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax library for rendering mathematical symbols -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #34495E;
+            --accent: #E74C3C;
+            --light: #F8F9FA;
+            --success: #2ECC71;
+            --info: #5BC0DE;
+            --text-color: #333;
+            --border-color: #E0E0E0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f9fbfd 0%, #e6f0ff 100%);
+            color: var(--text-color);
+            line-height: 1.8;
+            padding-bottom: 50px;
+            overflow-x: hidden;
+            font-size: 1.1rem;
+            text-align: right;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 2.5rem 0;
+            border-radius: 0 0 25px 25px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 2.5rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+        }
+        
+        .header p.lead {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            border-radius: 18px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, var(--primary), #6AAAF7);
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            border-radius: 18px 18px 0 0 !important;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .arabic-example {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #4A90E2;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: right;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .arabic-example::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+        }
+        
+        .arabic-example h5 {
+            color: var(--primary);
+            border-bottom: 2px solid rgba(74, 144, 226, 0.3);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        .description {
+            color: var(--secondary);
+            line-height: 1.7;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 10px;
+            background-color: rgba(74, 144, 226, 0.08);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover {
+            background-color: rgba(74, 144, 226, 0.15);
+            transform: translateX(-5px);
+        }
+        
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 12px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex-grow: 1;
+        }
+        
+        .final-expression {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--primary);
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+        
+        /* Math container with LTR direction */
+        .math-container {
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            padding: 10px;
+            margin: 10px 0;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+        
+        .math-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .interactive-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+            border: 3px solid var(--primary);
+            animation: scaleIn 0.6s ease-out;
+        }
+        
+        .question-box {
+            background-color: #FDFDFD;
+            border-radius: 15px;
+            padding: 1.8rem;
+            margin: 1.5rem 0;
+            border-right: 5px solid var(--accent);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .question-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .expression-input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .expression-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.3);
+        }
+        
+        .check-btn {
+            background: linear-gradient(90deg, var(--accent), #C0392B);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+            display: inline-block;
+            margin: 1rem auto;
+        }
+        
+        .check-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.5);
+            filter: brightness(1.1);
+        }
+        
+        .check-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+        }
+        
+        .result-box {
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-top: 1.2rem;
+            display: none;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease-out;
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        .success {
+            background-color: rgba(46, 204, 113, 0.18);
+            border: 2px solid var(--success);
+            color: #27AE60;
+        }
+        
+        .error {
+            background-color: rgba(231, 76, 60, 0.18);
+            border: 2px solid var(--accent);
+            color: #C0392B;
+        }
+        
+        .variable-input {
+            width: 100px;
+            padding: 0.6rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            margin: 0 0.5rem;
+            direction: ltr;
+        }
+        
+        .variable-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(90deg, #1ABC9C, #16A085);
+            border: none;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
+            filter: brightness(1.1);
+        }
+        
+        .solution-box {
+            background-color: rgba(46, 204, 113, 0.1);
+            border: 2px solid var(--success);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .solution-step {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 6px;
+        }
+        
+        .solution-final {
+            font-weight: bold;
+            color: var(--success);
+            margin-top: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .hint {
+            background-color: rgba(91, 192, 222, 0.15);
+            border-right: 5px solid var(--info);
+            padding: 1.2rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.2rem 0;
+            color: #2F7C9B;
+            font-size: 1rem;
+            text-align: right;
+        }
+        
+        .nav-buttons-container { /* Adjusted for better centering and spacing */
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem; /* Space between buttons */
+            margin-top: 3rem; /* Space from content above */
+            margin-bottom: 2rem; /* Space before footer */
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        .nav-btn {
+            border: none;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(26, 188, 156, 0.4);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            min-width: 150px; /* Ensure buttons have a minimum width */
+            justify-content: center; /* Center text inside buttons */
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(26, 188, 156, 0.6);
+            filter: brightness(1.1);
+        }
+
+        .nav-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(26, 188, 156, 0.3);
+        }
+
+        .prev-btn {
+            background: linear-gradient(90deg, var(--secondary), #5D7A9C);
+            box-shadow: 0 8px 20px rgba(52, 73, 94, 0.4);
+        }
+
+        .prev-btn:hover {
+            box-shadow: 0 12px 25px rgba(52, 73, 94, 0.6);
+        }
+
+        .next-btn {
+            background: linear-gradient(90deg, #1ABC9C, #16A085);
+            box-shadow: 0 8px 20px rgba(26, 188, 156, 0.4);
+        }
+
+        .home-btn { /* New style for home button */
+            background: linear-gradient(90deg, #3498DB, #2980B9);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .home-btn:hover {
+            box-shadow: 0 12px 25px rgba(52, 152, 219, 0.6);
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+        
+        .text-right {
+            text-align: right !important;
+        }
+        
+        .mb-4, .mb-3, .mb-0, .mt-4, .mt-5 {
+            text-align: right;
+        }
+        
+        .form-label {
+            text-align: right;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .section-title {
+            position: relative;
+            padding-right: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: -10px;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .header p.lead {
+                font-size: 1.1rem;
+            }
+            .card {
+                margin-bottom: 1.2rem;
+                border-radius: 12px;
+            }
+            .card-header {
+                font-size: 1.2rem;
+                padding: 1rem 1.2rem;
+            }
+            .card-body {
+                padding: 1rem;
+            }
+            .arabic-example {
+                padding: 1.2rem;
+                margin: 1.2rem 0;
+            }
+            .arabic-example h5 {
+                font-size: 1.1rem;
+            }
+            .interactive-section {
+                padding: 1.8rem;
+                margin-top: 1.8rem;
+            }
+            .question-box {
+                padding: 1.2rem;
+                margin: 0.8rem 0;
+            }
+            .expression-input {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+            .check-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            .result-box {
+                padding: 0.8rem;
+                font-size: 0.85rem;
+            }
+            .hint {
+                padding: 1rem;
+            }
+            .footer {
+                padding: 1rem;
+            }
+            .nav-buttons-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .variable-input {
+                width: 80px;
+                padding: 0.5rem;
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .footer {
+            background: var(--secondary);
+            color: white;
+            text-align: center;
+            padding: 1.8rem;
+            margin-top: 3rem;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header text-center">
+        <div class="container">
+            <h1><i class="fas fa-calculator me-3"></i>إيجاد قيمة المقادير الجبرية</h1>
+            <p class="lead">الصف السابع - مثال 3: حساب قيمة المقادير عند إعطاء قيم للمتغيرات</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Example 3 Section -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-book-open me-2"></i>مثال 3: إيجاد قيمة مقدار جبري
+            </div>
+            <div class="card-body">
+                <p class="text-center mb-4">لإيجاد قيمة مقدار جبري، أستبدل القيم العددية بالمتغيرات، ثم أجرى العمليات بحسب أولوياتها</p>
+                
+                <!-- Example 1 -->
+                <div class="arabic-example">
+                    <h5><i class="fas fa-pencil-alt me-2"></i>1. \( x^2 - (8 + x) \) عندما \( x = 5 \)</h5>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="description">نعوض قيمة x في المقدار</div>
+                            <div class="math-container">
+                                <div class="math-title">التعويض:</div>
+                                \( 5^2 - (8 + 5) \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="description">نحسب قيمة ما داخل القوس أولاً</div>
+                            <div class="math-container">
+                                <div class="math-title">حساب القوس:</div>
+                                \( 25 - 13 \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="description">نقوم بعملية الطرح</div>
+                            <div class="math-container">
+                                <div class="math-title">النتيجة:</div>
+                                \( 25 - 13 = 12 \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="final-expression">الناتج النهائي: 12</div>
+                </div>
+                
+                <!-- Example 2 -->
+                <div class="arabic-example">
+                    <h5><i class="fas fa-pencil-alt me-2"></i>2. \( y^2 + 4y \) عندما \( y = -6 \)</h5>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="description">نعوض قيمة y في المقدار</div>
+                            <div class="math-container">
+                                <div class="math-title">التعويض:</div>
+                                \( (-6)^2 + 4 \times (-6) \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="description">نحسب الأسس والضرب أولاً</div>
+                            <div class="math-container">
+                                <div class="math-title">الحساب:</div>
+                                \( 36 + (-24) \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="description">نقوم بعملية الجمع</div>
+                            <div class="math-container">
+                                <div class="math-title">النتيجة:</div>
+                                \( 36 - 24 = 12 \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="final-expression">الناتج النهائي: 12</div>
+                </div>
+                
+                <!-- Example 3 -->
+                <div class="arabic-example">
+                    <h5><i class="fas fa-pencil-alt me-2"></i>3. \( (p^2 - 4p) - 5 \div d \) عندما \( p = 3, d = -1 \)</h5>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="description">نعوض قيم p و d في المقدار</div>
+                            <div class="math-container">
+                                <div class="math-title">التعويض:</div>
+                                \( (3^2 - 4 \times 3) - 5 \div (-1) \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="description">نحسب ما داخل القوس أولاً</div>
+                            <div class="math-container">
+                                <div class="math-title">حساب القوس:</div>
+                                \( (9 - 12) - 5 \div (-1) \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="description">نقسم 5 على -1</div>
+                            <div class="math-container">
+                                <div class="math-title">القسمة:</div>
+                                \( (-3) - (-5) \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="description">نطرح -5 من -3</div>
+                            <div class="math-container">
+                                <div class="math-title">النتيجة:</div>
+                                \( -3 + 5 = 2 \)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="final-expression">الناتج النهائي: 2</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Check Your Understanding Section -->
+        <div class="interactive-section">
+            <h3 class="text-center mb-4" style="color: var(--primary);">
+                <i class="fas fa-check-circle me-2"></i>أتحقق من فهمي
+            </h3>
+            <p class="text-center mb-4">أوجد قيمة كل من المقادير الآتية:</p>
+            
+            <div class="hint">
+                <h5><i class="fas fa-lightbulb me-2"></i>تلميح:</h5>
+                <p class="mb-0">استبدل المتغيرات بالقيم المعطاة، ثم اتبع أولويات العمليات: الأقواس، الأسس، الضرب والقسمة (من اليسار لليمين)، الجمع والطرح (من اليسار لليمين).</p>
+            </div>
+            
+            <!-- Question 1 (formerly Try it yourself 4) -->
+            <div class="question-box">
+                <h5><i class="fas fa-question-circle me-2"></i>1. \( y^2 + (4 - 2y) \) عندما \( y = 5 \)</h5>
+                <div class="mb-3">
+                    <label class="form-label">أدخل قيمة y:</label>
+                    <input type="number" class="variable-input" id="check-y1" value="5" disabled>
+                    <label class="form-label">الإجابة:</label>
+                    <input type="text" class="expression-input" id="check-expr1" placeholder="أدخل الناتج النهائي">
+                </div>
+                <div class="btn-container">
+                    <button class="check-btn" onclick="checkAnswer(1)">
+                        <i class="fas fa-check me-2"></i>تحقق من الإجابة
+                    </button>
+                </div>
+                <div class="result-box" id="result1"></div>
+            </div>
+            
+            <!-- Question 2 (formerly Try it yourself 5) -->
+            <div class="question-box">
+                <h5><i class="fas fa-question-circle me-2"></i>2. \( 8d - d^2 + 1 \) عندما \( d = 3 \)</h5>
+                <div class="mb-3">
+                    <label class="form-label">أدخل قيمة d:</label>
+                    <input type="number" class="variable-input" id="check-d2" value="3" disabled>
+                    <label class="form-label">الإجابة:</label>
+                    <input type="text" class="expression-input" id="check-expr2" placeholder="أدخل الناتج النهائي">
+                </div>
+                <div class="btn-container">
+                    <button class="check-btn" onclick="checkAnswer(2)">
+                        <i class="fas fa-check me-2"></i>تحقق من الإجابة
+                    </button>
+                </div>
+                <div class="result-box" id="result2"></div>
+            </div>
+            
+            <!-- Question 3 (formerly Try it yourself 6) -->
+            <div class="question-box">
+                <h5><i class="fas fa-question-circle me-2"></i>3. \( (2b - b^2) - d \div 4 \) عندما \( b = 6, d = 8 \)</h5>
+                <div class="mb-3">
+                    <label class="form-label">أدخل قيمة b:</label>
+                    <input type="number" class="variable-input" id="check-b3" value="6" disabled>
+                    <label class="form-label">أدخل قيمة d:</label>
+                    <input type="number" class="variable-input" id="check-d3" value="8" disabled>
+                    <label class="form-label">الإجابة:</label>
+                    <input type="text" class="expression-input" id="check-expr3" placeholder="أدخل الناتج النهائي">
+                </div>
+                <div class="btn-container">
+                    <button class="check-btn" onclick="checkAnswer(3)">
+                        <i class="fas fa-check me-2"></i>تحقق من الإجابة
+                    </button>
+                </div>
+                <div class="result-box" id="result3"></div>
+            </div>
+
+            <!-- Question 4 (formerly Question 1) -->
+            <div class="question-box">
+                <h5><i class="fas fa-question-circle me-2"></i>4. \( 12 \times d + d^2 - 1 \) عندما \( d = -6 \)</h5>
+                <div class="mb-3">
+                    <label class="form-label">أدخل قيمة d:</label>
+                    <input type="number" class="variable-input" id="check-d4" value="-6" disabled>
+                    <label class="form-label">الإجابة:</label>
+                    <input type="text" class="expression-input" id="check-expr4" placeholder="أدخل الناتج النهائي">
+                </div>
+                <div class="btn-container">
+                    <button class="check-btn" onclick="checkAnswer(4)">
+                        <i class="fas fa-check me-2"></i>تحقق من الإجابة
+                    </button>
+                </div>
+                <div class="result-box" id="result4"></div>
+            </div>
+            
+            <!-- Question 5 (formerly Question 2) -->
+            <div class="question-box">
+                <h5><i class="fas fa-question-circle me-2"></i>5. \( (3n + n^2) + 12 + m \) عندما \( n = 5, m = 4 \)</h5>
+                <div class="mb-3">
+                    <label class="form-label">أدخل قيمة n:</label>
+                    <input type="number" class="variable-input" id="check-n5" value="5" disabled>
+                    <label class="form-label">أدخل قيمة m:</label>
+                    <input type="number" class="variable-input" id="check-m5" value="4" disabled>
+                    <label class="form-label">الإجابة:</label>
+                    <input type="text" class="expression-input" id="check-expr5" placeholder="أدخل الناتج النهائي">
+                </div>
+                <div class="btn-container">
+                    <button class="check-btn" onclick="checkAnswer(5)">
+                        <i class="fas fa-check me-2"></i>تحقق من الإجابة
+                    </button>
+                </div>
+                <div class="result-box" id="result5"></div>
+            </div>
+            
+            <!-- Question 6 (formerly Question 3) -->
+            <div class="question-box">
+                <h5><i class="fas fa-question-circle me-2"></i>6. \( (3n - 1)^2 + 12 - m \) عندما \( n = 2, m = -1 \)</h5>
+                <div class="mb-3">
+                    <label class="form-label">أدخل قيمة n:</label>
+                    <input type="number" class="variable-input" id="check-n6" value="2" disabled>
+                    <label class="form-label">أدخل قيمة m:</label>
+                    <input type="number" class="variable-input" id="check-m6" value="-1" disabled>
+                    <label class="form-label">الإجابة:</label>
+                    <input type="text" class="expression-input" id="check-expr6" placeholder="أدخل الناتج النهائي">
+                </div>
+                <div class="btn-container">
+                    <button class="check-btn" onclick="checkAnswer(6)">
+                        <i class="fas fa-check me-2"></i>تحقق من الإجابة
+                    </button>
+                </div>
+                <div class="result-box" id="result6"></div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="next-btn" onclick="checkAllAnswers()">
+                    <i class="fas fa-check-circle me-2"></i>تحقق من جميع الإجابات
+                </button>
+            </div>
+        </div>
+        
+        <!-- Navigation Buttons Section -->
+        <div class="text-center mt-5">
+            <div class="d-flex justify-content-between align-items-center nav-buttons-container">
+                <a href="u2l3p2.html" class="nav-btn prev-btn">
+                    <i class="fas fa-arrow-right me-2"></i>السابق
+                </a>
+                <a href="u2l3p4.html" class="nav-btn next-btn">
+                    التالي<i class="fas fa-arrow-left ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>الرياضيات للصف السابع - كتاب الطالب | وحدة الجبر</p>
+            <p class="mb-0">مثال 3: إيجاد قيمة المقادير الجبرية</p>
+        </div>
+    </div>
+
+    <script>
+        // Function to check answers for "Check Your Understanding" section (now includes all interactive questions)
+        function checkAnswer(questionNum) {
+            const inputField = document.getElementById(`check-expr${questionNum}`);
+            const resultDiv = document.getElementById(`result${questionNum}`);
+            const answer = inputField.value.trim();
+            
+            let correctAnswer = 0;
+            let feedbackMessage = ''; // Variable to hold the correct answer message
+            
+            switch(questionNum) {
+                case 1: // Formerly Try it yourself 4
+                    correctAnswer = 5 * 5 + (4 - 2 * 5); // 25 + (4-10) = 25 - 6 = 19
+                    break;
+                case 2: // Formerly Try it yourself 5
+                    correctAnswer = 8 * 3 - 3 * 3 + 1; // 24 - 9 + 1 = 16
+                    break;
+                case 3: // Formerly Try it yourself 6
+                    correctAnswer = (2 * 6 - 6 * 6) - (8 / 4); // (12 - 36) - 2 = -24 - 2 = -26
+                    break;
+                case 4: // Formerly Question 1
+                    correctAnswer = 12 * (-6) + Math.pow(-6, 2) - 1; // -72 + 36 - 1 = -37
+                    break;
+                case 5: // Formerly Question 2
+                    correctAnswer = (3 * 5 + Math.pow(5, 2)) + 12 + 4; // (15+25)+12+4 = 40+12+4 = 56
+                    break;
+                case 6: // Formerly Question 3
+                    correctAnswer = Math.pow((3 * 2 - 1), 2) + 12 - (-1); // (5)^2 + 12 + 1 = 25+13 = 38
+                    break;
+            }
+            
+            if (parseFloat(answer) === correctAnswer) {
+                resultDiv.className = "result-box success";
+                resultDiv.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>
+                    إجابة صحيحة! أحسنت!
+                `;
+            } else {
+                feedbackMessage = `<p>الإجابة الصحيحة: ${correctAnswer}</p>`; // Set the correct answer message
+                resultDiv.className = "result-box error";
+                resultDiv.innerHTML = `
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    يوجد خطأ في الإجابة. حاول مرة أخرى!
+                    ${feedbackMessage}
+                `;
+            }
+            
+            resultDiv.style.display = "block";
+        }
+        
+        function checkAllAnswers() {
+            // Now checking all 6 questions
+            for (let i = 1; i <= 6; i++) {
+                checkAnswer(i);
+            }
+        }
+        
+        // Render MathJax symbols after page load
+        window.onload = function() {
+            MathJax.typeset();
+        }
+    </script>
+</body>
+</html>
