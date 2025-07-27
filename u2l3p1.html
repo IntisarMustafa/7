@@ -1257,9 +1257,9 @@
                 <p class="mb-0">تذكر أن الحدود هي الأجزاء المنفصلة في المقدار، المعاملات هي الأرقام المضروبة في المتغيرات، والثوابت هي الأرقام دون متغيرات.</p>
             </div>
             
-            <!-- Question 1 -->
+            <!-- Question 1 (originally Q3 from image) -->
             <div class="question-box">
-                <h5>1. $-18y$</h5>
+                <h5>1. $\frac{y^3}{2}$</h5>
                 <div class="mb-3">
                     <label class="form-label">الحدود:</label>
                     <input type="text" class="expression-input" id="q1-terms">
@@ -1276,9 +1276,9 @@
                 <div class="result-box" id="result1"></div>
             </div>
             
-            <!-- Question 2 -->
+            <!-- Question 2 (originally Q4 from image) -->
             <div class="question-box">
-                <h5>2. $3 - u^3$</h5>
+                <h5>2. $6$</h5>
                 <div class="mb-3">
                     <label class="form-label">الحدود:</label>
                     <input type="text" class="expression-input" id="q2-terms">
@@ -1295,9 +1295,9 @@
                 <div class="result-box" id="result2"></div>
             </div>
             
-            <!-- Question 3 -->
+            <!-- Question 3 (originally Q5 from image) -->
             <div class="question-box">
-                <h5>3. $xy^2$</h5>
+                <h5>3. $\frac{3}{4}xy - 1$</h5>
                 <div class="mb-3">
                     <label class="form-label">الحدود:</label>
                     <input type="text" class="expression-input" id="q3-terms">
@@ -1314,9 +1314,9 @@
                 <div class="result-box" id="result3"></div>
             </div>
             
-            <!-- Question 4 -->
+            <!-- Question 4 (originally Q6 from image) -->
             <div class="question-box">
-                <h5>4. $5$</h5>
+                <h5>4. $1.34 rw^2$</h5>
                 <div class="mb-3">
                     <label class="form-label">الحدود:</label>
                     <input type="text" class="expression-input" id="q4-terms">
@@ -1331,44 +1331,6 @@
                 </div>
                 <button class="check-btn" onclick="checkAnswer(4)">تحقق من الإجابة</button>
                 <div class="result-box" id="result4"></div>
-            </div>
-            
-            <!-- Question 5 -->
-            <div class="question-box">
-                <h5>5. $9x - 5y$</h5>
-                <div class="mb-3">
-                    <label class="form-label">الحدود:</label>
-                    <input type="text" class="expression-input" id="q5-terms">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">المعاملات:</label>
-                    <input type="text" class="expression-input" id="q5-coefficients">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">الثوابت:</label>
-                    <input type="text" class="expression-input" id="q5-constants">
-                </div>
-                <button class="check-btn" onclick="checkAnswer(5)">تحقق من الإجابة</button>
-                <div class="result-box" id="result5"></div>
-            </div>
-            
-            <!-- Question 6 -->
-            <div class="question-box">
-                <h5>6. $124$</h5>
-                <div class="mb-3">
-                    <label class="form-label">الحدود:</label>
-                    <input type="text" class="expression-input" id="q6-terms">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">المعاملات:</label>
-                    <input type="text" class="expression-input" id="q6-coefficients">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">الثوابت:</label>
-                    <input type="text" class="expression-input" id="q6-constants">
-                </div>
-                <button class="check-btn" onclick="checkAnswer(6)">تحقق من الإجابة</button>
-                <div class="result-box" id="result6"></div>
             </div>
         </div>
     </div>
@@ -1401,60 +1363,87 @@
             
             let correctTerms, correctCoefficients, correctConstants;
             
-            // Define correct answers for each question
+            // Define correct answers for each question based on the new image
             switch(questionNum) {
-                case 1:
-                    correctTerms = "-18y";
-                    correctCoefficients = "-18";
+                case 1: // Corresponds to image Q3: y^3/2
+                    correctTerms = "y^3/2";
+                    correctCoefficients = "1/2";
                     correctConstants = "لا يوجد";
                     break;
-                case 2:
-                    correctTerms = "3, -u^3"; // Corrected to match MathJax input
-                    correctCoefficients = "لا يوجد, -1";
-                    correctConstants = "3";
-                    break;
-                case 3:
-                    correctTerms = "xy^2"; // Corrected to match MathJax input
-                    correctCoefficients = "1";
-                    correctConstants = "لا يوجد";
-                    break;
-                case 4:
-                    correctTerms = "5";
+                case 2: // Corresponds to image Q4: 6
+                    correctTerms = "6";
                     correctCoefficients = "لا يوجد";
-                    correctConstants = "5";
+                    correctConstants = "6";
                     break;
-                case 5:
-                    correctTerms = "9x, -5y";
-                    correctCoefficients = "9, -5";
+                case 3: // Corresponds to image Q5: (3/4)xy - 1
+                    correctTerms = "(3/4)xy, -1"; 
+                    correctCoefficients = "3/4";
+                    correctConstants = "-1";
+                    break;
+                case 4: // Corresponds to image Q6: 1.34 rw^2
+                    correctTerms = "1.34rw^2";
+                    correctCoefficients = "1.34";
                     correctConstants = "لا يوجد";
-                    break;
-                case 6:
-                    correctTerms = "124";
-                    correctCoefficients = "لا يوجد";
-                    correctConstants = "124";
                     break;
             }
             
             // Normalize input for comparison (e.g., remove spaces, convert to lowercase if needed)
-            const normalizeInput = (str) => str.replace(/\s+/g, '').toLowerCase();
+            // This function is crucial for making the comparison robust against minor input variations.
+            const normalizeInput = (str) => {
+                // Replace common Arabic numerical separators with standard ones for consistency
+                str = str.replace(/،/g, ','); // Replace Arabic comma with English comma
+                str = str.replace(/ /g, ''); // Remove all spaces
+                str = str.replace(/\s+/g, ''); // Remove any remaining whitespace
+                str = str.replace(/³/g, '^3'); // Replace superscript 3 with ^3
+                str = str.replace(/²/g, '^2'); // Replace superscript 2 with ^2
+                str = str.toLowerCase(); // Convert to lowercase
+                return str;
+            };
 
-            const termsCorrect = normalizeInput(termsInput.value) === normalizeInput(correctTerms);
-            const coefficientsCorrect = normalizeInput(coefficientsInput.value) === normalizeInput(correctCoefficients);
-            const constantsCorrect = normalizeInput(constantsInput.value) === normalizeInput(correctConstants);
+            // Function to check if the input matches the correct answer, considering "لا يوجد"
+            const isCorrect = (inputValue, correctValue) => {
+                const normalizedInput = normalizeInput(inputValue);
+                const normalizedCorrect = normalizeInput(correctValue);
+
+                if (normalizedCorrect === "لايوجد") {
+                    // If the correct answer is "لا يوجد", accept empty string or "0" or "لا يوجد" itself
+                    return normalizedInput === "" || normalizedInput === "0" || normalizedInput === "لايوجد";
+                } else {
+                    return normalizedInput === normalizedCorrect;
+                }
+            };
+
+            const termsCorrect = isCorrect(termsInput.value, correctTerms);
+            const coefficientsCorrect = isCorrect(coefficientsInput.value, correctCoefficients);
+            const constantsCorrect = isCorrect(constantsInput.value, correctConstants);
             
+            // Build the correct answers display string
+            let correctAnswersDisplay = "";
+            if (correctTerms !== "لا يوجد") {
+                correctAnswersDisplay += `الحدود (${correctTerms})`;
+            }
+            if (correctCoefficients !== "لا يوجد") {
+                if (correctAnswersDisplay !== "") correctAnswersDisplay += ", ";
+                correctAnswersDisplay += `المعاملات (${correctCoefficients})`;
+            }
+            if (correctConstants !== "لا يوجد") {
+                if (correctAnswersDisplay !== "") correctAnswersDisplay += ", ";
+                correctAnswersDisplay += `الثوابت (${correctConstants})`;
+            }
+
             if (termsCorrect && coefficientsCorrect && constantsCorrect) {
                 resultDiv.className = "result-box success";
                 resultDiv.innerHTML = `
                     <i class="fas fa-check-circle me-2"></i>
                     إجابة صحيحة! أحسنت!
-                    <div class="mt-2">الإجابات الصحيحة: الحدود (${correctTerms}), المعاملات (${correctCoefficients}), الثوابت (${correctConstants})</div>
+                    <div class="mt-2">الإجابات الصحيحة: ${correctAnswersDisplay}</div>
                 `;
             } else {
                 resultDiv.className = "result-box error";
                 resultDiv.innerHTML = `
                     <i class="fas fa-exclamation-circle me-2"></i>
                     يوجد خطأ في الإجابة. حاول مرة أخرى!
-                    <div class="mt-2">الإجابات الصحيحة: الحدود (${correctTerms}), المعاملات (${correctCoefficients}), الثوابت (${correctConstants})</div>
+                    <div class="mt-2">الإجابات الصحيحة: ${correctAnswersDisplay}</div>
                 `;
             }
             
@@ -1871,3 +1860,4 @@
     </script>
 </body>
 </html>
+
