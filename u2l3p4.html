@@ -307,6 +307,11 @@
             filter: brightness(1.1);
         }
         
+        .calculate-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(26, 188, 156, 0.3);
+        }
+        
         .solution-box {
             background-color: rgba(46, 204, 113, 0.1);
             border: 2px solid var(--success);
@@ -865,16 +870,42 @@
     </div>
 
     <script>
-        // Helper function to normalize strings for comparison (remove spaces, convert to lowercase)
+        // Helper function to normalize strings for comparison (remove spaces, convert to lowercase, handle superscripts)
         function normalizeString(str) {
-            return str.toLowerCase().replace(/\s/g, '');
+            str = str.replace(/،/g, ','); // Replace Arabic comma with English comma
+            str = str.replace(/ /g, ''); // Remove all spaces
+            str = str.replace(/\s+/g, ''); // Remove any remaining whitespace
+            str = str.replace(/³/g, '^3'); // Replace superscript 3 with ^3
+            str = str.replace(/²/g, '^2'); // Replace superscript 2 with ^2
+            str = str.toLowerCase(); // Convert to lowercase
+            return str;
         }
+
+        // Helper function to check if the input matches the correct answer, considering "لا يوجد"
+        const isCorrectInput = (inputValue, correctValue) => {
+            const normalizedInput = normalizeString(inputValue);
+            const normalizedCorrect = normalizeString(correctValue);
+
+            if (normalizedCorrect === "لايوجد") {
+                // If the correct answer is "لا يوجد", accept empty string or "0" or "لا يوجد" itself
+                return normalizedInput === "" || normalizedInput === "0" || normalizedInput === "لايوجد";
+            } else {
+                return normalizedInput === normalizedCorrect;
+            }
+        };
 
         // Helper function to compare arrays (order-independent)
         function compareArrays(arr1, arr2) {
             if (arr1.length !== arr2.length) return false;
-            const sortedArr1 = [...arr1].sort();
-            const sortedArr2 = [...arr2].sort();
+            // Filter out empty strings from user input before sorting
+            const filteredArr1 = arr1.filter(s => s !== "");
+            const filteredArr2 = arr2.filter(s => s !== "");
+
+            if (filteredArr1.length !== filteredArr2.length) return false;
+
+            const sortedArr1 = [...filteredArr1].sort((a, b) => normalizeString(a).localeCompare(normalizeString(b)));
+            const sortedArr2 = [...filteredArr2].sort((a, b) => normalizeString(a).localeCompare(normalizeString(b)));
+            
             for (let i = 0; i < sortedArr1.length; i++) {
                 if (normalizeString(sortedArr1[i]) !== normalizeString(sortedArr2[i])) {
                     return false;
@@ -885,9 +916,9 @@
 
         // Function to check answers for all questions
         function checkQuestion(questionNum) {
-            let isCorrect = false;
+            let correct = true; // Use 'correct' to track overall correctness for the current question
             let resultDiv = document.getElementById(`result${questionNum}`);
-            let feedbackMessage = '';
+            let feedbackMessageParts = []; // Array to build feedback message
 
             if (questionNum >= 1 && questionNum <= 6) {
                 // Questions for identifying terms, coefficients, constants
@@ -932,25 +963,29 @@
                         break;
                 }
 
+                // Split user input into arrays, handling empty inputs for "لا يوجد" cases
                 const userTerms = termsInput.split(',').map(s => s.trim()).filter(s => s !== '');
                 const userCoefficients = coefficientsInput.split(',').map(s => s.trim()).filter(s => s !== '');
                 const userConstants = constantsInput.trim();
 
-                const termsMatch = compareArrays(userTerms, correctTerms);
-                const coefficientsMatch = compareArrays(userCoefficients, correctCoefficients);
-                const constantsMatch = normalizeString(userConstants) === normalizeString(correctConstants);
+                // Check each part using the isCorrectInput helper
+                const termsMatch = isCorrectInput(userTerms.join(','), correctTerms.join(',')); // Join for string comparison
+                const coefficientsMatch = isCorrectInput(userCoefficients.join(','), correctCoefficients.join(','));
+                const constantsMatch = isCorrectInput(userConstants, correctConstants);
                 
-                isCorrect = termsMatch && coefficientsMatch && constantsMatch;
+                correct = termsMatch && coefficientsMatch && constantsMatch;
 
-                if (!isCorrect) {
-                    feedbackMessage = `
-                        <p>الإجابات الصحيحة:</p>
-                        <p>الحدود: ${correctTerms.join(', ')}</p>
-                        <p>المعاملات: ${correctCoefficients.join(', ')}</p>
-                        <p>الثوابت: ${correctConstants}</p>
-                    `;
+                // Build feedback message based on correct answers, excluding "لا يوجد"
+                if (correctTerms[0] !== "لا يوجد") {
+                    feedbackMessageParts.push(`الحدود: ${correctTerms.join(', ')}`);
                 }
-
+                if (correctCoefficients[0] !== "لا يوجد") {
+                    feedbackMessageParts.push(`المعاملات: ${correctCoefficients.join(', ')}`);
+                }
+                if (correctConstants !== "لا يوجد") {
+                    feedbackMessageParts.push(`الثوابت: ${correctConstants}`);
+                }
+                
             } else if (questionNum >= 7 && questionNum <= 9) {
                 // Questions for writing algebraic expressions
                 const expressionInput = document.getElementById(`q${questionNum}-expression`).value.trim();
@@ -967,12 +1002,10 @@
                         possibleAnswers = ["15-3b"];
                         break;
                 }
-                isCorrect = possibleAnswers.some(ans => normalizeString(expressionInput) === normalizeString(ans));
+                correct = possibleAnswers.some(ans => normalizeString(expressionInput) === normalizeString(ans));
                 
-                if (!isCorrect) {
-                    feedbackMessage = `
-                        <p>الإجابة الصحيحة المحتملة: ${possibleAnswers[0]}</p>
-                    `;
+                if (!correct) {
+                    feedbackMessageParts.push(`الإجابة الصحيحة المحتملة: ${possibleAnswers[0]}`);
                 }
 
             } else if (questionNum >= 10 && questionNum <= 12) {
@@ -991,12 +1024,10 @@
                         correctAnswer = Math.pow((3 * 2 - 1), 2) + 12 - (-1); // (5)^2 + 12 + 1 = 25 + 13 = 38
                         break;
                 }
-                isCorrect = parseFloat(answerInput) === correctAnswer;
+                correct = parseFloat(answerInput) === correctAnswer;
 
-                if (!isCorrect) {
-                    feedbackMessage = `
-                        <p>الإجابة الصحيحة: ${correctAnswer}</p>
-                    `;
+                if (!correct) {
+                    feedbackMessageParts.push(`الإجابة الصحيحة: ${correctAnswer}`);
                 }
 
             } else if (questionNum === 13) {
@@ -1010,17 +1041,15 @@
                 const expressionMatch = correctExpressionOptions.some(ans => normalizeString(expressionInput) === normalizeString(ans));
                 const costMatch = parseFloat(costInput) === correctCost;
 
-                isCorrect = expressionMatch && costMatch;
+                correct = expressionMatch && costMatch;
 
-                if (!isCorrect) {
-                    feedbackMessage = `
-                        <p>الإجابة الصحيحة للمقدار الجبري: ${correctExpressionOptions[0]}</p>
-                        <p>الإجابة الصحيحة للتكلفة: ${correctCost}</p>
-                    `;
+                if (!correct) {
+                    feedbackMessageParts.push(`الإجابة الصحيحة للمقدار الجبري: ${correctExpressionOptions[0]}`);
+                    feedbackMessageParts.push(`الإجابة الصحيحة للتكلفة: ${correctCost}`);
                 }
             }
 
-            if (isCorrect) {
+            if (correct) {
                 resultDiv.className = "result-box success";
                 resultDiv.innerHTML = `
                     <i class="fas fa-check-circle me-2"></i>
@@ -1031,7 +1060,7 @@
                 resultDiv.innerHTML = `
                     <i class="fas fa-exclamation-circle me-2"></i>
                     يوجد خطأ في الإجابة. حاول مرة أخرى!
-                    ${feedbackMessage}
+                    <div class="mt-2">${feedbackMessageParts.join('<br>')}</div>
                 `;
             }
             resultDiv.style.display = "block";
@@ -1050,3 +1079,4 @@
     </script>
 </body>
 </html>
+
