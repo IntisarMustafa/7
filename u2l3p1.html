@@ -458,14 +458,13 @@
 
         .main-content {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column; /* Changed to column for vertical stacking */
             gap: 1.5rem; /* Consistent gap */
             padding-top: 1.5rem; /* Add padding to separate from header */
         }
         
         .court-container {
-            flex: 2; /* Give court more space */
-            min-width: 300px;
+            width: 100%; /* Take full width in column layout */
             background: transparent; /* Make background transparent to blend with game-section */
             border-radius: 15px;
             padding: 0; /* Remove internal padding, rely on court styling */
@@ -697,13 +696,12 @@
         
         /* Updated math-container styling */
         .math-container {
-            flex: 1; /* Math problem takes less space */
-            min-width: 300px;
+            width: 100%; /* Take full width in column layout */
             background: transparent; /* Make background transparent to blend with game-section */
             color: var(--text-color);
             padding: 0; /* Remove internal padding, rely on problem/solution styling */
             border-radius: 15px;
-            box-shadow: none; /* Remove shadow */
+            box-shadow: none; /* Removed shadow */
             border: none; /* Ensure no extra borders */
             display: flex;
             flex-direction: column;
@@ -1070,6 +1068,7 @@
                 </div>
                     
                 <div class="main-content">
+                    <!-- Court Container - Placed first for "above" layout -->
                     <div class="court-container">
                         <!-- Removed the court title as requested -->
                         <div class="basketball-court">
@@ -1114,6 +1113,7 @@
                     </div>
                     
                     <!-- The math-container now has the sky blue styling and directly contains the problem and solution content -->
+                    <!-- Math Container - Placed second for "below" layout -->
                     <div class="math-container">
                         <!-- Removed the math title as requested -->
                         <div class="problem-text">
