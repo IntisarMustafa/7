@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جمع المقادير الجبرية وتبسيطها</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <style>
+        /* إعادة تعيين أساسية وتحديد الخط */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* تصميم الخلفية للجسم */
+        body {
+            background: #ffffff;
+            color: #1a237e;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* حاوية المحتوى الرئيسية */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            margin: 0 auto;
+        }
+
+        /* عنوان الصفحة */
+        .title {
+            text-align: center;
+            margin-bottom: 30px;
+            z-index: 10;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(to right, #0d47a1, #1976d2, #0d47a1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #283593;
+        }
+
+        /* تصميم الدرس */
+        .lesson-content {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.1);
+            border: 1px solid #e3f2fd;
+        }
+
+        .lesson-title {
+            font-size: 2.2rem;
+            color: #0d47a1;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #bbdefb;
+        }
+
+        .concept-box {
+            background: #e3f2fd;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #bbdefb;
+        }
+
+        .concept-title {
+            font-size: 1.6rem;
+            color: #0d47a1;
+            margin-bottom: 15px;
+        }
+
+        .concept-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #1a237e;
+        }
+
+        .term {
+            color: #1976d2;
+            font-weight: bold;
+        }
+
+        .example-box {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #c8e6c9;
+        }
+
+        .example-title {
+            font-size: 1.5rem;
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .example-content {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #1b5e20;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .math-expression {
+            font-family: 'Cambria Math', serif;
+            font-size: 1.5rem;
+            background: #f5f5f5;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 10px 0;
+            color: #0d47a1;
+            border: 1px solid #bbdefb;
+        }
+
+        /* حاوية المحيط الرئيسية */
+        .ocean-container {
+            width: 100%;
+            height: 50vh;
+            max-height: 500px;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(13, 71, 161, 0.15);
+            border: 2px solid #bbdefb;
+            clip-path: polygon(0 15%, 100% 15%, 100% 100%, 0 100%);
+            margin: 20px 0;
+        }
+
+        /* المحيط نفسه */
+        .ocean {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #2196f3, #1976d2, #0d47a1);
+        }
+
+        /* الأمواج المتحركة */
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 12%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".4" fill="%230d47a1"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".6" fill="%231976d2"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%232196f3"/></svg>');
+            background-size: 50% 100%;
+            animation: wave 20s linear infinite;
+            opacity: 0.8;
+        }
+
+        .wave-2 {
+            animation: wave 15s linear infinite reverse;
+            opacity: 0.6;
+            height: 10%;
+            bottom: 5%;
+        }
+
+        /* حركة الأمواج */
+        @keyframes wave {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* نقاط المثلث (تم زيادة حجمها وظلها) */
+        .point {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: #d32f2f;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(211, 47, 47, 0.5);
+            z-index: 10;
+            transform: translate(-50%, -50%);
+        }
+
+        /* تأثير النبض الخاص بنقطة برمودا */
+        .point.bermuda {
+            animation: bermuda-pulse 2s infinite alternate;
+        }
+
+        @keyframes bermuda-pulse {
+            0% {
+                box-shadow: 0 0 15px rgba(211, 47, 47, 0.5);
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                box-shadow: 0 0 30px rgba(211, 47, 47, 0.8);
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+
+        /* تسميات النقاط */
+        .point-label {
+            position: absolute;
+            color: #0d47a1;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background: #ffffff;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid #bbdefb;
+            box-shadow: 0 0 10px rgba(13, 71, 161, 0.1);
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        /* تصميم الطائرة بالإيموجي */
+        .plane {
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            font-size: 3.5rem;
+            animation: fly 20s infinite;
+            z-index: 5;
+            transform-origin: center;
+            filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3));
+        }
+
+        /* حركة الطائرة */
+        @keyframes fly {
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            20% {
+                transform: translate(15vw, 15vh) rotate(5deg);
+            }
+            40% {
+                transform: translate(60vw, 0vh) rotate(-10deg);
+            }
+            60% {
+                transform: translate(50vw, 30vh) rotate(8deg);
+            }
+            80% {
+                transform: translate(10vw, 10vh) rotate(-5deg);
+            }
+        }
+
+        /* أزرار التحكم */
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            z-index: 10;
+            justify-content: center;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: #0d47a1;
+            border: none;
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(13, 71, 161, 0.2);
+        }
+
+        .control-btn:hover {
+            background: #1565c0;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(13, 71, 161, 0.3);
+        }
+
+        /* زر التالي الجديد */
+        .next-btn {
+            background: #2e7d32;
+            margin-top: 30px;
+        }
+
+        .next-btn:hover {
+            background: #388e3c;
+        }
+
+        /* أيقونات الغموض العائمة */
+        .mystery-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .mystery-icon {
+            position: absolute;
+            font-size: 3rem;
+            color: rgba(25, 118, 210, 0.1);
+            animation: float-icon 15s infinite ease-in-out;
+        }
+
+        .mystery-icon:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .mystery-icon:nth-child(2) {
+            top: 70%;
+            right: 15%;
+            animation-delay: -3s;
+        }
+
+        .mystery-icon:nth-child(3) {
+            bottom: 30%;
+            left: 25%;
+            animation-delay: -5s;
+        }
+
+        .mystery-icon:nth-child(4) {
+            top: 40%;
+            right: 25%;
+            animation-delay: -7s;
+        }
+
+        .mystery-icon:nth-child(5) {
+            bottom: 20%;
+            right: 30%;
+            animation-delay: -9s;
+        }
+
+        /* حركة أيقونات الغموض */
+        @keyframes float-icon {
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.1;
+            }
+            25% {
+                transform: translate(30px, -40px) rotate(15deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-20px, 30px) rotate(-10deg);
+                opacity: 0.2;
+            }
+            75% {
+                transform: translate(40px, 20px) rotate(5deg);
+                opacity: 0.4;
+            }
+        }
+
+        /* تأثير العمق */
+        .depth-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 30%, rgba(255, 255, 255, 0.8) 100%);
+            pointer-events: none;
+        }
+
+        /* فقاعات الغموض */
+        .bubble {
+            position: absolute;
+            background: rgba(33, 150, 243, 0.3);
+            border-radius: 50%;
+            animation: bubble-rise 10s infinite ease-in;
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
+        }
+
+        /* حركة الفقاعات */
+        @keyframes bubble-rise {
+            0% {
+                transform: translateY(0) scale(0.1);
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* ومضات ضوئية غامضة */
+        .light-flash {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(33, 150, 243, 0.2) 0%, transparent 70%);
+            opacity: 0;
+            animation: flash 15s infinite;
+            pointer-events: none;
+        }
+
+        /* حركة الومضات */
+        @keyframes flash {
+            0%,
+            100% {
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.6;
+            }
+            10% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0;
+            }
+            55% {
+                opacity: 0.4;
+            }
+            60% {
+                opacity: 0;
+            }
+        }
+
+        /* انعكاس الماء */
+        .water-reflection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 60%, rgba(25, 118, 210, 0.05) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* سطح الماء */
+        .water-surface {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="rgba(25,118,210,0.1)" stroke-width="1" stroke-dasharray="5,5"/></svg>');
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* تأثير الاختفاء */
+        .disappear-effect {
+            position: absolute;
+            top: 40%;
+            left: 45%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(33, 150, 243, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: disappear 10s infinite;
+            pointer-events: none;
+            z-index: 8;
+        }
+
+        /* حركة الاختفاء */
+        @keyframes disappear {
+            0%,
+            100% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+        }
+
+        /* SVG للكتل الأرضية */
+        .landmasses-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+        }
+
+        .landmass {
+            fill: #4caf50;
+            stroke: #388e3c;
+            stroke-width: 1;
+        }
+
+        /* تسميات الكتل الأرضية */
+        .land-label {
+            position: absolute;
+            color: #0d47a1;
+            font-weight: bold;
+            font-size: 0.9rem;
+            background: #ffffff;
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid #bbdefb;
+            box-shadow: 0 0 5px rgba(13, 71, 161, 0.1);
+            z-index: 9;
+            white-space: nowrap;
+        }
+
+        /* إضافة نمط لعنصر canvas */
+        #triangleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9;
+        }
+
+        /* التجاوب مع أحجام الشاشات المختلفة */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .ocean-container {
+                height: 40vh;
+            }
+
+            .plane {
+                font-size: 2.5rem;
+            }
+
+            .land-label {
+                font-size: 0.7rem;
+                padding: 3px 8px;
+            }
+            
+            .point-label {
+                font-size: 1rem;
+                padding: 5px 15px;
+            }
+            
+            .control-btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+
+        /* كود البراميل الجبرية */
+        .algebra-container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.1);
+            border: 1px solid #e3f2fd;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #bbdefb;
+            font-size: 1rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+            color: #0d47a1;
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .barrels-container, .third-box {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 140px;
+            border: 3px dashed #4caf50;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .third-box {
+            border-color: #f57c00;
+            background: #fff3e0;
+            min-height: 180px;
+        }
+
+        .section-title {
+            color: #2e7d32;
+            font-size: 1.3rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .third-box .section-title {
+            color: #f57c00;
+            font-size: 1.4rem;
+        }
+
+        .barrels-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .barrel {
+            width: 65px;
+            height: 85px;
+            border-radius: 10px 10px 45px 45px;
+            position: relative;
+            cursor: grab;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: #ffffff;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 3px solid;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .barrel-n {
+            background: linear-gradient(to bottom, #795548, #5d4037);
+            border-color: #4e342e;
+        }
+
+        .barrel-d {
+            background: linear-gradient(to bottom, #5e35b1, #4527a0);
+            border-color: #311b92;
+        }
+
+        .barrel:hover {
+            transform: scale(1.08);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .barrel:active {
+            cursor: grabbing;
+            transform: scale(1.08);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25);
+        }
+
+        .barrel::before, .barrel::after {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 10px;
+            left: -10%;
+        }
+
+        .barrel-n::before, .barrel-n::after {
+            background: #4e342e;
+        }
+
+        .barrel-d::before, .barrel-d::after {
+            background: #311b92;
+        }
+
+        .barrel::before {
+            top: 25%;
+        }
+
+        .barrel::after {
+            top: 65%;
+        }
+
+        .third-box-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            min-height: 140px;
+            padding: 15px;
+        }
+
+        .third-box-expression {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #0d47a1;
+            background: #e3f2fd;
+            padding: 12px 20px;
+            border-radius: 12px;
+            min-width: 180px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 2px solid #bbdefb;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            background: linear-gradient(to bottom, #0d47a1, #1565c0);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 8px rgba(13, 71, 161, 0.2);
+            min-width: 160px;
+            flex: 1;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(13, 71, 161, 0.3);
+        }
+
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(13, 71, 161, 0.2);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            min-height: 40px;
+            color: #0d47a1;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f5f5f5;
+        }
+
+        .examples {
+            display: flex;
+            flex-direction: column;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .example-box {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 15px;
+            border: 2px solid #bbdefb;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .example-title {
+            color: #1976d2;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .example-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #0d47a1;
+        }
+
+        .variables-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .barrel-counter {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            margin: 0 5px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .third-box-barrels {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .third-box-barrel {
+            transform: scale(0.95);
+        }
+
+        .dragging {
+            opacity: 0.8;
+            transform: scale(1.15);
+            z-index: 100;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .third-box-active {
+            background: #ffecb3 !important;
+            border: 3px dashed #ffa000;
+        }
+
+        .barrel-counter-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .counter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            background: #f5f5f5;
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            color: #0d47a1;
+        }
+
+        .counter-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .counter-icon.n {
+            background: #5d4037;
+        }
+
+        .counter-icon.d {
+            background: #4527a0;
+        }
+
+        .drop-instruction {
+            margin-top: 15px;
+            padding: 10px;
+            background: #ffecb3;
+            border-radius: 10px;
+            border: 2px dashed #ffa000;
+            font-size: 1.1rem;
+            color: #f57c00;
+        }
+
+        /* تحسينات للرموز الرياضية */
+        .katex-display {
+            display: inline-block;
+            margin: 0;
+        }
+
+        .katex {
+            font-size: 1.6rem !important;
+        }
+        
+        /* منطقة فلوريدا الخضراء */
+        .florida-area {
+            position: absolute;
+            width: 18%;
+            height: 40%;
+            left: 8%;
+            top: 15%;
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #388e3c;
+            border-radius: 10px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        
+        .florida-area::after {
+            content: "فلوريدا";
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-shadow: 0 0 5px white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mystery-icons">
+        <div class="mystery-icon">❓</div>
+        <div class="mystery-icon">🌀</div>
+        <div class="mystery-icon">🌪️</div>
+        <div class="mystery-icon">💫</div>
+        <div class="mystery-icon">🔍</div>
+    </div>
+    <div class="depth-effect"></div>
+    <div class="light-flash"></div>
+    <div class="water-reflection"></div>
+    <div class="water-surface"></div>
+    <div class="disappear-effect"></div>
+    
+    <div class="container">
+        <!-- عنوان الدرس -->
+        <div class="title">
+            <h1>جمع المقادير الجبرية وتبسيطها</h1>
+            <p class="subtitle">استكشف عالم الجبر من خلال مثلث برمودا والبراميل التفاعلية</p>
+        </div>
+        
+        <!-- قسم استكشف: مثلث برمودا -->
+        <div class="lesson-content">
+            <h2 class="lesson-title">استكشف: مثلث برمودا</h2>
+            <div class="concept-box">
+                <div class="concept-title">السؤال الاستكشافي</div>
+                <div class="concept-content">
+                    مثلث برمودا منطقة جغرافية على شكل مثلث متطابق الأضلاع في المحيط الأطلسي.
+                    إذا عبرنا عن طول الضلع الواحد بالمقدار الجبري \( s = 600 \)، فما محيط المثلث بدلالة؟
+                </div>
+            </div>
+            
+            <div class="ocean-container" id="oceanContainer">
+                <div class="ocean"></div>
+                <div class="wave"></div>
+                <div class="wave wave-2"></div>
+                <!-- عنصر Canvas لرسم الخطوط -->
+                <canvas id="triangleCanvas"></canvas>
+                <!-- SVG للكتل الأرضية -->
+                <svg class="landmasses-svg" viewBox="0 0 100 100">
+                    <!-- أمريكا الشمالية وفلوريدا -->
+                    <path class="landmass" d="M5 0 L5 10 L12 12 L15 11 L18 13 L20 10 L23 11 L25 10 L27 12 L28 15 L26 17 L25 20 L22 22 L20 25 L18 27 L15 30 L10 35 L8 38 L8 40 L10 42 L13 44 L15 45 L17 48 L15 50 L10 50 L8 48 L6 45 L5 42 L5 40 L7 38 L7 35 L5 32 L3 30 L0 25 L0 0 Z" />
+                    <!-- كوبا -->
+                    <path class="landmass" d="M30 65 Q45 60 60 65 L65 67 Q68 70 65 72 Q60 75 55 75 L45 74 Q40 73 35 72 Z" />
+                    <!-- جزر الباهاماس -->
+                    <path class="landmass" d="M30 45 L32 46 L35 45 L33 44 Z" />
+                    <path class="landmass" d="M35 48 L37 49 L40 48 L38 47 Z" />
+                    <!-- هيسبانيولا (هايتي وجمهورية الدومينيكان) -->
+                    <path class="landmass" d="M60 70 Q65 72 70 70 Q75 68 75 72 Q70 75 65 75 Z" />
+                    <path class="landmass" d="M68 73 Q72 75 75 73 Q78 71 80 75 Q75 78 70 78 Z" />
+                    <!-- جامايكا -->
+                    <path class="landmass" d="M35 80 Q40 82 45 80 Q50 78 45 77 Q40 76 35 80 Z" />
+                    <!-- بورتوريكو (جزيرة صغيرة) -->
+                    <path class="landmass" d="M85 82 Q88 85 90 82 Q92 80 90 78 Q87 76 85 82 Z" />
+                </svg>
+                <!-- نقاط المثلث -->
+                <div class="point miami" id="miamiPoint"></div>
+                <div class="point bermuda" id="bermudaPoint"></div>
+                <div class="point puerto-rico" id="puertoRicoPoint"></div>
+                <!-- تسميات النقاط -->
+                <div class="point-label" id="miamiLabel">ميامي، فلوريدا</div>
+                <div class="point-label" id="bermudaLabel">برمودا</div>
+                <div class="point-label" id="puertoRicoLabel">بورتوريكو</div>
+                <!-- تسميات الكتل الأرضية -->
+                <div class="land-label" id="usaLabel">الولايات المتحدة</div>
+                <div class="land-label" id="floridaLabel">فلوريدا</div>
+                <div class="land-label" id="cubaLabel">كوبا</div>
+                <div class="land-label" id="bahamasLabel">الباهاماس</div>
+                <div class="land-label" id="haitiLabel">هايتي</div>
+                <div class="land-label" id="jamaicaLabel">جامايكا</div>
+                <div class="land-label" id="puertoRicoLandLabel">بورتوريكو</div>
+                <div class="plane" id="plane">✈️</div>
+                
+                <!-- منطقة فلوريدا الخضراء -->
+                <div class="florida-area"></div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" id="resetBtn">
+                    <i class="fas fa-sync-alt"></i> إعادة التشغيل
+                </button>
+                <button class="control-btn" id="speedBtn">
+                    <i class="fas fa-tachometer-alt"></i> تغيير السرعة
+                </button>
+                <button class="control-btn" id="addBtn">
+                    <i class="fas fa-plus"></i> إضافة طائرة
+                </button>
+            </div>
+        </div>
+        
+        <!-- قسم فكرة الدرس -->
+        <div class="lesson-content">
+            <h2 class="lesson-title">فكرة الدرس: تبسيط المقادير الجبرية</h2>
+            
+            <div class="concept-box">
+                <div class="concept-title">الحدود الجبرية المتشابهة</div>
+                <div class="concept-content">
+                    <span class="term">الحدود الجبرية المتشابهة (algebraic like terms)</span> هي حدود تحتوي على المتغيرات نفسها، وبالأسس نفسها.
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <div class="example-title">أمثلة على الحدود المتشابهة وغير المتشابهة</div>
+                <div class="example-content">
+                    <p>حدود متشابهة: \( x, 34x, -5x \)</p>
+                    <p>حدود غير متشابهة: \( x, x^3, x^5 \)</p>
+                    <p>حدود متشابهة: \( 17xy, -28xy, xy \)</p>
+                    <p>حدود غير متشابهة: \( 17, xy, xy^5 \)</p>
+                </div>
+            </div>
+            
+            <div class="concept-box">
+                <div class="concept-title">كيفية تبسيط المقادير الجبرية</div>
+                <div class="concept-content">
+                    يمكننا جمع أي حدين متشابهين أو طرحهما، وذلك بجمع معامليهما أو طرحهما فقط وإبقاء المتغيرات.
+                    <div class="math-expression">
+                        \( 3x + 4x = (3 + 4)x = 7x \)
+                    </div>
+                    <div class="math-expression">
+                        \( 4x - 3x = (4 - 3)x = x \)
+                    </div>
+                    <div class="math-expression">
+                        \( 9y^5 - y^5 = (9 - 1)y^5 = 8y^5 \)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-box">
+                <div class="concept-title">أبسط صورة للمقدار الجبري</div>
+                <div class="concept-content">
+                    يكون المقدار الجبري في أبسط صورة (simplest form) إذا لم يحتوي على أي حدود متشابهة.
+                </div>
+            </div>
+        </div>
+        
+        <!-- قسم البراميل الجبرية التفاعلي -->
+        <div class="algebra-container">
+            <h2 class="lesson-title">التمرين التفاعلي: تبسيط المقادير الجبرية</h2>
+            
+            <div class="instructions">
+                <p>اسحب البراميل إلى المستطيل البرتقالي لبناء تعبير جبري</p>
+                <p>البراميل البنية: المتغير n | البراميل البنفسجية: المتغير d</p>
+                <p style="color: #f57c00; font-weight: bold; font-size: 1.1rem;">تم زيادة مساحة الإفلات لتكون أسهل في الاستخدام</p>
+            </div>
+            
+            <div class="variables-container">
+                <div class="barrels-container">
+                    <h3 class="section-title">براميل المتغيرات</h3>
+                    <div class="barrels-row" id="originalBarrels">
+                        <div class="barrel barrel-n" draggable="true" data-type="n">n</div>
+                        <div class="barrel barrel-n" draggable="true" data-type="n">n</div>
+                        <div class="barrel barrel-n" draggable="true" data-type="n">n</div>
+                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
+                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
+                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
+                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
+                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-area">
+                <div class="third-box" id="thirdBox">
+                    <h3 class="section-title">منطقة الإفلات الكبيرة</h3>
+                    <div class="third-box-content" id="thirdBoxContent">
+                        <div class="third-box-expression" id="thirdBoxExpression">\( 0n + 0d \)</div>
+                        <div class="third-box-barrels" id="thirdBoxBarrels"></div>
+                    </div>
+                    <div class="drop-instruction">أسقط البراميل هنا (مساحة كبيرة للإفلات)</div>
+                    <div class="feedback" id="thirdBoxFeedback">اسحب البراميل إلى هذه المنطقة الواسعة</div>
+                    <div class="barrel-counter-container">
+                        <div class="counter-item">
+                            <div class="counter-icon n"></div>
+                            <span>n: <span id="nCounter">0</span></span>
+                        </div>
+                        <div class="counter-item">
+                            <div class="counter-icon d"></div>
+                            <span>d: <span id="dCounter">0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="examples">
+                <div class="example-box">
+                    <div class="example-title">أمثلة على التعبيرات الجبرية</div>
+                    <div class="example-content">
+                        \( 2n + 3d \)<br>
+                        \( 4n - d \)<br>
+                        \( n + 5d \)
+                    </div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">كيفية تبسيط المقادير</div>
+                    <div class="example-content">
+                        \( 3n + 2n = 5n \)<br>
+                        \( 4d - d = 3d \)<br>
+                        \( 2n + 3d + n = 3n + 3d \)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="addAlgebraBtn">إضافة برميل</button>
+                <button id="resetAlgebraBtn">إعادة تعيين</button>
+            </div>
+        </div>
+        
+        <!-- زر التالي في نهاية الصفحة -->
+        <div class="controls">
+            <a href="u2l4p1.html" class="control-btn next-btn">
+                <i class="fas fa-arrow-right"></i> التالي
+            </a>
+        </div>
+    </div>
+
+    <!-- مكتبة KaTeX للرموز الرياضية -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // تهيئة KaTeX لتصيير الرموز الرياضية
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                throwOnError: false
+            });
+            
+            // ========= كود مثلث برمودا =========
+            const points = document.querySelectorAll('.point');
+            const plane = document.getElementById('plane');
+            const resetBtn = document.getElementById('resetBtn');
+            const speedBtn = document.getElementById('speedBtn');
+            const addBtn = document.getElementById('addBtn');
+            const oceanContainer = document.getElementById('oceanContainer');
+
+            // متغيرات خاصة برسم المثلث
+            const canvas = document.getElementById('triangleCanvas');
+            const ctx = canvas.getContext('2d');
+            const miamiPoint = document.getElementById('miamiPoint');
+            const bermudaPoint = document.getElementById('bermudaPoint');
+            const puertoRicoPoint = document.getElementById('puertoRicoPoint');
+
+            // تسميات النقاط
+            const miamiLabel = document.getElementById('miamiLabel');
+            const bermudaLabel = document.getElementById('bermudaLabel');
+            const puertoRicoLabel = document.getElementById('puertoRicoLabel');
+            
+            // تسميات الكتل الأرضية
+            const usaLabel = document.getElementById('usaLabel');
+            const floridaLabel = document.getElementById('floridaLabel');
+            const cubaLabel = document.getElementById('cubaLabel');
+            const bahamasLabel = document.getElementById('bahamasLabel');
+            const haitiLabel = document.getElementById('haitiLabel');
+            const jamaicaLabel = document.getElementById('jamaicaLabel');
+            const puertoRicoLandLabel = document.getElementById('puertoRicoLandLabel');
+
+            let animationSpeed = 1;
+
+            // وظيفة لتحديد مواقع النقاط والتسميات ديناميكيًا
+            function updateTrianglePoints() {
+                const width = oceanContainer.clientWidth;
+                const height = oceanContainer.clientHeight;
+                
+                // تحديد مواقع رؤوس المثلث كنسب مئوية
+                const triangleSize = Math.min(width, height) * 0.35;
+                const centerX = width / 2;
+                const centerY = height / 2;
+                
+                // إحداثيات النقاط (متطابق الأضلاع) - مع التعديلات المطلوبة
+                // تم تعديل موقع نقطة ميامي للوصول إلى المنطقة الخضراء (فلوريدا)
+                const miamiX = centerX - triangleSize * 0.85;
+                const miamiY = centerY - triangleSize * 0.15;
+                
+                // تم تحريك نقطة برمودا شمالاً وشرقاً بمقدار 30% من حجم المثلث
+                const moveDistance = 0.3 * triangleSize;
+                const bermudaX = centerX + moveDistance;
+                const bermudaY = centerY - triangleSize * 0.5 - moveDistance;
+                
+                const puertoRicoX = centerX + triangleSize * 0.6;
+                const puertoRicoY = centerY + triangleSize * 0.6;
+
+                // تحديث مواقع النقاط
+                miamiPoint.style.left = `${miamiX}px`;
+                miamiPoint.style.top = `${miamiY}px`;
+                
+                bermudaPoint.style.left = `${bermudaX}px`;
+                bermudaPoint.style.top = `${bermudaY}px`;
+                
+                puertoRicoPoint.style.left = `${puertoRicoX}px`;
+                puertoRicoPoint.style.top = `${puertoRicoY}px`;
+                
+                // تحديث مواقع تسميات النقاط
+                miamiLabel.style.left = `${miamiX - 40}px`;
+                miamiLabel.style.top = `${miamiY - 30}px`;
+                
+                bermudaLabel.style.left = `${bermudaX}px`;
+                bermudaLabel.style.top = `${bermudaY - 30}px`;
+                
+                puertoRicoLabel.style.left = `${puertoRicoX - 50}px`;
+                puertoRicoLabel.style.top = `${puertoRicoY + 20}px`;
+                
+                // تحديث مواقع تسميات الكتل الأرضية
+                usaLabel.style.left = `${width * 0.1}px`;
+                usaLabel.style.top = `${height * 0.15}px`;
+                
+                floridaLabel.style.left = `${width * 0.1}px`;
+                floridaLabel.style.top = `${height * 0.4}px`;
+                
+                cubaLabel.style.left = `${width * 0.35}px`;
+                cubaLabel.style.top = `${height * 0.55}px`;
+                
+                bahamasLabel.style.left = `${width * 0.4}px`;
+                bahamasLabel.style.top = `${height * 0.35}px`;
+                
+                haitiLabel.style.left = `${width * 0.58}px`;
+                haitiLabel.style.top = `${height * 0.6}px`;
+                
+                jamaicaLabel.style.left = `${width * 0.35}px`;
+                jamaicaLabel.style.top = `${height * 0.68}px`;
+                
+                puertoRicoLandLabel.style.left = `${width * 0.75}px`;
+                puertoRicoLandLabel.style.top = `${height * 0.7}px`;
+                
+                // إعادة رسم المثلث
+                drawTriangle();
+            }
+
+            // وظيفة لرسم المثلث
+            function drawTriangle() {
+                // ضبط أبعاد الـ canvas لتناسب حجم الحاوية
+                canvas.width = oceanContainer.clientWidth;
+                canvas.height = oceanContainer.clientHeight;
+
+                // الحصول على إحداثيات النقاط
+                const miamiRect = miamiPoint.getBoundingClientRect();
+                const bermudaRect = bermudaPoint.getBoundingClientRect();
+                const puertoRicoRect = puertoRicoPoint.getBoundingClientRect();
+                const oceanRect = oceanContainer.getBoundingClientRect();
+
+                // حساب إحداثيات مركز كل نقطة بالنسبة للحاوية
+                const miamiX = miamiRect.left - oceanRect.left + miamiRect.width / 2;
+                const miamiY = miamiRect.top - oceanRect.top + miamiRect.height / 2;
+                const bermudaX = bermudaRect.left - oceanRect.left + bermudaRect.width / 2;
+                const bermudaY = bermudaRect.top - oceanRect.top + bermudaRect.height / 2;
+                const puertoRicoX = puertoRicoRect.left - oceanRect.left + puertoRicoRect.width / 2;
+                const puertoRicoY = puertoRicoRect.top - oceanRect.top + puertoRicoRect.height / 2;
+
+                // مسح الـ canvas قبل إعادة الرسم
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // إعدادات الخط
+                ctx.strokeStyle = '#0d47a1';
+                ctx.lineWidth = 4;
+                ctx.shadowColor = '#0d47a1';
+                ctx.shadowBlur = 15;
+
+                // رسم الخطوط
+                ctx.beginPath();
+                ctx.moveTo(miamiX, miamiY);
+                ctx.lineTo(bermudaX, bermudaY);
+                ctx.lineTo(puertoRicoX, puertoRicoY);
+                ctx.closePath();
+                ctx.stroke();
+
+                // إعادة رسم الخطوط بعد فترة زمنية قصيرة لتحديث تأثير الظل
+                setTimeout(() => {
+                    ctx.beginPath();
+                    ctx.moveTo(miamiX, miamiY);
+                    ctx.lineTo(bermudaX, bermudaY);
+                    ctx.lineTo(puertoRicoX, puertoRicoY);
+                    ctx.closePath();
+                    ctx.stroke();
+                }, 50);
+            }
+
+            // وظيفة لإنشاء فقاعات عشوائية
+            function createBubbles() {
+                setInterval(() => {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble';
+                    const size = Math.random() * 40 + 15;
+                    bubble.style.width = `${size}px`;
+                    bubble.style.height = `${size}px`;
+                    const left = Math.random() * 100;
+                    bubble.style.left = `${left}%`;
+                    bubble.style.bottom = `-${size}px`;
+                    const duration = Math.random() * 15 + 10;
+                    bubble.style.animationDuration = `${duration}s`;
+                    const delay = Math.random() * 5;
+                    bubble.style.animationDelay = `${delay}s`;
+                    oceanContainer.appendChild(bubble);
+                    setTimeout(() => {
+                        bubble.remove();
+                    }, duration * 1000);
+                }, 500);
+            }
+
+            // وظيفة لإضافة طائرة إضافية
+            function addExtraPlane() {
+                const newPlane = document.createElement('div');
+                newPlane.className = 'plane';
+                newPlane.textContent = '✈️';
+                newPlane.style.fontSize = '2.5rem';
+                newPlane.style.top = `${Math.random() * 30 + 15}%`;
+                newPlane.style.left = `${Math.random() * 30 + 10}%`;
+                newPlane.style.animation = `fly ${20 / animationSpeed}s infinite`;
+                oceanContainer.appendChild(newPlane);
+            }
+
+            // وظيفة لإضافة ومضات ضوئية
+            function addLightFlashes() {
+                setInterval(() => {
+                    const flash = document.createElement('div');
+                    flash.className = 'light-flash';
+                    const top = Math.random() * 100;
+                    const left = Math.random() * 100;
+                    flash.style.top = `${top}%`;
+                    flash.style.left = `${left}%`;
+                    const size = Math.random() * 200 + 100;
+                    flash.style.width = `${size}px`;
+                    flash.style.height = `${size}px`;
+                    oceanContainer.appendChild(flash);
+                    setTimeout(() => {
+                        flash.remove();
+                    }, 15000);
+                }, 5000);
+            }
+
+            // تأثير النبض للنقاط
+            setInterval(() => {
+                points.forEach(point => {
+                    point.style.boxShadow = `0 0 ${15 + Math.random() * 10}px rgba(211, 47, 47, ${0.5 + Math.random() * 0.3})`;
+                });
+            }, 1500);
+
+            // وظيفة زر إعادة التشغيل
+            resetBtn.addEventListener('click', function() {
+                plane.style.animation = 'none';
+                document.querySelectorAll('.plane').forEach(p => {
+                    if (p !== plane) p.remove();
+                });
+                plane.style.top = '30%';
+                plane.style.left = '30%';
+                setTimeout(() => {
+                    plane.style.animation = `fly ${20 / animationSpeed}s infinite`;
+                }, 10);
+            });
+
+            // وظيفة زر تغيير السرعة
+            speedBtn.addEventListener('click', function() {
+                animationSpeed = animationSpeed === 1 ? 2 : 0.5;
+                if (animationSpeed === 2) {
+                    this.innerHTML = '<i class="fas fa-tachometer-alt"></i> سرعة عادية';
+                } else if (animationSpeed === 0.5) {
+                    this.innerHTML = '<i class="fas fa-tachometer-alt"></i> سرعة بطيئة';
+                } else {
+                    this.innerHTML = '<i class="fas fa-tachometer-alt"></i> سرعة سريعة';
+                }
+                plane.style.animation = `fly ${20 / animationSpeed}s infinite`;
+                document.querySelectorAll('.plane').forEach(p => {
+                    if (p !== plane) {
+                        p.style.animation = `fly ${20 / animationSpeed}s infinite`;
+                    }
+                });
+            });
+
+            // وظيفة زر إضافة طائرة
+            addBtn.addEventListener('click', addExtraPlane);
+
+            // استدعاء وظيفة رسم المثلث عند تحميل الصفحة وعند تغيير حجمها
+            window.addEventListener('load', function() {
+                updateTrianglePoints();
+                createBubbles();
+                addLightFlashes();
+            });
+            window.addEventListener('resize', updateTrianglePoints);
+
+            // ========= كود البراميل الجبرية =========
+            const originalBarrels = document.getElementById('originalBarrels');
+            const thirdBox = document.getElementById('thirdBox');
+            const thirdBoxExpression = document.getElementById('thirdBoxExpression');
+            const thirdBoxFeedback = document.getElementById('thirdBoxFeedback');
+            const thirdBoxBarrels = document.getElementById('thirdBoxBarrels');
+            const nCounter = document.getElementById('nCounter');
+            const dCounter = document.getElementById('dCounter');
+            const addAlgebraBtn = document.getElementById('addAlgebraBtn');
+            const resetAlgebraBtn = document.getElementById('resetAlgebraBtn');
+            
+            let thirdBoxCountN = 0;
+            let thirdBoxCountD = 0;
+            let draggedBarrel = null;
+            
+            // إعداد أحداث السحب والإفلات
+            setupDragAndDrop();
+            
+            // دالة لإعداد السحب والإفلات
+            function setupDragAndDrop() {
+                // جعل البراميل الأصلية قابلة للسحب
+                document.querySelectorAll('.barrel').forEach(barrel => {
+                    setupDragEvents(barrel);
+                });
+                
+                // إعداد منطقة الإفلات للمستطيل الثالث
+                setupDropZone(thirdBox);
+            }
+            
+            // دالة لإعداد أحداث السحب للبرميل
+            function setupDragEvents(barrel) {
+                barrel.addEventListener('dragstart', function(e) {
+                    const type = this.getAttribute('data-type');
+                    e.dataTransfer.setData('text/plain', type);
+                    this.classList.add('dragging');
+                    draggedBarrel = this;
+                    
+                    setTimeout(() => this.style.display = 'none', 0);
+                });
+                
+                barrel.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    this.style.display = 'flex';
+                    draggedBarrel = null;
+                });
+                
+                // دعم السحب على الهاتف
+                barrel.addEventListener('touchstart', function(e) {
+                    this.classList.add('dragging');
+                    draggedBarrel = this;
+                }, { passive: false });
+                
+                barrel.addEventListener('touchend', function() {
+                    this.classList.remove('dragging');
+                    draggedBarrel = null;
+                });
+            }
+            
+            // دالة لإعداد منطقة الإفلات للمستطيل الثالث
+            function setupDropZone(zone) {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('third-box-active');
+                });
+                
+                zone.addEventListener('dragleave', function() {
+                    this.classList.remove('third-box-active');
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('third-box-active');
+                    
+                    const barrelType = e.dataTransfer.getData('text/plain');
+                    handleBarrelDrop(barrelType);
+                });
+                
+                // دعم الإفلات على الهاتف
+                zone.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+                
+                zone.addEventListener('touchend', function(e) {
+                    if (draggedBarrel) {
+                        const barrelType = draggedBarrel.getAttribute('data-type');
+                        handleBarrelDrop(barrelType);
+                        draggedBarrel.classList.remove('dragging');
+                    }
+                });
+            }
+            
+            // دالة لمعالجة إفلات البرميل
+            function handleBarrelDrop(barrelType) {
+                if (!draggedBarrel) return;
+                
+                // إزالة البرميل الأصلي من المستطيل العلوي
+                if (draggedBarrel.parentNode === originalBarrels) {
+                    draggedBarrel.remove();
+                    thirdBoxFeedback.textContent = `تم نقل برميل ${barrelType} إلى منطقة الإفلات الكبيرة`;
+                } else {
+                    thirdBoxFeedback.textContent = `تم إضافة برميل ${barrelType} إلى منطقة الإفلات الكبيرة`;
+                }
+                
+                // إضافة إلى المستطيل الثالث
+                if (barrelType === 'n') thirdBoxCountN++;
+                else if (barrelType === 'd') thirdBoxCountD++;
+                
+                updateThirdBox();
+                
+                // إنشاء نسخة من البرميل وإضافتها للمستطيل الثالث
+                const newBarrel = document.createElement('div');
+                newBarrel.className = `barrel barrel-${barrelType} third-box-barrel`;
+                newBarrel.textContent = barrelType;
+                newBarrel.setAttribute('data-type', barrelType);
+                newBarrel.setAttribute('draggable', 'true');
+                
+                // جعل البرميل الجديد قابلًا للسحب أيضًا
+                setupDragEvents(newBarrel);
+                
+                thirdBoxBarrels.appendChild(newBarrel);
+                
+                thirdBoxFeedback.style.color = barrelType === 'n' ? '#5d4037' : '#4527a0';
+                
+                // تأثير مرئي
+                thirdBox.style.transform = 'scale(1.05)';
+                setTimeout(() => thirdBox.style.transform = 'scale(1)', 300);
+                
+                draggedBarrel = null;
+            }
+            
+            // دالة تحديث المستطيل الثالث
+            function updateThirdBox() {
+                const expression = formatThirdExpression();
+                thirdBoxExpression.innerHTML = `\\( ${expression} \\)`;
+                nCounter.textContent = thirdBoxCountN;
+                dCounter.textContent = thirdBoxCountD;
+                updateExpressionColor(thirdBoxExpression, thirdBoxCountN + thirdBoxCountD);
+                
+                // إعادة تصيير KaTeX
+                renderMathInElement(thirdBoxExpression, {
+                    delimiters: [
+                        {left: "\\(", right: "\\)", display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+            
+            // دالة لتنسيق تعبير المستطيل الثالث
+            function formatThirdExpression() {
+                return formatExpression(thirdBoxCountN, thirdBoxCountD);
+            }
+            
+            // دالة عامة لتنسيق التعبير
+            function formatExpression(countN, countD) {
+                let expression = '';
+                
+                if (countN > 0) {
+                    expression += `${countN}n`;
+                } else {
+                    expression += '0n';
+                }
+                
+                if (countD > 0) {
+                    expression += ` + ${countD}d`;
+                } else {
+                    expression += ' + 0d';
+                }
+                
+                return expression;
+            }
+            
+            // دالة لتحديد لون التعبير حسب عدد البراميل
+            function updateExpressionColor(element, count) {
+                if (count === 0) {
+                    element.style.color = '#0d47a1';
+                } else if (count < 3) {
+                    element.style.color = '#1976d2';
+                } else if (count < 6) {
+                    element.style.color = '#2196f3';
+                } else {
+                    element.style.color = '#64b5f6';
+                }
+            }
+            
+            // زر إضافة برميل للمستطيل الثالث
+            addAlgebraBtn.addEventListener('click', function() {
+                const type = prompt('أدخل نوع البرميل (n أو d):');
+                if (type === 'n') {
+                    thirdBoxCountN++;
+                    thirdBoxFeedback.textContent = `تم إضافة برميل n: ${formatThirdExpression()}`;
+                    thirdBoxFeedback.style.color = '#5d4037';
+                    
+                    // إنشاء برميل جديد
+                    const newBarrel = document.createElement('div');
+                    newBarrel.className = 'barrel barrel-n third-box-barrel';
+                    newBarrel.textContent = 'n';
+                    newBarrel.setAttribute('data-type', 'n');
+                    newBarrel.setAttribute('draggable', 'true');
+                    setupDragEvents(newBarrel);
+                    thirdBoxBarrels.appendChild(newBarrel);
+                    
+                } else if (type === 'd') {
+                    thirdBoxCountD++;
+                    thirdBoxFeedback.textContent = `تم إضافة برميل d: ${formatThirdExpression()}`;
+                    thirdBoxFeedback.style.color = '#4527a0';
+                    
+                    // إنشاء برميل جديد
+                    const newBarrel = document.createElement('div');
+                    newBarrel.className = 'barrel barrel-d third-box-barrel';
+                    newBarrel.textContent = 'd';
+                    newBarrel.setAttribute('data-type', 'd');
+                    newBarrel.setAttribute('draggable', 'true');
+                    setupDragEvents(newBarrel);
+                    thirdBoxBarrels.appendChild(newBarrel);
+                    
+                } else {
+                    thirdBoxFeedback.textContent = 'النوع غير صحيح! يجب أن يكون n أو d';
+                    thirdBoxFeedback.style.color = '#f44336';
+                    return;
+                }
+                
+                updateThirdBox();
+            });
+            
+            // زر إعادة تعيين المستطيل الثالث
+            resetAlgebraBtn.addEventListener('click', function() {
+                // إعادة البراميل الأصلية
+                resetOriginalBarrels();
+                
+                // إعادة تعيين المستطيل البرتقالي
+                resetThirdBox();
+                
+                thirdBoxFeedback.textContent = 'تم إعادة تعيين كل شيء';
+                thirdBoxFeedback.style.color = '#0d47a1';
+            });
+            
+            // دالة إعادة تعيين المستطيل الثالث
+            function resetThirdBox() {
+                thirdBoxCountN = 0;
+                thirdBoxCountD = 0;
+                thirdBoxBarrels.innerHTML = '';
+                updateThirdBox();
+            }
+            
+            // دالة إعادة البراميل الأصلية
+            function resetOriginalBarrels() {
+                // إزالة البراميل الحالية
+                originalBarrels.innerHTML = '';
+                
+                // إضافة البراميل الأصلية من جديد
+                for (let i = 0; i < 3; i++) {
+                    const barrel = document.createElement('div');
+                    barrel.className = 'barrel barrel-n';
+                    barrel.textContent = 'n';
+                    barrel.setAttribute('data-type', 'n');
+                    barrel.setAttribute('draggable', 'true');
+                    setupDragEvents(barrel);
+                    originalBarrels.appendChild(barrel);
+                }
+                
+                for (let i = 0; i < 5; i++) {
+                    const barrel = document.createElement('div');
+                    barrel.className = 'barrel barrel-d';
+                    barrel.textContent = 'd';
+                    barrel.setAttribute('data-type', 'd');
+                    barrel.setAttribute('draggable', 'true');
+                    setupDragEvents(barrel);
+                    originalBarrels.appendChild(barrel);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
