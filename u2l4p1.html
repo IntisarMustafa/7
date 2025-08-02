@@ -663,6 +663,11 @@
             background: linear-gradient(to bottom, #5e35b1, #4527a0);
             border-color: #311b92;
         }
+        
+        .barrel.original-barrel {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
         .barrel:hover {
             transform: scale(1.08);
@@ -697,6 +702,23 @@
 
         .barrel::after {
             top: 65%;
+        }
+        
+        /* نمط البرميل الذي يتم سحبه حاليًا */
+        .dragging {
+            opacity: 0.7;
+            position: fixed; /* لتتبعه المؤشر أو الإصبع */
+            z-index: 9999;
+            pointer-events: none; /* لمنع التفاعل مع نفسه أثناء السحب */
+            transition: none; /* لمنع الانتقال أثناء السحب */
+        }
+        
+        .ghost-barrel {
+            opacity: 0.8;
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            transition: none;
         }
 
         .third-box-content {
@@ -823,13 +845,6 @@
 
         .third-box-barrel {
             transform: scale(0.95);
-        }
-
-        .dragging {
-            opacity: 0.8;
-            transform: scale(1.15);
-            z-index: 100;
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
         }
 
         .third-box-active {
@@ -1067,14 +1082,14 @@
                 <div class="barrels-container">
                     <h3 class="section-title">براميل المتغيرات</h3>
                     <div class="barrels-row" id="originalBarrels">
-                        <div class="barrel barrel-n" draggable="true" data-type="n">n</div>
-                        <div class="barrel barrel-n" draggable="true" data-type="n">n</div>
-                        <div class="barrel barrel-n" draggable="true" data-type="n">n</div>
-                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
-                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
-                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
-                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
-                        <div class="barrel barrel-d" draggable="true" data-type="d">d</div>
+                        <div class="barrel barrel-n original-barrel" data-type="n">n</div>
+                        <div class="barrel barrel-n original-barrel" data-type="n">n</div>
+                        <div class="barrel barrel-n original-barrel" data-type="n">n</div>
+                        <div class="barrel barrel-d original-barrel" data-type="d">d</div>
+                        <div class="barrel barrel-d original-barrel" data-type="d">d</div>
+                        <div class="barrel barrel-d original-barrel" data-type="d">d</div>
+                        <div class="barrel barrel-d original-barrel" data-type="d">d</div>
+                        <div class="barrel barrel-d original-barrel" data-type="d">d</div>
                     </div>
                 </div>
             </div>
@@ -1135,8 +1150,8 @@
     </div>
 
     <!-- مكتبة KaTeX للرموز الرياضية -->
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1192,13 +1207,16 @@
                 
                 // إحداثيات النقاط (متطابق الأضلاع) - مع التعديلات المطلوبة
                 // تم تعديل موقع نقطة ميامي للوصول إلى المنطقة الخضراء (فلوريدا)
-                const miamiX = centerX - triangleSize * 0.85;
+                // تم تعديل هذا السطر لتحريك النقطة إلى الغرب (ناقص قيمة أكبر)
+                const miamiX = centerX - triangleSize * 0.95;
                 const miamiY = centerY - triangleSize * 0.15;
                 
                 // تم تحريك نقطة برمودا شمالاً وشرقاً بمقدار 30% من حجم المثلث
-                const moveDistance = 0.3 * triangleSize;
-                const bermudaX = centerX + moveDistance;
-                const bermudaY = centerY - triangleSize * 0.5 - moveDistance;
+                const moveDistanceX = 0.35 * triangleSize;
+                const moveDistanceY = 0.25 * triangleSize;
+                
+                const bermudaX = centerX + moveDistanceX;
+                const bermudaY = centerY - triangleSize * 0.5 - moveDistanceY;
                 
                 const puertoRicoX = centerX + triangleSize * 0.6;
                 const puertoRicoY = centerY + triangleSize * 0.6;
@@ -1399,7 +1417,7 @@
             });
             window.addEventListener('resize', updateTrianglePoints);
 
-            // ========= كود البراميل الجبرية =========
+            // ========= كود البراميل الجبرية (تم التعديل) =========
             const originalBarrels = document.getElementById('originalBarrels');
             const thirdBox = document.getElementById('thirdBox');
             const thirdBoxExpression = document.getElementById('thirdBoxExpression');
@@ -1407,96 +1425,105 @@
             const thirdBoxBarrels = document.getElementById('thirdBoxBarrels');
             const nCounter = document.getElementById('nCounter');
             const dCounter = document.getElementById('dCounter');
-            const addAlgebraBtn = document.getElementById('addAlgebraBtn');
             const resetAlgebraBtn = document.getElementById('resetAlgebraBtn');
             
             let thirdBoxCountN = 0;
             let thirdBoxCountD = 0;
-            let draggedBarrel = null;
-            
-            // إعداد أحداث السحب والإفلات
-            setupDragAndDrop();
-            
-            // دالة لإعداد السحب والإفلات
-            function setupDragAndDrop() {
-                // جعل البراميل الأصلية قابلة للسحب
-                document.querySelectorAll('.barrel').forEach(barrel => {
-                    setupDragEvents(barrel);
-                });
-                
-                // إعداد منطقة الإفلات للمستطيل الثالث
-                setupDropZone(thirdBox);
-            }
-            
-            // دالة لإعداد أحداث السحب للبرميل
+            let draggedItem = null;
+            let ghostBarrel = null;
+
+            // دالة لإعداد أحداث السحب والإفلات للبراميل الأصلية
             function setupDragEvents(barrel) {
-                barrel.addEventListener('dragstart', function(e) {
-                    const type = this.getAttribute('data-type');
-                    e.dataTransfer.setData('text/plain', type);
-                    this.classList.add('dragging');
-                    draggedBarrel = this;
-                    
-                    setTimeout(() => this.style.display = 'none', 0);
-                });
-                
-                barrel.addEventListener('dragend', function() {
-                    this.classList.remove('dragging');
-                    this.style.display = 'flex';
-                    draggedBarrel = null;
-                });
-                
-                // دعم السحب على الهاتف
-                barrel.addEventListener('touchstart', function(e) {
-                    this.classList.add('dragging');
-                    draggedBarrel = this;
-                }, { passive: false });
-                
-                barrel.addEventListener('touchend', function() {
-                    this.classList.remove('dragging');
-                    draggedBarrel = null;
-                });
+                // أحداث سحب الفأرة
+                barrel.addEventListener('mousedown', startDrag);
+                barrel.addEventListener('mouseup', endDrag);
+
+                // أحداث سحب اللمس
+                barrel.addEventListener('touchstart', startDrag, { passive: false });
+                barrel.addEventListener('touchend', endDrag);
             }
-            
-            // دالة لإعداد منطقة الإفلات للمستطيل الثالث
-            function setupDropZone(zone) {
-                zone.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    this.classList.add('third-box-active');
-                });
+
+            // دالة بدء السحب
+            function startDrag(e) {
+                e.preventDefault(); // منع السلوك الافتراضي للمتصفح مثل تحديد النص
+
+                const barrel = this;
+                const rect = barrel.getBoundingClientRect();
+                const offsetX = e.clientX ? e.clientX - rect.left : e.touches[0].clientX - rect.left;
+                const offsetY = e.clientY ? e.clientY - rect.top : e.touches[0].clientY - rect.top;
+
+                // إنشاء برميل شبحي (ghost barrel) يتبع المؤشر/الإصبع
+                ghostBarrel = barrel.cloneNode(true);
+                ghostBarrel.classList.add('ghost-barrel');
+                ghostBarrel.style.width = `${rect.width}px`;
+                ghostBarrel.style.height = `${rect.height}px`;
+                document.body.appendChild(ghostBarrel);
                 
-                zone.addEventListener('dragleave', function() {
-                    this.classList.remove('third-box-active');
-                });
-                
-                zone.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    this.classList.remove('third-box-active');
-                    
-                    const barrelType = e.dataTransfer.getData('text/plain');
-                    handleBarrelDrop(barrelType);
-                });
-                
-                // دعم الإفلات على الهاتف
-                zone.addEventListener('touchmove', function(e) {
-                    e.preventDefault();
-                }, { passive: false });
-                
-                zone.addEventListener('touchend', function(e) {
-                    if (draggedBarrel) {
-                        const barrelType = draggedBarrel.getAttribute('data-type');
-                        handleBarrelDrop(barrelType);
-                        draggedBarrel.classList.remove('dragging');
-                    }
-                });
+                // إخفاء البرميل الأصلي أثناء السحب
+                barrel.style.visibility = 'hidden';
+
+                draggedItem = barrel;
+
+                // إضافة مستمع لحركة المؤشر/اللمس لتحديث موقع البرميل الشبحي
+                document.addEventListener('mousemove', moveDrag);
+                document.addEventListener('touchmove', moveDrag, { passive: false });
             }
-            
+
+            // دالة تحديث موقع البرميل الشبحي أثناء السحب
+            function moveDrag(e) {
+                if (!ghostBarrel) return;
+
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+
+                // تحديث موقع البرميل الشبحي
+                ghostBarrel.style.left = `${clientX - ghostBarrel.offsetWidth / 2}px`;
+                ghostBarrel.style.top = `${clientY - ghostBarrel.offsetHeight / 2}px`;
+            }
+
+            // دالة نهاية السحب
+            function endDrag(e) {
+                if (!draggedItem) return;
+
+                // إزالة مستمعات الأحداث
+                document.removeEventListener('mousemove', moveDrag);
+                document.removeEventListener('touchmove', moveDrag);
+
+                const clientX = e.clientX || (e.changedTouches ? e.changedTouches[0].clientX : null);
+                const clientY = e.clientY || (e.changedTouches ? e.changedTouches[0].clientY : null);
+
+                // التحقق من موقع الإفلات
+                const dropTarget = clientX !== null && clientY !== null ? document.elementFromPoint(clientX, clientY) : null;
+                const thirdBoxRect = thirdBox.getBoundingClientRect();
+                
+                // تحقق مما إذا تم الإفلات داخل منطقة الإفلات البرتقالية
+                if (dropTarget && thirdBox.contains(dropTarget) || isOverlapping(clientX, clientY, thirdBoxRect)) {
+                    handleBarrelDrop(draggedItem.getAttribute('data-type'));
+                }
+
+                // إظهار البرميل الأصلي مرة أخرى
+                draggedItem.style.visibility = 'visible';
+                
+                // إزالة البرميل الشبحي
+                if (ghostBarrel) {
+                    ghostBarrel.remove();
+                    ghostBarrel = null;
+                }
+                
+                draggedItem = null;
+                thirdBox.classList.remove('third-box-active');
+            }
+
+            // دالة مساعدة للتحقق من التداخل
+            function isOverlapping(x, y, rect) {
+                return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+            }
+
             // دالة لمعالجة إفلات البرميل
             function handleBarrelDrop(barrelType) {
-                if (!draggedBarrel) return;
-                
                 // إزالة البرميل الأصلي من المستطيل العلوي
-                if (draggedBarrel.parentNode === originalBarrels) {
-                    draggedBarrel.remove();
+                if (draggedItem && draggedItem.parentNode === originalBarrels) {
+                    draggedItem.remove();
                     thirdBoxFeedback.textContent = `تم نقل برميل ${barrelType} إلى منطقة الإفلات الكبيرة`;
                 } else {
                     thirdBoxFeedback.textContent = `تم إضافة برميل ${barrelType} إلى منطقة الإفلات الكبيرة`;
@@ -1513,9 +1540,8 @@
                 newBarrel.className = `barrel barrel-${barrelType} third-box-barrel`;
                 newBarrel.textContent = barrelType;
                 newBarrel.setAttribute('data-type', barrelType);
-                newBarrel.setAttribute('draggable', 'true');
                 
-                // جعل البرميل الجديد قابلًا للسحب أيضًا
+                // جعل البرميل الجديد قابلاً للسحب أيضًا
                 setupDragEvents(newBarrel);
                 
                 thirdBoxBarrels.appendChild(newBarrel);
@@ -1525,10 +1551,8 @@
                 // تأثير مرئي
                 thirdBox.style.transform = 'scale(1.05)';
                 setTimeout(() => thirdBox.style.transform = 'scale(1)', 300);
-                
-                draggedBarrel = null;
             }
-            
+
             // دالة تحديث المستطيل الثالث
             function updateThirdBox() {
                 const expression = formatThirdExpression();
@@ -1583,46 +1607,6 @@
                 }
             }
             
-            // زر إضافة برميل للمستطيل الثالث
-            addAlgebraBtn.addEventListener('click', function() {
-                const type = prompt('أدخل نوع البرميل (n أو d):');
-                if (type === 'n') {
-                    thirdBoxCountN++;
-                    thirdBoxFeedback.textContent = `تم إضافة برميل n: ${formatThirdExpression()}`;
-                    thirdBoxFeedback.style.color = '#5d4037';
-                    
-                    // إنشاء برميل جديد
-                    const newBarrel = document.createElement('div');
-                    newBarrel.className = 'barrel barrel-n third-box-barrel';
-                    newBarrel.textContent = 'n';
-                    newBarrel.setAttribute('data-type', 'n');
-                    newBarrel.setAttribute('draggable', 'true');
-                    setupDragEvents(newBarrel);
-                    thirdBoxBarrels.appendChild(newBarrel);
-                    
-                } else if (type === 'd') {
-                    thirdBoxCountD++;
-                    thirdBoxFeedback.textContent = `تم إضافة برميل d: ${formatThirdExpression()}`;
-                    thirdBoxFeedback.style.color = '#4527a0';
-                    
-                    // إنشاء برميل جديد
-                    const newBarrel = document.createElement('div');
-                    newBarrel.className = 'barrel barrel-d third-box-barrel';
-                    newBarrel.textContent = 'd';
-                    newBarrel.setAttribute('data-type', 'd');
-                    newBarrel.setAttribute('draggable', 'true');
-                    setupDragEvents(newBarrel);
-                    thirdBoxBarrels.appendChild(newBarrel);
-                    
-                } else {
-                    thirdBoxFeedback.textContent = 'النوع غير صحيح! يجب أن يكون n أو d';
-                    thirdBoxFeedback.style.color = '#f44336';
-                    return;
-                }
-                
-                updateThirdBox();
-            });
-            
             // زر إعادة تعيين المستطيل الثالث
             resetAlgebraBtn.addEventListener('click', function() {
                 // إعادة البراميل الأصلية
@@ -1651,25 +1635,74 @@
                 // إضافة البراميل الأصلية من جديد
                 for (let i = 0; i < 3; i++) {
                     const barrel = document.createElement('div');
-                    barrel.className = 'barrel barrel-n';
+                    barrel.className = 'barrel barrel-n original-barrel';
                     barrel.textContent = 'n';
                     barrel.setAttribute('data-type', 'n');
-                    barrel.setAttribute('draggable', 'true');
                     setupDragEvents(barrel);
                     originalBarrels.appendChild(barrel);
                 }
                 
                 for (let i = 0; i < 5; i++) {
                     const barrel = document.createElement('div');
-                    barrel.className = 'barrel barrel-d';
+                    barrel.className = 'barrel barrel-d original-barrel';
                     barrel.textContent = 'd';
                     barrel.setAttribute('data-type', 'd');
-                    barrel.setAttribute('draggable', 'true');
                     setupDragEvents(barrel);
                     originalBarrels.appendChild(barrel);
                 }
             }
+            
+            // إعداد أحداث السحب والإفلات للبراميل الأصلية عند تحميل الصفحة
+            document.querySelectorAll('.original-barrel').forEach(barrel => {
+                setupDragEvents(barrel);
+            });
+            
+            // إضافة وإزالة فئة التنشيط عند السحب فوق منطقة الإفلات
+            thirdBox.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                thirdBox.classList.add('third-box-active');
+            });
+            
+            thirdBox.addEventListener('dragleave', () => {
+                thirdBox.classList.remove('third-box-active');
+            });
+            
+            thirdBox.addEventListener('drop', (e) => {
+                e.preventDefault();
+                thirdBox.classList.remove('third-box-active');
+                if (draggedItem) {
+                    const barrelType = draggedItem.getAttribute('data-type');
+                    handleBarrelDrop(barrelType);
+                    draggedItem = null;
+                }
+            });
+            
+            // دعم إضافة البراميل يدويًا (الزر)
+            addAlgebraBtn.addEventListener('click', function() {
+                // ... (نفس المنطق القديم هنا)
+                const type = prompt('أدخل نوع البرميل (n أو d):');
+                if (type === 'n' || type === 'd') {
+                    if (type === 'n') thirdBoxCountN++;
+                    else thirdBoxCountD++;
+                    
+                    const newBarrel = document.createElement('div');
+                    newBarrel.className = `barrel barrel-${type} third-box-barrel`;
+                    newBarrel.textContent = type;
+                    newBarrel.setAttribute('data-type', type);
+                    setupDragEvents(newBarrel);
+                    thirdBoxBarrels.appendChild(newBarrel);
+
+                    updateThirdBox();
+                    
+                    thirdBoxFeedback.textContent = `تم إضافة برميل ${type} يدويًا.`;
+                    thirdBoxFeedback.style.color = type === 'n' ? '#5d4037' : '#4527a0';
+                } else {
+                    thirdBoxFeedback.textContent = 'النوع غير صحيح! يجب أن يكون n أو d';
+                    thirdBoxFeedback.style.color = '#f44336';
+                }
+            });
         });
     </script>
 </body>
 </html>
+
