@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تبسيط المقادير الجبرية - 3</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            /* Updated to shades of a clear blue - "Dark Sky Blue" */
+            --blue-dark: #0F4C81;
+            --blue-medium: #3282B8;
+            --blue-light: #BBE1FA;
+            --blue-lighter: #E8F6FF;
+            --accent-gold: #d4af37; /* Keeping the gold accent for contrast */
+            --white-bg: #FFFFFF;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--white-bg);
+            color: var(--blue-dark);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            font-size: 1.1rem; /* Base font size increased */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Updated Header Styling */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--blue-medium) 0%, var(--blue-dark) 100%);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(10, 35, 66, 0.3);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-gold), #f8f9fa, var(--accent-gold));
+        }
+
+        /* Decorative SVG pattern in the header background */
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Updated the SVG fill color to match the new color scheme */
+            background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="pattern-zigzag" patternUnits="userSpaceOnUse" width="40" height="20"><path d="M-5,10 L-5,-10 L35,-10 L35,10 M-5,10 L15,20 L35,10" stroke="%233282B8" stroke-width="2" fill="none" transform="rotate(45)" opacity="0.1" /></pattern></defs><rect width="100%" height="100%" fill="url(%23pattern-zigzag)"/></svg>');
+            opacity: 0.1;
+            animation: movePattern 20s linear infinite;
+        }
+
+        @keyframes movePattern {
+            from {
+                transform: translateX(0) translateY(0);
+            }
+            to {
+                transform: translateX(-40px) translateY(-40px);
+            }
+        }
+        
+        h1 {
+            font-size: 3.2rem; /* Increased font size */
+            margin-bottom: 10px;
+            color: white;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem; /* Increased font size */
+            color: var(--blue-lighter);
+            max-width: 800px;
+            margin: 0 auto;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .section {
+            flex: 1;
+            min-width: 300px;
+            background: var(--white-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(10, 35, 66, 0.1);
+            border: 2px solid var(--blue-light);
+            transition: transform 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(10, 35, 66, 0.15);
+        }
+        
+        h2 {
+            font-size: 2.2rem; /* Increased font size */
+            margin-bottom: 10px; 
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--accent-gold);
+            color: var(--blue-medium);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-instruction {
+            font-size: 1.3rem; /* Increased font size */
+            color: var(--blue-dark);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        h2::before {
+            content: "•";
+            color: var(--accent-gold);
+            font-size: 2.2rem; /* Increased font size */
+        }
+        
+        .example-box {
+            background: linear-gradient(to right, #f8f9fa, var(--white-bg));
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--blue-medium);
+            box-shadow: 0 2px 6px rgba(10, 35, 66, 0.05);
+        }
+        
+        .expression {
+            font-size: 1.6rem; /* Increased font size */
+            margin-bottom: 10px;
+            color: var(--blue-medium);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .expression::before {
+            content: "=";
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+        
+        .solution {
+            background: rgba(26, 67, 124, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 3px solid var(--accent-gold);
+            font-weight: bold;
+            color: var(--blue-dark);
+            font-size: 1.2rem; /* Increased font size */
+        }
+        
+        .exercise {
+            background: linear-gradient(to right, #f8f9fa, var(--white-bg));
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-left: 4px solid var(--blue-medium);
+            box-shadow: 0 2px 6px rgba(10, 35, 66, 0.05);
+        }
+        
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .exercise-title {
+            font-size: 1.5rem; /* Increased font size */
+            font-weight: bold;
+            color: var(--blue-medium);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .exercise-title::before {
+            content: "✓";
+            color: var(--accent-gold);
+            font-size: 1.5rem; /* Increased font size */
+        }
+        
+        .exercise-content {
+            font-size: 1.6rem; /* Increased font size */
+            margin: 10px 0;
+            color: var(--blue-dark);
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background: rgba(26, 67, 124, 0.05);
+            border-radius: 8px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        input {
+            padding: 15px; /* Increased padding */
+            border: 2px solid var(--blue-light);
+            border-radius: 8px;
+            background: var(--white-bg);
+            color: var(--blue-dark);
+            font-size: 1.3rem; /* Increased font size */
+            flex: 1;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--blue-medium);
+            box-shadow: 0 0 8px rgba(26, 67, 124, 0.3);
+        }
+        
+        button {
+            padding: 15px 25px; /* Increased padding */
+            background: linear-gradient(to bottom, var(--blue-medium), var(--blue-dark));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem; /* Increased font size */
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(10, 35, 66, 0.2);
+        }
+        
+        button:hover {
+            background: linear-gradient(to bottom, var(--blue-light), var(--blue-medium));
+            box-shadow: 0 5px 10px rgba(10, 35, 66, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+            font-size: 1.2rem; /* Increased font size */
+        }
+        
+        .correct {
+            background: rgba(40, 167, 69, 0.1);
+            border: 2px solid #28a745;
+            color: #28a745;
+        }
+        
+        .incorrect {
+            background: rgba(220, 53, 69, 0.1);
+            border: 2px solid #dc3545;
+            color: #dc3545;
+        }
+        
+        .key-points {
+            background: linear-gradient(to right, rgba(26, 67, 124, 0.03), rgba(26, 67, 124, 0.05));
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 1px solid var(--blue-light);
+        }
+        
+        .key-points h3 {
+            font-size: 1.8rem; /* Increased font size */
+            margin-bottom: 15px;
+            color: var(--blue-medium);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .key-points h3::before {
+            content: "💡";
+        }
+        
+        .point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.7);
+        }
+        
+        .point-icon {
+            background: var(--blue-medium);
+            color: white;
+            width: 35px; /* Increased size */
+            height: 35px; /* Increased size */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid var(--blue-light);
+        }
+        
+        .nav-button {
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(10, 35, 66, 0.2);
+            color: white;
+            text-align: center;
+        }
+
+        .nav-button.prev {
+            background: linear-gradient(to bottom, #d4af37, #b8860b);
+        }
+        
+        .nav-button.next {
+            background: linear-gradient(to bottom, var(--blue-medium), var(--blue-dark));
+        }
+
+        .nav-button:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(10, 35, 66, 0.3);
+        }
+
+        .nav-button:active {
+            transform: translateY(0);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: var(--blue-medium);
+            font-size: 1rem; /* Increased font size */
+            border-top: 1px solid var(--blue-light);
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid var(--blue-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .svg-container {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .section-instruction {
+                font-size: 1.1rem;
+            }
+            
+            .expression, .exercise-content {
+                font-size: 1.4rem;
+            }
+            
+            input, button {
+                font-size: 1.1rem;
+                padding: 12px;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>تبسيط المقادير الجبرية - تدرب</h1>
+            <p class="subtitle">حل التمارين التالية لتعزيز فهمك لتبسيط المقادير الجبرية</p>
+        </header>
+
+        <div class="content">
+            <!-- Section 1: أكتب كل مقدار جبري مما يأتي في أبسط صورة -->
+            <div class="section">
+                <h2>أتدرب وأحل المسائل</h2>
+                <p class="section-instruction">أكتب كل مقدار جبري مما يأتي في أبسط صورة:</p>
+
+                <!-- Exercise 1 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 1</div>
+                    </div>
+                    <div class="exercise-content">\( 3.5x + 1.5x \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(1)">تحقق</button>
+                    </div>
+                    <div id="result1" class="result"></div>
+                </div>
+
+                <!-- Exercise 2 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 2</div>
+                    </div>
+                    <div class="exercise-content">\( 7y + 4y \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(2)">تحقق</button>
+                    </div>
+                    <div id="result2" class="result"></div>
+                </div>
+
+                <!-- Exercise 3 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 3</div>
+                    </div>
+                    <div class="exercise-content">\( c^3r - 6c^3r \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise3" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(3)">تحقق</button>
+                    </div>
+                    <div id="result3" class="result"></div>
+                </div>
+                
+                <!-- Exercise 4 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 4</div>
+                    </div>
+                    <div class="exercise-content">\( bd - 4bd \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise4" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(4)">تحقق</button>
+                    </div>
+                    <div id="result4" class="result"></div>
+                </div>
+
+            </div>
+
+            <!-- Section 2: أكتب كل مقدار جبري مما يأتي في أبسط صورة -->
+            <div class="section">
+                <h2>أكمل الحل</h2>
+                <p class="section-instruction">أكتب كل مقدار جبري مما يأتي في أبسط صورة:</p>
+                
+                <!-- Exercise 5 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 5</div>
+                    </div>
+                    <div class="exercise-content">\( (3np + 5w) + (w - 10np) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise5" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(5)">تحقق</button>
+                    </div>
+                    <div id="result5" class="result"></div>
+                </div>
+
+                <!-- Exercise 6 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 6</div>
+                    </div>
+                    <div class="exercise-content">\( (-z + 2xy) + (xy + 4z) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise6" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(6)">تحقق</button>
+                    </div>
+                    <div id="result6" class="result"></div>
+                </div>
+                
+                <!-- Exercise 7 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 7</div>
+                    </div>
+                    <div class="exercise-content">\( (14x^2-19x) + (-6x^2 + x) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise7" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(7)">تحقق</button>
+                    </div>
+                    <div id="result7" class="result"></div>
+                </div>
+                
+                <!-- Exercise 8 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 8</div>
+                    </div>
+                    <div class="exercise-content">\( (10b^2-3b) + (b^2-2b) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise8" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(8)">تحقق</button>
+                    </div>
+                    <div id="result8" class="result"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Section 3: أكتب كل مقدار جبري مما يأتي في أبسط صورة -->
+            <div class="section">
+                <h2>مزيد من التمارين</h2>
+                <p class="section-instruction">أكتب كل مقدار جبري مما يأتي في أبسط صورة:</p>
+
+                <!-- Exercise 9 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 9</div>
+                    </div>
+                    <div class="exercise-content">\( (1.5w - 6.5) - (0.5w + 3.5) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise9" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(9)">تحقق</button>
+                    </div>
+                    <div id="result9" class="result"></div>
+                </div>
+
+                <!-- Exercise 10 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 10</div>
+                    </div>
+                    <div class="exercise-content">\( (x + \frac{4}{7}) - (4x - \frac{2}{7}) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise10" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(10)">تحقق</button>
+                    </div>
+                    <div id="result10" class="result"></div>
+                </div>
+                
+                <!-- Exercise 11 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 11</div>
+                    </div>
+                    <div class="exercise-content">\( 8d + 4c^2 - 3(d - 5c^2) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise11" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(11)">تحقق</button>
+                    </div>
+                    <div id="result11" class="result"></div>
+                </div>
+                
+                <!-- Exercise 12 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 12</div>
+                    </div>
+                    <div class="exercise-content">\( 6w - 3n^2m - 2(w + n^2m) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise12" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(12)">تحقق</button>
+                    </div>
+                    <div id="result12" class="result"></div>
+                </div>
+            </div>
+
+            <!-- Section 4: أجد مقداراً جبرياً يمثل محيط كل شكل مما يأتي -->
+            <div class="section">
+                <h2>المسائل الهندسية</h2>
+                <p class="section-instruction">أجد مقداراً جبرياً يمثل محيط كل شكل مما يأتي:</p>
+
+                <!-- Exercise 13 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 13</div>
+                    </div>
+                    <div class="image-container">
+                        <!-- SVG for the first triangle -->
+                        <svg class="svg-container" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                            <style>
+                                .triangle-path {
+                                    fill: none;
+                                    stroke: var(--blue-dark);
+                                    stroke-width: 2;
+                                }
+                                .side-label {
+                                    font-size: 16px;
+                                    font-weight: bold;
+                                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                    fill: var(--blue-dark);
+                                }
+                            </style>
+                            <polygon class="triangle-path" points="50,150 250,150 150,50" />
+                            <text class="side-label" x="150" y="170" text-anchor="middle">b</text>
+                            <text class="side-label" x="90" y="100" text-anchor="middle">a</text>
+                            <text class="side-label" x="210" y="100" text-anchor="middle">2a</text>
+                        </svg>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="exercise13" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(13)">تحقق</button>
+                    </div>
+                    <div id="result13" class="result"></div>
+                </div>
+
+                <!-- Exercise 14 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 14</div>
+                    </div>
+                    <div class="image-container">
+                        <!-- SVG for the second triangle -->
+                        <svg class="svg-container" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                            <style>
+                                .triangle-path {
+                                    fill: none;
+                                    stroke: var(--blue-dark);
+                                    stroke-width: 2;
+                                }
+                                .side-label {
+                                    font-size: 16px;
+                                    font-weight: bold;
+                                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                    fill: var(--blue-dark);
+                                }
+                            </style>
+                            <polygon class="triangle-path" points="50,150 250,150 150,50" />
+                            <text class="side-label" x="150" y="170" text-anchor="middle">u</text>
+                            <text class="side-label" x="90" y="100" text-anchor="middle">w</text>
+                            <text class="side-label" x="210" y="100" text-anchor="middle">w</text>
+                        </svg>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="exercise14" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkExercise(14)">تحقق</button>
+                    </div>
+                    <div id="result14" class="result"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Section 5: المسائل الكلامية -->
+            <div class="section">
+                <h2>المسائل الكلامية</h2>
+                
+                <!-- Exercise 15 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 15</div>
+                    </div>
+                    <div class="exercise-content" style="text-align: right; font-size: 1.2rem;">أكتب المقدار الجبري الذي يمثل تكلفة السياج الذي يحيط بالحديقة.</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise15" placeholder="أدخل المقدار الجبري">
+                        <button onclick="checkExercise(15)">تحقق</button>
+                    </div>
+                    <div id="result15" class="result"></div>
+                </div>
+
+                <!-- Exercise 16 -->
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-title">التمرين 16</div>
+                    </div>
+                    <div class="exercise-content" style="text-align: right; font-size: 1.2rem;">أحسب تكلفة السياج الذي يحيط بالحديقة علماً بأن عرض الحديقة 30 متر.</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise16" placeholder="أدخل التكلفة بالدينار">
+                        <button onclick="checkExercise(16)">تحقق</button>
+                    </div>
+                    <div id="result16" class="result"></div>
+                </div>
+
+                <div class="key-points">
+                    <h3>معطيات المسألة:</h3>
+                    <div class="point">
+                        <div class="point-icon"></div>
+                        <div>حديقة منزل مستطيلة الشكل طولها يساوي ثلاثة أمثال عرضها، أراد مالكها إحاطة سياج بها. تكلفة المتر الطولي منه 7JD.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation">
+            <a href="u2l4p3.html" class="nav-button prev">السابق</a>
+            <a href="u2l4p5.html" class="nav-button next">التالي</a>
+        </div>
+
+        <footer>
+            <p>وحدة جمع المقادير الجبرية وطرقها | تصميم أزرق مع خلفية بيضاء</p>
+        </footer>
+    </div>
+
+    <script>
+        // Solutions for exercises based on the image provided
+        const solutions = {
+            1: "5x",
+            2: "11y",
+            3: "-5c^3r",
+            4: "-3bd",
+            5: "-7np + 6w",
+            6: "3z + 3xy",
+            7: "8x^2 - 18x",
+            8: "11b^2 - 5b",
+            9: "w - 10",
+            10: "-3x + 6/7",
+            11: "5d + 19c^2",
+            12: "4w - 5n^2m",
+            13: "3a + b", // Perimeter of the first triangle (a + b + 2a)
+            14: "2w + u", // Perimeter of the second triangle (w + w + u)
+            15: "8w", // Perimeter of the garden (2 * (w + 3w)) where w is the width
+            16: "1680" // Cost of the fence: (Perimeter) * (cost per meter) = (8 * 30) * 7
+        };
+        
+        // Function to check the answers
+        function checkExercise(exerciseNum) {
+            const inputElement = document.getElementById(`exercise${exerciseNum}`);
+            const resultElement = document.getElementById(`result${exerciseNum}`);
+            const userAnswer = inputElement.value.trim();
+            const correctAnswer = solutions[exerciseNum];
+            
+            // Hide previous results
+            resultElement.style.display = "none";
+            
+            if (userAnswer === "") {
+                console.warn("Please enter an answer before checking.");
+                // You can add a custom modal here for user feedback
+                return;
+            }
+            
+            let normalizedUserAnswer = userAnswer.replace(/\s+/g, '').toLowerCase();
+            let normalizedCorrectAnswer = correctAnswer.replace(/\s+/g, '').toLowerCase();
+            
+            // Handle some common variations for algebraic expressions
+            // For example, 3a+b is the same as b+3a
+            const correctVariants = [normalizedCorrectAnswer];
+            if (correctAnswer.includes(' ')) {
+                const parts = correctAnswer.split(' ');
+                if (parts.length === 3 && (parts[1] === '+' || parts[1] === '-')) {
+                    const swappedAnswer = `${parts[2]} ${parts[1] === '+' ? '+' : ''} ${parts[0]}`;
+                    correctVariants.push(swappedAnswer.replace(/\s+/g, '').toLowerCase());
+                }
+            }
+
+            if (correctVariants.includes(normalizedUserAnswer)) {
+                resultElement.textContent = "✓ إجابة صحيحة! أحسنت!";
+                resultElement.className = "result correct";
+            } else {
+                resultElement.textContent = `✗ إجابة غير صحيحة. الإجابة الصحيحة هي: ${correctAnswer}`;
+                resultElement.className = "result incorrect";
+            }
+            
+            resultElement.style.display = "block";
+        }
+        
+        // Enable pressing Enter to check the answer
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const exerciseNum = this.id.replace('exercise', '');
+                    checkExercise(exerciseNum);
+                }
+            });
+        });
+
+        // Special handling for exercise 16 to calculate the cost based on the width
+        // and handle both perimeter and final cost inputs
+        document.getElementById('exercise16').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const width = 30;
+                const costPerMeter = 7;
+                const perimeterExpression = "8w";
+                const perimeterValue = 8 * width;
+                const finalCost = perimeterValue * costPerMeter;
+
+                const userAnswer = this.value.trim();
+                const resultElement = document.getElementById('result16');
+                resultElement.style.display = "none";
+
+                if (userAnswer === "") {
+                    console.warn("Please enter an answer before checking.");
+                    return;
+                }
+
+                if (userAnswer == finalCost.toString()) {
+                    resultElement.textContent = "✓ إجابة صحيحة! أحسنت!";
+                    resultElement.className = "result correct";
+                } else {
+                    resultElement.textContent = `✗ إجابة غير صحيحة. الإجابة الصحيحة هي: ${finalCost}`;
+                    resultElement.className = "result incorrect";
+                }
+                resultElement.style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>
