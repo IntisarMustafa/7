@@ -214,7 +214,7 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(13, 71, 161, 0.15);
             border: 2px solid #bbdefb;
-            /* *** التغيير هنا: تم إزالة خاصية clip-path لإظهار الجزء العلوي من الحاوية بالكامل *** */
+            clip-path: polygon(0 15%, 100% 15%, 100% 100%, 0 100%);
             margin: 20px 0;
         }
 
@@ -233,7 +233,7 @@
             left: 0;
             width: 200%;
             height: 12%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".4" fill="%230d47a1"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".6" fill="%231976d2"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%232196f3"/></svg>');
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".4" fill="%230d47a1"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".6" fill="%231976d2"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%232196f3"/></svg>');
             background-size: 50% 100%;
             animation: wave 20s linear infinite;
             opacity: 0.8;
@@ -1052,18 +1052,18 @@
                 <svg class="landmasses-svg" viewBox="0 0 100 100">
                     <!-- أمريكا الشمالية وفلوريدا -->
                     <path class="landmass" d="M5 0 L5 10 L12 12 L15 11 L18 13 L20 10 L23 11 L25 10 L27 12 L28 15 L26 17 L25 20 L22 22 L20 25 L18 27 L15 30 L10 35 L8 38 L8 40 L10 42 L13 44 L15 45 L17 48 L15 50 L10 50 L8 48 L6 45 L5 42 L5 40 L7 38 L7 35 L5 32 L3 30 L0 25 L0 0 Z" />
-                    <!-- كوبا -->
-                    <path class="landmass" d="M30 65 Q45 60 60 65 L65 67 Q68 70 65 72 Q60 75 55 75 L45 74 Q40 73 35 72 Z" />
-                    <!-- جزر الباهاماس -->
-                    <path class="landmass" d="M30 45 L32 46 L35 45 L33 44 Z" />
-                    <path class="landmass" d="M35 48 L37 49 L40 48 L38 47 Z" />
-                    <!-- هيسبانيولا (هايتي وجمهورية الدومينيكان) -->
-                    <path class="landmass" d="M60 70 Q65 72 70 70 Q75 68 75 72 Q70 75 65 75 Z" />
-                    <path class="landmass" d="M68 73 Q72 75 75 73 Q78 71 80 75 Q75 78 70 78 Z" />
-                    <!-- جامايكا -->
-                    <path class="landmass" d="M35 80 Q40 82 45 80 Q50 78 45 77 Q40 76 35 80 Z" />
-                    <!-- بورتوريكو (جزيرة صغيرة) -->
-                    <path class="landmass" d="M85 82 Q88 85 90 82 Q92 80 90 78 Q87 76 85 82 Z" />
+                    <!-- كوبا (تم تحريكها لليسار) -->
+                    <path class="landmass" d="M5 65 Q20 60 35 65 L40 67 Q43 70 40 72 Q35 75 30 75 L20 74 Q15 73 10 72 Z" />
+                    <!-- جزر الباهاماس (تم تحريكها لليسار) -->
+                    <path class="landmass" d="M5 45 L7 46 L10 45 L8 44 Z" />
+                    <path class="landmass" d="M10 48 L12 49 L15 48 L13 47 Z" />
+                    <!-- هيسبانيولا (هايتي وجمهورية الدومينيكان - تم تحريكها لليسار) -->
+                    <path class="landmass" d="M35 70 Q40 72 45 70 Q50 68 50 72 Q45 75 40 75 Z" />
+                    <path class="landmass" d="M43 73 Q47 75 50 73 Q53 71 55 75 Q50 78 45 78 Z" />
+                    <!-- جامايكا (تم تحريكها لليسار) -->
+                    <path class="landmass" d="M10 80 Q15 82 20 80 Q25 78 20 77 Q15 76 10 80 Z" />
+                    <!-- بورتوريكو (جزيرة صغيرة - تم تحريكها لليسار) -->
+                    <path class="landmass" d="M60 82 Q63 85 65 82 Q67 80 65 78 Q62 76 60 82 Z" />
                 </svg>
                 <!-- نقاط المثلث -->
                 <div class="point miami" id="miamiPoint"></div>
@@ -1102,7 +1102,7 @@
         
         <!-- قسم فكرة الدرس -->
         <div class="lesson-content">
-            <h2 class="lesson-title">  فكرة الدرس: جمع المقادير الجبرية وطرحها. وتبسيط المقادير الجبرية</h2>
+            <h2 class="lesson-title">  فكرة الدرس: أبسط المقادير الجبرية بجمع الحدود الجبرية وطرحها </h2>
             
             <div class="concept-box">
                 <div class="concept-title">الحدود الجبرية المتشابهة</div>
@@ -1321,93 +1321,89 @@
                 const centerX = width / 2;
                 const centerY = height / 2;
                 
-                //
-                //  *** تم تعديل هذا الجزء من الكود ***
-                //
-                //  1. تم تثبيت مواقع ميامي وبورتوريكو (لم يتم تغييرها)
-                //     - ميامي في المنطقة الشمالية الغربية
-                //     - بورتوريكو في المنطقة الجنوبية الشرقية
+                // تحديد إحداثيات ميامي وبورتوريكو (لم يتم تغييرها)
+                // ----------------------------------------------------
                 const miamiX = centerX - triangleSize * 0.95;
                 const miamiY = centerY - triangleSize * 0.15;
                 
-                const puertoRicoX = centerX + triangleSize * 0.6;
-                const puertoRicoY = centerY + triangleSize * 0.6;
+                const puertoRicoX = centerX + triangleSize * 0.5;
+                const puertoRicoY = centerY + triangleSize * 0.7;
 
-                // تحديث مواقع النقاط الثابتة
-                miamiPoint.style.left = `${miamiX}px`;
-                miamiPoint.style.top = `${miamiY}px`;
-                
-                puertoRicoPoint.style.left = `${puertoRicoX}px`;
-                puertoRicoPoint.style.top = `${puertoRicoY}px`;
-
-                //
-                //  2. حساب الموقع الجديد لنقطة برمودا لتكوين مثلث متطابق الأضلاع
-                //     - يتم حساب طول الضلع بناءً على المسافة بين ميامي وبورتوريكو.
-                //     - ثم يتم حساب ارتفاع المثلث المتطابق الأضلاع.
-                //     - أخيرًا، يتم تحديد موقع برمودا الجديد عموديًا على منتصف الخط الواصل بين ميامي وبورتوريكو.
+                // ----------------------------------------------------
+                // حساب إحداثيات نقطة برمودا لجعل المثلث متطابق الأضلاع
+                // 1. حساب طول الضلع بين ميامي وبورتوريكو
                 const dx = puertoRicoX - miamiX;
                 const dy = puertoRicoY - miamiY;
                 const sideLength = Math.sqrt(dx * dx + dy * dy);
-                const heightOfEquilateral = (Math.sqrt(3) / 2) * sideLength;
-
+                
+                // 2. حساب نقطة المنتصف بين ميامي وبورتوريكو
                 const midX = (miamiX + puertoRicoX) / 2;
                 const midY = (miamiY + puertoRicoY) / 2;
-
-                // المتجه العمودي على الخط الواصل بين ميامي وبورتوريكو
-                let perpVectorX = -dy;
-                let perpVectorY = dx;
-
-                // التأكد من أن النقطة تتحرك للأعلى (نحو Y الأصغر)
-                // إذا كان الاتجاه الحالي يجعل النقطة تنزل، نعكس المتجه
-                if (perpVectorY > 0) {
-                    perpVectorX = dy;
-                    perpVectorY = -dx;
-                }
                 
-                // تطبيع المتجه العمودي
-                const perpVectorLength = Math.sqrt(perpVectorX * perpVectorX + perpVectorY * perpVectorY);
-                const unitPerpX = perpVectorX / perpVectorLength;
-                const unitPerpY = perpVectorY / perpVectorLength;
+                // 3. حساب ارتفاع المثلث المتطابق الأضلاع
+                const heightOfTriangle = (sideLength * Math.sqrt(3)) / 2;
+                
+                // 4. حساب متجه عمودي على الضلع (ميامي-بورتوريكو)
+                const unitPerpX = -dy / sideLength;
+                const unitPerpY = dx / sideLength;
+                
+                // 5. حساب إحداثيات نقطة برمودا الجديدة (هناك نقطتان ممكنتان)
+                const bermudaX1 = midX + unitPerpX * heightOfTriangle;
+                const bermudaY1 = midY + unitPerpY * heightOfTriangle;
+                
+                const bermudaX2 = midX - unitPerpX * heightOfTriangle;
+                const bermudaY2 = midY - unitPerpY * heightOfTriangle;
 
-                // حساب الإحداثيات النهائية لنقطة برمودا
-                const bermudaX = midX + unitPerpX * heightOfEquilateral;
-                const bermudaY = midY + unitPerpY * heightOfEquilateral;
+                // 6. اختيار النقطة "الأعلى" (ذات إحداثي Y الأصغر)
+                let bermudaX, bermudaY;
+                if (bermudaY1 < bermudaY2) {
+                    bermudaX = bermudaX1;
+                    bermudaY = bermudaY1;
+                } else {
+                    bermudaX = bermudaX2;
+                    bermudaY = bermudaY2;
+                }
 
-                // تحديث موقع نقطة برمودا
+                // تحديث مواقع النقاط
+                miamiPoint.style.left = `${miamiX}px`;
+                miamiPoint.style.top = `${miamiY}px`;
+                
                 bermudaPoint.style.left = `${bermudaX}px`;
                 bermudaPoint.style.top = `${bermudaY}px`;
                 
+                puertoRicoPoint.style.left = `${puertoRicoX}px`;
+                puertoRicoPoint.style.top = `${puertoRicoY}px`;
+                
                 // تحديث مواقع تسميات النقاط
-                // *** التغيير هنا: تم تعديل موقع التسمية "ميامي، فلوريدا" لرفعها أكثر وكشف النقطة الحمراء بالكامل. ***
                 miamiLabel.style.left = `${miamiX - 40}px`;
-                miamiLabel.style.top = `${miamiY - 50}px`; // تم تغيير القيمة من -30 إلى -50
+                miamiLabel.style.top = `${miamiY - 30}px`;
                 
                 bermudaLabel.style.left = `${bermudaX}px`;
                 bermudaLabel.style.top = `${bermudaY - 30}px`;
                 
                 puertoRicoLabel.style.left = `${puertoRicoX - 50}px`;
-                puertoRicoLabel.style.top = `${puertoRicoY + 20}px`;
+                puertoRicoLabel.style.top = `${puertoRicoY + 10}px`;
                 
-                // تحديث مواقع تسميات الكتل الأرضية
+                // تحديث مواقع تسميات الكتل الأرضية (تم تعديل هذه القيم لتحريك الجزر إلى اليسار)
                 usaLabel.style.left = `${width * 0.1}px`;
                 usaLabel.style.top = `${height * 0.15}px`;
                 
                 floridaLabel.style.left = `${width * 0.1}px`;
                 floridaLabel.style.top = `${height * 0.4}px`;
                 
-                cubaLabel.style.left = `${width * 0.35}px`;
+                cubaLabel.style.left = `${width * 0.1}px`;
                 cubaLabel.style.top = `${height * 0.55}px`;
                 
-                bahamasLabel.style.left = `${width * 0.4}px`;
+                bahamasLabel.style.left = `${width * 0.15}px`;
                 bahamasLabel.style.top = `${height * 0.35}px`;
                 
-                haitiLabel.style.left = `${width * 0.58}px`;
+                haitiLabel.style.left = `${width * 0.33}px`;
                 haitiLabel.style.top = `${height * 0.6}px`;
                 
-                jamaicaLabel.style.left = `${width * 0.35}px`;
+                jamaicaLabel.style.left = `${width * 0.1}px`;
                 jamaicaLabel.style.top = `${height * 0.68}px`;
                 
-                puertoRicoLandLabel.style.left = `${width * 0.75}px`;
+                puertoRicoLandLabel.style.left = `${width * 0.5}px`;
                 puertoRicoLandLabel.style.top = `${height * 0.7}px`;
                 
                 // إعادة رسم المثلث
