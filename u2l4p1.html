@@ -214,7 +214,7 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(13, 71, 161, 0.15);
             border: 2px solid #bbdefb;
-            clip-path: polygon(0 15%, 100% 15%, 100% 100%, 0 100%);
+            /* *** التغيير هنا: تم إزالة خاصية clip-path لإظهار الجزء العلوي من الحاوية بالكامل *** */
             margin: 20px 0;
         }
 
@@ -1102,7 +1102,7 @@
         
         <!-- قسم فكرة الدرس -->
         <div class="lesson-content">
-            <h2 class="lesson-title">  فكرة الدرس: أبسط المقادير الجبرية بجمع الحدود الجبرية وطرحها </h2>
+            <h2 class="lesson-title">  فكرة الدرس: جمع المقادير الجبرية وطرحها. وتبسيط المقادير الجبرية</h2>
             
             <div class="concept-box">
                 <div class="concept-title">الحدود الجبرية المتشابهة</div>
@@ -1321,35 +1321,66 @@
                 const centerX = width / 2;
                 const centerY = height / 2;
                 
-                // إحداثيات النقاط (متطابق الأضلاع) - مع التعديلات المطلوبة
-                // تم تعديل موقع نقطة ميامي للوصول إلى المنطقة الخضراء (فلوريدا)
-                // تم تعديل هذا السطر لتحريك النقطة إلى الغرب (ناقص قيمة أكبر)
+                //
+                //  *** تم تعديل هذا الجزء من الكود ***
+                //
+                //  1. تم تثبيت مواقع ميامي وبورتوريكو (لم يتم تغييرها)
+                //     - ميامي في المنطقة الشمالية الغربية
+                //     - بورتوريكو في المنطقة الجنوبية الشرقية
                 const miamiX = centerX - triangleSize * 0.95;
                 const miamiY = centerY - triangleSize * 0.15;
-                
-                // تم تحريك نقطة برمودا شمالاً وشرقاً بمقدار 30% من حجم المثلث
-                const moveDistanceX = 0.35 * triangleSize;
-                const moveDistanceY = 0.25 * triangleSize;
-                
-                const bermudaX = centerX + moveDistanceX;
-                const bermudaY = centerY - triangleSize * 0.5 - moveDistanceY;
                 
                 const puertoRicoX = centerX + triangleSize * 0.6;
                 const puertoRicoY = centerY + triangleSize * 0.6;
 
-                // تحديث مواقع النقاط
+                // تحديث مواقع النقاط الثابتة
                 miamiPoint.style.left = `${miamiX}px`;
                 miamiPoint.style.top = `${miamiY}px`;
                 
+                puertoRicoPoint.style.left = `${puertoRicoX}px`;
+                puertoRicoPoint.style.top = `${puertoRicoY}px`;
+
+                //
+                //  2. حساب الموقع الجديد لنقطة برمودا لتكوين مثلث متطابق الأضلاع
+                //     - يتم حساب طول الضلع بناءً على المسافة بين ميامي وبورتوريكو.
+                //     - ثم يتم حساب ارتفاع المثلث المتطابق الأضلاع.
+                //     - أخيرًا، يتم تحديد موقع برمودا الجديد عموديًا على منتصف الخط الواصل بين ميامي وبورتوريكو.
+                const dx = puertoRicoX - miamiX;
+                const dy = puertoRicoY - miamiY;
+                const sideLength = Math.sqrt(dx * dx + dy * dy);
+                const heightOfEquilateral = (Math.sqrt(3) / 2) * sideLength;
+
+                const midX = (miamiX + puertoRicoX) / 2;
+                const midY = (miamiY + puertoRicoY) / 2;
+
+                // المتجه العمودي على الخط الواصل بين ميامي وبورتوريكو
+                let perpVectorX = -dy;
+                let perpVectorY = dx;
+
+                // التأكد من أن النقطة تتحرك للأعلى (نحو Y الأصغر)
+                // إذا كان الاتجاه الحالي يجعل النقطة تنزل، نعكس المتجه
+                if (perpVectorY > 0) {
+                    perpVectorX = dy;
+                    perpVectorY = -dx;
+                }
+                
+                // تطبيع المتجه العمودي
+                const perpVectorLength = Math.sqrt(perpVectorX * perpVectorX + perpVectorY * perpVectorY);
+                const unitPerpX = perpVectorX / perpVectorLength;
+                const unitPerpY = perpVectorY / perpVectorLength;
+
+                // حساب الإحداثيات النهائية لنقطة برمودا
+                const bermudaX = midX + unitPerpX * heightOfEquilateral;
+                const bermudaY = midY + unitPerpY * heightOfEquilateral;
+
+                // تحديث موقع نقطة برمودا
                 bermudaPoint.style.left = `${bermudaX}px`;
                 bermudaPoint.style.top = `${bermudaY}px`;
                 
-                puertoRicoPoint.style.left = `${puertoRicoX}px`;
-                puertoRicoPoint.style.top = `${puertoRicoY}px`;
-                
                 // تحديث مواقع تسميات النقاط
+                // *** التغيير هنا: تم تعديل موقع التسمية "ميامي، فلوريدا" لرفعها أكثر وكشف النقطة الحمراء بالكامل. ***
                 miamiLabel.style.left = `${miamiX - 40}px`;
-                miamiLabel.style.top = `${miamiY - 30}px`;
+                miamiLabel.style.top = `${miamiY - 50}px`; // تم تغيير القيمة من -30 إلى -50
                 
                 bermudaLabel.style.left = `${bermudaX}px`;
                 bermudaLabel.style.top = `${bermudaY - 30}px`;
