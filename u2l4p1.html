@@ -27,7 +27,7 @@
         body {
             background: #ffffff;
             color: #1a237e;
-            min-height: 100vh;
+            min-height: 10vh;
             overflow-x: hidden;
             position: relative;
         }
@@ -233,7 +233,7 @@
             left: 0;
             width: 200%;
             height: 12%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".4" fill="%230d47a1"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".6" fill="%231976d2"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%232196f3"/></svg>');
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".4" fill="%230d47a1"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".6" fill="%231976d2"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%232196f3"/></svg>');
             background-size: 50% 100%;
             animation: wave 20s linear infinite;
             opacity: 0.8;
@@ -529,7 +529,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="rgba(25,118,210,0.1)" stroke-width="1" stroke-dasharray="5,5"/></svg>');
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="rgba(25,118,210,0.1)" stroke-width="1" stroke-dasharray="5,5"/></svg>');
             opacity: 0.2;
             pointer-events: none;
             z-index: 3;
@@ -974,31 +974,6 @@
             font-size: 1.6rem !important;
             direction: ltr !important;
         }
-        
-        /* منطقة فلوريدا الخضراء */
-        .florida-area {
-            position: absolute;
-            width: 18%;
-            height: 40%;
-            left: 8%;
-            top: 15%;
-            background: rgba(76, 175, 80, 0.3);
-            border: 2px solid #388e3c;
-            border-radius: 10px;
-            z-index: 5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-        }
-        
-        .florida-area::after {
-            content: "فلوريدا";
-            color: #2e7d32;
-            font-weight: bold;
-            font-size: 1.5rem;
-            text-shadow: 0 0 5px white;
-        }
     </style>
 </head>
 
@@ -1062,15 +1037,13 @@
                     <path class="landmass" d="M43 73 Q47 75 50 73 Q53 71 55 75 Q50 78 45 78 Z" />
                     <!-- جامايكا (تم تحريكها لليسار) -->
                     <path class="landmass" d="M10 80 Q15 82 20 80 Q25 78 20 77 Q15 76 10 80 Z" />
-                    <!-- بورتوريكو (جزيرة صغيرة - تم تحريكها لليسار) -->
-                    <path class="landmass" d="M60 82 Q63 85 65 82 Q67 80 65 78 Q62 76 60 82 Z" />
                 </svg>
                 <!-- نقاط المثلث -->
                 <div class="point miami" id="miamiPoint"></div>
                 <div class="point bermuda" id="bermudaPoint"></div>
                 <div class="point puerto-rico" id="puertoRicoPoint"></div>
                 <!-- تسميات النقاط -->
-                <div class="point-label" id="miamiLabel">ميامي، فلوريدا</div>
+                <div class="point-label" id="miamiLabel">ميامي</div>
                 <div class="point-label" id="bermudaLabel">برمودا</div>
                 <div class="point-label" id="puertoRicoLabel">بورتوريكو</div>
                 <!-- تسميات الكتل الأرضية -->
@@ -1080,11 +1053,7 @@
                 <div class="land-label" id="bahamasLabel">الباهاماس</div>
                 <div class="land-label" id="haitiLabel">هايتي</div>
                 <div class="land-label" id="jamaicaLabel">جامايكا</div>
-                <div class="land-label" id="puertoRicoLandLabel">بورتوريكو</div>
                 <div class="plane" id="plane">✈️</div>
-                
-                <!-- منطقة فلوريدا الخضراء -->
-                <div class="florida-area"></div>
             </div>
             
             <div class="controls">
@@ -1307,7 +1276,6 @@
             const bahamasLabel = document.getElementById('bahamasLabel');
             const haitiLabel = document.getElementById('haitiLabel');
             const jamaicaLabel = document.getElementById('jamaicaLabel');
-            const puertoRicoLandLabel = document.getElementById('puertoRicoLandLabel');
 
             let animationSpeed = 1;
 
@@ -1324,7 +1292,7 @@
                 // تحديد إحداثيات ميامي وبورتوريكو (لم يتم تغييرها)
                 // ----------------------------------------------------
                 const miamiX = centerX - triangleSize * 0.95;
-                const miamiY = centerY - triangleSize * 0.15;
+                const miamiY = centerY + triangleSize * 0.05; // تم خفض ميامي للأسفل
                 
                 const puertoRicoX = centerX + triangleSize * 0.5;
                 const puertoRicoY = centerY + triangleSize * 0.7;
@@ -1375,21 +1343,23 @@
                 puertoRicoPoint.style.top = `${puertoRicoY}px`;
                 
                 // تحديث مواقع تسميات النقاط
-                miamiLabel.style.left = `${miamiX - 40}px`;
-                miamiLabel.style.top = `${miamiY - 30}px`;
+                // تم تعديل موقع تسمية ميامي للتحرك للأعلى
+                miamiLabel.style.left = `${miamiX - 25}px`;
+                miamiLabel.style.top = `${miamiY + 5}px`; 
                 
-                bermudaLabel.style.left = `${bermudaX}px`;
-                bermudaLabel.style.top = `${bermudaY - 30}px`;
+                bermudaLabel.style.left = `${bermudaX - 35}px`;
+                bermudaLabel.style.top = `${bermudaY + 20}px`;
                 
                 puertoRicoLabel.style.left = `${puertoRicoX - 50}px`;
                 puertoRicoLabel.style.top = `${puertoRicoY + 10}px`;
                 
-                // تحديث مواقع تسميات الكتل الأرضية (تم تعديل هذه القيم لتحريك الجزر إلى اليسار)
+                // تحديث مواقع تسميات الكتل الأرضية
                 usaLabel.style.left = `${width * 0.1}px`;
                 usaLabel.style.top = `${height * 0.15}px`;
                 
-                floridaLabel.style.left = `${width * 0.1}px`;
-                floridaLabel.style.top = `${height * 0.4}px`;
+                // هذا هو التغيير المطلوب: تم تحريك تسمية فلوريدا لليسار بمقدار 10 بكسل
+                floridaLabel.style.left = `${width * 0.08 - 10}px`; 
+                floridaLabel.style.top = `${height * 0.35}px`;
                 
                 cubaLabel.style.left = `${width * 0.1}px`;
                 cubaLabel.style.top = `${height * 0.55}px`;
@@ -1403,8 +1373,7 @@
                 jamaicaLabel.style.left = `${width * 0.1}px`;
                 jamaicaLabel.style.top = `${height * 0.68}px`;
                 
-                puertoRicoLandLabel.style.left = `${width * 0.5}px`;
-                puertoRicoLandLabel.style.top = `${height * 0.7}px`;
+                // تم حذف تسمية بورتوريكو الصغيرة
                 
                 // إعادة رسم المثلث
                 drawTriangle();
