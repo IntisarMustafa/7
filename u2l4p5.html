@@ -94,6 +94,8 @@
             display: flex;
             gap: 25px;
             margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
         .character {
@@ -260,6 +262,8 @@
             border-radius: 20px;
             font-size: 1.2rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
         .stat {
@@ -627,6 +631,8 @@
             display: flex;
             gap: 20px;
             z-index: 50;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
         .info-item {
@@ -900,35 +906,36 @@
             animation: bounce 1s infinite;
         }
 
-        /* Question Modal Specific Styles */
+        /* Responsive Question Styles */
         .question-modal h2 {
-            font-size: 2.2rem; /* Adjusted for smaller screens */
-            margin-bottom: 25px; /* Slightly reduced margin */
+            font-size: clamp(1.2rem, 4.5vw, 2.2rem);
+            margin-bottom: 15px;
             color: #f1faee;
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            direction: ltr; /* Ensure question text is LTR */
+            direction: ltr;
             text-align: initial;
-            width: 90%; /* More fluid width */
-            max-width: 650px; /* Reduced max-width for better mobile fit */
-            unicode-bidi: embed; /* Embed LTR for math */
+            width: 95%;
+            max-width: 650px;
+            unicode-bidi: embed;
             word-break: break-word;
             overflow-wrap: break-word;
+            line-height: 1.4;
         }
 
         .question-modal input[type="text"] {
-            padding: 12px 20px; /* Slightly reduced padding */
-            font-size: 1.3rem; /* Adjusted for smaller screens */
+            padding: 12px 20px;
+            font-size: 1.3rem;
             border-radius: 10px;
             border: 2px solid #4cc9f0;
             background-color: rgba(255, 255, 255, 0.1);
             color: #fff;
-            width: 85%; /* More fluid width */
-            max-width: 350px; /* Reduced max-width */
+            width: 85%;
+            max-width: 350px;
             text-align: center;
             margin-bottom: 20px;
             outline: none;
             transition: border-color 0.3s ease, background-color 0.3s ease;
-            direction: ltr; /* Ensure input is LTR */
+            direction: ltr;
         }
 
         .question-modal input[type="text"]:focus {
@@ -937,8 +944,8 @@
         }
 
         .question-modal .feedback-message {
-            font-size: 1.4rem; /* Adjusted for smaller screens */
-            margin-top: 15px; /* Slightly reduced margin */
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
+            margin-top: 15px;
             font-weight: bold;
         }
 
@@ -956,9 +963,9 @@
         .options-container {
             display: flex;
             flex-direction: column;
-            gap: 12px; /* Slightly reduced gap */
-            width: 90%; /* More fluid width */
-            max-width: 500px; /* Reduced max-width */
+            gap: 12px;
+            width: 90%;
+            max-width: 500px;
             margin-bottom: 20px;
         }
 
@@ -966,13 +973,13 @@
             background: rgba(76, 201, 240, 0.2);
             color: white;
             border: 2px solid #4cc9f0;
-            padding: 12px 20px; /* Slightly reduced padding */
-            font-size: 1.2rem; /* Adjusted for smaller screens */
+            padding: 12px 20px;
+            font-size: clamp(1.0rem, 3.5vw, 1.2rem);
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: initial;
-            direction: ltr; /* Ensure option text is LTR */
+            direction: ltr;
             unicode-bidi: embed;
             word-break: break-word;
             overflow-wrap: break-word;
@@ -990,25 +997,150 @@
             box-shadow: 0 0 20px rgba(67, 97, 238, 0.8);
         }
 
-        /* Media queries for very small screens */
-        @media (max-width: 400px) {
+        /* Mobile optimization for question modal */
+        @media (max-height: 600px) {
+            .question-modal {
+                padding: 10px;
+            }
+            
             .question-modal h2 {
-                font-size: 1.8rem; /* Even smaller font for very small screens */
+                font-size: clamp(1.1rem, 4vw, 1.8rem);
+                margin-bottom: 10px;
+            }
+            
+            .option-btn {
+                padding: 10px 15px;
+                font-size: 1.0rem;
+            }
+        }
+
+        /* Mobile controls */
+        .mobile-controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 20px;
+            z-index: 50;
+            display: none;
+        }
+        
+        .mobile-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(76, 201, 240, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            user-select: none;
+            touch-action: manipulation;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            .game-container {
+                max-height: 90vh;
+                border-radius: 10px;
+            }
+            
+            .logo {
+                font-size: 3.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.4rem;
                 margin-bottom: 20px;
             }
-
-            .question-modal input[type="text"] {
+            
+            .character {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .character i {
+                font-size: 2.5rem;
+            }
+            
+            .btn {
+                padding: 14px 30px;
+                font-size: 1.2rem;
+            }
+            
+            .controls-info {
+                gap: 8px;
+            }
+            
+            .control-item {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .stats {
+                gap: 15px;
+                padding: 10px 20px;
+            }
+            
+            .stat-value {
+                font-size: 1.8rem;
+            }
+            
+            .mobile-controls {
+                display: flex;
+            }
+            
+            #game-message {
+                font-size: 2rem;
+                padding: 15px 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .character {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .character i {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
                 font-size: 1.1rem;
-                padding: 10px 15px;
             }
-
-            .options-container {
+            
+            .mobile-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+            }
+            
+            .stats {
                 gap: 10px;
+                padding: 8px 15px;
             }
-
-            .option-btn {
-                font-size: 1.0rem;
-                padding: 10px 15px;
+            
+            .stat-value {
+                font-size: 1.6rem;
+            }
+            
+            .info-item {
+                font-size: 0.9rem;
+                padding: 6px 12px;
             }
         }
     </style>
@@ -1140,13 +1272,20 @@
             <i class="fas fa-volume-up"></i>
         </button>
 
-        <!-- New: Question Modal -->
+        <!-- Mobile Controls -->
+        <div class="mobile-controls">
+            <div class="mobile-btn" id="jump-btn">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+            <div class="mobile-btn" id="slide-btn">
+                <i class="fas fa-arrow-down"></i>
+            </div>
+        </div>
+
+        <!-- Question Modal -->
         <div id="question-modal" class="question-modal">
             <h2 id="question-text"></h2>
-            <!-- Options Container for 'multiple-choice' type questions -->
-            <div id="options-container" class="options-container">
-                <!-- Options will be dynamically added here -->
-            </div>
+            <div id="options-container" class="options-container"></div>
             <button id="submit-answer-btn" class="btn">
                 <i class="fas fa-check"></i> إرسال الإجابة
             </button>
@@ -1192,6 +1331,8 @@
             let finalPlatformsElement = document.getElementById('final-platforms');
             let coinsCollectedElement = document.getElementById('coins-collected');
             let finalCoinsElement = document.getElementById('final-coins');
+            const jumpBtn = document.getElementById('jump-btn');
+            const slideBtn = document.getElementById('slide-btn');
 
             // Question Modal Elements
             const questionModal = document.getElementById('question-modal');
@@ -1211,11 +1352,11 @@
             let player;
             let obstacles = [];
             let flyingPlatforms = [];
-            let coins = []; // New array for coins
+            let coins = [];
             let obstacleSpeed = 4.0; 
-            let currentSpeedMultiplier = 1.0; // Start with 1.0 for initial speed
+            let currentSpeedMultiplier = 1.0;
             let obstacleInterval;
-            let obstacleIntervalTime = 2000; // Initial interval time
+            let obstacleIntervalTime = 2000;
             let backgroundElements = [];
             let playerMode = 'cube';
             let gravityDirection = 1;
@@ -1240,12 +1381,11 @@
             let soundEnabled = true;
             
             // Question Variables
-            let currentCorrectOptionIndex = -1; // For multiple choice questions
-            let currentSelectedOptionIndex = -1; // For multiple choice questions
-            let collidedObstacleRef = null; // Global variable to store the obstacle that triggered the question
+            let currentCorrectOptionIndex = -1;
+            let currentSelectedOptionIndex = -1;
+            let collidedObstacleRef = null;
 
             // --- Questions for 7th Grade, Jordan Curriculum - Algebraic Expressions ---
-            // Using LaTeX for mathematical expressions to ensure LTR display and proper formatting.
             const questions = [
                 {
                     type: 'multiple-choice',
@@ -2144,90 +2284,6 @@
                 requestAnimationFrame(updateGame);
             }
 
-            // --- Algebraic Question Logic ---
-
-            // Helper function to normalize algebraic expressions for comparison
-            // Handles terms like "3x", "-5y", "7", "x", "-x"
-            // Sorts terms alphabetically by variable, then constant at the end.
-            // Example: "5x + 3 + 2y" -> "5x + 2y + 3" (simplified and sorted)
-            function normalizeAlgebraicExpression(expression) {
-                expression = String(expression).toLowerCase(); // Convert to string and lowercase
-                expression = expression.replace(/\s+/g, ''); // Remove all whitespace
-                expression = expression.replace(/\-\-/g, '+'); // -- becomes +
-                expression = expression.replace(/\+\-/g, '-'); // +- becomes -
-
-                // Replace common multiplication symbols with nothing for normalization
-                expression = expression.replace(/\*/g, ''); 
-                expression = expression.replace(/\\times/g, ''); 
-
-                // Handle implicit 1 coefficients (e.g., 'x' becomes '1x', '-x' becomes '-1x')
-                // This regex needs to be careful not to add '1' to numbers without variables
-                expression = expression.replace(/([+\-])([a-z])/g, '$11$2'); // +x -> +1x, -y -> -1y
-                if (expression.match(/^[a-z]/)) { // if starts with a variable, e.g., 'x'
-                    expression = '1' + expression;
-                }
-
-                // Split into terms (e.g., "3x+5-2y" -> ["3x", "+5", "-2y"])
-                // Updated regex to handle terms like 'x^2' or 'y^3'
-                const terms = expression.match(/([+\-]?\d*\.?\d*[a-z]?\^?\d*)/g)
-                                        .filter(term => term !== '' && term !== '+' && term !== '-');
-
-                let varTerms = {}; // Stores { 'x': 5, 'y^2': -2 }
-                let constant = 0;
-
-                terms.forEach(term => {
-                    // Regex to capture coefficient and variable part (including power)
-                    const match = term.match(/([+\-]?\d*\.?\d*)([a-z]?\^?\d*)/);
-                    if (match) {
-                        let coeff = parseFloat(match[1]);
-                        if (isNaN(coeff)) { // Handle cases like 'x' or '-x' after initial replacement
-                            coeff = (match[1] === '-') ? -1 : 1;
-                        }
-                        const variablePart = match[2];
-
-                        if (variablePart) {
-                            if (!varTerms[variablePart]) {
-                                varTerms[variablePart] = 0;
-                            }
-                            varTerms[variablePart] += coeff;
-                        } else {
-                            constant += coeff;
-                        }
-                    }
-                });
-
-                let sortedTerms = [];
-                // Sort variable terms alphabetically
-                Object.keys(varTerms).sort().forEach(key => {
-                    if (varTerms[key] !== 0) {
-                        let termStr = '';
-                        if (varTerms[key] === 1 && key.length > 0 && !key.includes('^')) { // '1x' -> 'x'
-                            termStr = key;
-                        } else if (varTerms[key] === -1 && key.length > 0 && !key.includes('^')) { // '-1x' -> '-x'
-                            termStr = '-' + key;
-                        }
-                        else {
-                            termStr = `${varTerms[key]}${key}`;
-                        }
-                        sortedTerms.push(termStr);
-                    }
-                });
-                
-                // Add constant last
-                if (constant !== 0) {
-                    sortedTerms.push(String(constant));
-                }
-
-                // Join with '+' and handle initial '+' if present
-                let result = sortedTerms.join('+');
-                result = result.replace(/\+\-/g, '-'); // Replace '+-' with '-'
-                if (result.startsWith('+')) {
-                    result = result.substring(1);
-                }
-                if (result === '') return '0'; // If everything cancels out
-                return result;
-            }
-
             // Show the question modal
             function showQuestion() {
                 gamePaused = true;
@@ -2681,7 +2737,9 @@
             startBtn.addEventListener('click', startGame);
             restartBtn.addEventListener('click', startGame);
             musicToggleButton.addEventListener('click', toggleSound); 
-            submitAnswerBtn.addEventListener('click', checkAnswer); // New: Submit answer button
+            submitAnswerBtn.addEventListener('click', checkAnswer);
+            jumpBtn.addEventListener('click', jump);
+            slideBtn.addEventListener('click', slide);
 
             document.addEventListener('keydown', (e) => {
                 // Prevent game controls if question modal is open
