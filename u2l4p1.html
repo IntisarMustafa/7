@@ -591,6 +591,8 @@
             box-shadow: 0 0 5px rgba(13, 71, 161, 0.1);
             z-index: 9;
             white-space: nowrap;
+            /* التغيير هنا: توسيط التسمية حول نقطة الإحداثيات */
+            transform: translate(-50%, -50%); 
         }
 
         /* إضافة نمط لعنصر canvas */
@@ -666,7 +668,7 @@
             margin-top: 25px;
         }
 
-        .barrels-container, .third-box {
+        .barrels-container {
             background: #f5f5f5;
             border-radius: 15px;
             padding: 20px;
@@ -1024,7 +1026,7 @@
                 <!-- عنصر Canvas لرسم الخطوط -->
                 <canvas id="triangleCanvas"></canvas>
                 <!-- SVG للكتل الأرضية -->
-                <svg class="landmasses-svg" viewBox="0 0 100 100">
+                <svg class="landmasses-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
                     <!-- أمريكا الشمالية وفلوريدا -->
                     <path class="landmass" d="M5 0 L5 10 L12 12 L15 11 L18 13 L20 10 L23 11 L25 10 L27 12 L28 15 L26 17 L25 20 L22 22 L20 25 L18 27 L15 30 L10 35 L8 38 L8 40 L10 42 L13 44 L15 45 L17 48 L15 50 L10 50 L8 48 L6 45 L5 42 L5 40 L7 38 L7 35 L5 32 L3 30 L0 25 L0 0 Z" />
                     <!-- كوبا (تم تحريكها لليسار) -->
@@ -1342,7 +1344,7 @@
                 puertoRicoPoint.style.left = `${puertoRicoX}px`;
                 puertoRicoPoint.style.top = `${puertoRicoY}px`;
                 
-                // تحديث مواقع تسميات النقاط
+                // تحديث مواقع تسميات النقاط (بناءً على طلب المستخدم بأنها تعمل بشكل جيد)
                 // تم تعديل موقع تسمية ميامي للتحرك للأعلى
                 miamiLabel.style.left = `${miamiX - 25}px`;
                 miamiLabel.style.top = `${miamiY + 5}px`; 
@@ -1352,28 +1354,6 @@
                 
                 puertoRicoLabel.style.left = `${puertoRicoX - 50}px`;
                 puertoRicoLabel.style.top = `${puertoRicoY + 10}px`;
-                
-                // تحديث مواقع تسميات الكتل الأرضية
-                usaLabel.style.left = `${width * 0.1}px`;
-                usaLabel.style.top = `${height * 0.15}px`;
-                
-                // هذا هو التغيير المطلوب: تم تحريك تسمية فلوريدا لليسار بمقدار 10 بكسل
-                floridaLabel.style.left = `${width * 0.08 - 10}px`; 
-                floridaLabel.style.top = `${height * 0.35}px`;
-                
-                cubaLabel.style.left = `${width * 0.1}px`;
-                cubaLabel.style.top = `${height * 0.55}px`;
-                
-                bahamasLabel.style.left = `${width * 0.15}px`;
-                bahamasLabel.style.top = `${height * 0.35}px`;
-                
-                haitiLabel.style.left = `${width * 0.33}px`;
-                haitiLabel.style.top = `${height * 0.6}px`;
-                
-                jamaicaLabel.style.left = `${width * 0.1}px`;
-                jamaicaLabel.style.top = `${height * 0.68}px`;
-                
-                // تم حذف تسمية بورتوريكو الصغيرة
                 
                 // إعادة رسم المثلث
                 drawTriangle();
@@ -1425,6 +1405,46 @@
                     ctx.closePath();
                     ctx.stroke();
                 }, 50);
+            }
+
+            // Define landmass label positions (x, y in SVG viewBox 0-100, representing the center of the label)
+            // هذه الإحداثيات هي لمركز التسمية داخل نظام إحداثيات SVG (0-100)
+            const landLabelData = {
+                usa: { x: 15, y: 25, element: usaLabel },
+                florida: { x: 10, y: 40, element: floridaLabel },
+                cuba: { x: 25, y: 68, element: cubaLabel },
+                bahamas: { x: 15, y: 46, element: bahamasLabel },
+                haiti: { x: 45, y: 72, element: haitiLabel },
+                jamaica: { x: 20, y: 82, element: jamaicaLabel }
+            };
+
+            // وظيفة لتحديث مواقع تسميات الكتل الأرضية
+            function updateLandLabels() {
+                const containerWidth = oceanContainer.clientWidth;
+                const containerHeight = oceanContainer.clientHeight;
+                const svgViewBoxWidth = 100;
+                const svgViewBoxHeight = 100;
+
+                // Calculate the scale and offsets for the SVG content due to preserveAspectRatio="xMidYMid meet"
+                const scale = Math.min(containerWidth / svgViewBoxWidth, containerHeight / svgViewBoxHeight);
+                const renderedSvgWidth = svgViewBoxWidth * scale;
+                const renderedSvgHeight = svgViewBoxHeight * scale;
+                const offsetX = (containerWidth - renderedSvgWidth) / 2; // Horizontal offset for centering
+                const offsetY = (containerHeight - renderedSvgHeight) / 2; // Vertical offset for centering
+
+                // Update positions for each land label
+                for (const key in landLabelData) {
+                    const data = landLabelData[key];
+                    if (data.element) {
+                        // Calculate position relative to the rendered SVG content
+                        // data.x and data.y are in SVG viewBox coordinates (0-100)
+                        const left = offsetX + (data.x * scale);
+                        const top = offsetY + (data.y * scale);
+
+                        data.element.style.left = `${left}px`;
+                        data.element.style.top = `${top}px`;
+                    }
+                }
             }
 
             // وظيفة لإنشاء فقاعات عشوائية
@@ -1521,13 +1541,17 @@
             // وظيفة زر إضافة طائرة
             addBtn.addEventListener('click', addExtraPlane);
 
-            // استدعاء وظيفة رسم المثلث عند تحميل الصفحة وعند تغيير حجمها
+            // استدعاء وظيفة رسم المثلث وتحديث تسميات الكتل الأرضية عند تحميل الصفحة وعند تغيير حجمها
             window.addEventListener('load', function() {
                 updateTrianglePoints();
+                updateLandLabels(); // Call the new function
                 createBubbles();
                 addLightFlashes();
             });
-            window.addEventListener('resize', updateTrianglePoints);
+            window.addEventListener('resize', function() {
+                updateTrianglePoints();
+                updateLandLabels(); // Call the new function
+            });
 
             // ========= كود البراميل الجبرية (تم التعديل) =========
             const originalBarrels = document.getElementById('originalBarrels');
@@ -1538,144 +1562,153 @@
             const nCounter = document.getElementById('nCounter');
             const dCounter = document.getElementById('dCounter');
             const resetAlgebraBtn = document.getElementById('resetAlgebraBtn');
-            const addAlgebraBtn = document.getElementById('addAlgebraBtn'); // تأكد من أن هذا الزر موجود في HTML
+            const addAlgebraBtn = document.getElementById('addAlgebraBtn');
 
-            
             let thirdBoxCountN = 0;
             let thirdBoxCountD = 0;
             let draggedItem = null;
             let ghostBarrel = null;
+            let initialMouseX = 0;
+            let initialMouseY = 0;
+            let initialBarrelX = 0;
+            let initialBarrelY = 0;
 
-            // دالة لإعداد أحداث السحب والإفلات للبراميل الأصلية
+            // Function to set up drag events for a barrel
             function setupDragEvents(barrel) {
-                // أحداث سحب الفأرة
                 barrel.addEventListener('mousedown', startDrag);
-                barrel.addEventListener('mouseup', endDrag);
-
-                // أحداث سحب اللمس
                 barrel.addEventListener('touchstart', startDrag, { passive: false });
-                barrel.addEventListener('touchend', endDrag);
             }
 
-            // دالة بدء السحب
+            // Function to start drag operation
             function startDrag(e) {
-                e.preventDefault(); // منع السلوك الافتراضي للمتصفح مثل تحديد النص
+                // Prevent default touch behaviors like scrolling/zooming
+                if (e.type === 'touchstart') {
+                    e.preventDefault();
+                }
 
                 const barrel = this;
-                const rect = barrel.getBoundingClientRect();
-                const offsetX = e.clientX ? e.clientX - rect.left : e.touches[0].clientX - rect.left;
-                const offsetY = e.clientY ? e.clientY - rect.top : e.touches[0].clientY - rect.top;
+                draggedItem = barrel;
 
-                // إنشاء برميل شبحي (ghost barrel) يتبع المؤشر/الإصبع
+                const rect = barrel.getBoundingClientRect();
+
+                // Calculate initial offset from the top-left of the barrel to the mouse/touch point
+                initialMouseX = e.clientX || e.touches[0].clientX;
+                initialMouseY = e.clientY || e.touches[0].clientY;
+                initialBarrelX = rect.left;
+                initialBarrelY = rect.top;
+
+                // Create and style the ghost barrel
                 ghostBarrel = barrel.cloneNode(true);
                 ghostBarrel.classList.add('ghost-barrel');
                 ghostBarrel.style.width = `${rect.width}px`;
                 ghostBarrel.style.height = `${rect.height}px`;
+                ghostBarrel.style.left = `${initialBarrelX}px`; // Start at original position
+                ghostBarrel.style.top = `${initialBarrelY}px`;
                 document.body.appendChild(ghostBarrel);
-                
-                // إخفاء البرميل الأصلي أثناء السحب
+
+                // Hide the original barrel
                 barrel.style.visibility = 'hidden';
 
-                draggedItem = barrel;
-
-                // إضافة مستمع لحركة المؤشر/اللمس لتحديث موقع البرميل الشبحي
+                // Add event listeners to the document for movement and release
                 document.addEventListener('mousemove', moveDrag);
                 document.addEventListener('touchmove', moveDrag, { passive: false });
+                document.addEventListener('mouseup', endDrag);
+                document.addEventListener('touchend', endDrag);
+
+                // Add active class to drop target for visual feedback
+                thirdBox.classList.add('third-box-active');
             }
 
-            // دالة تحديث موقع البرميل الشبحي أثناء السحب
+            // Function to update ghost barrel position during drag
             function moveDrag(e) {
                 if (!ghostBarrel) return;
 
                 const clientX = e.clientX || e.touches[0].clientX;
                 const clientY = e.clientY || e.touches[0].clientY;
 
-                // تحديث موقع البرميل الشبحي
-                ghostBarrel.style.left = `${clientX - ghostBarrel.offsetWidth / 2}px`;
-                ghostBarrel.style.top = `${clientY - ghostBarrel.offsetHeight / 2}px`;
+                // Position the ghost barrel so the initial click point stays under the cursor/finger
+                ghostBarrel.style.left = `${initialBarrelX + (clientX - initialMouseX)}px`;
+                ghostBarrel.style.top = `${initialBarrelY + (clientY - initialMouseY)}px`;
             }
 
-            // دالة نهاية السحب
+            // Function to handle drag end
             function endDrag(e) {
                 if (!draggedItem) return;
 
-                // إزالة مستمعات الأحداث
+                // Remove event listeners from the document
                 document.removeEventListener('mousemove', moveDrag);
                 document.removeEventListener('touchmove', moveDrag);
+                document.removeEventListener('mouseup', endDrag);
+                document.removeEventListener('touchend', endDrag);
 
                 const clientX = e.clientX || (e.changedTouches ? e.changedTouches[0].clientX : null);
                 const clientY = e.clientY || (e.changedTouches ? e.changedTouches[0].clientY : null);
 
-                // التحقق من موقع الإفلات
-                const dropTarget = clientX !== null && clientY !== null ? document.elementFromPoint(clientX, clientY) : null;
-                const thirdBoxRect = thirdBox.getBoundingClientRect();
-                
-                // تحقق مما إذا تم الإفلات داخل منطقة الإفلات البرتقالية
-                if (dropTarget && thirdBox.contains(dropTarget) || isOverlapping(clientX, clientY, thirdBoxRect)) {
+                // Determine the element under the cursor/finger at drop point
+                const dropTargetElement = clientX !== null && clientY !== null ? document.elementFromPoint(clientX, clientY) : null;
+
+                // Check if the drop occurred within the thirdBox or its children
+                if (dropTargetElement && thirdBox.contains(dropTargetElement)) {
                     handleBarrelDrop(draggedItem.getAttribute('data-type'));
+                } else {
+                    // If dropped outside, return the original barrel to its initial state
+                    draggedItem.style.visibility = 'visible';
                 }
 
-                // إظهار البرميل الأصلي مرة أخرى
-                draggedItem.style.visibility = 'visible';
-                
-                // إزالة البرميل الشبحي
+                // Clean up ghost barrel
                 if (ghostBarrel) {
                     ghostBarrel.remove();
                     ghostBarrel = null;
                 }
-                
+
                 draggedItem = null;
                 thirdBox.classList.remove('third-box-active');
             }
 
-            // دالة مساعدة للتحقق من التداخل
-            function isOverlapping(x, y, rect) {
-                return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-            }
-
-            // دالة لمعالجة إفلات البرميل
+            // Function to handle barrel drop
             function handleBarrelDrop(barrelType) {
-                // إزالة البرميل الأصلي من المستطيل العلوي
+                // Remove the original barrel from the top container if it was moved from there
                 if (draggedItem && draggedItem.parentNode === originalBarrels) {
                     draggedItem.remove();
                     thirdBoxFeedback.textContent = `تم نقل برميل ${barrelType} إلى منطقة الإفلات الكبيرة`;
                 } else {
+                    // This case handles adding new barrels (e.g., from "إضافة برميل" button)
                     thirdBoxFeedback.textContent = `تم إضافة برميل ${barrelType} إلى منطقة الإفلات الكبيرة`;
                 }
-                
-                // إضافة إلى المستطيل الثالث
+
+                // Add to the third box count
                 if (barrelType === 'n') thirdBoxCountN++;
                 else if (barrelType === 'd') thirdBoxCountD++;
-                
+
                 updateThirdBox();
-                
-                // إنشاء نسخة من البرميل وإضافتها للمستطيل الثالث
+
+                // Create a new barrel copy and add it to the third box
                 const newBarrel = document.createElement('div');
                 newBarrel.className = `barrel barrel-${barrelType} third-box-barrel`;
                 newBarrel.textContent = barrelType;
                 newBarrel.setAttribute('data-type', barrelType);
-                
-                // جعل البرميل الجديد قابلاً للسحب أيضًا
+
+                // Make the new barrel draggable as well
                 setupDragEvents(newBarrel);
-                
+
                 thirdBoxBarrels.appendChild(newBarrel);
-                
+
                 thirdBoxFeedback.style.color = barrelType === 'n' ? '#5d4037' : '#4527a0';
-                
-                // تأثير مرئي
-                thirdBox.style.transform = 'scale(1.05)';
-                setTimeout(() => thirdBox.style.transform = 'scale(1)', 300);
+
+                // Visual effect
+                thirdBox.style.transform = 'scale(1.02)'; // Slightly less aggressive scale
+                setTimeout(() => thirdBox.style.transform = 'scale(1)', 200); // Faster reset
             }
 
-            // دالة تحديث المستطيل الثالث
+            // Function to update the third box display
             function updateThirdBox() {
                 const expression = formatThirdExpression();
                 thirdBoxExpression.innerHTML = `\\( ${expression} \\)`;
                 nCounter.textContent = thirdBoxCountN;
                 dCounter.textContent = thirdBoxCountD;
                 updateExpressionColor(thirdBoxExpression, thirdBoxCountN + thirdBoxCountD);
-                
-                // إعادة تصيير KaTeX
+
+                // Re-render KaTeX
                 renderMathInElement(thirdBoxExpression, {
                     delimiters: [
                         {left: "\\(", right: "\\)", display: false}
@@ -1683,8 +1716,8 @@
                     throwOnError: false
                 });
             }
-            
-            // دالة لتنسيق تعبير المستطيل الثالث (تم التعديل)
+
+            // Function to format the expression for the third box
             function formatThirdExpression() {
                 let parts = [];
                 if (thirdBoxCountN > 0) {
@@ -1693,15 +1726,15 @@
                 if (thirdBoxCountD > 0) {
                     parts.push(`${thirdBoxCountD}d`);
                 }
-                
+
                 if (parts.length === 0) {
                     return '0';
                 }
-                
+
                 return parts.join(' + ');
             }
-            
-            // دالة لتحديد لون التعبير حسب عدد البراميل
+
+            // Function to set expression color based on barrel count
             function updateExpressionColor(element, count) {
                 if (count === 0) {
                     element.style.color = '#0d47a1';
@@ -1713,33 +1746,20 @@
                     element.style.color = '#64b5f6';
                 }
             }
-            
-            // زر إعادة تعيين المستطيل الثالث
+
+            // Reset button for algebra barrels
             resetAlgebraBtn.addEventListener('click', function() {
-                // إعادة البراميل الأصلية
                 resetOriginalBarrels();
-                
-                // إعادة تعيين المستطيل البرتقالي
                 resetThirdBox();
-                
                 thirdBoxFeedback.textContent = 'تم إعادة تعيين كل شيء';
                 thirdBoxFeedback.style.color = '#0d47a1';
             });
-            
-            // دالة إعادة تعيين المستطيل الثالث
-            function resetThirdBox() {
-                thirdBoxCountN = 0;
-                thirdBoxCountD = 0;
-                thirdBoxBarrels.innerHTML = '';
-                updateThirdBox();
-            }
-            
-            // دالة إعادة البراميل الأصلية
+
+            // Reset original barrels to their initial state
             function resetOriginalBarrels() {
-                // إزالة البراميل الحالية
-                originalBarrels.innerHTML = '';
-                
-                // إضافة البراميل الأصلية من جديد
+                originalBarrels.innerHTML = ''; // Clear existing barrels
+
+                // Add initial set of 'n' barrels
                 for (let i = 0; i < 3; i++) {
                     const barrel = document.createElement('div');
                     barrel.className = 'barrel barrel-n original-barrel';
@@ -1748,7 +1768,8 @@
                     setupDragEvents(barrel);
                     originalBarrels.appendChild(barrel);
                 }
-                
+
+                // Add initial set of 'd' barrels
                 for (let i = 0; i < 5; i++) {
                     const barrel = document.createElement('div');
                     barrel.className = 'barrel barrel-d original-barrel';
@@ -1758,40 +1779,19 @@
                     originalBarrels.appendChild(barrel);
                 }
             }
-            
-            // إعداد أحداث السحب والإفلات للبراميل الأصلية عند تحميل الصفحة
+
+            // Initialize drag events for all original barrels when the page loads
             document.querySelectorAll('.original-barrel').forEach(barrel => {
                 setupDragEvents(barrel);
             });
-            
-            // إضافة وإزالة فئة التنشيط عند السحب فوق منطقة الإفلات
-            thirdBox.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                thirdBox.classList.add('third-box-active');
-            });
-            
-            thirdBox.addEventListener('dragleave', () => {
-                thirdBox.classList.remove('third-box-active');
-            });
-            
-            thirdBox.addEventListener('drop', (e) => {
-                e.preventDefault();
-                thirdBox.classList.remove('third-box-active');
-                if (draggedItem) {
-                    const barrelType = draggedItem.getAttribute('data-type');
-                    handleBarrelDrop(barrelType);
-                    draggedItem = null;
-                }
-            });
-            
-            // دعم إضافة البراميل يدويًا (الزر)
+
+            // Add barrel button (modified to add a fixed type instead of prompt)
             addAlgebraBtn.addEventListener('click', function() {
-                // ... (نفس المنطق القديم هنا)
-                const type = prompt('أدخل نوع البرميل (n أو d):');
+                const type = 'n'; // Default to adding an 'n' barrel for simplicity
                 if (type === 'n' || type === 'd') {
                     if (type === 'n') thirdBoxCountN++;
                     else if (type === 'd') thirdBoxCountD++;
-                    
+
                     const newBarrel = document.createElement('div');
                     newBarrel.className = `barrel barrel-${type} third-box-barrel`;
                     newBarrel.textContent = type;
@@ -1800,12 +1800,9 @@
                     thirdBoxBarrels.appendChild(newBarrel);
 
                     updateThirdBox();
-                    
+
                     thirdBoxFeedback.textContent = `تم إضافة برميل ${type} يدويًا.`;
                     thirdBoxFeedback.style.color = type === 'n' ? '#5d4037' : '#4527a0';
-                } else {
-                    thirdBoxFeedback.textContent = 'النوع غير صحيح! يجب أن يكون n أو d';
-                    thirdBoxFeedback.style.color = '#f44336';
                 }
             });
         });
