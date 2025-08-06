@@ -26,9 +26,10 @@
             font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #1a2980, #26d0ce);
             color: #333;
-            line-height: 1.6;
+            line-height: 1.8; /* Increased line height for better readability */
             padding: 20px;
             min-height: 100vh;
+            font-size: 1.1rem; /* Base font size increased */
         }
         
         .container {
@@ -49,12 +50,12 @@
         }
         
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem; /* Slightly larger */
             margin-bottom: 10px;
         }
         
         .page-title {
-            font-size: 1.8rem;
+            font-size: 2rem; /* Slightly larger */
             color: var(--gold);
             margin-bottom: 20px;
         }
@@ -75,7 +76,7 @@
         .section-title {
             color: var(--royal-blue);
             margin-bottom: 15px;
-            font-size: 1.5rem;
+            font-size: 1.8rem; /* Increased font size */
             display: flex;
             align-items: center;
         }
@@ -83,23 +84,30 @@
         .section-title::before {
             content: "•";
             color: var(--gold);
-            font-size: 2rem;
+            font-size: 2.2rem; /* Adjusted for larger title */
             margin-left: 10px;
         }
         
         .explore-box {
             background: linear-gradient(to right, #e3f2fd, #bbdefb);
-            padding: 20px;
+            padding: 25px; /* Increased padding */
             border-radius: 10px;
             margin: 20px 0;
             border: 1px dashed var(--light-blue);
-            text-align: center; /* Center content including the flag */
-            display: flex; /* Use flexbox for centering */
-            flex-direction: column; /* Stack items vertically */
-            align-items: center; /* Center horizontally */
-            justify-content: center; /* Center vertically if space allows */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* Increased font size specifically for text within explore-box */
+        .explore-box p {
+            font-size: 1.35rem; /* Significantly increased font size */
+            line-height: 1.8; /* Ensure good line spacing */
+            margin-top: 15px; /* Add some space above the text */
+        }
+        
         /* Existing image styling (kept for reference, though replaced by flag code) */
         .explore-box img {
             max-width: 100%;
@@ -120,11 +128,11 @@
         .example-title {
             color: var(--light-blue);
             margin-bottom: 15px;
-            font-size: 1.3rem;
+            font-size: 1.4rem; /* Slightly larger */
         }
         
         .math-expression {
-            font-size: 1.2rem;
+            font-size: 1.3rem; /* Increased font size */
             text-align: center;
             margin: 15px 0;
             padding: 10px;
@@ -133,6 +141,11 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
+        .explanation, .note {
+            font-size: 1.15rem; /* Slightly larger for explanation and note */
+            line-height: 1.7;
+        }
+
         .explanation {
             background: #e3f2fd;
             padding: 15px;
@@ -163,7 +176,7 @@
         .check-understanding h2 {
             text-align: center;
             margin-bottom: 30px;
-            font-size: 2rem;
+            font-size: 2.2rem; /* Slightly larger */
             border-bottom: 2px solid var(--gold);
             padding-bottom: 15px;
             display: inline-block;
@@ -172,7 +185,7 @@
         
         .check-understanding .section-title {
             color: white;
-            font-size: 1.8rem;
+            font-size: 2rem; /* Adjusted for consistency */
             justify-content: center;
         }
         
@@ -200,12 +213,12 @@
         .exercise h3 {
             color: var(--light-blue);
             margin-bottom: 20px;
-            font-size: 1.5rem;
+            font-size: 1.6rem; /* Slightly larger */
             text-align: center;
         }
         
         .problem {
-            font-size: 1.3rem;
+            font-size: 1.4rem; /* Increased font size */
             margin-bottom: 20px;
             text-align: center;
             font-weight: bold;
@@ -222,7 +235,7 @@
             padding: 14px;
             border: 2px solid var(--sky-blue);
             border-radius: 5px 0 0 5px;
-            font-size: 1.2rem;
+            font-size: 1.2rem; /* Consistent with other text */
             font-family: 'Cairo', sans-serif;
         }
         
@@ -233,7 +246,7 @@
             padding: 0 25px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1.2rem; /* Slightly larger */
             border-radius: 0 5px 5px 0;
             transition: all 0.3s;
         }
@@ -250,7 +263,7 @@
             padding: 12px;
             border-radius: 5px;
             margin-top: 15px;
-            font-size: 1.1rem;
+            font-size: 1.2rem; /* Increased font size */
         }
         
         .feedback.correct {
@@ -273,7 +286,7 @@
             border-radius: 5px;
             margin: 20px 0;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.3rem; /* Slightly larger */
             display: none;
             width: 100%;
         }
@@ -284,7 +297,7 @@
             color: var(--royal-blue);
             border: none;
             padding: 15px 30px;
-            font-size: 1.5rem;
+            font-size: 1.6rem; /* Slightly larger */
             font-weight: bold;
             border-radius: 10px;
             cursor: pointer;
@@ -306,6 +319,7 @@
             background: var(--royal-blue);
             color: white;
             border-top: 3px solid var(--gold);
+            font-size: 1rem; /* Consistent with base font */
         }
         
         @media (max-width: 768px) {
@@ -314,11 +328,11 @@
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .page-title {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
             
             .check-understanding {
@@ -329,8 +343,35 @@
                 padding: 20px;
             }
             .next-button {
-                font-size: 1.2rem;
+                font-size: 1.3rem; /* Adjusted for mobile */
                 padding: 12px 25px;
+            }
+            .explore-box p {
+                font-size: 1.2rem; /* Adjusted for mobile */
+            }
+            body {
+                font-size: 1rem; /* Base font size adjusted for mobile */
+            }
+            .section-title {
+                font-size: 1.6rem; /* Adjusted for mobile */
+            }
+            .example-title {
+                font-size: 1.3rem; /* Adjusted for mobile */
+            }
+            .math-expression {
+                font-size: 1.2rem; /* Adjusted for mobile */
+            }
+            .problem {
+                font-size: 1.3rem; /* Adjusted for mobile */
+            }
+            .input-group input, .input-group button {
+                font-size: 1.1rem; /* Adjusted for mobile */
+            }
+            .feedback {
+                font-size: 1.1rem; /* Adjusted for mobile */
+            }
+            .success-banner {
+                font-size: 1.2rem; /* Adjusted for mobile */
             }
         }
 
@@ -563,7 +604,7 @@
             </div>
 
             <!-- زر التالي -->
-            <a href="u2l5p1.html" class="next-button">التالي</a>
+            <a href="u2l5p2.html" class="next-button">التالي</a>
         </section>
         
         <footer>
@@ -653,3 +694,4 @@
     </script>
 </body>
 </html>
+
