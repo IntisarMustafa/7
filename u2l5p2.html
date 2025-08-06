@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تبسيط المقادير الجبرية - الرياضيات</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --royal-blue: #0c2461;
+            --gold: #f6b93b;
+            --light-blue: #1e3799;
+            --sky-blue: #4a69bd;
+            --pale-blue: #dff9fb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.8; /* Increased line height for better readability */
+            padding: 20px;
+            min-height: 10vh;
+            font-size: 1.1rem; /* Base font size increased */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid var(--gold);
+        }
+        
+        h1 {
+            font-size: 2.8rem; /* Slightly larger */
+            margin-bottom: 10px;
+        }
+        
+        .page-title {
+            font-size: 2rem; /* Slightly larger */
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            padding: 0 25px 25px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--sky-blue);
+        }
+        
+        .section-title {
+            color: var(--royal-blue);
+            margin-bottom: 15px;
+            font-size: 1.8rem; /* Increased font size */
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title::before {
+            content: "•";
+            color: var(--gold);
+            font-size: 2.2rem; /* Adjusted for larger title */
+            margin-left: 10px;
+        }
+        
+        .explore-box {
+            background: linear-gradient(to right, #e3f2fd, #bbdefb);
+            padding: 25px; /* Increased padding */
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px dashed var(--light-blue);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Increased font size specifically for text within explore-box */
+        .explore-box p {
+            font-size: 1.35rem; /* Significantly increased font size */
+            line-height: 1.8; /* Ensure good line spacing */
+            margin-top: 15px; /* Add some space above the text */
+        }
+        
+        .example {
+            background: #f9fbe7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--gold);
+        }
+        
+        .example-title {
+            color: var(--light-blue);
+            margin-bottom: 15px;
+            font-size: 1.4rem; /* Slightly larger */
+        }
+        
+        .math-expression {
+            font-size: 1.3rem; /* Increased font size */
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .explanation, .note {
+            font-size: 1.15rem; /* Slightly larger for explanation and note */
+            line-height: 1.7;
+        }
+
+        .explanation {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid var(--sky-blue);
+        }
+        
+        .note {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid var(--gold);
+        }
+        
+        .check-understanding {
+            background: linear-gradient(135deg, var(--royal-blue), var(--light-blue));
+            color: white;
+            padding: 40px 25px;
+            border-top: 5px solid var(--gold);
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .check-understanding h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem; /* Slightly larger */
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 15px;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .check-understanding .section-title {
+            color: white;
+            font-size: 2rem; /* Adjusted for consistency */
+            justify-content: center;
+        }
+        
+        .check-understanding .section-title::before {
+            display: none;
+        }
+        
+        .exercises-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .exercise {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--gold);
+            color: #333;
+        }
+        
+        .exercise h3 {
+            color: var(--light-blue);
+            margin-bottom: 20px;
+            font-size: 1.6rem; /* Slightly larger */
+            text-align: center;
+        }
+        
+        .problem {
+            font-size: 1.4rem; /* Increased font size */
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--royal-blue);
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid var(--sky-blue);
+            border-radius: 5px 0 0 5px;
+            font-size: 1.2rem; /* Consistent with other text */
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .input-group button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem; /* Slightly larger */
+            border-radius: 0 5px 5px 0;
+            transition: all 0.3s;
+        }
+        
+        .input-group button:hover {
+            background: #ffd166;
+            transform: translateY(-2px);
+        }
+        
+        .feedback {
+            min-height: 30px;
+            font-weight: bold;
+            text-align: center;
+            padding: 12px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 1.2rem; /* Increased font size */
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .success-banner {
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 1.3rem; /* Slightly larger */
+            display: none;
+            width: 100%;
+        }
+
+        /* Styles for navigation buttons container */
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Space between buttons */
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        /* New style for navigation buttons (both next and previous) */
+        .nav-button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.6rem; /* Slightly larger */
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background: #ffd166;
+            transform: translateY(-3px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border-top: 3px solid var(--gold);
+            font-size: 1rem; /* Consistent with base font */
+        }
+        
+        @media (max-width: 768px) {
+            .exercises-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .page-title {
+                font-size: 1.6rem;
+            }
+            
+            .check-understanding {
+                padding: 25px 15px;
+            }
+            
+            .exercise {
+                padding: 20px;
+            }
+            .nav-button { /* Adjusted for mobile */
+                font-size: 1.3rem;
+                padding: 12px 25px;
+            }
+            .navigation-buttons {
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                gap: 15px;
+            }
+            .explore-box p {
+                font-size: 1.2rem; /* Adjusted for mobile */
+            }
+            body {
+                font-size: 1rem; /* Base font size adjusted for mobile */
+            }
+            .section-title {
+                font-size: 1.6rem; /* Adjusted for mobile */
+            }
+            .example-title {
+                font-size: 1.3rem; /* Adjusted for mobile */
+            }
+            .math-expression {
+                font-size: 1.2rem; /* Adjusted for mobile */
+            }
+            .problem {
+                font-size: 1.3rem; /* Adjusted for mobile */
+            }
+            .input-group input, .input-group button {
+                font-size: 1.1rem; /* Adjusted for mobile */
+            }
+            .feedback {
+                font-size: 1.1rem; /* Adjusted for mobile */
+            }
+            .success-banner {
+                font-size: 1.2rem; /* Adjusted for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>تبسيط المقادير الجبرية</h1>
+            <div class="page-title">الرياضيات - الصف السابع</div> <!-- Updated grade level -->
+        </header>
+        
+        <!-- محتوى الصفحة -->
+        <main class="content">
+            <!-- قسم استكشف -->
+            <section class="section">
+                <h2 class="section-title"></h2> <!-- Removed "استكشف" -->
+                <div class="explore-box">
+                    <p>يمكنني ضرب حدّ جبري في مقدار جبري باستخدام خاصية التوزيع؛ وذلك بضرب الحدّ في كل واحد من حدود المقدار.</p>
+                    <p></p>
+                </div>
+            </section>
+            
+            <!-- مثال 2 -->
+            <section class="section">
+                <h2 class="section-title">مثال 2</h2>
+                <p>أبسط كل مقدار جبري مما يأتي، ثم أجد قيمته عند القيم المعطاة:</p>
+                
+                <div class="example">
+                    <h3 class="example-title">1. \( 2x(3x - y) \)، عندما \( x = 3, y = -7 \)</h3>
+                    <div class="math-expression">
+                        <p>\( 2x(3x - y) = 6x^2 - 2xy \)</p>
+                        <p>أعوض \( x = 3, y = -7 \):</p>
+                        <p>\( 6(3)^2 - 2(3)(-7) \)</p>
+                        <p>\( = 6(9) - (-42) \)</p>
+                        <p>\( = 54 + 42 = 96 \)</p>
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h3 class="example-title">2. \( x(3x + 2y - 4) - 9 \)، عندما \( x = -1, y = 5 \)</h3>
+                    <div class="math-expression">
+                        <p>\( x(3x + 2y - 4) - 9 = 3x^2 + 2xy - 4x - 9 \)</p>
+                        <p>أعوض \( x = -1, y = 5 \):</p>
+                        <p>\( 3(-1)^2 + 2(-1)(5) - 4(-1) - 9 \)</p>
+                        <p>\( = 3(1) - 10 + 4 - 9 \)</p>
+                        <p>\( = 3 - 10 + 4 - 9 = -12 \)</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- قسم أتحقق من فهمي في نهاية الصفحة -->
+        <section class="check-understanding">
+            <h2 class="section-title">أتحقق من فهمي</h2>
+            <div class="success-banner" id="successBanner">مبروك! لقد أكملت جميع التمارين بنجاح!</div>
+            
+            <div class="exercises-container">
+                <!-- تمرين 1 (كان 3 في الصورة) -->
+                <div class="exercise">
+                    <h3>التمرين 1</h3>
+                    <div class="problem">\( 2a(4a + b) \)، عندما \( a = -2, b = 7 \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkAnswer(1)">تحقق</button>
+                    </div>
+                    <div id="feedback1" class="feedback"></div>
+                </div>
+                
+                <!-- تمرين 2 (كان 4 في الصورة) -->
+                <div class="exercise">
+                    <h3>التمرين 2</h3>
+                    <div class="problem">\( 5b(2a - b) \)، عندما \( a = 2, b = -3 \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkAnswer(2)">تحقق</button>
+                    </div>
+                    <div id="feedback2" class="feedback"></div>
+                </div>
+                
+                <!-- تمرين 3 (كان 5 في الصورة) -->
+                <div class="exercise">
+                    <h3>التمرين 3</h3>
+                    <div class="problem">\( 2x(x - 2y + 1) - 6 \)، عندما \( x = -3, y = 4 \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise3" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkAnswer(3)">تحقق</button>
+                    </div>
+                    <div id="feedback3" class="feedback"></div>
+                </div>
+                
+                <!-- تمرين 4 (كان 6 في الصورة) -->
+                <div class="exercise">
+                    <h3>التمرين 4</h3>
+                    <div class="problem">\( 4y(y - 2x) + y + 2 \)، عندما \( x = -4, y = 2 \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise4" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkAnswer(4)">تحقق</button>
+                    </div>
+                    <div id="feedback4" class="feedback"></div>
+                </div>
+            </div>
+
+            <!-- أزرار التنقل -->
+            <div class="navigation-buttons">
+                <a href="u2l5p1.html" class="nav-button">السابق</a>
+                <a href="u2l5p3.html" class="nav-button">التالي</a>
+            </div>
+        </section>
+        
+        <footer>
+            <p>مادة الرياضيات - وحدة المقادير الجبرية | الصف السابع</p> <!-- Updated grade level -->
+            <p>جميع الحقوق محفوظة © 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        // الإجابات الصحيحة للتمارين (التبسيط فقط)
+        const correctAnswers = {
+            1: "8a^2 + 2ab",
+            2: "10ab - 5b^2",
+            3: "2x^2 - 4xy + 2x - 6",
+            4: "4y^2 - 8xy + y + 2"
+        };
+        
+        // عدد التمارين التي تم حلها
+        let solvedCount = 0;
+
+        // دالة مساعدة لتوحيد تنسيق إدخال المستخدم والإجابات الصحيحة
+        function normalizeInput(input) {
+            // تحويل الأحرف إلى أحرف صغيرة
+            let normalized = input.toLowerCase();
+            
+            // استبدال الرموز العلوية (superscripts) بـ '^' متبوعة بالرقم
+            normalized = normalized.replace(/²/g, '^2');
+            normalized = normalized.replace(/³/g, '^3');
+            normalized = normalized.replace(/¹/g, '^1');
+            normalized = normalized.replace(/⁴/g, '^4');
+            normalized = normalized.replace(/⁵/g, '^5');
+            normalized = normalized.replace(/⁶/g, '^6');
+            normalized = normalized.replace(/⁷/g, '^7');
+            normalized = normalized.replace(/⁸/g, '^8');
+            normalized = normalized.replace(/⁹/g, '^9');
+            normalized = normalized.replace(/⁰/g, '^0');
+
+            // إزالة جميع المسافات لضمان مقارنة دقيقة
+            normalized = normalized.replace(/\s/g, '');
+
+            return normalized;
+        }
+        
+        // دالة للتحقق من الإجابات
+        function checkAnswer(exerciseNum) {
+            const inputId = `exercise${exerciseNum}`;
+            const feedbackId = `feedback${exerciseNum}`;
+            
+            const rawUserAnswer = document.getElementById(inputId).value.trim();
+            const userAnswer = normalizeInput(rawUserAnswer); // توحيد إدخال المستخدم
+            const correctAnswer = normalizeInput(correctAnswers[exerciseNum]); // توحيد الإجابة الصحيحة للمقارنة
+
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            // التحقق من الإجابة
+            if (userAnswer === correctAnswer) {
+                feedbackElement.textContent = "إجابة صحيحة! أحسنت!";
+                feedbackElement.className = "feedback correct";
+                
+                // زيادة عدد التمارين المحلولة
+                solvedCount++;
+                
+                // تعطيل الحقل والزر بعد الإجابة الصحيحة
+                document.getElementById(inputId).disabled = true;
+                document.querySelector(`#${inputId} + button`).disabled = true;
+                
+                // عرض رسالة النجاح إذا تم حل جميع التمارين (4 تمارين)
+                if (solvedCount === 4) {
+                    document.getElementById('successBanner').style.display = 'block';
+                }
+            } else {
+                // عرض الإجابة الصحيحة بالتنسيق الأصلي للمساعدة
+                feedbackElement.textContent = `إجابة غير صحيحة. الإجابة الصحيحة هي: ${correctAnswers[exerciseNum]}`;
+                feedbackElement.className = "feedback incorrect";
+            }
+        }
+        
+        // تهيئة حقول الإدخال للاستجابة عند الضغط على Enter
+        document.querySelectorAll('.input-group input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const exerciseNum = this.id.replace('exercise', '');
+                    checkAnswer(parseInt(exerciseNum));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

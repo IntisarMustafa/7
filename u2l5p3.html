@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ضرب المقادير الجبرية - الرياضيات</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --royal-blue: #0c2461;
+            --gold: #f6b93b;
+            --light-blue: #1e3799;
+            --sky-blue: #4a69bd;
+            --pale-blue: #dff9fb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.8;
+            padding: 20px;
+            min-height: 100vh; /* Reverted to 100vh */
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid var(--gold);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            padding: 0 25px 25px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--sky-blue);
+        }
+        
+        .section-title {
+            color: var(--royal-blue);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* Added to allow text to wrap */
+        }
+        
+        .section-title::before {
+            content: "•";
+            color: var(--gold);
+            font-size: 2.2rem;
+            margin-left: 10px;
+        }
+        
+        .example {
+            background: #f9fbe7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--gold);
+        }
+        
+        .example-title {
+            color: var(--light-blue);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .math-expression {
+            font-size: 1.3rem;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .math-expression p {
+            margin-bottom: 5px;
+        }
+        
+        .explanation, .note {
+            font-size: 1.15rem;
+            line-height: 1.7;
+        }
+
+        .explanation {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid var(--sky-blue);
+        }
+        
+        .note {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid var(--gold);
+        }
+        
+        .check-understanding {
+            background: linear-gradient(135deg, var(--royal-blue), var(--light-blue));
+            color: white;
+            padding: 40px 25px;
+            border-top: 5px solid var(--gold);
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .check-understanding h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 15px;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .check-understanding .section-title {
+            color: white;
+            font-size: 2rem;
+            justify-content: center;
+        }
+        
+        .check-understanding .section-title::before {
+            display: none;
+        }
+        
+        .exercises-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .exercise {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--gold);
+            color: #333;
+        }
+        
+        .exercise h3 {
+            color: var(--light-blue);
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+        }
+        
+        .problem {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--royal-blue);
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid var(--sky-blue);
+            border-radius: 5px 0 0 5px;
+            font-size: 1.2rem;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .input-group button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-radius: 0 5px 5px 0;
+            transition: all 0.3s;
+        }
+        
+        .input-group button:hover {
+            background: #ffd166;
+            transform: translateY(-2px);
+        }
+        
+        .feedback {
+            min-height: 30px;
+            font-weight: bold;
+            text-align: center;
+            padding: 12px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .success-banner {
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: none;
+            width: 100%;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .nav-button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background: #ffd166;
+            transform: translateY(-3px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border-top: 3px solid var(--gold);
+            font-size: 1rem;
+        }
+
+        /* Styles for the Area Model Grid */
+        .area-model-grid {
+            display: grid;
+            grid-template-columns: auto repeat(4, 1fr);
+            grid-template-rows: auto repeat(4, 1fr);
+            gap: 2px;
+            background-color: #ccc;
+            width: fit-content;
+            margin: 20px auto;
+            border: 2px solid #333;
+        }
+
+        .area-model-grid-item {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .area-model-grid .header-cell {
+            background-color: #eee;
+            font-weight: bold;
+        }
+
+        .area-model-grid .x-header-col, .area-header-row {
+            background-color: #f0f0f0;
+        }
+
+        .area-model-grid .x-x-cell {
+            background-color: #a7d9a7;
+        }
+
+        .area-model-grid .x-one-cell {
+            background-color: #ffcccc;
+        }
+
+        .area-model-grid .one-x-cell {
+            background-color: #ffcccc;
+        }
+
+        .area-model-grid .one-one-cell {
+            background-color: #ffe0b2;
+        }
+
+        .area-model-grid .label-x {
+            font-size: 1.5rem;
+            color: var(--royal-blue);
+        }
+        .area-model-grid .label-one {
+            font-size: 1.2rem;
+            color: var(--light-blue);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .exercises-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .page-title {
+                font-size: 1.6rem;
+            }
+            
+            .check-understanding {
+                padding: 25px 15px;
+            }
+            
+            .exercise {
+                padding: 20px;
+            }
+            .nav-button {
+                font-size: 1.3rem;
+                padding: 12px 25px;
+            }
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            body {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 1.5rem; /* Slightly reduced for better fit */
+                line-height: 1.3; /* Adjusted line height for wrapped text */
+            }
+            .example-title {
+                font-size: 1.3rem;
+            }
+            .math-expression {
+                font-size: 1rem;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .problem {
+                font-size: 1.3rem;
+            }
+            .input-group input, .input-group button {
+                font-size: 1.1rem;
+            }
+            .feedback {
+                font-size: 1.1rem;
+            }
+            .success-banner {
+                font-size: 1.2rem;
+            }
+            .area-model-grid {
+                grid-template-columns: auto repeat(4, 1fr);
+                grid-template-rows: auto repeat(4, 1fr);
+                font-size: 0.9rem;
+            }
+            .area-model-grid .label-x {
+                font-size: 1.2rem;
+            }
+            .area-model-grid .label-one {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ضرب المقادير الجبرية</h1>
+            <div class="page-title">الرياضيات - الصف السابع</div>
+        </header>
+        
+        <main class="content">
+            <!-- قسم استكشف (تمت إزالته بناءً على طلبك) -->
+            
+            <!-- مثال 3 -->
+            <section class="section">
+                <h2 class="section-title">مثال 3: ناتج الضرب \( (3+x)(4+x) \) في أبسط صورة.</h2>
+                
+                <div class="example">
+                    <h3 class="example-title">الطريقة 1: نماذج المساحة</h3>
+                    <p>طول المستطيل الكبير \( (x+4) \) وحدات، وعرضه \( (x+3) \) وحدات.</p>
+                    <p>مساحة المستطيل الكبير تساوي ناتج ضرب المقدارين الجبريين:</p>
+                    
+                    <!-- Area Model Grid -->
+                    <div class="area-model-grid">
+                        <div class="area-model-grid-item header-cell"></div>
+                        <div class="area-model-grid-item header-cell label-x">x</div>
+                        <div class="area-model-grid-item header-cell label-one">1</div>
+                        <div class="area-model-grid-item header-cell label-one">1</div>
+                        <div class="area-model-grid-item header-cell label-one">1</div>
+
+                        <div class="area-model-grid-item header-cell label-x">x</div>
+                        <div class="area-model-grid-item area-model-grid-item x-x-cell">x\(^2\)</div>
+                        <div class="area-model-grid-item area-model-grid-item x-one-cell">x</div>
+                        <div class="area-model-grid-item area-model-grid-item x-one-cell">x</div>
+                        <div class="area-model-grid-item area-model-grid-item x-one-cell">x</div>
+
+                        <div class="area-model-grid-item header-cell label-one">1</div>
+                        <div class="area-model-grid-item area-model-grid-item one-x-cell">x</div>
+                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+
+                        <div class="area-model-grid-item header-cell label-one">1</div>
+                        <div class="area-model-grid-item area-model-grid-item one-x-cell">x</div>
+                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+
+                        <div class="area-model-grid-item header-cell label-one">1</div>
+                        <div class="area-model-grid-item area-model-grid-item one-x-cell">x</div>
+                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                    </div>
+
+                    <div class="explanation">
+                        <p>مساحة المربع الأخضر تساوي \( x \times x = x^2 \) وحدة مربعة.</p>
+                        <p>مساحة المستطيلات الحمراء تساوي \( x \times 1 = x \) وحدة مربعة. يوجد 7 مستطيلات حمراء، إذن مجموع مساحتها \( 7x \).</p>
+                        <p>مساحة المربعات البرتقالية تساوي \( 1 \times 1 = 1 \) وحدة مربعة. يوجد 12 مربعًا برتقاليًا، إذن مجموع مساحتها \( 12 \).</p>
+                        <p>إذن، مساحة المستطيل الكبير، هي: \( x^2 + 7x + 12 \)</p>
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h3 class="example-title">الطريقة 2: خاصية التوزيع</h3>
+                    <p>يمكنني أيضًا استخدام خاصية التوزيع بطريقة مختلفة كما يأتي:</p>
+                    <div class="math-expression">
+                        <p>\( (x+4)(x+3) \)</p>
+                        <p>أفصل المقدار \( (x+4) \) إلى حدين \( x \), \( 4 \). ثم أضرب كلا منهما في المقدار \( (x+3) \):</p>
+                        <p>\( = x(x+3) + 4(x+3) \)</p>
+                        <p>أستخدم خاصية التوزيع:</p>
+                        <p>\( = (x^2 + 3x) + (4x + 12) \)</p>
+                        <p>أجمع الحدود المتشابهة:</p>
+                        <p>\( = x^2 + 3x + 4x + 12 \)</p>
+                        <p>أكتب المقدار في أبسط صورة:</p>
+                        <p>\( = x^2 + 7x + 12 \)</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- قسم أتحقق من فهمي في نهاية الصفحة -->
+        <section class="check-understanding">
+            <h2 class="section-title">أتحقق من فهمي</h2>
+            <div class="success-banner" id="successBanner">مبروك! لقد أكملت جميع التمارين بنجاح!</div>
+            
+            <div class="exercises-container">
+                <!-- تمرين 1 -->
+                <div class="exercise">
+                    <h3>التمرين 1</h3>
+                    <div class="problem">أبسط المقدار الجبري: \( (x+2)(x+5) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkAnswer(1)">تحقق</button>
+                    </div>
+                    <div id="feedback1" class="feedback"></div>
+                </div>
+                
+                <!-- تمرين 2 -->
+                <div class="exercise">
+                    <h3>التمرين 2</h3>
+                    <div class="problem">أبسط المقدار الجبري: \( (3-d)(4-d) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة">
+                        <button onclick="checkAnswer(2)">تحقق</button>
+                    </div>
+                    <div id="feedback2" class="feedback"></div>
+                </div>
+            </div>
+
+            <!-- أزرار التنقل -->
+            <div class="navigation-buttons">
+                <a href="u2l5p1.html" class="nav-button">السابق</a>
+                <a href="u2l5p3.html" class="nav-button">التالي</a>
+            </div>
+        </section>
+        
+        <footer>
+            <p>مادة الرياضيات - وحدة المقادير الجبرية | الصف السابع</p>
+            <p>جميع الحقوق محفوظة © 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Define the correct simplified algebraic expressions for the exercises.
+        // These are the answers expected from the user's input.
+        const correctAnswers = {
+            1: "x^2 + 7x + 10",
+            2: "d^2 - 7d + 12" 
+        };
+        
+        // Counter for the number of correctly solved exercises.
+        let solvedCount = 0;
+
+        /**
+         * Parses a single algebraic term from a string.
+         * @param {string} termString - The string representation of a term (e.g., "+x^2", "-7x", "10").
+         * @returns {object} An object containing the parsed components: { sign, coefficient, variable, exponent }.
+         */
+        function parseTerm(termString) {
+            let sign = '+';
+            if (termString.startsWith('-')) {
+                sign = '-';
+                termString = termString.substring(1);
+            } else if (termString.startsWith('+')) {
+                termString = termString.substring(1);
+            }
+
+            let coefficient = 1;
+            let variable = '';
+            let exponent = 0;
+
+            const parts = termString.match(/^(\d*)?([a-z])?(\^(\d+))?$/);
+            if (parts) {
+                if (parts[1]) { // Has a coefficient number
+                    coefficient = parseInt(parts[1]);
+                }
+                if (parts[2]) { // Has a variable
+                    variable = parts[2];
+                    exponent = 1; // Default exponent if variable exists
+                }
+                if (parts[4]) { // Has an explicit exponent
+                    exponent = parseInt(parts[4]);
+                }
+                // Special case: if it's just 'x' or 'd', coefficient is 1
+                if (!parts[1] && parts[2]) {
+                    coefficient = 1;
+                }
+            } else { // Handle constants like '10' or '12'
+                coefficient = parseInt(termString) || 0; // If not a number, default to 0
+                variable = '';
+                exponent = 0;
+            }
+            
+            return { sign, coefficient, variable, exponent, original: termString };
+        }
+
+        /**
+         * Normalizes the input algebraic expression by standardizing format and sorting terms.
+         * This function converts the input to lowercase, replaces common superscript characters,
+         * removes all whitespace, parses terms, sorts them, and reconstructs the expression.
+         * @param {string} input - The algebraic expression string to normalize.
+         * @returns {string} The normalized and sorted expression string.
+         */
+        function normalizeInput(input) {
+            // 1. Initial Cleaning: lowercase, superscripts, no whitespace
+            let cleanedInput = input.toLowerCase();
+            cleanedInput = cleanedInput.replace(/²/g, '^2');
+            cleanedInput = cleanedInput.replace(/³/g, '^3');
+            cleanedInput = cleanedInput.replace(/¹/g, '^1');
+            cleanedInput = cleanedInput.replace(/⁴/g, '^4');
+            cleanedInput = cleanedInput.replace(/⁵/g, '^5');
+            cleanedInput = cleanedInput.replace(/⁶/g, '^6');
+            cleanedInput = cleanedInput.replace(/⁷/g, '^7');
+            cleanedInput = cleanedInput.replace(/⁸/g, '^8');
+            cleanedInput = cleanedInput.replace(/⁹/g, '^9');
+            cleanedInput = cleanedInput.replace(/⁰/g, '^0');
+            cleanedInput = cleanedInput.replace(/\s/g, '');
+
+            // 2. Add leading '+' for first term if missing and positive
+            if (cleanedInput.length > 0 && !cleanedInput.startsWith('+') && !cleanedInput.startsWith('-')) {
+                cleanedInput = '+' + cleanedInput;
+            }
+
+            // 3. Split into terms
+            const termStrings = cleanedInput.match(/[+-]?[a-z]?\d*(\^[+-]?\d+)?|[+-]?\d+/g); // More robust regex for terms
+            if (!termStrings) return ''; // Return empty if no terms found
+
+            const parsedTerms = termStrings.map(termString => {
+                let sign = '+';
+                let value = termString;
+                if (termString.startsWith('-')) {
+                    sign = '-';
+                    value = termString.substring(1);
+                } else if (termString.startsWith('+')) {
+                    value = termString.substring(1);
+                }
+
+                let coefficient = 1;
+                let variable = '';
+                let exponent = 0;
+
+                // Regex to capture coefficient, variable, and exponent
+                const termMatch = value.match(/^(\d*)?([a-z])?(\^(\d+))?$/);
+                if (termMatch) {
+                    if (termMatch[1]) { // Coefficient exists
+                        coefficient = parseInt(termMatch[1]);
+                    }
+                    if (termMatch[2]) { // Variable exists
+                        variable = termMatch[2];
+                        exponent = 1; // Default exponent for a variable
+                    }
+                    if (termMatch[4]) { // Explicit exponent exists
+                        exponent = parseInt(termMatch[4]);
+                    }
+                    // If no coefficient number but variable exists (e.g., 'x', 'd')
+                    if (!termMatch[1] && termMatch[2]) {
+                        coefficient = 1;
+                    }
+                } else { // It's likely a standalone number (constant)
+                    coefficient = parseInt(value) || 0;
+                    variable = '';
+                    exponent = 0;
+                }
+
+                return { sign, coefficient, variable, exponent, original: termString };
+            });
+
+            // 4. Sort terms
+            parsedTerms.sort((a, b) => {
+                // Primary sort: by exponent (descending)
+                if (a.exponent !== b.exponent) {
+                    return b.exponent - a.exponent;
+                }
+                // Secondary sort: by variable name (alphabetical ascending)
+                if (a.variable && b.variable) {
+                    return a.variable.localeCompare(b.variable);
+                }
+                // Tertiary sort: constants come last (no variable)
+                if (a.variable && !b.variable) return -1;
+                if (!a.variable && b.variable) return 1;
+                
+                // Finally, by coefficient (ascending) for consistency if all else is equal
+                return a.coefficient - b.coefficient;
+            });
+
+            // 5. Reconstruct expression
+            let reconstructed = '';
+            parsedTerms.forEach((term, index) => {
+                let termString = '';
+                if (term.variable === '') { // It's a constant
+                    termString = term.coefficient.toString();
+                } else {
+                    termString = term.coefficient === 1 ? term.variable : term.coefficient.toString() + term.variable;
+                    if (term.exponent > 1) {
+                        termString += '^' + term.exponent;
+                    }
+                }
+
+                if (term.sign === '-') {
+                    reconstructed += '-' + termString;
+                } else {
+                    if (index > 0 || term.coefficient < 0) { // Add '+' if not the very first term or if it's a negative constant
+                        reconstructed += '+' + termString;
+                    } else { // First term and positive, no '+' needed
+                        reconstructed += termString;
+                    }
+                }
+            });
+            
+            // Final cleanup: remove leading '+' if present and not needed (e.g., "+x^2" -> "x^2")
+            if (reconstructed.startsWith('+') && parsedTerms[0] && parsedTerms[0].sign === '+' && parsedTerms[0].coefficient >= 0) {
+                reconstructed = reconstructed.substring(1);
+            }
+
+            return reconstructed;
+        }
+        
+        /**
+         * Checks the user's answer for a given exercise.
+         * It compares the user's simplified algebraic expression with the correct one.
+         * @param {number} exerciseNum - The number of the exercise to check.
+         */
+        function checkAnswer(exerciseNum) {
+            const inputId = `exercise${exerciseNum}`;
+            const feedbackId = `feedback${exerciseNum}`;
+            
+            const rawUserAnswer = document.getElementById(inputId).value.trim();
+            const userAnswer = normalizeInput(rawUserAnswer); // Normalize user's input
+            const correctAnswer = normalizeInput(correctAnswers[exerciseNum]); // Normalize correct answer
+
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            // Check if the simplified algebraic expression is correct
+            if (userAnswer === correctAnswer) {
+                feedbackElement.textContent = "إجابة صحيحة! أحسنت!";
+                feedbackElement.className = "feedback correct";
+                
+                // Increment solved count
+                solvedCount++;
+                
+                // Disable the input field and button after a correct answer
+                document.getElementById(inputId).disabled = true;
+                document.querySelector(`#${inputId} + button`).disabled = true;
+                
+                // Show success banner if all exercises are solved (2 exercises)
+                if (solvedCount === Object.keys(correctAnswers).length) {
+                    document.getElementById('successBanner').style.display = 'block';
+                }
+            } else {
+                // If the simplified answer is incorrect, provide feedback with the correct simplified form.
+                feedbackElement.textContent = `إجابة غير صحيحة. الإجابة الصحيحة هي: ${correctAnswers[exerciseNum]}`;
+                feedbackElement.className = "feedback incorrect";
+            }
+        }
+        
+        // Initialize input fields to respond to the 'Enter' key press.
+        document.querySelectorAll('.input-group input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const exerciseNum = this.id.replace('exercise', '');
+                    checkAnswer(parseInt(exerciseNum));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
