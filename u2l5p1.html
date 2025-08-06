@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ضرب المقادير الجبرية - الرياضيات</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --royal-blue: #0c2461;
+            --gold: #f6b93b;
+            --light-blue: #1e3799;
+            --sky-blue: #4a69bd;
+            --pale-blue: #dff9fb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid var(--gold);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            padding: 0 25px 25px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--sky-blue);
+        }
+        
+        .section-title {
+            color: var(--royal-blue);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title::before {
+            content: "•";
+            color: var(--gold);
+            font-size: 2rem;
+            margin-left: 10px;
+        }
+        
+        .explore-box {
+            background: linear-gradient(to right, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px dashed var(--light-blue);
+            text-align: center; /* Center content including the flag */
+            display: flex; /* Use flexbox for centering */
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center horizontally */
+            justify-content: center; /* Center vertically if space allows */
+        }
+
+        /* Existing image styling (kept for reference, though replaced by flag code) */
+        .explore-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .example {
+            background: #f9fbe7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--gold);
+        }
+        
+        .example-title {
+            color: var(--light-blue);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .math-expression {
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .explanation {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid var(--sky-blue);
+        }
+        
+        .note {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid var(--gold);
+        }
+        
+        .check-understanding {
+            background: linear-gradient(135deg, var(--royal-blue), var(--light-blue));
+            color: white;
+            padding: 40px 25px;
+            border-top: 5px solid var(--gold);
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .check-understanding h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 15px;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .check-understanding .section-title {
+            color: white;
+            font-size: 1.8rem;
+            justify-content: center;
+        }
+        
+        .check-understanding .section-title::before {
+            display: none;
+        }
+        
+        .exercises-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .exercise {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--gold);
+            color: #333;
+        }
+        
+        .exercise h3 {
+            color: var(--light-blue);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .problem {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--royal-blue);
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid var(--sky-blue);
+            border-radius: 5px 0 0 5px;
+            font-size: 1.2rem;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .input-group button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 0 5px 5px 0;
+            transition: all 0.3s;
+        }
+        
+        .input-group button:hover {
+            background: #ffd166;
+            transform: translateY(-2px);
+        }
+        
+        .feedback {
+            min-height: 30px;
+            font-weight: bold;
+            text-align: center;
+            padding: 12px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .success-banner {
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: none;
+            width: 100%;
+        }
+
+        /* New style for the Next button */
+        .next-button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .next-button:hover {
+            background: #ffd166;
+            transform: translateY(-3px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border-top: 3px solid var(--gold);
+        }
+        
+        @media (max-width: 768px) {
+            .exercises-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .check-understanding {
+                padding: 25px 15px;
+            }
+            
+            .exercise {
+                padding: 20px;
+            }
+            .next-button {
+                font-size: 1.2rem;
+                padding: 12px 25px;
+            }
+        }
+
+        /* --- Flag Specific CSS --- */
+        /* حاوية العلم الرئيسية */
+        .flag-container {
+            /* تعريف متغيرات CSS للأبعاد لتسهيل الاستجابة */
+            --flag-width: 600px;
+            --flag-height: 300px; /* نسبة عرض إلى ارتفاع 2:1 */
+            --triangle-width: 200px; /* عرض قاعدة المثلث الأحمر */
+
+            position: relative;
+            width: var(--flag-width);
+            height: var(--flag-height);
+            overflow: hidden; /* لإخفاء أي جزء زائد عن الحاوية */
+            box-shadow: 0 0 15px rgba(0,0,0,0.3); /* ظل خفيف لإبراز العلم */
+            border-radius: 8px; /* حواف مستديرة للعلم */
+            display: flex;
+            flex-direction: column; /* لجعل الشرائط تتكدس عموديًا */
+            margin-bottom: 15px; /* Added space below the flag */
+        }
+
+        /* تعديلات الاستجابة لأحجام الشاشات الصغيرة (مثل الجوال) */
+        @media (max-width: 768px) {
+            .flag-container {
+                --flag-width: 90vw; /* استخدام 90% من عرض الشاشة */
+                --flag-height: 45vw; /* الحفاظ على نسبة 2:1 */
+                --triangle-width: calc(var(--flag-width) * (200 / 600)); /* قياس عرض المثلث نسبيًا */
+            }
+        }
+
+        /* تنسيق الشرائط الأفقية */
+        .stripe {
+            width: 100%;
+            height: 33.33%; /* كل شريط يأخذ ثلث ارتفاع العلم */
+        }
+
+        /* ألوان الشرائط */
+        .black {
+            background-color: #000000; /* أسود */
+        }
+
+        .white {
+            background-color: #ffffff; /* أبيض */
+        }
+
+        .green {
+            background-color: #007A3D; /* أخضر */
+        }
+
+        /* المثلث الأحمر على اليسار (مقلوب حول محور Y) */
+        .red-triangle {
+            position: absolute;
+            top: 0;
+            left: 0; /* تم وضعه على اليسار */
+            width: 0; /* لجعل العنصر بدون عرض حقيقي */
+            height: 100%;
+            /* استخدام خصائص border لإنشاء شكل المثلث الذي يشير إلى اليسار */
+            border-top: calc(var(--flag-height) / 2) solid transparent;
+            border-bottom: calc(var(--flag-height) / 2) solid transparent;
+            border-left: var(--triangle-width) solid #CE1126; /* أحمر - قاعدة المثلث تشير لليسار */
+            box-sizing: border-box; /* لضمان أن الحدود لا تزيد من حجم العنصر */
+        }
+
+        /* حاوية النجمة لتموضعها داخل المثلث المقلوب */
+        .star-container {
+            position: absolute;
+            top: 50%; /* مركزة عموديًا */
+            /* تموضع أفقي: مركز المثلث الأحمر من اليسار */
+            left: calc(var(--triangle-width) / 2 - (calc(var(--flag-height) / 3) / 2));
+            transform: translateY(-50%); /* لضبط المركز العمودي الفعلي للنجمة */
+            width: calc(var(--flag-height) / 3); /* حجم النجمة نسبيًا لارتفاع العلم */
+            height: calc(var(--flag-height) / 3);
+            z-index: 1; /* للتأكد من أن النجمة تظهر فوق الشرائط */
+        }
+
+        /* تنسيق النجمة (SVG) */
+        .star {
+            fill: white; /* لون النجمة أبيض */
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ضرب المقادير الجبرية</h1>
+            <div class="page-title">الرياضيات - الصف الأول المتوسط</div>
+        </header>
+        
+        <!-- محتوى الصفحة الأولى -->
+        <main class="content">
+            <!-- قسم استكشف -->
+            <section class="section">
+                <h2 class="section-title">استكشف</h2>
+                <div class="explore-box">
+                    <!-- كود علم الأردن المدمج هنا -->
+                    <div class="flag-container">
+                        <!-- الشرائط الأفقية -->
+                        <div class="stripe black"></div>
+                        <div class="stripe white"></div>
+                        <div class="stripe green"></div>
+
+                        <!-- المثلث الأحمر -->
+                        <div class="red-triangle"></div>
+
+                        <!-- حاوية النجمة SVG -->
+                        <div class="star-container">
+                            <!-- SVG للنجمة السباعية -->
+                            <svg class="star" viewBox="0 0 100 100">
+                                <polygon points="
+                                    50,5
+                                    58.6,32.4
+                                    85.2,22.1
+                                    69.5,45.5
+                                    93.9,59.8
+                                    65.6,62.5
+                                    69.1,90.1
+                                    50,70
+                                    30.9,90.1
+                                    34.4,62.5
+                                    6.1,59.8
+                                    30.5,45.5
+                                    14.8,22.1
+                                    41.4,32.4
+                                "/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p>يمثل المقدار الجبري \( 4x + 10 \) عرض العلم الأردني المرفوع على سارية رغدان. إذا كان طول العلم يساوي مثلي عرضه، فأجد مساحة العلم بدلالة \( x \)، ثم أجد مساحة العلم إذا كانت قيمة \( x = 5 \, \text{m} \).</p>
+                </div>
+            </section>
+            
+            <!-- فكرة الدرس -->
+            <section class="section">
+                <h2 class="section-title">فكرة الدرس</h2>
+                <p>أضرب المقادير الجبرية وأبسطها.</p>
+                <div class="explanation">
+                    <p>عندما أضرب عدداً في حد جبري فإنني أجد ناتج ضرب العدد في معامل الحد الجبري، ثم أضع الناتج جانب المتغير.</p>
+                    <div class="math-expression">\[ 4 \times 2z = 8z \]</div>
+                    <p>يمكنني تطبيق قواعد الأسس لضرب حد جبري في آخر حتى لو اختلفت المتغيرات.</p>
+                </div>
+            </section>
+            
+            <!-- مثال 1 -->
+            <section class="section">
+                <h2 class="section-title">مثال 1</h2>
+                <p>أجد ناتج ضرب العدد في الحد الجبري في كل مما يلي:</p>
+                
+                <div class="example">
+                    <h3 class="example-title">1. \( -5 \times 3x \)</h3>
+                    <div class="math-expression">\[ -5 \times 3x = (-5 \times 3)x = -15x \]</div>
+                </div>
+                
+                <div class="example">
+                    <h3 class="example-title">2. \( 4x \times 3x \)</h3>
+                    <div class="math-expression">\[ 4x \times 3x = (4 \times 3)(x \times x) = 12x^2 \]</div>
+                    <div class="note">
+                        <p>الخاصية التبديلية والتجميعية في الضرب</p>
+                        <p>قاعدة ضرب القوى</p>
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h3 class="example-title">3. \( xy \times 3xy \)</h3>
+                    <div class="math-expression">\[ xy \times 3xy = (1 \times 3)(x \times x)(y \times y) = 3x^2 y^2 \]</div>
+                </div>
+                
+                <div class="example">
+                    <h3 class="example-title">4. \( (-xy) \times (x^2 y) \)</h3>
+                    <div class="math-expression">\[ (-xy) \times (x^2 y) = (-x \times x^2)(y \times y) = -x^3 y^2 \]</div>
+                    <div class="note">
+                        <p>الخاصية التبديلية والتجميعية في الضرب</p>
+                        <p>قاعدة ضرب القوى في الأسس</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- قسم أتحقق من فهمي في نهاية الصفحة -->
+        <section class="check-understanding">
+            <h2 class="section-title">أتحقق من فهمي</h2>
+            <div class="success-banner" id="successBanner">مبروك! لقد أكملت جميع التمارين بنجاح!</div>
+            
+            <div class="exercises-container">
+                <!-- تمرين 1 -->
+                <div class="exercise">
+                    <h3>التمرين 1</h3>
+                    <div class="problem">\( 5 \times (-2x) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise1" placeholder="أدخل الإجابة">
+                        <button onclick="checkAnswer(1)">تحقق</button>
+                    </div>
+                    <div id="feedback1" class="feedback"></div>
+                </div>
+                
+                <!-- تمرين 2 -->
+                <div class="exercise">
+                    <h3>التمرين 2</h3>
+                    <div class="problem">\( 6 \times (-3u) \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise2" placeholder="أدخل الإجابة">
+                        <button onclick="checkAnswer(2)">تحقق</button>
+                    </div>
+                    <div id="feedback2" class="feedback"></div>
+                </div>
+                
+                <!-- تمرين 3 -->
+                <div class="exercise">
+                    <h3>التمرين 3</h3>
+                    <div class="problem">\( 2y \times 5y \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise3" placeholder="أدخل الإجابة">
+                        <button onclick="checkAnswer(3)">تحقق</button>
+                    </div>
+                    <div id="feedback3" class="feedback"></div>
+                </div>
+                
+                <!-- تمرين 4 -->
+                <div class="exercise">
+                    <h3>التمرين 4</h3>
+                    <div class="problem">\( 7c \times 2c \)</div>
+                    <div class="input-group">
+                        <input type="text" id="exercise4" placeholder="أدخل الإجابة">
+                        <button onclick="checkAnswer(4)">تحقق</button>
+                    </div>
+                    <div id="feedback4" class="feedback"></div>
+                </div>
+            </div>
+
+            <!-- زر التالي -->
+            <a href="u2l5p1.html" class="next-button">التالي</a>
+        </section>
+        
+        <footer>
+            <p>مادة الرياضيات - وحدة المقادير الجبرية | الصف الأول المتوسط</p>
+            <p>جميع الحقوق محفوظة © 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        // الإجابات الصحيحة للتمارين
+        const correctAnswers = {
+            1: "-10x",
+            2: "-18u",
+            3: "10y^2",
+            4: "14c^2"
+        };
+        
+        // عدد التمارين التي تم حلها
+        let solvedCount = 0;
+
+        // دالة مساعدة لتوحيد تنسيق إدخال المستخدم والإجابات الصحيحة
+        function normalizeInput(input) {
+            // تحويل الأحرف إلى أحرف صغيرة
+            let normalized = input.toLowerCase();
+            
+            // استبدال الرموز العلوية (superscripts) بـ '^' متبوعة بالرقم
+            normalized = normalized.replace(/²/g, '^2');
+            normalized = normalized.replace(/³/g, '^3');
+            normalized = normalized.replace(/¹/g, '^1');
+            normalized = normalized.replace(/⁴/g, '^4');
+            normalized = normalized.replace(/⁵/g, '^5');
+            normalized = normalized.replace(/⁶/g, '^6');
+            normalized = normalized.replace(/⁷/g, '^7');
+            normalized = normalized.replace(/⁸/g, '^8');
+            normalized = normalized.replace(/⁹/g, '^9');
+            normalized = normalized.replace(/⁰/g, '^0');
+
+            // إزالة جميع المسافات لضمان مقارنة دقيقة
+            normalized = normalized.replace(/\s/g, '');
+
+            return normalized;
+        }
+        
+        // دالة للتحقق من الإجابات
+        function checkAnswer(exerciseNum) {
+            const inputId = `exercise${exerciseNum}`;
+            const feedbackId = `feedback${exerciseNum}`;
+            
+            const rawUserAnswer = document.getElementById(inputId).value.trim();
+            const userAnswer = normalizeInput(rawUserAnswer); // توحيد إدخال المستخدم
+            const correctAnswer = normalizeInput(correctAnswers[exerciseNum]); // توحيد الإجابة الصحيحة للمقارنة
+
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            // التحقق من الإجابة
+            if (userAnswer === correctAnswer) {
+                feedbackElement.textContent = "إجابة صحيحة! أحسنت!";
+                feedbackElement.className = "feedback correct";
+                
+                // زيادة عدد التمارين المحلولة
+                solvedCount++;
+                
+                // تعطيل الحقل والزر بعد الإجابة الصحيحة
+                document.getElementById(inputId).disabled = true;
+                document.querySelector(`#${inputId} + button`).disabled = true;
+                
+                // عرض رسالة النجاح إذا تم حل جميع التمارين
+                if (solvedCount === 4) {
+                    document.getElementById('successBanner').style.display = 'block';
+                }
+            } else {
+                // عرض الإجابة الصحيحة بالتنسيق الأصلي للمساعدة
+                feedbackElement.textContent = `إجابة غير صحيحة. الإجابة الصحيحة هي: ${correctAnswers[exerciseNum]}`;
+                feedbackElement.className = "feedback incorrect";
+            }
+        }
+        
+        // تهيئة حقول الإدخال للاستجابة عند الضغط على Enter
+        document.querySelectorAll('.input-group input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const exerciseNum = this.id.replace('exercise', '');
+                    checkAnswer(parseInt(exerciseNum));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
