@@ -28,7 +28,7 @@
             color: #333;
             line-height: 1.8;
             padding: 20px;
-            min-height: 100vh; /* Reverted to 100vh */
+            min-height: 100vh;
             font-size: 1.1rem;
         }
         
@@ -79,7 +79,7 @@
             font-size: 1.8rem;
             display: flex;
             align-items: center;
-            flex-wrap: wrap; /* Added to allow text to wrap */
+            flex-wrap: wrap;
         }
         
         .section-title::before {
@@ -307,11 +307,18 @@
             font-size: 1rem;
         }
 
+        /* Styles for the Area Model Grid Wrapper */
+        .area-model-grid-wrapper {
+            overflow-x: auto; /* This is the key change to enable horizontal scrolling */
+            width: 100%;
+        }
+
         /* Styles for the Area Model Grid */
         .area-model-grid {
+            /* Updated grid to 4x5 for (x+3) x (x+4) */
             display: grid;
-            grid-template-columns: auto repeat(4, 1fr);
-            grid-template-rows: auto repeat(4, 1fr);
+            grid-template-columns: auto repeat(5, 1fr); 
+            grid-template-rows: auto repeat(4, 1fr); 
             gap: 2px;
             background-color: #ccc;
             width: fit-content;
@@ -328,6 +335,8 @@
             font-weight: bold;
             font-size: 1.2rem;
             color: #333;
+            /* Added to make the cell a perfect square */
+            aspect-ratio: 1 / 1; 
         }
 
         .area-model-grid .header-cell {
@@ -397,8 +406,8 @@
                 font-size: 1rem;
             }
             .section-title {
-                font-size: 1.5rem; /* Slightly reduced for better fit */
-                line-height: 1.3; /* Adjusted line height for wrapped text */
+                font-size: 1.5rem;
+                line-height: 1.3;
             }
             .example-title {
                 font-size: 1.3rem;
@@ -421,7 +430,8 @@
                 font-size: 1.2rem;
             }
             .area-model-grid {
-                grid-template-columns: auto repeat(4, 1fr);
+                /* Updated grid to 4x5 for (x+3) x (x+4) */
+                grid-template-columns: auto repeat(5, 1fr); 
                 grid-template-rows: auto repeat(4, 1fr);
                 font-size: 0.9rem;
             }
@@ -446,48 +456,59 @@
             
             <!-- مثال 3 -->
             <section class="section">
-                <h2 class="section-title">مثال 3: ناتج الضرب \( (3+x)(4+x) \) في أبسط صورة.</h2>
+                <!-- Title updated to reflect the new expression (x+4)(x+3) -->
+                <h2 class="section-title">مثال 3: ناتج الضرب \( (x+4)(x+3) \) في أبسط صورة.</h2>
                 
                 <div class="example">
                     <h3 class="example-title">الطريقة 1: نماذج المساحة</h3>
+                    <!-- Description updated for (x+4)(x+3) -->
                     <p>طول المستطيل الكبير \( (x+4) \) وحدات، وعرضه \( (x+3) \) وحدات.</p>
                     <p>مساحة المستطيل الكبير تساوي ناتج ضرب المقدارين الجبريين:</p>
                     
-                    <!-- Area Model Grid -->
-                    <div class="area-model-grid">
-                        <div class="area-model-grid-item header-cell"></div>
-                        <div class="area-model-grid-item header-cell label-x">x</div>
-                        <div class="area-model-grid-item header-cell label-one">1</div>
-                        <div class="area-model-grid-item header-cell label-one">1</div>
-                        <div class="area-model-grid-item header-cell label-one">1</div>
+                    <!-- Added a wrapper for horizontal scrolling on small screens -->
+                    <div class="area-model-grid-wrapper">
+                        <!-- Area Model Grid, updated for (x+4) x (x+3) -->
+                        <div class="area-model-grid">
+                            <div class="area-model-grid-item header-cell"></div>
+                            <div class="area-model-grid-item header-cell label-x">x</div>
+                            <div class="area-model-grid-item header-cell label-one">1</div>
+                            <div class="area-model-grid-item header-cell label-one">1</div>
+                            <div class="area-model-grid-item header-cell label-one">1</div>
+                            <div class="area-model-grid-item header-cell label-one">1</div>
 
-                        <div class="area-model-grid-item header-cell label-x">x</div>
-                        <div class="area-model-grid-item area-model-grid-item x-x-cell">x\(^2\)</div>
-                        <div class="area-model-grid-item area-model-grid-item x-one-cell">x</div>
-                        <div class="area-model-grid-item area-model-grid-item x-one-cell">x</div>
-                        <div class="area-model-grid-item area-model-grid-item x-one-cell">x</div>
+                            <div class="area-model-grid-item header-cell label-x">x</div>
+                            <div class="area-model-grid-item x-x-cell">x\(^2\)</div>
+                            <div class="area-model-grid-item x-one-cell">x</div>
+                            <div class="area-model-grid-item x-one-cell">x</div>
+                            <div class="area-model-grid-item x-one-cell">x</div>
+                            <div class="area-model-grid-item x-one-cell">x</div>
 
-                        <div class="area-model-grid-item header-cell label-one">1</div>
-                        <div class="area-model-grid-item area-model-grid-item one-x-cell">x</div>
-                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
-                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
-                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item header-cell label-one">1</div>
+                            <div class="area-model-grid-item one-x-cell">x</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
 
-                        <div class="area-model-grid-item header-cell label-one">1</div>
-                        <div class="area-model-grid-item area-model-grid-item one-x-cell">x</div>
-                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
-                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
-                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item header-cell label-one">1</div>
+                            <div class="area-model-grid-item one-x-cell">x</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
 
-                        <div class="area-model-grid-item header-cell label-one">1</div>
-                        <div class="area-model-grid-item area-model-grid-item one-x-cell">x</div>
-                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
-                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
-                        <div class="area-model-grid-item area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item header-cell label-one">1</div>
+                            <div class="area-model-grid-item one-x-cell">x</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                            <div class="area-model-grid-item one-one-cell">1</div>
+                        </div>
                     </div>
 
                     <div class="explanation">
                         <p>مساحة المربع الأخضر تساوي \( x \times x = x^2 \) وحدة مربعة.</p>
+                        <!-- Explanation updated for (x+4)(x+3) -->
                         <p>مساحة المستطيلات الحمراء تساوي \( x \times 1 = x \) وحدة مربعة. يوجد 7 مستطيلات حمراء، إذن مجموع مساحتها \( 7x \).</p>
                         <p>مساحة المربعات البرتقالية تساوي \( 1 \times 1 = 1 \) وحدة مربعة. يوجد 12 مربعًا برتقاليًا، إذن مجموع مساحتها \( 12 \).</p>
                         <p>إذن، مساحة المستطيل الكبير، هي: \( x^2 + 7x + 12 \)</p>
@@ -498,6 +519,7 @@
                     <h3 class="example-title">الطريقة 2: خاصية التوزيع</h3>
                     <p>يمكنني أيضًا استخدام خاصية التوزيع بطريقة مختلفة كما يأتي:</p>
                     <div class="math-expression">
+                        <!-- Math expression updated for (x+4)(x+3) -->
                         <p>\( (x+4)(x+3) \)</p>
                         <p>أفصل المقدار \( (x+4) \) إلى حدين \( x \), \( 4 \). ثم أضرب كلا منهما في المقدار \( (x+3) \):</p>
                         <p>\( = x(x+3) + 4(x+3) \)</p>
