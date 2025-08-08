@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>لعبة ضرب المقادير الجبرية</title>
+    
+    <!-- إضافة مكتبة MathJax لتحسين عرض المعادلات -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /*
+        * تخصيص عام
+        */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background: #0f2027;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></svg>');
+            background-size: 150px 150px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /*
+        * تخصيص لوحة اللعب (Canvas)
+        */
+        #gameCanvas {
+            background: #000428;
+            display: block;
+            touch-action: none;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /*
+        * تخصيص شاشة البداية والإيقاف المؤقت وأسئلة الجبر
+        */
+        .game-overlay, .question-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.9);
+            text-align: center;
+            padding: 20px;
+            z-index: 50;
+            transition: opacity 0.5s ease;
+        }
+
+        .game-overlay.hidden, .question-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .game-overlay h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            color: #4fc3f7;
+            text-shadow: 0 0 15px rgba(79, 195, 247, 0.9);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .game-overlay p {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            color: #bbdefb;
+            margin-bottom: 30px;
+        }
+
+        .game-overlay .btn {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 10px #26d0ce;
+            margin-top: 10px;
+        }
+
+        .game-overlay .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px #26d0ce;
+        }
+
+        .game-overlay .btn:active {
+            transform: translateY(1px);
+        }
+
+        .stats {
+            position: absolute;
+            top: 15px;
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .stat-item {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            background: rgba(0, 30, 60, 0.7);
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #4fc3f7;
+            text-shadow: 0 0 5px #4fc3f7;
+        }
+        
+        /*
+        * تخصيص أدوات التحكم باللمس
+        */
+        .touch-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 20;
+        }
+        
+        /* زر إطلاق النار */
+        #fireBtn {
+            width: clamp(70px, 15vw, 100px);
+            height: clamp(70px, 15vw, 100px);
+            border-radius: 50%;
+            background: rgba(255, 107, 107, 0.3);
+            border: 3px solid #ff6b6b;
+            color: white;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            touch-action: manipulation;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        #fireBtn:active {
+            background: rgba(255, 107, 107, 0.7);
+            transform: scale(0.95);
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.8);
+        }
+        
+        /* دائرة التحكم (Joystick) */
+        #joystickBase {
+            width: clamp(100px, 20vw, 150px);
+            height: clamp(100px, 20vw, 150px);
+            background: rgba(0, 150, 255, 0.2);
+            border-radius: 50%;
+            border: 2px solid #0096ff;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #joystickHandle {
+            width: clamp(50px, 10vw, 75px);
+            height: clamp(50px, 10vw, 75px);
+            background: #0096ff;
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.7;
+            box-shadow: 0 0 10px rgba(0, 150, 255, 0.8);
+            transition: transform 0.1s ease;
+        }
+
+        #soundToggle {
+            background: rgba(26, 41, 128, 0.7);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        #soundToggle:hover {
+            background: rgba(38, 208, 206, 0.7);
+        }
+        
+        /* إخفاء عناصر التحكم باللمس على سطح المكتب */
+        @media (min-width: 769px) {
+            .touch-controls {
+                display: none;
+            }
+        }
+        
+        /* نمط رسالة المستوى الجديد */
+        #levelUpMessage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(2rem, 10vw, 5rem);
+            color: #26d0ce;
+            text-shadow: 0 0 20px #26d0ce, 0 0 40px #26d0ce;
+            opacity: 0;
+            animation: fadeInOut 2s forwards;
+            z-index: 100;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            25% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            75% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* تخصيص خاص بشاشة الأسئلة */
+        .question-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .question-text {
+            font-size: clamp(1.5rem, 6vw, 3rem);
+            color: #fff;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: rgba(79, 195, 247, 0.2);
+            border-radius: 15px;
+        }
+
+        .answers-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .answer-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4fc3f7;
+            color: #fff;
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .answer-btn:hover {
+            background: rgba(79, 195, 247, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .answer-btn.correct {
+            background-color: #4CAF50; /* أخضر */
+            border-color: #388E3C;
+        }
+        
+        .answer-btn.wrong {
+            background-color: #F44336; /* أحمر */
+            border-color: #D32F2F;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- شاشة التراكب (تظهر قبل بدء اللعبة وأثناء الإيقاف المؤقت) -->
+    <div id="gameOverlay" class="game-overlay">
+        <h1 id="overlayTitle">لعبة ضرب المقادير الجبرية</h1>
+        <p id="overlayMessage">انقر لبدء اللعبة</p>
+        <button id="overlayBtn" class="btn">بدء اللعبة</button>
+    </div>
+    
+    <!-- شاشة الأسئلة الجبرية -->
+    <div id="questionOverlay" class="question-overlay hidden">
+        <div class="question-container">
+            <h2 class="question-text"></h2>
+            <div class="answers-container"></div>
+        </div>
+    </div>
+    
+    <!-- رسالة المستويات -->
+    <div id="levelUpMessage" style="display:none;"></div>
+
+    <!-- معلومات حالة اللعبة -->
+    <div class="stats">
+        <div class="stat-item">المستوى: <span id="level" class="stat-value">1</span></div>
+        <div class="stat-item">النقاط: <span id="score" class="stat-value">0</span></div>
+        <div class="stat-item">الأرواح: <span id="lives" class="stat-value">3</span></div>
+        <button id="soundToggle">الصوت: تشغيل</button>
+    </div>
+
+    <!-- أدوات التحكم باللمس (دائرة التحكم وزر إطلاق النار) -->
+    <div class="touch-controls">
+        <!-- دائرة التحكم (الجوستيك) -->
+        <div id="joystickBase">
+            <div id="joystickHandle"></div>
+        </div>
+        <!-- زر إطلاق النار -->
+        <div id="fireBtn">نار</div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            const scoreElement = document.getElementById('score');
+            const livesElement = document.getElementById('lives');
+            const levelElement = document.getElementById('level');
+            const overlay = document.getElementById('gameOverlay');
+            const overlayTitle = document.getElementById('overlayTitle');
+            const overlayMessage = document.getElementById('overlayMessage');
+            const overlayBtn = document.getElementById('overlayBtn');
+            const questionOverlay = document.getElementById('questionOverlay');
+            const questionTextElement = questionOverlay.querySelector('.question-text');
+            const answersContainer = questionOverlay.querySelector('.answers-container');
+            const fireBtn = document.getElementById('fireBtn');
+            const joystickBase = document.getElementById('joystickBase');
+            const joystickHandle = document.getElementById('joystickHandle');
+            const soundToggleBtn = document.getElementById('soundToggle');
+            const levelUpMessageElement = document.getElementById('levelUpMessage');
+
+            let GAME_WIDTH;
+            let GAME_HEIGHT;
+            
+            // حالة اللعبة
+            let gameState = {
+                level: 1,
+                score: 0,
+                lives: 3,
+                gameOver: false,
+                gameStarted: false,
+                paused: false,
+                enemies: [],
+                bullets: [],
+                explosions: [],
+                particles: [],
+                enemySpawnRate: 60,
+                enemySpawnCounter: 0,
+                enemySpeed: 2
+            };
+            
+            // أسئلة الجبر للصف السابع (المنهاج الأردني)
+            const questions = [
+                {
+                    problem: '$$5(x+3)$$',
+                    answers: ['5x + 8', '5x + 15', '5x + 3', '8x'],
+                    correct: '5x + 15'
+                },
+                {
+                    problem: '$$2x(x-4)$$',
+                    answers: ['2x + 8', '2x - 8', '$$2x^2 - 8x$$', '$$2x^2 - 4$$'],
+                    correct: '$$2x^2 - 8x$$'
+                },
+                {
+                    problem: '$$-3(2x+1)$$',
+                    answers: ['-6x + 1', '-6x - 3', '6x + 3', '-6x + 3'],
+                    correct: '-6x - 3'
+                },
+                {
+                    problem: '$$x(x+5)$$',
+                    answers: ['x + 5', '2x + 5', '$$x^2 + 5x$$', '6x'],
+                    correct: '$$x^2 + 5x$$'
+                },
+                {
+                    problem: '$$10(y-2)$$',
+                    answers: ['10y - 20', '10y + 20', '10y - 2', '20y'],
+                    correct: '10y - 20'
+                },
+                {
+                    problem: '$$-4y(2-y)$$',
+                    answers: ['$$-8y + 4y^2$$', '$$8y - 4y^2$$', '$$-4y^2 - 8y$$', '$$8y + 4y^2$$'],
+                    correct: '$$-8y + 4y^2$$'
+                },
+            ];
+
+            // تهيئة المستويات
+            const levelsConfig = [
+                { scoreToNextLevel: 100, enemySpawnRate: 80, enemySpeed: 1.5 },
+                { scoreToNextLevel: 250, enemySpawnRate: 70, enemySpeed: 2 },
+                { scoreToNextLevel: 500, enemySpawnRate: 60, enemySpeed: 2.5 },
+                { scoreToNextLevel: 800, enemySpawnRate: 50, enemySpeed: 3 },
+                { scoreToNextLevel: 1200, enemySpawnRate: 40, enemySpeed: 3.5 }
+            ];
+
+            // حالة التحكم باللمس
+            let joystickState = {
+                isDragging: false,
+                touchId: null,
+                baseCenter: { x: 0, y: 0 },
+                handlePos: { x: 0, y: 0 },
+                radius: 0
+            };
+
+            // مصفوفة للنجوم في الخلفية
+            let stars = [];
+            const numStars = 150;
+            const starSpeed = 0.5;
+            
+            // متغير للتحكم في الصوت
+            let soundEnabled = true;
+
+            // إنشاء مؤثرات صوتية
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
+                if (!soundEnabled) return;
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = type;
+                oscillator.frequency.value = frequency;
+                gainNode.gain.value = volume;
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + duration);
+            }
+
+            // السفينة
+            const player = {
+                x: 0,
+                y: 0,
+                width: 60,
+                height: 60,
+                speed: 7,
+                dx: 0, // سرعة الحركة الأفقية
+                draw: function() {
+                    // لهب المحرك (نظام جسيمات)
+                    const flameColor = ctx.createLinearGradient(this.x, this.y + this.height / 2, this.x, this.y + this.height);
+                    flameColor.addColorStop(0, 'rgba(255, 100, 0, 0.8)');
+                    flameColor.addColorStop(0.5, 'rgba(255, 200, 0, 0.5)');
+                    flameColor.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                    
+                    if (this.dx !== 0) {
+                        ctx.fillStyle = flameColor;
+                        ctx.beginPath();
+                        ctx.moveTo(this.x - 10, this.y + this.height / 2);
+                        ctx.lineTo(this.x, this.y + this.height);
+                        ctx.lineTo(this.x + 10, this.y + this.height / 2);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                    
+                    // جسم السفينة الرئيسي
+                    ctx.fillStyle = '#4fc3f7';
+                    ctx.shadowColor = '#4fc3f7';
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y - 15);
+                    ctx.lineTo(this.x - this.width / 2, this.y + this.height / 2);
+                    ctx.lineTo(this.x - this.width / 4, this.y + this.height / 3);
+                    ctx.lineTo(this.x + this.width / 4, this.y + this.height / 3);
+                    ctx.lineTo(this.x + this.width / 2, this.y + this.height / 2);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // قمرة القيادة
+                    ctx.fillStyle = '#e1f5fe';
+                    ctx.shadowBlur = 5;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y - 5, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // إعادة تعيين الظلال
+                    ctx.shadowBlur = 0;
+                }
+            };
+            
+            // كائن لتأثير الانفجار
+            function Explosion(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.particles = [];
+                this.life = 0;
+                
+                for (let i = 0; i < 20; i++) {
+                    this.particles.push({
+                        x: this.x,
+                        y: this.y,
+                        speedX: (Math.random() - 0.5) * 5,
+                        speedY: (Math.random() - 0.5) * 5,
+                        size: Math.random() * 5 + 2,
+                        color: color,
+                        alpha: 1
+                    });
+                }
+                
+                this.update = function() {
+                    this.life++;
+                    this.particles.forEach(p => {
+                        p.x += p.speedX;
+                        p.y += p.speedY;
+                        p.alpha -= 0.05;
+                        p.size -= 0.1;
+                    });
+                };
+                
+                this.draw = function() {
+                    this.particles.forEach(p => {
+                        ctx.globalAlpha = p.alpha;
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                    ctx.globalAlpha = 1;
+                };
+            }
+            
+            // دالة لتبديل ترتيب عناصر المصفوفة عشوائياً
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // دالة لتغيير حجم اللوحة عند تحميل الصفحة وتغيير حجم النافذة
+            function resizeCanvas() {
+                GAME_WIDTH = window.innerWidth;
+                GAME_HEIGHT = window.innerHeight;
+                
+                canvas.width = GAME_WIDTH;
+                canvas.height = GAME_HEIGHT;
+
+                // إعادة وضع السفينة بعد تغيير الحجم لتجنب اختفائها
+                if (gameState.gameStarted) {
+                    player.x = GAME_WIDTH / 2;
+                    player.y = GAME_HEIGHT - 170;
+                }
+
+                // إعادة إنشاء النجوم
+                createStars();
+            }
+
+            // إنشاء النجوم
+            function createStars() {
+                stars = [];
+                for (let i = 0; i < numStars; i++) {
+                    stars.push({
+                        x: Math.random() * GAME_WIDTH,
+                        y: Math.random() * GAME_HEIGHT,
+                        size: Math.random() * 2,
+                        speed: Math.random() * starSpeed + 0.1
+                    });
+                }
+            }
+
+            // رسم النجوم
+            function drawStars() {
+                ctx.fillStyle = '#ffffff';
+                stars.forEach(star => {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+            // تحديث النجوم
+            function updateStars() {
+                stars.forEach(star => {
+                    star.y += star.speed;
+                    if (star.y > GAME_HEIGHT) {
+                        star.y = 0;
+                        star.x = Math.random() * GAME_WIDTH;
+                    }
+                });
+            }
+
+            // إنشاء عدو (كويكب يحمل مسألة)
+            function createEnemy() {
+                const size = Math.random() * (GAME_WIDTH / 15) + (GAME_WIDTH / 25);
+                const problem = questions[Math.floor(Math.random() * questions.length)];
+                
+                return {
+                    x: Math.random() * (GAME_WIDTH - size),
+                    y: -size,
+                    width: size,
+                    height: size,
+                    speed: Math.random() * 1 + gameState.enemySpeed,
+                    problem: problem, // إضافة المسألة الجبرية
+                    draw: function() {
+                        // رسم كويكب
+                        ctx.fillStyle = '#8b4513';
+                        ctx.shadowColor = '#5c330a';
+                        ctx.shadowBlur = 15;
+                        ctx.beginPath();
+                        ctx.arc(this.x + this.width / 2, this.y + this.height / 2, this.width / 2, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        ctx.fillStyle = '#a0522d';
+                        ctx.beginPath();
+                        ctx.arc(this.x + this.width / 2.5, this.y + this.height / 2.5, this.width / 8, 0, Math.PI * 2);
+                        ctx.arc(this.x + this.width / 1.5, this.y + this.height / 1.5, this.width / 6, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
+                };
+            }
+
+            // إطلاق رصاصة
+            function fireBullet() {
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
+                
+                const bulletWidth = Math.max(4, GAME_WIDTH / 200);
+                const bulletHeight = Math.max(20, GAME_HEIGHT / 25);
+                
+                gameState.bullets.push({
+                    x: player.x,
+                    y: player.y,
+                    width: bulletWidth,
+                    height: bulletHeight,
+                    speed: 15,
+                    draw: function() {
+                        // تأثير الرصاصة
+                        const laserGradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y - this.height);
+                        laserGradient.addColorStop(0, '#ffeb3b');
+                        laserGradient.addColorStop(1, 'rgba(255, 255, 255, 0.7)');
+                        
+                        ctx.fillStyle = laserGradient;
+                        ctx.shadowColor = '#ffeb3b';
+                        ctx.shadowBlur = 15;
+                        ctx.fillRect(this.x - this.width / 2, this.y, this.width, this.height);
+                        
+                        ctx.shadowBlur = 0;
+                    }
+                });
+
+                // مؤثر صوتي: إطلاق نار
+                playSound(440, 'triangle', 0.05, 0.5);
+            }
+            
+            // أحداث التحكم باللمس للجوستيك
+            joystickBase.addEventListener('touchstart', handleJoystickStart);
+            joystickBase.addEventListener('touchmove', handleJoystickMove);
+            joystickBase.addEventListener('touchend', handleJoystickEnd);
+            joystickBase.addEventListener('touchcancel', handleJoystickEnd);
+
+            function handleJoystickStart(e) {
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
+                e.preventDefault();
+                const touch = e.changedTouches[0];
+                const rect = joystickBase.getBoundingClientRect();
+                
+                joystickState.baseCenter = { 
+                    x: rect.left + rect.width / 2, 
+                    y: rect.top + rect.height / 2 
+                };
+                joystickState.radius = rect.width / 2;
+                
+                joystickState.isDragging = true;
+                joystickState.touchId = touch.identifier;
+                
+                updateJoystick(touch.clientX, touch.clientY);
+            }
+            
+            function handleJoystickMove(e) {
+                if (!joystickState.isDragging) return;
+                
+                const touch = Array.from(e.changedTouches).find(t => t.identifier === joystickState.touchId);
+                if (!touch) return;
+                
+                updateJoystick(touch.clientX, touch.clientY);
+            }
+            
+            function handleJoystickEnd(e) {
+                if (!joystickState.isDragging) return;
+                
+                const touch = Array.from(e.changedTouches).find(t => t.identifier === joystickState.touchId);
+                if (!touch) return;
+                
+                joystickState.isDragging = false;
+                joystickState.touchId = null;
+                joystickHandle.style.transform = `translate(0, 0)`;
+                player.dx = 0; // إيقاف حركة اللاعب عند رفع الإصبع
+            }
+
+            function updateJoystick(clientX, clientY) {
+                const dx = clientX - joystickState.baseCenter.x;
+                const clampedDx = Math.min(Math.max(dx, -joystickState.radius), joystickState.radius);
+                
+                joystickHandle.style.transform = `translate(${clampedDx}px, 0)`;
+                
+                // تحديث سرعة اللاعب بناءً على حركة الجويستيك
+                player.dx = clampedDx / joystickState.radius * player.speed;
+            }
+
+            // أحداث زر إطلاق النار
+            fireBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                fireBullet();
+            });
+
+            // تحريك اللاعب
+            function movePlayer() {
+                // تحديث موضع اللاعب بناءً على السرعة المحددة من الجويستيك
+                player.x += player.dx;
+                
+                // منع اللاعب من الخروج من حدود اللوحة
+                player.x = Math.max(player.width / 2, Math.min(GAME_WIDTH - player.width / 2, player.x));
+            }
+
+            // تحديث الأعداء
+            function updateEnemies() {
+                gameState.enemySpawnCounter++;
+                if (gameState.enemySpawnCounter >= gameState.enemySpawnRate) {
+                    gameState.enemies.push(createEnemy());
+                    gameState.enemySpawnCounter = 0;
+                }
+                
+                for (let i = gameState.enemies.length - 1; i >= 0; i--) {
+                    const enemy = gameState.enemies[i];
+                    enemy.y += enemy.speed;
+                    
+                    if (enemy.y > GAME_HEIGHT) {
+                        gameState.enemies.splice(i, 1);
+                        gameState.lives--; // فقدان حياة عند تجاوز العدو
+                        livesElement.textContent = gameState.lives;
+                        if (gameState.lives <= 0) {
+                            gameState.gameOver = true;
+                        }
+                    }
+                }
+            }
+            
+            // تحديث الرصاصات
+            function updateBullets() {
+                for (let i = gameState.bullets.length - 1; i >= 0; i--) {
+                    const bullet = gameState.bullets[i];
+                    bullet.y -= bullet.speed;
+                    
+                    if (bullet.y < 0) {
+                        gameState.bullets.splice(i, 1);
+                        continue;
+                    }
+
+                    // هنا قمنا بتغيير المنطق: لا يوجد سؤال عند اصابة الكويكب
+                    for (let j = gameState.enemies.length - 1; j >= 0; j--) {
+                        const enemy = gameState.enemies[j];
+                        
+                        const dx = bullet.x - (enemy.x + enemy.width / 2);
+                        const dy = bullet.y - (enemy.y + enemy.height / 2);
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < enemy.width / 2) {
+                            // تم الاصطدام!
+                            gameState.explosions.push(new Explosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#4fc3f7'));
+                            playSound(150, 'square', 0.1, 0.8);
+                            
+                            // زيادة النقاط وتدمير العدو
+                            gameState.score += 10;
+                            scoreElement.textContent = gameState.score;
+                            
+                            gameState.enemies.splice(j, 1);
+                            gameState.bullets.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // دالة لإظهار السؤال
+            function showQuestion(enemy, enemyIndex) {
+                const problem = enemy.problem;
+                
+                // استخدام innerHTML لإظهار الرموز الرياضية
+                questionTextElement.innerHTML = problem.problem;
+
+                answersContainer.innerHTML = '';
+                
+                // خلط الخيارات عشوائياً
+                const shuffledAnswers = shuffle([...problem.answers]);
+                
+                shuffledAnswers.forEach(answer => {
+                    const button = document.createElement('button');
+                    button.classList.add('answer-btn');
+                    button.innerHTML = answer; // استخدام innerHTML للرموز
+                    button.addEventListener('click', () => checkAnswer(answer, problem.correct, enemyIndex));
+                    answersContainer.appendChild(button);
+                });
+                
+                questionOverlay.classList.remove('hidden');
+
+                // طلب من MathJax إعادة تهيئة العناصر الجديدة
+                if (window.MathJax) {
+                    MathJax.typesetPromise([questionOverlay]);
+                }
+            }
+            
+            // دالة للتحقق من الإجابة
+            function checkAnswer(selectedAnswer, correctAnswer, enemyIndex) {
+                const buttons = answersContainer.querySelectorAll('.answer-btn');
+                let isCorrect = (selectedAnswer === correctAnswer);
+
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.textContent === correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                    if (!isCorrect && btn.textContent === selectedAnswer) {
+                        btn.classList.add('wrong');
+                    }
+                });
+
+                if (isCorrect) {
+                    playSound(600, 'sine', 0.2, 0.7);
+                    
+                    // تأخير قصير قبل استئناف اللعبة
+                    setTimeout(() => {
+                        questionOverlay.classList.add('hidden');
+                        gameState.paused = false; // استئناف اللعبة
+                    }, 1000);
+                } else {
+                    playSound(80, 'sawtooth', 0.2, 1.0);
+                    // الإجابة خاطئة
+                    setTimeout(() => {
+                        questionOverlay.classList.add('hidden');
+                        gameState.paused = false;
+                        
+                        gameState.lives--; // فقدان حياة بسبب الإجابة الخاطئة
+                        livesElement.textContent = gameState.lives;
+                        
+                        // تأثير اهتزاز الشاشة
+                        canvas.style.transform = 'translateX(10px)';
+                        setTimeout(() => {
+                            canvas.style.transform = 'translateX(-10px)';
+                            setTimeout(() => {
+                                canvas.style.transform = 'translateX(0)';
+                            }, 50);
+                        }, 50);
+
+                        if (gameState.lives <= 0) {
+                            gameState.gameOver = true;
+                        }
+                    }, 1000);
+                }
+            }
+            
+            // الكشف عن تصادم الأعداء مع اللاعب
+            function checkPlayerCollision() {
+                if (gameState.paused) return; // لا يوجد تصادم أثناء الإيقاف المؤقت
+                for (let i = gameState.enemies.length - 1; i >= 0; i--) {
+                    const enemy = gameState.enemies[i];
+                    
+                    const dx = player.x - (enemy.x + enemy.width / 2);
+                    const dy = (player.y) - (enemy.y + enemy.height / 2);
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < player.width / 2 + enemy.width / 2) {
+                        // تم الاصطدام! نوقف اللعبة ونظهر السؤال
+                        gameState.paused = true;
+                        showQuestion(enemy, i); // تمرير العدو الذي اصطدم
+                        
+                        // إزالة العدو من اللعبة
+                        gameState.enemies.splice(i, 1);
+
+                        // مؤثر صوتي: اصطدام اللاعب
+                        playSound(80, 'sawtooth', 0.2, 1.0);
+
+                        // لا توجد نهاية فورية للعبة، الإجابة الخاطئة هي التي تؤدي إلى خسارة الأرواح
+                        break;
+                    }
+                }
+            }
+            
+            // دالة التحقق من التقدم في المستويات
+            function checkLevelUp() {
+                const currentLevelConfig = levelsConfig[gameState.level - 1];
+                if (currentLevelConfig && gameState.score >= currentLevelConfig.scoreToNextLevel) {
+                    gameState.level++;
+                    
+                    if (levelsConfig[gameState.level - 1]) {
+                        const nextLevelConfig = levelsConfig[gameState.level - 1];
+                        gameState.enemySpawnRate = nextLevelConfig.enemySpawnRate;
+                        gameState.enemySpeed = nextLevelConfig.enemySpeed;
+                        
+                        // عرض رسالة المستوى الجديد
+                        levelUpMessageElement.style.display = 'block';
+                        levelUpMessageElement.textContent = `المستوى ${gameState.level}`;
+                        setTimeout(() => {
+                            levelUpMessageElement.style.display = 'none';
+                        }, 2000);
+                        
+                        // مؤثر صوتي: تقدم في المستوى
+                        playSound(600, 'sine', 0.2, 0.7);
+                    } else {
+                        // تهانينا، لقد فزت باللعبة!
+                        gameState.gameOver = true;
+                        overlayTitle.textContent = 'تهانينا!';
+                        overlayMessage.textContent = `لقد أكملت جميع المستويات! نقاطك النهائية: ${gameState.score}`;
+                        overlayBtn.textContent = 'إعادة التشغيل';
+                        overlay.classList.remove('hidden');
+                    }
+                }
+            }
+
+            // رسم اللعبة
+            function draw() {
+                ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                
+                // تحديث ورسم النجوم
+                updateStars();
+                drawStars();
+
+                player.draw();
+                gameState.enemies.forEach(enemy => enemy.draw());
+                gameState.bullets.forEach(bullet => bullet.draw());
+                
+                // تحديث ورسم الانفجارات
+                gameState.explosions.forEach(explosion => {
+                    explosion.update();
+                    explosion.draw();
+                });
+                gameState.explosions = gameState.explosions.filter(exp => exp.life < 20); // إزالة الانفجارات القديمة
+            }
+            
+            // تحديث اللعبة
+            function update() {
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
+                
+                movePlayer();
+                updateEnemies();
+                updateBullets();
+                checkPlayerCollision();
+                checkLevelUp();
+            }
+            
+            // حلقة اللعبة
+            function gameLoop() {
+                update();
+                draw();
+                
+                levelElement.textContent = gameState.level;
+                
+                if (gameState.gameOver && levelsConfig[gameState.level - 1]) {
+                    overlayTitle.textContent = 'انتهت اللعبة!';
+                    overlayMessage.textContent = `نقاطك النهائية: ${gameState.score}`;
+                    overlayBtn.textContent = 'إعادة التشغيل';
+                    overlay.classList.remove('hidden');
+                } else if (gameState.paused && gameState.gameStarted) {
+                    overlayTitle.textContent = 'إيقاف مؤقت';
+                    overlayMessage.textContent = 'اللعبة في وضع الإيقاف المؤقت';
+                    overlayBtn.textContent = 'استمرار';
+                    overlay.classList.remove('hidden');
+                } else {
+                    overlay.classList.add('hidden');
+                }
+                
+                requestAnimationFrame(gameLoop);
+            }
+            
+            // بدء اللعبة
+            function startGame() {
+                // إعادة تعيين حالة اللعبة
+                gameState = {
+                    level: 1,
+                    score: 0,
+                    lives: 3,
+                    gameOver: false,
+                    gameStarted: true,
+                    paused: false,
+                    enemies: [],
+                    bullets: [],
+                    explosions: [],
+                    enemySpawnCounter: 0,
+                    enemySpawnRate: levelsConfig[0].enemySpawnRate,
+                    enemySpeed: levelsConfig[0].enemySpeed
+                };
+                
+                // مؤثر صوتي: بدء اللعبة
+                playSound(200, 'sine', 0.1, 0.3);
+
+                player.x = GAME_WIDTH / 2;
+                player.y = GAME_HEIGHT - 170;
+                
+                scoreElement.textContent = '0';
+                livesElement.textContent = '3';
+                levelElement.textContent = '1';
+                questionOverlay.classList.add('hidden'); // إخفاء شاشة الأسئلة
+            }
+            
+            // أحداث الأزرار
+            overlayBtn.addEventListener('click', () => {
+                if (gameState.gameOver) {
+                    startGame();
+                } else if (!gameState.gameStarted) {
+                    startGame();
+                } else if (gameState.paused) {
+                    gameState.paused = false;
+                }
+            });
+
+            soundToggleBtn.addEventListener('click', () => {
+                soundEnabled = !soundEnabled;
+                soundToggleBtn.textContent = `الصوت: ${soundEnabled ? 'تشغيل' : 'إيقاف'}`;
+            });
+            
+            // إيقاف اللعبة مؤقتًا عند فقدان التركيز
+            window.addEventListener('blur', () => {
+                if (gameState.gameStarted && !gameState.gameOver && !questionOverlay.classList.contains('hidden')) {
+                    gameState.paused = true;
+                }
+            });
+            
+            // يجب أن يتم تغيير حجم اللوحة أولاً
+            resizeCanvas();
+
+            // بدء اللعبة على الفور على الأجهزة التي تدعم اللمس
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                startGame();
+            } else {
+                 // إظهار شاشة البداية على الأجهزة غير اللمسية
+                 overlayTitle.textContent = 'لعبة ضرب المقادير الجبرية';
+                 overlayMessage.textContent = 'اضغط لبدء اللعبة';
+                 overlayBtn.textContent = 'بدء اللعبة';
+                 overlay.classList.remove('hidden');
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            
+            gameLoop();
+        });
+    </script>
+</body>
+</html>
