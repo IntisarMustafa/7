@@ -7,16 +7,26 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* تعريف متغيرات الألوان لتسهيل التعديل */
+        :root {
+            --royal-blue: #0c2461;
+            --gold: #f6b93b;
+            --light-blue: #1e3799;
+            --sky-blue: #4a69bd;
+            --pale-blue: #dff9fb;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Cairo', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #e6e9ff, #d6dcff, #e0e0ff);
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
             color: #333;
             min-height: 100vh;
             padding: 20px;
@@ -25,74 +35,30 @@
             align-items: center;
             position: relative;
             overflow-x: hidden;
-        }
-        
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(180, 180, 255, 0.2) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(150, 150, 220, 0.2) 0%, transparent 30%),
-                radial-gradient(circle at 30% 60%, rgba(200, 200, 250, 0.2) 0%, transparent 25%);
-            z-index: -1;
-            animation: waterEffect 15s infinite alternate;
-        }
-        
-        @keyframes waterEffect {
-            0% {
-                background-position: 0% 0%;
-            }
-            100% {
-                background-position: 100% 100%;
-            }
+            font-size: 1.1rem;
         }
         
         .container {
             max-width: 800px;
             width: 100%;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            box-shadow: 0 12px 30px rgba(80, 80, 180, 0.2);
+            border-radius: 0; /* تم تغييرها لتكون حادة */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             margin: 20px 0;
-            border: 1px solid rgba(180, 180, 255, 0.5);
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(12, 36, 97, 0.5);
             position: relative;
             z-index: 1;
         }
         
         header {
-            background: linear-gradient(135deg, #4a6fdc, #6a5acd);
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
             color: white;
             text-align: center;
             padding: 35px 20px;
             position: relative;
             overflow: hidden;
-        }
-        
-        header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
-            transform: rotate(30deg);
-            animation: shine 8s infinite linear;
-        }
-        
-        @keyframes shine {
-            0% {
-                transform: rotate(30deg) translateX(-100%);
-            }
-            100% {
-                transform: rotate(30deg) translateX(100%);
-            }
+            border-bottom: 5px solid var(--gold);
         }
         
         h1 {
@@ -102,7 +68,7 @@
             font-weight: 700;
             position: relative;
             z-index: 2;
-            color: #fff;
+            color: var(--gold); /* تم تغيير لون العنوان */
         }
         
         .subtitle {
@@ -112,7 +78,7 @@
             margin: 15px auto 0;
             background: rgba(255, 255, 255, 0.2);
             padding: 10px 20px;
-            border-radius: 30px;
+            border-radius: 0; /* تم تغييرها لتكون حادة */
             font-weight: 500;
             position: relative;
             z-index: 2;
@@ -120,16 +86,16 @@
         }
         
         .instructions {
-            background: linear-gradient(to bottom, #eef2ff, #e0e7ff);
+            background: var(--pale-blue); /* لون أزرق فاتح جداً */
             padding: 25px;
-            border-bottom: 1px solid #d1d9ff;
+            border-bottom: 1px solid var(--sky-blue);
             font-size: 1.15rem;
             line-height: 1.7;
-            color: #4a5568;
+            color: var(--royal-blue);
         }
         
         .instructions h3 {
-            color: #4a6fdc;
+            color: var(--royal-blue);
             margin-bottom: 20px;
             font-size: 1.5rem;
             display: flex;
@@ -137,21 +103,9 @@
             gap: 10px;
         }
         
-        .instructions ul {
-            padding-right: 25px;
-            margin: 20px 0;
-        }
-        
-        .instructions li {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: flex-start;
-            line-height: 1.6;
-        }
-        
         .instructions li i {
             margin-left: 12px;
-            color: #4a6fdc;
+            color: var(--gold); /* تم تغيير لون الأيقونة للذهبي */
             margin-top: 6px;
             font-size: 1.2rem;
         }
@@ -162,11 +116,11 @@
         
         .question {
             background: white;
-            border-radius: 14px;
+            border-radius: 0; /* تم تغييرها لتكون حادة */
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(74, 109, 220, 0.1);
-            border-left: 5px solid #4a6fdc;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--sky-blue);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -174,7 +128,7 @@
         
         .question:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(74, 109, 220, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
         
         .question-header {
@@ -184,11 +138,11 @@
         }
         
         .question-number {
-            background: linear-gradient(to bottom, #4a6fdc, #3a5fcc);
+            background: linear-gradient(to bottom, var(--royal-blue), var(--light-blue));
             color: white;
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: 0; /* تم تغييرها لتكون حادة */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -196,12 +150,12 @@
             font-size: 1.2rem;
             margin-left: 15px;
             flex-shrink: 0;
-            box-shadow: 0 4px 8px rgba(74, 109, 220, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         
         .question-title {
             font-size: 1.35rem;
-            color: #4a6fdc;
+            color: var(--royal-blue); /* تم تغيير لون العنوان */
             font-weight: 700;
         }
         
@@ -219,75 +173,11 @@
             margin: 20px 0;
             padding: 15px;
             background: #edf2ff;
-            border-radius: 10px;
+            border-radius: 0; /* تم تغييرها لتكون حادة */
             font-weight: bold;
-            border: 1px solid #d1d9ff;
-            color: #4a6fdc;
-            box-shadow: inset 0 0 10px rgba(74, 109, 220, 0.1);
-        }
-        
-        .number-line {
-            width: 100%;
-            height: 70px;
-            background: #edf2ff;
-            border-radius: 10px;
-            position: relative;
-            margin: 25px 0;
-            border: 1px solid #d1d9ff;
-            overflow: hidden;
-            box-shadow: inset 0 0 10px rgba(74, 109, 220, 0.1);
-        }
-        
-        .line {
-            position: absolute;
-            top: 50%;
-            left: 5%;
-            width: 90%;
-            height: 3px;
-            background: #4a6fdc;
-            transform: translateY(-50%);
-        }
-        
-        .tick {
-            position: absolute;
-            top: 30%;
-            width: 3px;
-            height: 18px;
-            background: #4a6fdc;
-        }
-        
-        .tick-label {
-            position: absolute;
-            top: 65%;
-            font-size: 1.1rem;
-            transform: translateX(-50%);
-            color: #4a6fdc;
-            font-weight: 600;
-        }
-        
-        .point {
-            position: absolute;
-            top: 50%;
-            width: 26px;
-            height: 26px;
-            background: linear-gradient(to bottom, #5b7cff, #4a6fdc);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(74, 109, 220, 0.3);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            z-index: 2;
-        }
-        
-        .point:hover {
-            transform: translate(-50%, -50%) scale(1.1);
-            background: linear-gradient(to bottom, #6a5acd, #5a4acd);
+            border: 1px solid var(--sky-blue);
+            color: var(--royal-blue);
+            box-shadow: inset 0 0 10px rgba(12, 36, 97, 0.1);
         }
         
         .options {
@@ -299,18 +189,18 @@
             align-items: center;
             padding: 16px 20px;
             margin-bottom: 15px;
-            background: #f0f4ff;
-            border-radius: 12px;
+            background: var(--pale-blue); /* لون أزرق فاتح جداً */
+            border-radius: 0; /* تم تغييرها لتكون حادة */
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid #d1d9ff;
+            border: 2px solid var(--sky-blue);
             position: relative;
             overflow: hidden;
         }
         
         .option:hover {
             background: #e6edff;
-            border-color: #b3c1ff;
+            border-color: var(--gold); /* تم تغيير لون الحدود للذهبي */
             transform: translateX(5px);
         }
         
@@ -321,7 +211,7 @@
             right: 0;
             width: 5px;
             height: 100%;
-            background: #4a6fdc;
+            background: var(--gold);
             opacity: 0;
             transition: all 0.3s ease;
         }
@@ -334,14 +224,14 @@
             margin-left: 12px;
             transform: scale(1.4);
             cursor: pointer;
-            accent-color: #4a6fdc;
+            accent-color: var(--gold);
         }
         
         .option label {
             flex: 1;
             font-size: 1.15rem;
             cursor: pointer;
-            color: #4a5568;
+            color: var(--royal-blue);
             font-weight: 500;
         }
         
@@ -357,14 +247,14 @@
             padding: 16px 36px;
             font-size: 1.2rem;
             border: none;
-            border-radius: 50px;
+            border-radius: 0; /* تم تغييرها لتكون حادة */
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 6px 15px rgba(80, 80, 180, 0.2);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
             z-index: 1;
@@ -387,28 +277,18 @@
             transform: translateX(100%);
         }
         
-        #submit-btn {
-            background: linear-gradient(to right, #4a6fdc, #6a5acd);
-            color: white;
+        #submit-btn, #reset-btn {
+            background: var(--gold); /* تم تغيير لون الزر للذهبي */
+            color: var(--royal-blue); /* تم تغيير لون النص للأزرق الملكي */
         }
         
-        #submit-btn:hover {
+        #submit-btn:hover, #reset-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 109, 220, 0.4);
-        }
-        
-        #reset-btn {
-            background: linear-gradient(to right, #5b7cff, #6a5acd);
-            color: white;
-        }
-        
-        #reset-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(91, 124, 255, 0.4);
+            box-shadow: 0 8px 20px rgba(246, 185, 59, 0.4); /* ظل ذهبي */
         }
         
         .start-btn {
-            background: linear-gradient(to right, #4a6fdc, #6a5acd);
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
             color: white;
             margin: 25px auto;
             display: none;
@@ -417,23 +297,23 @@
         
         .start-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 109, 220, 0.4);
+            box-shadow: 0 8px 20px rgba(12, 36, 97, 0.4);
         }
         
         .result {
             text-align: center;
             padding: 35px;
-            background: #f0f4ff;
-            border-radius: 16px;
+            background: var(--pale-blue); /* لون أزرق فاتح جداً */
+            border-radius: 0; /* تم تغييرها لتكون حادة */
             margin: 25px;
             display: none;
-            border: 1px solid #d1d9ff;
-            box-shadow: 0 5px 15px rgba(74, 109, 220, 0.1);
+            border: 1px solid var(--sky-blue);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .result h2 {
             font-size: 2.2rem;
-            color: #4a6fdc;
+            color: var(--royal-blue);
             margin-bottom: 25px;
             font-weight: 700;
         }
@@ -441,7 +321,7 @@
         .score {
             font-size: 4rem;
             font-weight: 800;
-            background: linear-gradient(to right, #4a6fdc, #6a5acd);
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -453,7 +333,7 @@
             font-size: 1.4rem;
             margin: 25px 0;
             line-height: 1.7;
-            color: #4a6fdc;
+            color: var(--royal-blue);
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
@@ -465,16 +345,16 @@
             margin-top: 35px;
             padding: 25px;
             background: white;
-            border-radius: 14px;
-            border: 1px solid #d1d9ff;
+            border-radius: 0; /* تم تغييرها لتكون حادة */
+            border: 1px solid var(--sky-blue);
         }
         
         .correct-answers h3 {
-            color: #4a6fdc;
+            color: var(--royal-blue);
             margin-bottom: 25px;
             font-size: 1.6rem;
             padding-bottom: 15px;
-            border-bottom: 3px solid #4a6fdc;
+            border-bottom: 3px solid var(--gold); /* تم تغيير لون الخط للذهبي */
             display: flex;
             align-items: center;
             gap: 12px;
@@ -483,7 +363,7 @@
         .answer-item {
             margin-bottom: 22px;
             padding-bottom: 22px;
-            border-bottom: 2px dashed #d1d9ff;
+            border-bottom: 2px dashed var(--sky-blue);
         }
         
         .answer-item:last-child {
@@ -495,12 +375,12 @@
         .answer-item p {
             margin-bottom: 10px;
             line-height: 1.7;
-            color: #4a5568;
+            color: var(--royal-blue);
             font-size: 1.1rem;
         }
         
         .answer-item strong {
-            color: #4a6fdc;
+            color: var(--gold); /* تم تغيير لون النص للذهبي */
             font-weight: 600;
         }
         
@@ -517,21 +397,23 @@
         footer {
             text-align: center;
             padding: 25px;
-            color: rgba(74, 85, 104, 0.8);
+            background: var(--royal-blue);
+            color: white;
             font-size: 1.1rem;
             width: 100%;
             max-width: 800px;
             font-weight: 500;
             position: relative;
             z-index: 2;
+            border-top: 3px solid var(--gold);
         }
         
         .skill-tag {
             display: inline-block;
-            background: linear-gradient(to right, #e0e7ff, #d1d9ff);
-            color: #4a6fdc;
+            background: var(--pale-blue);
+            color: var(--royal-blue);
             padding: 6px 15px;
-            border-radius: 20px;
+            border-radius: 0; /* تم تغييرها لتكون حادة */
             font-size: 0.9rem;
             margin: 8px 5px;
             font-weight: 600;
@@ -559,14 +441,6 @@
             .math {
                 font-size: 1.2rem;
                 padding: 12px;
-            }
-            
-            .number-line {
-                height: 60px;
-            }
-            
-            .tick-label {
-                font-size: 1rem;
             }
             
             .container {
@@ -863,7 +737,6 @@
             const scoreElement = document.getElementById('score');
             const feedbackElement = document.getElementById('feedback');
             
-            // الإجابات الصحيحة
             const correctAnswers = {
                 q1: 'c', // 7 + (-3) = 4
                 q2: 'b', // -5 - 8 = -13
@@ -877,7 +750,6 @@
                 let score = 0;
                 const userAnswers = {};
                 
-                // جمع الإجابات من المستخدم
                 for(let i = 1; i <= 6; i++) {
                     const qSelected = document.querySelector(`input[name="q${i}"]:checked`);
                     userAnswers[`q${i}`] = qSelected ? qSelected.value : '';
@@ -886,10 +758,8 @@
                     }
                 }
                 
-                // عرض النتيجة
                 scoreElement.textContent = `${score}/6`;
                 
-                // تقديم التغذية الراجعة
                 if (score === 6) {
                     feedbackElement.innerHTML = '<p class="correct">ممتاز! أنت جاهز لبدء درس جمع وطرح الأعداد النسبية.</p>';
                 } else if (score >= 4) {
@@ -898,7 +768,6 @@
                     feedbackElement.innerHTML = '<p class="incorrect">يحتاج إلى تحسين. ننصحك بمراجعة المهارات الأساسية قبل بدء الدرس.</p>';
                 }
                 
-                // إظهار زر بدء الدرس
                 startLessonBtn.style.display = 'flex';
                 
                 resultSection.style.display = 'block';
@@ -909,50 +778,43 @@
             });
             
             resetBtn.addEventListener('click', function() {
-                // مسح جميع الإجابات
                 document.querySelectorAll('input[type="radio"]').forEach(radio => {
                     radio.checked = false;
                 });
                 
-                // إخفاء النتيجة
                 resultSection.style.display = 'none';
                 
-                // إخفاء زر بدء الدرس
                 startLessonBtn.style.display = 'none';
                 
-                // إزالة تأثيرات التحديد
                 document.querySelectorAll('.option').forEach(option => {
-                    option.style.background = '#f0f4ff';
-                    option.style.borderColor = '#d1d9ff';
+                    option.style.background = 'var(--pale-blue)';
+                    option.style.borderColor = 'var(--sky-blue)';
                 });
                 
-                // التمرير إلى الأعلى
                 window.scrollTo(0, 0);
             });
             
-            // إضافة تأثير عند اختيار الإجابة
             document.querySelectorAll('.option').forEach(option => {
                 option.addEventListener('click', function() {
                     const radio = this.querySelector('input[type="radio"]');
                     radio.checked = true;
                     
-                    // إزالة التحديد من جميع الخيارات
                     this.parentElement.querySelectorAll('.option').forEach(opt => {
-                        opt.style.background = '#f0f4ff';
-                        opt.style.borderColor = '#d1d9ff';
+                        opt.style.background = 'var(--pale-blue)';
+                        opt.style.borderColor = 'var(--sky-blue)';
                     });
                     
-                    // تمييز الخيار المحدد
                     this.style.background = '#e6edff';
-                    this.style.borderColor = '#b3c1ff';
+                    this.style.borderColor = 'var(--gold)';
                 });
             });
             
-            // زر بدء الدرس
             startLessonBtn.addEventListener('click', function() {
-                window.location.href = 'u1l4p1.html';
+                // هذا الرابط يجب تحديثه ليعمل في سياق المشروع
+                window.location.href = '#';
             });
         });
     </script>
 </body>
 </html>
+
