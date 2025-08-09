@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>درس تفاعلي: التخمين والتحقق - رحلة وادي رم</title>
+    <!-- Google Fonts for a better Arabic display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for proper math rendering -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Three.js library for the 3D scene -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* تم تحديث الألوان الرئيسية هنا بناءً على طلبك */
+        :root {
+            --royal-blue: #1a4599;
+            --gold: #f6b93b;
+            --cool-yellow: #fffdd0;
+            --light-blue: #2257a3;
+            --sky-blue: #4a69bd;
+            --pale-blue: #dff9fb;
+            --text-color: #333;
+            --light-bg: #f8f9ff;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-strong: rgba(0, 0, 0, 0.1);
+
+            /* ألوان جديدة للحاسبة - تم تغييرها إلى الأزرق بناءً على الطلب */
+            --calculator-bg: rgba(223, 249, 251, 0.7); /* خلفية فاتحة */
+            --calculator-primary: #1a4599; /* أزرق داكن */
+            --calculator-secondary: #2257a3; /* أزرق متوسط */
+            --calculator-border: rgba(26, 69, 153, 0.5); /* أزرق للحدود */
+            --calculator-input-bg: rgba(26, 69, 153, 0.1); /* خلفية مدخلات شفافة */
+            --calculator-button-start: #2257a3;
+            --calculator-button-end: #4a69bd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--royal-blue), #26d0ce);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 5px solid var(--gold);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .lesson-content {
+            padding: 30px 40px;
+        }
+
+        .lesson-idea-section {
+            background: var(--cool-yellow);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #f9f9e0;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border-right: 5px solid var(--gold);
+        }
+
+        .problem-section {
+            background: var(--pale-blue);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e7ff;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border-right: 5px solid var(--sky-blue);
+        }
+
+        h2 {
+            color: var(--royal-blue);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--royal-blue);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--royal-blue);
+            margin: 25px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        .problem-statement {
+            background: white;
+            border-right: 5px solid var(--light-blue);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px var(--shadow-light);
+        }
+
+        .problem-statement p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .interactive-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .table-section {
+            min-width: 100%;
+        }
+
+        .explanation {
+            min-width: 100%;
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 15px;
+            border-right: 3px solid var(--sky-blue);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        th {
+            background: var(--royal-blue);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9ff;
+        }
+
+        .correct {
+            background-color: #e8f5e9 !important;
+            color: #2e7d32;
+            font-weight: 700;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #ffd166;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-light);
+        }
+        
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .solution {
+            background: var(--pale-blue);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: none;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .solution.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border-top: 3px solid var(--gold);
+            font-size: 1rem;
+        }
+
+        .math-equation {
+            direction: ltr;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        ol, ul {
+            padding-right: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .interactive-section {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .lesson-content, header {
+                padding: 20px;
+            }
+        }
+
+        /* ----- Styles for Wadi Rum 3D Scene ----- */
+        .wadi-rum-interactive-scene {
+            padding: 0;
+            margin: 30px 0;
+            background: none;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .scene-container {
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            background-color: #87CEEB;
+        }
+        
+        #desertScene {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+        }
+
+        .scene-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            left: auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 10;
+            pointer-events: none;
+            max-width: 400px;
+        }
+        
+        .scene-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #E9B384;
+            text-align: center;
+        }
+        
+        .scene-subtitle {
+            font-size: 16px;
+            opacity: 0.8;
+            color: white;
+            text-align: center;
+        }
+        
+        /* Styles for the calculator with blue, bold fonts - FONT SIZE INCREASED */
+        .calculator-section {
+            background: var(--calculator-bg);
+            padding: 20px; /* Increased padding */
+            border-radius: 10px;
+            color: var(--calculator-primary); /* لون النص الأساسي */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold; /* جعل الخط غامقاً */
+        }
+
+        .calculator-section h3 {
+            color: var(--calculator-primary);
+            margin-top: 0;
+            margin-bottom: 20px; /* Increased margin */
+            text-align: center;
+            font-weight: bold; /* التأكد من أن العنوان غامق */
+            font-size: 1.6rem; /* Increased font size */
+        }
+
+        .calculator-section p {
+            font-weight: bold;
+            font-size: 1.1rem; /* Increased font size */
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px; /* Increased margin */
+            gap: 15px; /* Increased gap */
+        }
+
+        .item-name {
+            flex-basis: 35%;
+            font-size: 1.2rem; /* Increased font size */
+            color: var(--calculator-primary);
+            font-weight: bold; /* جعل الخط غامقاً */
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 30%;
+            gap: 5px; /* Increased gap */
+        }
+
+        .input-group label {
+            font-size: 1rem; /* Increased font size */
+            color: var(--calculator-primary); /* لون أزرق واضح */
+            text-align: center;
+            font-weight: bold; /* جعل الخط غامقاً */
+        }
+
+        .quantity-input, .price-input {
+            padding: 10px; /* Increased padding */
+            border-radius: 8px;
+            border: 1px solid var(--calculator-border);
+            background: var(--calculator-input-bg);
+            color: var(--calculator-primary);
+            font-size: 1.1rem; /* Increased font size */
+            text-align: center;
+            font-weight: bold; /* جعل الخط غامقاً */
+        }
+
+        .total-section {
+            margin-top: 25px; /* Increased margin */
+            text-align: center;
+            padding-top: 20px; /* Increased padding */
+            border-top: 1px solid rgba(26, 69, 153, 0.2);
+        }
+
+        .action-button {
+            background: linear-gradient(to right, var(--calculator-button-start), var(--calculator-button-end));
+            color: white; /* لون النص في الزر أبيض ليكون واضحاً على الخلفية الزرقاء */
+            padding: 15px 30px; /* Increased padding */
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.3rem; /* Increased font size */
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            width: 100%;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .action-button:hover {
+            background: linear-gradient(to right, var(--calculator-button-end), var(--calculator-button-start));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .action-button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .total-display {
+            font-size: 2rem; /* Increased font size */
+            font-weight: bold;
+            color: var(--calculator-primary);
+            text-shadow: 0 0 8px rgba(26, 69, 153, 0.5);
+        }
+
+        .mobile-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .movement-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .control-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+        
+        .control-btn {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-btn:active {
+            background: rgba(204, 85, 0, 0.5);
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .mobile-info {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            max-width: 80%;
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 900px) {
+            .scene-overlay {
+                top: 15px;
+                right: 15px;
+                left: auto;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .scene-container {
+                height: 400px;
+            }
+            .item-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .item-name, .input-group {
+                flex-basis: 100%;
+                width: 100%;
+            }
+        }
+
+        .next-page-nav {
+            display: flex;
+            justify-content: center;
+            padding: 20px 40px 0;
+            border-top: 1px solid #ddd;
+        }
+
+        .next-page-nav a.next-button {
+            background: var(--royal-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .next-page-nav a.next-button:hover {
+            background: var(--light-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-light);
+        }
+
+        .next-page-nav a.next-button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>خطة حل المسألة: التخمين والتحقق</h1>
+            <div class="subtitle">رحلة سياحية إلى وادي رم - الأردن</div>
+        </header>
+
+        <div class="lesson-content">
+            <div class="lesson-idea-section">
+                <h3>فكرة الدرس</h3>
+                <p>حل المسائل باستخدام خطة التخمين والتحقق، حيث نقوم بتخمين الحل ثم التحقق من صحته باستخدام معطيات المسألة.</p>
+            </div>
+
+            <div class="problem-section">
+                <h2>المشكلة</h2>
+                <div class="problem-statement">
+                    <p>شارك 40 شخصاً في رحلة سياحية إلى وادي رم، وكان رسم الإشتراك في الرحلة للشخص الكبير 20 ديناراً وللشخص الصغير 10 دنانير.</p>
+                    <p>بلغ مجموع ما دفعوه جميعاً 650 ديناراً. المطلوب: إيجاد عدد المشاركين من الكبار وعدد المشاركين من الصغار.</p>
+                </div>
+            </div>
+
+            <div class="wadi-rum-interactive-scene">
+                <div class="scene-container">
+                    <canvas id="desertScene"></canvas>
+                    <div class="scene-overlay">
+                        <div class="scene-title">وادي رم ثلاثي الأبعاد</div>
+                        <div class="scene-subtitle">تجول في الصحراء الجميلة!</div>
+                    </div>
+                </div>
+
+                <div class="mobile-controls">
+                    <div class="mobile-info">
+                        اسحب بإصبعك على الشاشة للنظر حولك، واستخدم أزرار التحكم للحركة
+                    </div>
+                    <div class="movement-controls">
+                        <div class="control-row">
+                            <div class="control-btn" id="forwardBtn">↑</div>
+                        </div>
+                        <div class="control-row">
+                            <div class="control-btn" id="leftBtn">←</div>
+                            <div class="control-btn" id="backwardBtn">↓</div>
+                            <div class="control-btn" id="rightBtn">→</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calculator-section">
+                    <h3>حاسبة الأشخاص</h3>
+                    <p>استخدم هذه الحاسبة لتجربة قيم مختلفة لأسعار الكبار والصغار.</p>
+                    <div id="itemsContainer">
+                        <div class="item-row">
+                            <span class="item-name">عدد الكبار</span>
+                            <div class="input-group">
+                                <label for="adults-quantity">العدد</label>
+                                <input type="number" id="adults-quantity" class="quantity-input" placeholder="0" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="adults-price">السعر</label>
+                                <input type="number" id="adults-price" class="price-input" placeholder="0.00" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="item-row">
+                            <span class="item-name">عدد الصغار</span>
+                            <div class="input-group">
+                                <label for="children-quantity">العدد</label>
+                                <input type="number" id="children-quantity" class="quantity-input" placeholder="0" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="children-price">السعر</label>
+                                <input type="number" id="children-price" class="price-input" placeholder="0.00" min="0" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="total-section">
+                        <button id="calculateTotalBtn" class="action-button">احسب المجموع</button>
+                        <div class="total-display">
+                            المجموع الكلي: <span id="totalAmount">0.00</span> د.أ
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>حل المسألة بالتخمين والتحقق</h2>
+
+            <div class="interactive-section">
+                <div class="table-section hidden" id="table-section">
+                    <table id="guess-table">
+                        <thead>
+                            <tr>
+                                <th>عدد الكبار (\(x\))</th>
+                                <th>عدد الصغار (\(y\))</th>
+                                <th>المبلغ (\(20x + 10y\))</th>
+                                <th>التحقق</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td contenteditable="true">30</td>
+                                <td contenteditable="true">10</td>
+                                <td>700</td>
+                                <td><i class="fas fa-times" style="color: #c62828;"></i></td>
+                            </tr>
+                            <tr>
+                                <td contenteditable="true">26</td>
+                                <td contenteditable="true">14</td>
+                                <td>660</td>
+                                <td><i class="fas fa-times" style="color: #c62828;"></i></td>
+                            </tr>
+                            <tr>
+                                <td contenteditable="true">24</td>
+                                <td contenteditable="true">16</td>
+                                <td>640</td>
+                                <td><i class="fas fa-times" style="color: #c62828;"></i></td>
+                            </tr>
+                            <tr>
+                                <td contenteditable="true">25</td>
+                                <td contenteditable="true">15</td>
+                                <td>650</td>
+                                <td><i class="fas fa-check" style="color: #2e7d32;"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="controls">
+                        <button id="add-row-btn">
+                            <i class="fas fa-plus-circle"></i> إضافة تخمين جديد
+                        </button>
+                    </div>
+                </div>
+                <div class="controls">
+                     <button id="show-solution-and-table-btn">
+                        <i class="fas fa-lightbulb"></i> إظهار الجدول
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-page-nav">
+            <a href="u2l6p1.html" class="next-button">
+                التالي <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+
+        <footer>
+            <p>درس تفاعلي في الرياضيات - خطة التخمين والتحقق</p>
+            <p>رحلة سياحية إلى وادي رم في الأردن</p>
+        </footer>
+    </div>
+
+    <script>
+        // Update MathJax after dynamic content is added
+        function updateMathJax() {
+            if (window.MathJax) {
+                MathJax.typesetPromise().then(() => {
+                    // Optional: Do something after typesetting is complete.
+                }).catch((err) => {
+                    console.error("MathJax typesetting failed:", err);
+                });
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const addRowBtn = document.getElementById('add-row-btn');
+            const showAllBtn = document.getElementById('show-solution-and-table-btn');
+            const tableSection = document.getElementById('table-section');
+            const tableBody = document.querySelector('#guess-table tbody');
+            
+            // Add a new guess row
+            addRowBtn.addEventListener('click', function() {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td contenteditable="true">0</td>
+                    <td contenteditable="true">0</td>
+                    <td>0</td>
+                    <td><i class="fas fa-question" style="color: #ff9800;"></i></td>
+                `;
+                tableBody.appendChild(newRow);
+                
+                // Add an input event listener to the new row's editable cells
+                const cells = newRow.querySelectorAll('td[contenteditable="true"]');
+                cells.forEach(cell => {
+                    cell.addEventListener('input', function() {
+                        updateRowCalculation(newRow);
+                    });
+                });
+                updateMathJax(); // Re-render MathJax
+            });
+            
+            // Function to update row calculation and check
+            function updateRowCalculation(row) {
+                const xCell = row.cells[0];
+                const yCell = row.cells[1];
+                const amountCell = row.cells[2];
+                const checkCell = row.cells[3];
+                
+                const x = parseInt(xCell.textContent) || 0;
+                const y = parseInt(yCell.textContent) || 0;
+                
+                // Calculate the amount
+                const amount = (20 * x) + (10 * y);
+                amountCell.textContent = amount;
+                
+                // Check if the guess is correct
+                if (x + y === 40 && amount === 650) {
+                    checkCell.innerHTML = '<i class="fas fa-check" style="color: #2e7d32;"></i>';
+                    row.classList.add('correct');
+                } else {
+                    checkCell.innerHTML = '<i class="fas fa-times" style="color: #c62828;"></i>';
+                    row.classList.remove('correct');
+                }
+            }
+            
+            // Add input event listeners to the existing editable cells
+            document.querySelectorAll('#guess-table td[contenteditable="true"]').forEach(cell => {
+                cell.addEventListener('input', function() {
+                    updateRowCalculation(this.parentElement);
+                });
+            });
+            
+            // Show the table
+            showAllBtn.addEventListener('click', function() {
+                tableSection.classList.remove('hidden');
+                showAllBtn.style.display = 'none'; // Hide the button after it's clicked
+            });
+            
+            // Initial render of MathJax for all static content
+            updateMathJax();
+        });
+
+        // ----- JavaScript for Wadi Rum 3D Scene -----
+        window.addEventListener('load', function() {
+            // تهيئة مشهد Three.js
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog = new THREE.Fog(0x87CEEB, 20, 100);
+            
+            const canvas = document.getElementById('desertScene');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.setPixelRatio(window.devicePixelRatio);
+            
+            // إعداد الكاميرا
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            camera.position.set(0, 5, 10);
+            
+            // الإضاءة
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const sunLight = new THREE.DirectionalLight(0xFDB813, 1);
+            sunLight.position.set(100, 200, 100);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 1024;
+            sunLight.shadow.mapSize.height = 1024;
+            sunLight.shadow.camera.near = 0.5;
+            sunLight.shadow.camera.far = 300;
+            scene.add(sunLight);
+            
+            // إنشاء أرضية الصحراء
+            const groundGeometry = new THREE.PlaneGeometry(200, 200, 100, 100);
+            const groundMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xCC5500,
+                roughness: 0.9,
+                metalness: 0.1
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+            
+            // إنشاء جبال الصحراء
+            function createMountain(x, z, height, width) {
+                const mountainGroup = new THREE.Group();
+                
+                const mountainGeometry = new THREE.CylinderGeometry(width * 0.2, width, height, 8);
+                const mountainMaterial = new THREE.MeshStandardMaterial({ 
+                    color: 0x8B4513,
+                    roughness: 0.9,
+                    metalness: 0.1
+                });
+                const mountain = new THREE.Mesh(mountainGeometry, mountainMaterial);
+                mountain.position.y = height/2;
+                mountain.castShadow = true;
+                mountain.receiveShadow = true;
+                mountainGroup.add(mountain);
+                
+                mountainGroup.position.set(x, 0, z);
+                scene.add(mountainGroup);
+            }
+    
+            // إنشاء شخصية (كبير أو صغير، ذكر أو أنثى)
+            function createPerson(x, z, type, gender, bodyType = 'normal', clothingColor = 0x800000) {
+                const personGroup = new THREE.Group();
+                
+                let bodyHeight;
+                let headSize;
+                let bodyWidth;
+                let armRadius;
+                let legRadius;
+                let armLength;
+                let legLength;
+                let hairColor;
+                let neckHeight;
+
+                if (type === 'adult') {
+                    bodyHeight = 2.0;
+                    headSize = 0.6;
+                    bodyWidth = 1.0;
+                    armRadius = 0.2;
+                    legRadius = 0.25;
+                    armLength = 1.0;
+                    legLength = 1.0;
+                    neckHeight = 0.3;
+                } else { // child
+                    bodyHeight = 1.5;
+                    headSize = 0.5;
+                    bodyWidth = 0.8;
+                    armRadius = 0.15;
+                    legRadius = 0.2;
+                    armLength = 0.8;
+                    legLength = 0.8;
+                    neckHeight = 0.2;
+                }
+                
+                if (gender === 'male') {
+                    bodyWidth *= 1.2;
+                    hairColor = 0x5c3a21;
+                } else { // female
+                    bodyWidth *= 0.9;
+                    hairColor = 0x5c3a21;
+                }
+                
+                if (bodyType === 'heavy') {
+                    bodyWidth *= 1.5;
+                    armRadius *= 1.5;
+                    legRadius *= 1.5;
+                }
+                
+                const headColor = 0xF5DEB3;
+                const torsoYPosition = bodyHeight / 2 + legLength;
+                const neckYPosition = torsoYPosition + bodyHeight / 2 + neckHeight / 2;
+                const headYPosition = neckYPosition + neckHeight / 2 + headSize;
+                const armXPosition = bodyWidth * 0.6 + armRadius;
+                const handYPosition = torsoYPosition + bodyHeight * 0.4 - armLength * 0.5;
+                const legXPosition = bodyWidth * 0.3;
+                
+                const torsoGeometry = new THREE.BoxGeometry(bodyWidth, bodyHeight, bodyWidth * 0.7);
+                const torsoMaterial = new THREE.MeshStandardMaterial({ color: clothingColor, roughness: 0.8 });
+                const torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
+                torso.position.y = torsoYPosition;
+                torso.castShadow = true;
+                personGroup.add(torso);
+
+                const neckGeometry = new THREE.CylinderGeometry(headSize * 0.4, headSize * 0.4, neckHeight, 8);
+                const neckMaterial = new THREE.MeshStandardMaterial({ color: headColor, roughness: 0.8 });
+                const neck = new THREE.Mesh(neckGeometry, neckMaterial);
+                neck.position.y = neckYPosition;
+                neck.castShadow = true;
+                personGroup.add(neck);
+                
+                const armMaterial = new THREE.MeshStandardMaterial({ color: clothingColor, roughness: 0.8 });
+                const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(armRadius, armRadius, armLength, 8), armMaterial);
+                leftArm.position.set(-armXPosition, handYPosition, 0);
+                leftArm.rotation.z = -Math.PI / 4;
+                leftArm.castShadow = true;
+                personGroup.add(leftArm);
+
+                const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(armRadius, armRadius, armLength, 8), armMaterial);
+                rightArm.position.set(armXPosition, handYPosition, 0);
+                rightArm.rotation.z = Math.PI / 4;
+                rightArm.castShadow = true;
+                personGroup.add(rightArm);
+                
+                const handGeometry = new THREE.SphereGeometry(armRadius * 1.5, 8, 8);
+                const handMaterial = new THREE.MeshStandardMaterial({ color: headColor, roughness: 0.8 });
+                const leftHand = new THREE.Mesh(handGeometry, handMaterial);
+                leftHand.position.set(
+                    leftArm.position.x - Math.sin(Math.PI / 4) * armLength/2, 
+                    leftArm.position.y - Math.cos(Math.PI / 4) * armLength/2,
+                    0
+                );
+                leftHand.castShadow = true;
+                personGroup.add(leftHand);
+
+                const rightHand = new THREE.Mesh(handGeometry, handMaterial);
+                rightHand.position.set(
+                    rightArm.position.x + Math.sin(Math.PI / 4) * armLength/2, 
+                    rightArm.position.y - Math.cos(Math.PI / 4) * armLength/2,
+                    0
+                );
+                rightHand.castShadow = true;
+                personGroup.add(rightHand);
+                
+                const legMaterial = new THREE.MeshStandardMaterial({ color: 0x4B3721 });
+                const leftLeg = new THREE.Mesh(new THREE.CylinderGeometry(legRadius, legRadius, legLength, 8), legMaterial);
+                leftLeg.position.set(-legXPosition, legLength/2, 0);
+                leftLeg.castShadow = true;
+                personGroup.add(leftLeg);
+
+                const rightLeg = new THREE.Mesh(new THREE.CylinderGeometry(legRadius, legRadius, legLength, 8), legMaterial);
+                rightLeg.position.set(legXPosition, legLength/2, 0);
+                rightLeg.castShadow = true;
+                personGroup.add(rightLeg);
+                
+                const shoeGeometry = new THREE.BoxGeometry(legRadius * 2, 0.2, legRadius * 3);
+                const shoeMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+                const leftShoe = new THREE.Mesh(shoeGeometry, shoeMaterial);
+                leftShoe.position.set(leftLeg.position.x, 0.1, 0);
+                leftShoe.castShadow = true;
+                personGroup.add(leftShoe);
+
+                const rightShoe = new THREE.Mesh(shoeGeometry, shoeMaterial);
+                rightShoe.position.set(rightLeg.position.x, 0.1, 0);
+                rightShoe.castShadow = true;
+                personGroup.add(rightShoe);
+
+                const hairMaterial = new THREE.MeshStandardMaterial({ color: hairColor, roughness: 0.8 });
+                
+                const headGroup = new THREE.Group();
+                headGroup.position.y = headYPosition;
+                personGroup.add(headGroup);
+
+                const headGeometry = new THREE.SphereGeometry(headSize, 32, 32);
+                const head = new THREE.Mesh(headGeometry, neckMaterial);
+                headGroup.add(head);
+
+                const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+                const eyeGeometry = new THREE.SphereGeometry(headSize * 0.1, 16, 16);
+                
+                const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+                leftEye.position.set(-headSize * 0.35, headSize * 0.25, headSize * 0.9);
+                head.add(leftEye);
+
+                const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+                rightEye.position.set(headSize * 0.35, headSize * 0.25, headSize * 0.9);
+                head.add(rightEye);
+
+                const mouthMaterial = new THREE.MeshStandardMaterial({ color: 0xff4d4d });
+                const mouthGeometry = new THREE.TorusGeometry(headSize * 0.2, headSize * 0.05, 16, 100, Math.PI);
+                const mouth = new THREE.Mesh(mouthGeometry, mouthMaterial);
+                mouth.position.set(0, -headSize * 0.2, headSize * 0.9);
+                mouth.rotation.x = Math.PI / 2;
+                head.add(mouth);
+
+                if (gender === 'female') {
+                    function createBraid(segments = 15, segmentHeight = 0.3) {
+                        const braidGroup = new THREE.Group();
+                        const segmentGeometry = new THREE.CylinderGeometry(0.1, 0.1, segmentHeight * 1.5, 8);
+                        
+                        for (let i = 0; i < segments; i++) {
+                            for (let j = 0; j < 3; j++) {
+                                const strand = new THREE.Mesh(segmentGeometry, hairMaterial);
+                                strand.position.y = -i * segmentHeight;
+                                
+                                const angle = (j / 3) * Math.PI * 2;
+                                strand.position.x = Math.cos(angle) * 0.1;
+                                strand.position.z = Math.sin(angle) * 0.1;
+                                
+                                strand.rotation.y = (i * Math.PI / 8) + angle;
+                                strand.rotation.x = Math.PI / 2;
+                                
+                                braidGroup.add(strand);
+                            }
+                        }
+                        return braidGroup;
+                    }
+
+                    const hairGeometry = new THREE.SphereGeometry(headSize * 1.02, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+                    const hair = new THREE.Mesh(hairGeometry, hairMaterial);
+                    hair.position.z = -headSize * 0.05;
+                    headGroup.add(hair);
+
+                    const leftBraid = createBraid();
+                    leftBraid.scale.set(headSize, headSize, headSize);
+                    leftBraid.position.set(-headSize * 0.9, 0, 0);
+                    leftBraid.rotation.z = Math.PI / 8;
+                    leftBraid.rotation.y = -Math.PI / 2;
+                    headGroup.add(leftBraid);
+
+                    const rightBraid = createBraid();
+                    rightBraid.scale.set(headSize, headSize, headSize);
+                    rightBraid.position.set(headSize * 0.9, 0, 0);
+                    rightBraid.rotation.z = -Math.PI / 8;
+                    rightBraid.rotation.y = Math.PI / 2;
+                    headGroup.add(rightBraid);
+
+                } else { // male
+                    const hairGeometry = new THREE.SphereGeometry(headSize * 0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+                    const hair = new THREE.Mesh(hairGeometry, hairMaterial);
+                    hair.position.y = headSize * 0.6;
+                    hair.castShadow = true;
+                    headGroup.add(hair);
+                }
+
+                personGroup.position.set(x, 0, z);
+                personGroup.scale.set(0.8, 0.8, 0.8);
+                scene.add(personGroup);
+            }
+            
+            // إنشاء البيئة
+            createMountain(-70, -40, 30, 30);
+            createMountain(80, 50, 35, 36);
+            createMountain(-60, 70, 25, 24);
+            createMountain(60, -60, 40, 40);
+            createMountain(-80, 30, 28, 28);
+    
+            const clothingColors = [
+                0x800000, 
+                0x00008B,
+                0x006400,
+                0x4B0082,
+                0x2F4F4F,
+                0x8B4513,
+                0x000000
+            ];
+            
+            const peopleCount = 15;
+            for (let i = 0; i < peopleCount; i++) {
+                const x = Math.random() * 100 - 50;
+                const z = Math.random() * 100 - 50;
+                const type = Math.random() > 0.5 ? 'adult' : 'child';
+                const gender = Math.random() > 0.5 ? 'male' : 'female';
+                const bodyType = Math.random() > 0.7 ? 'heavy' : 'normal';
+                
+                const randomColor = clothingColors[Math.floor(Math.random() * clothingColors.length)];
+                
+                createPerson(x, z, type, gender, bodyType, randomColor);
+            }
+            
+            const moveState = { forward: false, backward: false, left: false, right: false };
+            const velocity = new THREE.Vector3();
+            const direction = new THREE.Vector3();
+            const movementSpeed = 0.2;
+            const rotationSpeed = 0.005;
+            
+            document.addEventListener('keydown', (e) => {
+                switch(e.key.toLowerCase()) {
+                    case 'w': moveState.forward = true; break;
+                    case 's': moveState.backward = true; break;
+                    case 'a': moveState.left = true; break;
+                    case 'd': moveState.right = true; break;
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                switch(e.key.toLowerCase()) {
+                    case 'w': moveState.forward = false; break;
+                    case 's': moveState.backward = false; break;
+                    case 'a': moveState.left = false; break;
+                    case 'd': moveState.right = false;
+                }
+            });
+            
+            document.getElementById('forwardBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.forward = true;
+            });
+            document.getElementById('forwardBtn').addEventListener('touchend', () => moveState.forward = false);
+            
+            document.getElementById('backwardBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.backward = true;
+            });
+            document.getElementById('backwardBtn').addEventListener('touchend', () => moveState.backward = false);
+            
+            document.getElementById('leftBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.left = true;
+            });
+            document.getElementById('leftBtn').addEventListener('touchend', () => moveState.left = false);
+            
+            document.getElementById('rightBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.right = true;
+            });
+            document.getElementById('rightBtn').addEventListener('touchend', () => moveState.right = false);
+            
+            let previousMouseX = 0;
+            let previousMouseY = 0;
+            let isDragging = false;
+            
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMouseX = e.clientX;
+                previousMouseY = e.clientY;
+                canvas.style.cursor = 'grabbing';
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - previousMouseX;
+                const deltaY = e.clientY - previousMouseY;
+                
+                camera.rotation.y -= deltaX * rotationSpeed;
+                camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - deltaY * rotationSpeed));
+                
+                previousMouseX = e.clientX;
+                previousMouseY = e.clientY; 
+            });
+
+            let previousTouchX = 0;
+            let previousTouchY = 0;
+
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    previousTouchX = e.touches[0].clientX;
+                    previousTouchY = e.touches[0].clientY;
+                }
+            });
+
+            canvas.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDragging || e.touches.length !== 1) return;
+                
+                const deltaX = e.touches[0].clientX - previousTouchX;
+                const deltaY = e.touches[0].clientY - previousTouchY;
+                
+                camera.rotation.y -= deltaX * rotationSpeed;
+                camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - deltaY * rotationSpeed));
+                
+                previousTouchX = e.touches[0].clientX;
+                previousTouchY = e.touches[0].clientY;
+            });
+            
+            // حلقة الحركة (Animation Loop)
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                velocity.x = 0;
+                velocity.z = 0;
+                
+                if (moveState.forward) velocity.z -= movementSpeed;
+                if (moveState.backward) velocity.z += movementSpeed;
+                if (moveState.left) velocity.x -= movementSpeed;
+                if (moveState.right) velocity.x += movementSpeed;
+                
+                direction.set(velocity.x, 0, velocity.z);
+                direction.applyQuaternion(camera.quaternion);
+                direction.y = 0;
+                
+                camera.position.add(direction);
+                
+                camera.position.y = 5;
+                
+                camera.position.x = Math.max(-90, Math.min(90, camera.position.x));
+                camera.position.z = Math.max(-90, Math.min(90, camera.position.z));
+                
+                renderer.render(scene, camera);
+            }
+            
+            window.addEventListener('resize', () => {
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            });
+            
+            animate();
+            
+            // منطق الحاسبة
+            const calculateTotalBtn = document.getElementById('calculateTotalBtn');
+            const totalAmountSpan = document.getElementById('totalAmount');
+            
+            function calculateTotal() {
+                let total = 0;
+                
+                const adultsQty = parseFloat(document.getElementById('adults-quantity').value) || 0;
+                const adultsPrice = parseFloat(document.getElementById('adults-price').value) || 0;
+                total += adultsQty * adultsPrice;
+                
+                const childrenQty = parseFloat(document.getElementById('children-quantity').value) || 0;
+                const childrenPrice = parseFloat(document.getElementById('children-price').value) || 0;
+                total += childrenQty * childrenPrice;
+                
+                totalAmountSpan.textContent = total.toFixed(2);
+            }
+            
+            calculateTotalBtn.addEventListener('click', calculateTotal);
+            
+            // No initial call to calculateTotal() to start with 0.00
+            // calculateTotal();
+        });
+    </script>
+</body>
+</html>
