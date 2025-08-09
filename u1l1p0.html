@@ -7,16 +7,26 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --royal-blue: #0c2461;
+            --light-blue: #1e3799;
+            --sky-blue: #4a69bd;
+            --gold: #f6b93b;
+            --pale-blue: #dff9fb;
+            --shadow-color: rgba(12, 36, 97, 0.2); /* Royal blue with opacity */
+        }
+        
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Cairo', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #e6e9ff, #d6dcff, #e0e0ff);
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
             color: #333;
             min-height: 100vh;
             padding: 20px;
@@ -25,6 +35,7 @@
             align-items: center;
             position: relative;
             overflow-x: hidden;
+            font-size: 1.1rem;
         }
         
         body::before {
@@ -35,9 +46,9 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 10% 20%, rgba(180, 180, 255, 0.2) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(150, 150, 220, 0.2) 0%, transparent 30%),
-                radial-gradient(circle at 30% 60%, rgba(200, 200, 250, 0.2) 0%, transparent 25%);
+                radial-gradient(circle at 10% 20%, rgba(12, 36, 97, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(12, 36, 97, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 30% 60%, rgba(12, 36, 97, 0.2) 0%, transparent 25%);
             z-index: -1;
             animation: waterEffect 15s infinite alternate;
         }
@@ -55,23 +66,24 @@
             max-width: 800px;
             width: 100%;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            box-shadow: 0 12px 30px rgba(80, 80, 180, 0.2);
+            border-radius: 0; /* Updated to sharp corners */
+            box-shadow: 0 12px 30px var(--shadow-color);
             overflow: hidden;
             margin: 20px 0;
-            border: 1px solid rgba(180, 180, 255, 0.5);
+            border: 1px solid rgba(12, 36, 97, 0.5);
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 1;
         }
         
         header {
-            background: linear-gradient(135deg, #4a6fdc, #6a5acd);
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
             color: white;
             text-align: center;
             padding: 35px 20px;
             position: relative;
             overflow: hidden;
+            border-bottom: 5px solid var(--gold);
         }
         
         header::before {
@@ -112,7 +124,7 @@
             margin: 15px auto 0;
             background: rgba(255, 255, 255, 0.2);
             padding: 10px 20px;
-            border-radius: 30px;
+            border-radius: 0; /* Updated to sharp corners */
             font-weight: 500;
             position: relative;
             z-index: 2;
@@ -120,26 +132,21 @@
         }
         
         .instructions {
-            background: linear-gradient(to bottom, #eef2ff, #e0e7ff);
+            background: var(--pale-blue);
             padding: 25px;
-            border-bottom: 1px solid #d1d9ff;
+            border-bottom: 1px solid rgba(12, 36, 97, 0.1);
             font-size: 1.15rem;
             line-height: 1.7;
             color: #4a5568;
         }
         
         .instructions h3 {
-            color: #4a6fdc;
+            color: var(--royal-blue);
             margin-bottom: 20px;
             font-size: 1.5rem;
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-        
-        .instructions ul {
-            padding-right: 25px;
-            margin: 20px 0;
         }
         
         .instructions li {
@@ -151,7 +158,7 @@
         
         .instructions li i {
             margin-left: 12px;
-            color: #4a6fdc;
+            color: var(--royal-blue);
             margin-top: 6px;
             font-size: 1.2rem;
         }
@@ -162,11 +169,11 @@
         
         .question {
             background: white;
-            border-radius: 14px;
+            border-radius: 0; /* Updated to sharp corners */
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(74, 109, 220, 0.1);
-            border-left: 5px solid #4a6fdc;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            border-left: 5px solid var(--sky-blue);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -174,7 +181,7 @@
         
         .question:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(74, 109, 220, 0.2);
+            box-shadow: 0 8px 25px rgba(12, 36, 97, 0.3);
         }
         
         .question-header {
@@ -184,11 +191,11 @@
         }
         
         .question-number {
-            background: linear-gradient(to bottom, #4a6fdc, #3a5fcc);
-            color: white;
+            background: var(--royal-blue);
+            color: var(--gold);
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: 0; /* Updated to sharp corners */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -196,12 +203,12 @@
             font-size: 1.2rem;
             margin-left: 15px;
             flex-shrink: 0;
-            box-shadow: 0 4px 8px rgba(74, 109, 220, 0.3);
+            box-shadow: 0 4px 8px var(--shadow-color);
         }
         
         .question-title {
             font-size: 1.35rem;
-            color: #4a6fdc;
+            color: var(--royal-blue);
             font-weight: 700;
         }
         
@@ -218,24 +225,24 @@
             text-align: center;
             margin: 20px 0;
             padding: 15px;
-            background: #edf2ff;
-            border-radius: 10px;
+            background: var(--pale-blue);
+            border-radius: 0; /* Updated to sharp corners */
             font-weight: bold;
-            border: 1px solid #d1d9ff;
-            color: #4a6fdc;
-            box-shadow: inset 0 0 10px rgba(74, 109, 220, 0.1);
+            border: 1px solid var(--sky-blue);
+            color: var(--royal-blue);
+            box-shadow: inset 0 0 10px var(--shadow-color);
         }
         
         .number-line {
             width: 100%;
             height: 70px;
-            background: #edf2ff;
-            border-radius: 10px;
+            background: var(--pale-blue);
+            border-radius: 0; /* Updated to sharp corners */
             position: relative;
             margin: 25px 0;
-            border: 1px solid #d1d9ff;
+            border: 1px solid var(--sky-blue);
             overflow: hidden;
-            box-shadow: inset 0 0 10px rgba(74, 109, 220, 0.1);
+            box-shadow: inset 0 0 10px var(--shadow-color);
         }
         
         .line {
@@ -244,7 +251,7 @@
             left: 5%;
             width: 90%;
             height: 3px;
-            background: #4a6fdc;
+            background: var(--royal-blue);
             transform: translateY(-50%);
         }
         
@@ -253,7 +260,7 @@
             top: 30%;
             width: 3px;
             height: 18px;
-            background: #4a6fdc;
+            background: var(--royal-blue);
         }
         
         .tick-label {
@@ -261,7 +268,7 @@
             top: 65%;
             font-size: 1.1rem;
             transform: translateX(-50%);
-            color: #4a6fdc;
+            color: var(--royal-blue);
             font-weight: 600;
         }
         
@@ -270,16 +277,16 @@
             top: 50%;
             width: 26px;
             height: 26px;
-            background: linear-gradient(to bottom, #5b7cff, #4a6fdc);
+            background: var(--royal-blue);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--gold);
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(74, 109, 220, 0.3);
+            box-shadow: 0 4px 8px var(--shadow-color);
             font-size: 1rem;
             transition: all 0.3s ease;
             z-index: 2;
@@ -287,7 +294,7 @@
         
         .point:hover {
             transform: translate(-50%, -50%) scale(1.1);
-            background: linear-gradient(to bottom, #6a5acd, #5a4acd);
+            background: var(--light-blue);
         }
         
         .options {
@@ -299,18 +306,18 @@
             align-items: center;
             padding: 16px 20px;
             margin-bottom: 15px;
-            background: #f0f4ff;
-            border-radius: 12px;
+            background: #fff;
+            border-radius: 0; /* Updated to sharp corners */
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid #d1d9ff;
+            border: 2px solid var(--pale-blue);
             position: relative;
             overflow: hidden;
         }
         
         .option:hover {
-            background: #e6edff;
-            border-color: #b3c1ff;
+            background: var(--pale-blue);
+            border-color: var(--sky-blue);
             transform: translateX(5px);
         }
         
@@ -321,7 +328,7 @@
             right: 0;
             width: 5px;
             height: 100%;
-            background: #4a6fdc;
+            background: var(--sky-blue);
             opacity: 0;
             transition: all 0.3s ease;
         }
@@ -334,7 +341,7 @@
             margin-left: 12px;
             transform: scale(1.4);
             cursor: pointer;
-            accent-color: #4a6fdc;
+            accent-color: var(--royal-blue);
         }
         
         .option label {
@@ -357,14 +364,14 @@
             padding: 16px 36px;
             font-size: 1.2rem;
             border: none;
-            border-radius: 50px;
+            border-radius: 0; /* Updated to sharp corners */
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 6px 15px rgba(80, 80, 180, 0.2);
+            box-shadow: 0 6px 15px var(--shadow-color);
             position: relative;
             overflow: hidden;
             z-index: 1;
@@ -388,28 +395,28 @@
         }
         
         #submit-btn {
-            background: linear-gradient(to right, #4a6fdc, #6a5acd);
-            color: white;
+            background: linear-gradient(to right, var(--gold), var(--sky-blue));
+            color: var(--royal-blue);
         }
         
         #submit-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 109, 220, 0.4);
+            box-shadow: 0 8px 20px rgba(246, 185, 59, 0.4);
         }
         
         #reset-btn {
-            background: linear-gradient(to right, #5b7cff, #6a5acd);
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
             color: white;
         }
         
         #reset-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(91, 124, 255, 0.4);
+            box-shadow: 0 8px 20px var(--shadow-color);
         }
         
         .start-btn {
-            background: linear-gradient(to right, #4a6fdc, #6a5acd);
-            color: white;
+            background: linear-gradient(to right, var(--gold), var(--sky-blue));
+            color: var(--royal-blue);
             margin: 25px auto;
             display: none;
             padding: 16px 45px;
@@ -417,23 +424,23 @@
         
         .start-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 109, 220, 0.4);
+            box-shadow: 0 8px 20px rgba(246, 185, 59, 0.4);
         }
         
         .result {
             text-align: center;
             padding: 35px;
-            background: #f0f4ff;
-            border-radius: 16px;
+            background: #fff;
+            border-radius: 0; /* Updated to sharp corners */
             margin: 25px;
             display: none;
-            border: 1px solid #d1d9ff;
-            box-shadow: 0 5px 15px rgba(74, 109, 220, 0.1);
+            border: 1px solid var(--pale-blue);
+            box-shadow: 0 5px 15px var(--shadow-color);
         }
         
         .result h2 {
             font-size: 2.2rem;
-            color: #4a6fdc;
+            color: var(--royal-blue);
             margin-bottom: 25px;
             font-weight: 700;
         }
@@ -441,7 +448,7 @@
         .score {
             font-size: 4rem;
             font-weight: 800;
-            background: linear-gradient(to right, #4a6fdc, #6a5acd);
+            background: linear-gradient(to right, var(--royal-blue), var(--sky-blue));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -453,7 +460,7 @@
             font-size: 1.4rem;
             margin: 25px 0;
             line-height: 1.7;
-            color: #4a6fdc;
+            color: var(--royal-blue);
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
@@ -464,17 +471,17 @@
             text-align: right;
             margin-top: 35px;
             padding: 25px;
-            background: white;
-            border-radius: 14px;
-            border: 1px solid #d1d9ff;
+            background: #fff;
+            border-radius: 0; /* Updated to sharp corners */
+            border: 1px solid var(--pale-blue);
         }
         
         .correct-answers h3 {
-            color: #4a6fdc;
+            color: var(--royal-blue);
             margin-bottom: 25px;
             font-size: 1.6rem;
             padding-bottom: 15px;
-            border-bottom: 3px solid #4a6fdc;
+            border-bottom: 3px solid var(--sky-blue);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -483,7 +490,7 @@
         .answer-item {
             margin-bottom: 22px;
             padding-bottom: 22px;
-            border-bottom: 2px dashed #d1d9ff;
+            border-bottom: 2px dashed var(--pale-blue);
         }
         
         .answer-item:last-child {
@@ -500,7 +507,7 @@
         }
         
         .answer-item strong {
-            color: #4a6fdc;
+            color: var(--royal-blue);
             font-weight: 600;
         }
         
@@ -517,7 +524,7 @@
         footer {
             text-align: center;
             padding: 25px;
-            color: rgba(74, 85, 104, 0.8);
+            color: #dff9fb;
             font-size: 1.1rem;
             width: 100%;
             max-width: 800px;
@@ -528,10 +535,10 @@
         
         .skill-tag {
             display: inline-block;
-            background: linear-gradient(to right, #e0e7ff, #d1d9ff);
-            color: #4a6fdc;
+            background: var(--pale-blue);
+            color: var(--royal-blue);
             padding: 6px 15px;
-            border-radius: 20px;
+            border-radius: 0; /* Updated to sharp corners */
             font-size: 0.9rem;
             margin: 8px 5px;
             font-weight: 600;
@@ -750,8 +757,8 @@
                     <div class="tick" style="left: 5%;"></div>
                     <div class="tick-label" style="left: 5%;">-3</div>
                     
-                    <!-- حذف تسمية الرقم -2 -->
                     <div class="tick" style="left: 20%;"></div>
+                    <div class="tick-label" style="left: 20%;">-2</div>
                     
                     <div class="tick" style="left: 35%;"></div>
                     <div class="tick-label" style="left: 35%;">-1</div>
@@ -762,20 +769,19 @@
                     <div class="tick" style="left: 65%;"></div>
                     <div class="tick-label" style="left: 65%;">1</div>
                     
-                    <!-- إضافة نقطة جديدة عند الرقم 2 -->
                     <div class="tick" style="left: 80%;"></div>
                     <div class="tick-label" style="left: 80%;">2</div>
                     
                     <div class="tick" style="left: 95%;"></div>
                     <div class="tick-label" style="left: 95%;">3</div>
                     
-                    <!-- Points - تغيير الرموز إلى إنجليزية -->
+                    <!-- Points -->
                     <div class="point" style="left: 5%;">A</div>
                     <div class="point" style="left: 20%;">B</div>
                     <div class="point" style="left: 35%;">C</div>
                     <div class="point" style="left: 50%;">D</div>
                     <div class="point" style="left: 65%;">E</div>
-                    <div class="point" style="left: 80%;">F</div> <!-- النقطة الجديدة عند الرقم 2 -->
+                    <div class="point" style="left: 80%;">F</div>
                 </div>
                 
                 <div class="options">
@@ -953,8 +959,8 @@
                 
                 // إزالة تأثيرات التحديد
                 document.querySelectorAll('.option').forEach(option => {
-                    option.style.background = '#f0f4ff';
-                    option.style.borderColor = '#d1d9ff';
+                    option.style.background = '#fff';
+                    option.style.borderColor = 'var(--pale-blue)';
                 });
                 
                 // التمرير إلى الأعلى
@@ -969,13 +975,13 @@
                     
                     // إزالة التحديد من جميع الخيارات
                     this.parentElement.querySelectorAll('.option').forEach(opt => {
-                        opt.style.background = '#f0f4ff';
-                        opt.style.borderColor = '#d1d9ff';
+                        opt.style.background = '#fff';
+                        opt.style.borderColor = 'var(--pale-blue)';
                     });
                     
                     // تمييز الخيار المحدد
-                    this.style.background = '#e6edff';
-                    this.style.borderColor = '#b3c1ff';
+                    this.style.background = 'var(--pale-blue)';
+                    this.style.borderColor = 'var(--sky-blue)';
                 });
             });
             
@@ -988,3 +994,4 @@
     </script>
 </body>
 </html>
+
