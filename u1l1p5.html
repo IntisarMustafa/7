@@ -3,1251 +3,1416 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong مع تحويل الأعداد النسبية</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Space Waves - لعبة الموجات الفضائية _العدد النسبي</title>
+    <!-- تضمين مكتبة MathJax للتعامل مع الرموز الرياضية -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
+        /* أنماط CSS الأساسية للجسم والتنسيق العام */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
-            touch-action: manipulation;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #0c1445, #1a2980);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            height: 100vh;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        }
-        
-        #game-container {
+            overflow: hidden;
             position: relative;
+        }
+
+        /* خلفية النجوم المتحركة */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></svg>');
+            background-size: 150px 150px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        #gameCanvas {
+            background: #000428;
+            display: block;
+            touch-action: none;
             width: 100vw;
             height: 100vh;
-            max-width: 500px;
-            max-height: 700px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .background {
+
+        /* الطبقات الشفافة التي تظهر فوق اللعبة (شاشة البداية، الأسئلة، إلخ) */
+        .game-overlay, .question-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0c1445, #1a2980);
-            z-index: 1;
-        }
-        
-        .paddle {
-            position: absolute;
-            width: 25%;
-            height: 15px;
-            border-radius: 10px;
-            z-index: 10;
-            transition: transform 0.05s ease;
-            box-shadow: 0 0 15px rgba(0, 200, 255, 0.8);
-        }
-        
-        #paddle-top {
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(to right, #ff6b6b, #ff0000);
-        }
-        
-        #paddle-bottom {
-            bottom: 15%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(to right, #00c6ff, #0072ff);
-        }
-        
-        #ball {
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            background: linear-gradient(135deg, #ff00cc, #333399);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            z-index: 10;
-            box-shadow: 0 0 15px rgba(255, 0, 204, 0.8);
-        }
-        
-        #score {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 48px;
-            font-weight: bold;
-            z-index: 10;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
-            font-family: 'Arial Rounded MT Bold', sans-serif;
-            letter-spacing: 5px;
-        }
-        
-        #center-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
-            top: 50%;
-            z-index: 1;
-        }
-        
-        #start-screen {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: rgba(12, 20, 69, 0.95);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
-            z-index: 20;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.85);
             text-align: center;
             padding: 20px;
-            backdrop-filter: blur(8px);
+            z-index: 50;
             transition: opacity 0.5s ease;
         }
-        
-        .game-title {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            background: linear-gradient(to right, #00c6ff, #ff00cc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 15px rgba(0, 198, 255, 0.7);
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-top: -30px;
+
+        .game-overlay.hidden, .question-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
-        
-        .game-subtitle {
-            font-size: 1.2rem;
-            color: #aaccff;
+
+        .game-overlay h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            color: #4fc3f7;
+            text-shadow: 0 0 15px rgba(79, 195, 247, 0.9);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .game-overlay p {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            color: #bbdefb;
             margin-bottom: 30px;
         }
-        
-        #mode-selection {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin: 30px 0;
-            width: 90%;
-            max-width: 350px;
-        }
-        
-        .mode-btn {
-            padding: 16px 30px;
-            font-size: 1.2rem;
-            background: linear-gradient(to right, #00c6ff, #0072ff);
+
+        .game-overlay .btn {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
             color: white;
             border: none;
+            padding: 15px 40px;
+            font-size: clamp(1rem, 4vw, 1.5rem);
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0, 114, 255, 0.5);
-            position: relative;
-            overflow: hidden;
-            font-weight: 600;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 10px #26d0ce;
+            margin-top: 10px;
+        }
+
+        .game-overlay .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px #26d0ce;
+        }
+
+        .game-overlay .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* شريط الإحصائيات في الأعلى */
+        .stats {
+            position: absolute;
+            top: 15px;
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .stat-item {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            background: rgba(0, 30, 60, 0.7);
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #4fc3f7;
+            text-shadow: 0 0 5px #4fc3f7;
         }
         
-        .mode-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 114, 255, 0.8);
+        #soundToggle {
+            background: rgba(26, 41, 128, 0.7);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        #soundToggle:hover {
+            background: rgba(38, 208, 206, 0.7);
         }
         
-        .mode-btn:active {
-            transform: translateY(2px);
-        }
-        
-        #math-question {
+        #levelUpMessage {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(12, 20, 69, 0.97);
-            color: white;
-            padding: 30px;
+            font-size: clamp(2rem, 10vw, 5rem);
+            color: #26d0ce;
+            text-shadow: 0 0 20px #26d0ce, 0 0 40px #26d0ce;
+            opacity: 0;
+            animation: fadeInOut 2s forwards;
+            z-index: 100;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            25% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            75% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+        }
+        
+        .difficulty-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(0.8rem, 3vw, 1.2rem);
+            background: rgba(255, 50, 50, 0.7);
+            padding: 5px 15px;
             border-radius: 20px;
             text-align: center;
-            z-index: 30;
-            display: none;
-            border: 3px solid #00c6ff;
-            box-shadow: 0 0 30px rgba(0, 198, 255, 0.7);
-            width: 90%;
-            max-width: 350px;
-            backdrop-filter: blur(5px);
+            z-index: 20;
+            animation: pulse 1.5s infinite;
         }
         
-        #math-question h3 {
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px rgba(255, 50, 50, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 50, 50, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(255, 50, 50, 0.5); }
+        }
+
+        /* --- Question Overlay Styles --- */
+        .question-overlay {
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .question-overlay .question-content {
+            background: rgba(15, 32, 39, 0.95);
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: 20px;
+            max-width: 90%;
+            width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px #4fc3f7;
+            border: 2px solid #2c5364;
+        }
+
+        .question-overlay h2 {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            color: #fff;
             margin-bottom: 20px;
-            color: #00c6ff;
-            font-size: 1.4rem;
+            text-shadow: 0 0 10px #4fc3f7;
         }
         
-        #question-text {
-            font-size: 1.8rem;
-            margin: 20px 0;
-            color: #ffcc00;
-            font-weight: 700;
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
-        }
-        
-        #answer-input {
-            padding: 14px;
-            font-size: 1.3rem;
-            width: 200px;
-            text-align: center;
-            margin: 20px 0;
-            border: 2px solid #00c6ff;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.3);
+        /* جعل نصوص الرياضيات تبدو أكبر وأكثر وضوحًا */
+        .question-overlay .question-content mjx-container {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
             color: white;
-            outline: none;
-            transition: all 0.3s;
         }
         
-        #answer-input:focus {
-            border-color: #ff00cc;
-            box-shadow: 0 0 15px rgba(255, 0, 204, 0.7);
-            transform: scale(1.05);
+        .question-overlay .answer-options mjx-container {
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            color: #0f2027;
         }
-        
-        #submit-answer {
-            padding: 14px 30px;
-            background: linear-gradient(to right, #ff00cc, #333399);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(255, 0, 204, 0.5);
-            font-weight: 600;
-        }
-        
-        #submit-answer:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 0, 204, 0.8);
-        }
-        
-        .touch-areas {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+
+        .question-overlay .answer-options {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            z-index: 2;
-        }
-        
-        .player-touch-area {
-            width: 100%;
-            height: 40%;
-            opacity: 0.1;
-            transition: opacity 0.3s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        #player1-touch-area {
-            background: linear-gradient(to bottom, #ff6b6b, transparent);
-        }
-        
-        #player2-touch-area {
-            background: linear-gradient(to top, #00c6ff, transparent);
-        }
-        
-        .player-touch-area.active {
-            opacity: 0.3;
-        }
-        
-        .bounce {
-            animation: bounce 0.5s ease;
-        }
-        
-        @keyframes bounce {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-        
-        .player-instruction {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 18px;
-            z-index: 10;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-        }
-        
-        #top-player {
-            top: 12%;
-        }
-        
-        #bottom-player {
-            bottom: 18%;
-        }
-        
-        .question-points {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            background: rgba(255, 165, 0, 0.8);
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 16px;
-            z-index: 10;
-            font-weight: 600;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        #start-btn {
-            position: absolute;
-            bottom: 40%;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 18px 45px;
-            font-size: 1.4rem;
-            background: linear-gradient(to right, #4CAF50, #2E7D32);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.6);
-            display: none;
-            z-index: 25;
-            font-weight: 700;
-        }
-        
-        #start-btn:hover {
-            transform: translate(-50%, -5px);
-            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.8);
-        }
-        
-        .touch-instruction {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.3rem;
-            text-align: center;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            width: 90%;
-            max-width: 300px;
-            pointer-events: none;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .fraction-example {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 15px;
-            border-radius: 15px;
-            margin: 15px 0;
-            border: 2px dashed #00c6ff;
-            box-shadow: 0 0 15px rgba(0, 198, 255, 0.3);
-        }
-        
-        .computer-difficulty {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: white;
-            background: rgba(255, 100, 100, 0.8);
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 14px;
-            z-index: 10;
-            font-weight: 600;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .computer-difficulty:hover {
-            transform: scale(1.05);
-        }
-        
-        #sound-toggle {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 100;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        #pause-screen {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            z-index: 40;
-            text-align: center;
-            backdrop-filter: blur(5px);
-        }
-        
-        #pause-screen h2 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            color: #00c6ff;
-        }
-        
-        #resume-btn {
-            padding: 15px 40px;
-            font-size: 1.3rem;
-            background: linear-gradient(to right, #4CAF50, #2E7D32);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.6);
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        
-        #power-ups {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
             gap: 15px;
-            z-index: 10;
-        }
-        
-        .power-up {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
-        }
-        
-        .power-up:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-        }
-        
-        .power-up.disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        
-        .flash-effect {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 15;
         }
-        
-        .winning-chance {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+
+        .question-overlay .answer-btn {
+            background: linear-gradient(to right, #005aa7, #fffde4);
+            color: #0f2027;
+            border: none;
+            padding: 15px;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .question-overlay .answer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .question-overlay .answer-btn:active {
+            transform: translateY(0);
+        }
+
+        .question-overlay .answer-btn.correct {
+            background: linear-gradient(to right, #00b09b, #96c93d);
             color: white;
-            background: rgba(100, 255, 100, 0.8);
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 14px;
-            z-index: 10;
-            font-weight: 600;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-overlay .answer-btn.incorrect {
+            background: linear-gradient(to right, #c04848, #d84545);
+            color: white;
+        }
+
+        .question-overlay .message-box {
+            margin-top: 20px;
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <div class="background"></div>
-        <div id="flash-effect" class="flash-effect"></div>
-        
-        <div id="paddle-top" class="paddle"></div>
-        <div id="paddle-bottom" class="paddle"></div>
-        <div id="ball"></div>
-        <div id="center-line"></div>
-        <div id="score">0 - 0</div>
-        <div class="question-points">الأسئلة عند: 3, 6, 9 نقاط</div>
-        <div class="computer-difficulty" id="difficulty-btn">مستوى الكمبيوتر: متوسط</div>
-        <div class="winning-chance" id="winning-chance">فرصتك للفوز: 65%</div>
-        
-        <div class="player-instruction" id="top-player"></div>
-        <div class="player-instruction" id="bottom-player"></div>
-        
-        <div id="sound-toggle">
-            <i class="fas fa-volume-up"></i>
-        </div>
-        
-        <div class="touch-areas">
-            <div class="player-touch-area" id="player1-touch-area">
-                <div class="touch-instruction" id="player1-instruction"></div>
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="gameOverlay" class="game-overlay">
+        <h1 id="overlayTitle">Space Waves</h1>
+        <p id="overlayMessage">العب وتجنب الاصطدام بالجدران</p>
+        <button id="overlayBtn" class="btn">بدء اللعبة</button>
+    </div>
+    
+    <!-- Question Overlay -->
+    <div id="questionOverlay" class="question-overlay hidden">
+        <div class="question-content">
+            <h2 id="questionText"></h2>
+            <div id="answerOptions" class="answer-options">
+                <!-- أزرار الإجابات يتم إدراجها هنا -->
             </div>
-            <div class="player-touch-area" id="player2-touch-area">
-                <div class="touch-instruction" id="player2-instruction"></div>
-            </div>
-        </div>
-        
-        <div id="start-screen">
-            <h1 class="game-title">PONG مع تحويل الأعداد</h1>
-            <p class="game-subtitle">لعبة طاولة المضرب للهاتف والكمبيوتر</p>
-            <div id="mode-selection">
-                <button class="mode-btn" id="vs-friend">
-                    <i class="fas fa-user-friends"></i> لعب مع صديق
-                </button>
-                <button class="mode-btn" id="vs-computer">
-                    <i class="fas fa-laptop"></i> لعب مع الكمبيوتر
-                </button>
-            </div>
-            <p>الأسئلة تظهر عند إحراز 3, 6, 9 نقاط</p>
-            <div class="fraction-example">
-                <p>سيُطلب منك تحويل الأعداد النسبية إلى صيغة a/b </p>
-                <p>مثال: 0.6 = 3/5, -1.6 = -8/5</p>
-            </div>
-        </div>
-        
-        <div id="math-question">
-            <h3><i class="fas fa-calculator"></i> حل السؤال للمتابعة</h3>
-            <p id="question-text"></p>
-            <input type="text" id="answer-input" placeholder="أدخل على شكل a/b">
-            <p style="color: #ffcc00; font-size: 1rem; margin-top: 15px;">مثال: 3/4 أو -2/5</p>
-            <button id="submit-answer"><i class="fas fa-check"></i> تحقق</button>
-        </div>
-        
-        <button id="start-btn"><i class="fas fa-play"></i> ابدأ اللعب</button>
-        
-        <div id="pause-screen">
-            <h2>اللعبة متوقفة</h2>
-            <button id="resume-btn"><i class="fas fa-play"></i> استئناف اللعب</button>
-            <p>اضغط على زر المسافة أو P لاستئناف اللعب</p>
-        </div>
-        
-        <div id="power-ups">
-            <div class="power-up" id="slow-ball" title="إبطاء الكرة">
-                <i class="fas fa-turtle"></i>
-            </div>
-            <div class="power-up" id="big-paddle" title="تكبير المضرب">
-                <i class="fas fa-arrows-alt-h"></i>
-            </div>
-            <div class="power-up" id="double-points" title="نقاط مضاعفة">
-                <i class="fas fa-star"></i>
-            </div>
+            <p id="feedbackMessage" class="message-box"></p>
         </div>
     </div>
 
+    <div id="levelUpMessage" style="display:none;"></div>
+
+    <div class="stats">
+        <div class="stat-item">المستوى: <span id="level" class="stat-value">1</span></div>
+        <div class="stat-item">النقاط: <span id="score" class="stat-value">0</span></div>
+        <div class="stat-item">الزمن: <span id="time" class="stat-value">0</span> ثانية</div>
+        <button id="soundToggle">الصوت: تشغيل</button>
+    </div>
+    
+    <div class="difficulty-indicator">مسار جبلي حاد وعقبات داخلية!</div>
+    
     <script>
-        // عناصر اللعبة
-        const gameContainer = document.getElementById('game-container');
-        const paddleTop = document.getElementById('paddle-top');
-        const paddleBottom = document.getElementById('paddle-bottom');
-        const ball = document.getElementById('ball');
-        const scoreElement = document.getElementById('score');
-        const startScreen = document.getElementById('start-screen');
-        const mathQuestion = document.getElementById('math-question');
-        const questionText = document.getElementById('question-text');
-        const answerInput = document.getElementById('answer-input');
-        const submitAnswer = document.getElementById('submit-answer');
-        const player1TouchArea = document.getElementById('player1-touch-area');
-        const player2TouchArea = document.getElementById('player2-touch-area');
-        const player1Instruction = document.getElementById('player1-instruction');
-        const player2Instruction = document.getElementById('player2-instruction');
-        const startBtn = document.getElementById('start-btn');
-        const topPlayerInstruction = document.getElementById('top-player');
-        const bottomPlayerInstruction = document.getElementById('bottom-player');
-        const soundToggle = document.getElementById('sound-toggle');
-        const pauseScreen = document.getElementById('pause-screen');
-        const resumeBtn = document.getElementById('resume-btn');
-        const flashEffect = document.getElementById('flash-effect');
-        const difficultyBtn = document.getElementById('difficulty-btn');
-        const winningChanceElement = document.getElementById('winning-chance');
-        
-        // متغيرات اللعبة
-        let gameRunning = false;
-        let gameMode = '';
-        let topScore = 0;
-        let bottomScore = 0;
-        let currentQuestion = {};
-        let waitingForAnswer = false;
-        let isPlayer1Active = false;
-        let isPlayer2Active = false;
-        let lastScorer = '';
-        let questionTriggerPoints = [3, 6, 9];
-        let questionTriggered = false;
-        let computerDifficulty = 'medium'; // سهلة، متوسطة، صعبة
-        let computerErrorRate = 0.4;
-        let computerReactionTime = 0;
-        let soundEnabled = true;
-        let gamePaused = false;
-        let powerUps = {
-            slowBall: { active: false, timeLeft: 0 },
-            bigPaddle: { active: false, timeLeft: 0 },
-            doublePoints: { active: false, timeLeft: 0 }
-        };
-        let level = 1;
-        let winningChance = 65;
-        
-        // سرعة المضارب والكرة
-        const paddleSpeed = 30;
-        let ballSpeedX = 6;
-        let ballSpeedY = 6;
-        const originalBallSpeed = 6;
-        
-        // مواضع المضارب
-        let topPaddleX = 50;
-        let bottomPaddleX = 50;
-        
-        // موضع الكرة
-        let ballX = 50;
-        let ballY = 50;
-        
-        // إنشاء مؤثرات صوتية
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-        function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
-            if (!soundEnabled) return;
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            const scoreElement = document.getElementById('score');
+            const timeElement = document.getElementById('time');
+            const levelElement = document.getElementById('level');
+            const overlay = document.getElementById('gameOverlay');
+            const overlayTitle = document.getElementById('overlayTitle');
+            const overlayMessage = document.getElementById('overlayMessage');
+            const overlayBtn = document.getElementById('overlayBtn');
+            const soundToggleBtn = document.getElementById('soundToggle');
+            const levelUpMessageElement = document.getElementById('levelUpMessage');
+
+            // عناصر لوحة الأسئلة
+            const questionOverlay = document.getElementById('questionOverlay');
+            const questionTextElement = document.getElementById('questionText');
+            const answerOptionsContainer = document.getElementById('answerOptions');
+            const feedbackMessageElement = document.getElementById('feedbackMessage');
             
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+            let GAME_WIDTH;
+            let GAME_HEIGHT;
             
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.type = type;
-            oscillator.frequency.value = frequency;
-            gainNode.gain.value = volume;
-            
-            oscillator.start();
-            oscillator.stop(audioContext.currentTime + duration);
-        }
-        
-        // إضافة أحداث الأزرار بعد تحميل الصفحة
-        window.addEventListener('DOMContentLoaded', () => {
-            const vsFriendBtn = document.getElementById('vs-friend');
-            const vsComputerBtn = document.getElementById('vs-computer');
-            const slowBallBtn = document.getElementById('slow-ball');
-            const bigPaddleBtn = document.getElementById('big-paddle');
-            const doublePointsBtn = document.getElementById('double-points');
-            
-            // تغيير مستوى صعوبة الكمبيوتر
-            difficultyBtn.addEventListener('click', () => {
-                if (computerDifficulty === 'easy') {
-                    computerDifficulty = 'medium';
-                    computerErrorRate = 0.4;
-                    difficultyBtn.textContent = "مستوى الكمبيوتر: متوسط";
-                    winningChance = 65;
-                } else if (computerDifficulty === 'medium') {
-                    computerDifficulty = 'hard';
-                    computerErrorRate = 0.2;
-                    difficultyBtn.textContent = "مستوى الكمبيوتر: صعب";
-                    winningChance = 45;
-                } else {
-                    computerDifficulty = 'easy';
-                    computerErrorRate = 0.6;
-                    difficultyBtn.textContent = "مستوى الكمبيوتر: سهل";
-                    winningChance = 85;
-                }
-                winningChanceElement.textContent = `فرصتك للفوز: ${winningChance}%`;
-                playSound(349.23, 'sine', 0.1);
-            });
-            
-            vsFriendBtn.addEventListener('click', () => {
-                gameMode = 'friend';
-                startScreen.style.display = 'none';
-                startBtn.style.display = 'block';
-                topPlayerInstruction.textContent = "مضرب اللاعب العلوي";
-                bottomPlayerInstruction.textContent = "مضرب اللاعب السفلي";
-                player1Instruction.innerHTML = 'المس فوق المضرب العلوي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
-                player2Instruction.innerHTML = 'المس فوق المضرب السفلي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
-                playSound(523.25, 'sine', 0.1);
-            });
-            
-            vsComputerBtn.addEventListener('click', () => {
-                gameMode = 'computer';
-                startScreen.style.display = 'none';
-                startBtn.style.display = 'block';
-                topPlayerInstruction.textContent = "مضرب الكمبيوتر (الأعلى)";
-                bottomPlayerInstruction.textContent = "مضربك (الأسفل)";
-                player1Instruction.innerHTML = 'مضرب الكمبيوتر يتحرك تلقائياً';
-                player2Instruction.innerHTML = 'المس فوق المضرب السفلي أو اسحب بالماوس لتحريكه <i class="fas fa-hand-point-up"></i>';
-                playSound(523.25, 'sine', 0.1);
-            });
-            
-            startBtn.addEventListener('click', () => {
-                startBtn.style.display = 'none';
-                startGame();
-                playSound(659.25, 'sine', 0.2);
-            });
-            
-            submitAnswer.addEventListener('click', checkAnswer);
-            
-            soundToggle.addEventListener('click', () => {
-                soundEnabled = !soundEnabled;
-                soundToggle.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
-                playSound(392, 'sine', 0.1);
-            });
-            
-            // أحداث لوحة المفاتيح للتحكم باللعبة
-            document.addEventListener('keydown', (e) => {
-                // Pause/resume game
-                if (e.key === 'p' || e.key === 'P' || e.key === ' ') {
-                    if (gameRunning) {
-                        gamePaused = !gamePaused;
-                        pauseScreen.style.display = gamePaused ? 'flex' : 'none';
-                        playSound(349.23, 'sine', 0.1);
-                    }
-                }
+            // حالة اللعبة
+            let gameState = {
+                level: 1,
+                // نقاط المستوى الحالي (تُستخدم لإضافة النقاط إلى النقاط الإجمالية عند نهاية المستوى)
+                currentLevelScore: 0, 
+                // النقاط الإجمالية التراكمية
+                totalScore: 0,
+                gameTime: 0,
+                gameOver: false,
+                gameStarted: false,
+                paused: false,
+                isLevelComplete: false,
+                isQuestionActive: false,
+                pathPoints: [],
+                pathWidth: 150,
+                pathSpeed: 1, // سرعة المسار الابتدائية
+                targetPathSpeed: 4, // السرعة المستهدفة
+                lastTime: 0,
                 
-                // Move paddles with keyboard
-                if (!gamePaused && gameRunning) {
-                    if (e.key === 'ArrowLeft') {
-                        bottomPaddleX = Math.max(0, bottomPaddleX - 2);
-                        updatePaddlePosition();
-                    }
-                    if (e.key === 'ArrowRight') {
-                        bottomPaddleX = Math.min(100, bottomPaddleX + 2);
-                        updatePaddlePosition();
-                    }
-                }
-            });
+                obstacles: [],
+                obstacleGenerationInterval: 1000
+            };
             
-            resumeBtn.addEventListener('click', () => {
-                gamePaused = false;
-                pauseScreen.style.display = 'none';
-                playSound(440, 'sine', 0.1);
-            });
-            
-            // Power-up events
-            slowBallBtn.addEventListener('click', () => {
-                if (!powerUps.slowBall.active) {
-                    activatePowerUp('slowBall');
-                    playSound(261.63, 'sine', 0.2);
-                }
-            });
-            
-            bigPaddleBtn.addEventListener('click', () => {
-                if (!powerUps.bigPaddle.active) {
-                    activatePowerUp('bigPaddle');
-                    playSound(329.63, 'sine', 0.2);
-                }
-            });
-            
-            doublePointsBtn.addEventListener('click', () => {
-                if (!powerUps.doublePoints.active) {
-                    activatePowerUp('doublePoints');
-                    playSound(392, 'sine', 0.2);
-                }
-            });
-        });
+            // مصفوفة ألوان العوائق لكل مستوى
+            const levelColors = ['#ff6b6b', '#ffd166', '#06d6a0', '#118ab2', '#073b4c'];
 
-        // دوال التحكم باللمس والماوس
-        function handleInteractionStart(e, playerNum) {
-            e.preventDefault();
-            if (playerNum === 1) {
-                isPlayer1Active = true;
-                player1TouchArea.classList.add('active');
-            } else {
-                isPlayer2Active = true;
-                player2TouchArea.classList.add('active');
-            }
-            updatePaddlePosition(e, playerNum);
-        }
-        
-        function handleInteractionMove(e, playerNum) {
-            if ((playerNum === 1 && isPlayer1Active) || (playerNum === 2 && isPlayer2Active)) {
-                updatePaddlePosition(e, playerNum);
-            }
-            e.preventDefault();
-        }
-        
-        function handleInteractionEnd(playerNum) {
-            if (playerNum === 1) {
-                isPlayer1Active = false;
-                player1TouchArea.classList.remove('active');
-            } else {
-                isPlayer2Active = false;
-                player2TouchArea.classList.remove('active');
-            }
-        }
-        
-        // أحداث اللمس للاعب الأول (المضرب العلوي)
-        player1TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 1), {passive: false});
-        player1TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 1), {passive: false});
-        player1TouchArea.addEventListener('touchend', () => handleInteractionEnd(1));
-        player1TouchArea.addEventListener('mousedown', (e) => handleInteractionStart(e, 1));
-        player1TouchArea.addEventListener('mousemove', (e) => handleInteractionMove(e, 1));
-        player1TouchArea.addEventListener('mouseup', () => handleInteractionEnd(1));
-        player1TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(1));
-        
-        // أحداث اللمس للاعب الثاني (المضرب السفلي)
-        player2TouchArea.addEventListener('touchstart', (e) => handleInteractionStart(e, 2), {passive: false});
-        player2TouchArea.addEventListener('touchmove', (e) => handleInteractionMove(e, 2), {passive: false});
-        player2TouchArea.addEventListener('touchend', () => handleInteractionEnd(2));
-        player2TouchArea.addEventListener('mousedown', (e) => handleInteractionStart(e, 2));
-        player2TouchArea.addEventListener('mousemove', (e) => handleInteractionMove(e, 2));
-        player2TouchArea.addEventListener('mouseup', () => handleInteractionEnd(2));
-        player2TouchArea.addEventListener('mouseleave', () => handleInteractionEnd(2));
-        
-        function updatePaddlePosition(e, playerNum) {
-            const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
-            
-            const containerRect = gameContainer.getBoundingClientRect();
-            const containerWidth = containerRect.width;
-            const paddleWidth = paddleTop.offsetWidth;
-            
-            const touchX = clientX - containerRect.left;
-            let newX = (touchX / containerWidth) * 100;
-            newX = Math.max(0, Math.min(newX, 100));
-            
-            if (playerNum === 1 && gameMode === 'friend') {
-                topPaddleX = newX;
-                paddleTop.style.left = `calc(${topPaddleX}% - ${paddleWidth/2}px)`;
-            } else if (playerNum === 2) {
-                bottomPaddleX = newX;
-                paddleBottom.style.left = `calc(${bottomPaddleX}% - ${paddleWidth/2}px)`;
-            }
-        }
-        
-        // بدء اللعبة
-        function startGame() {
-            topScore = 0;
-            bottomScore = 0;
-            level = 1;
-            updateScore();
-            gameRunning = true;
-            resetBall();
-            gameLoop();
-        }
-        
-        // إعادة تعيين الكرة
-        function resetBall() {
-            const containerHeight = gameContainer.offsetHeight;
-            const containerWidth = gameContainer.offsetWidth;
-            
-            ballX = containerWidth / 2;
-            ballY = containerHeight / 2;
-            ballSpeedX = (Math.random() > 0.5 ? 1 : -1) * originalBallSpeed;
-            ballSpeedY = (Math.random() > 0.5 ? 1 : -1) * originalBallSpeed;
-            
-            ball.classList.add('bounce');
-            setTimeout(() => ball.classList.remove('bounce'), 500);
-        }
-        
-        // إنشاء سؤال رياضيات حول تحويل الأعداد إلى كسور
-        function generateMathQuestion() {
-            const specificQuestions = [
-                {
-                    text: "اكتب العدد 0.6 على صورة كسر a/b",
-                    answer: "3/5"
-                },
-                {
-                    text: "اكتب العدد -1.6 على صورة كسر a/b",
-                    answer: "-8/5"
-                },
-                {
-                    text: "اكتب العدد الكسري(- 2/3 1 )على صورة كسر a/b",
-                    answer: "-5/3"
-                },
-                {
-                    text: "اكتب العدد -5 على صورة كسر a/b",
-                    answer: "-5/1"
-                },
-                {
-                    text: "اكتب العدد 1.25 على صورة كسر a/b",
-                    answer: "5/4"
-                },
-                {
-                    text: "اكتب العدد -0.75 على صورة كسر a/b",
-                    answer: "-3/4"
-                },
-                {
-                    text: "اكتب العدد 2.5 على صورة كسر a/b",
-                    answer: "5/2"
-                }
-            ];
-            
-            currentQuestion = specificQuestions[Math.floor(Math.random() * specificQuestions.length)];
-            
-            questionText.textContent = currentQuestion.text;
-            answerInput.value = '';
-            mathQuestion.style.display = 'block';
-            waitingForAnswer = true;
-            answerInput.focus();
-            playSound(261.63, 'sine', 0.3);
-        }
-        
-        // التحقق من الإجابة
-        function checkAnswer() {
-            const userAnswer = answerInput.value.trim();
-            const fractionPattern = /^(-?\d+)\/(-?\d+)$|^(-?\d+)\/(\d+)$|^(\d+)\/(-?\d+)$/;
-            
-            if (!fractionPattern.test(userAnswer)) {
-                alert('صيغة غير صحيحة! استخدم الصيغة a/b (مثال: 3/4 أو -2/5)');
-                answerInput.value = '';
-                answerInput.focus();
-                playSound(220, 'sine', 0.3);
-                return;
-            }
-            
-            const simplifyFraction = (fraction) => {
-                const parts = fraction.split('/');
-                let num = parseInt(parts[0]);
-                let den = parseInt(parts[1]);
-
-                const sign = (num * den < 0) ? -1 : 1;
-                num = Math.abs(num);
-                den = Math.abs(den);
-
-                const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
-                const commonDivisor = gcd(num, den);
-                
-                return `${sign * (num / commonDivisor)}/${den / commonDivisor}`;
+            // حالة التحكم باللمس
+            let touchState = {
+                isTouched: false,
+                lastY: null
             };
 
-            const simplifiedUserAnswer = simplifyFraction(userAnswer);
-            const simplifiedCorrectAnswer = simplifyFraction(currentQuestion.answer);
+            // مصفوفة نجوم الخلفية
+            let stars = [];
+            const numStars = 200;
+            const starSpeed = 0.7;
+            
+            // متغير التحكم بالصوت
+            let soundEnabled = true;
 
-            if (simplifiedUserAnswer === simplifiedCorrectAnswer) {
-                mathQuestion.style.display = 'none';
-                waitingForAnswer = false;
-                resetBall();
-                gameRunning = true;
-                gameLoop();
-                playSound(523.25, 'sine', 0.3);
-            } else {
-                const hints = [
-                    'حاول مرة أخرى!',
-                    'ليس صحيحاً، جرب مجدداً',
-                    'انتبه للإشارات والكسور المختصرة',
-                    `تلميح: الإجابة الصحيحة هي ${currentQuestion.answer}`
-                ];
-                
-                const randomHint = hints[Math.floor(Math.random() * hints.length)];
-                alert(randomHint);
-                answerInput.value = '';
-                answerInput.focus();
-                playSound(220, 'sine', 0.3);
-            }
-        }
-        
-        // تحريك الكمبيوتر للمضرب العلوي (محسّنة)
-        function moveComputerPaddle() {
-            const containerWidth = gameContainer.offsetWidth;
-            const paddleWidth = paddleTop.offsetWidth;
+            // إعداد الصوت
+            let audioContext;
+            let thrusterOscillator = null;
+            let backgroundMelodyTimeoutId = null;
+            let isBackgroundMelodyPlaying = false;
             
-            let targetX = (ballX / containerWidth) * 100;
-            
-            // إضافة خطأ بناءً على مستوى الصعوبة
-            if (Math.random() < computerErrorRate) {
-                const errorAmount = 5 + Math.random() * 15;
-                const errorDirection = Math.random() > 0.5 ? 1 : -1;
-                targetX += errorAmount * errorDirection;
-                computerReactionTime = Math.random() * 0.2;
-            }
-            
-            let diff = targetX - topPaddleX;
-            diff *= (1 - computerReactionTime);
-            
-            // زيادة الدقة مع زيادة المستوى
-            const speedVariation = 0.05 + Math.random() * 0.1 * (1 - level * 0.05);
-            let movement = diff * speedVariation;
-            
-            // الحد من الحركة القصوى
-            movement = Math.max(-5, Math.min(5, movement));
-            
-            topPaddleX += movement;
-            topPaddleX = Math.max(0, Math.min(topPaddleX, 100));
-            
-            paddleTop.style.left = `calc(${topPaddleX}% - ${paddleWidth/2}px)`;
-        }
-        
-        // التحقق من نقاط السؤال
-        function checkQuestionPoints() {
-            const playerScore = bottomScore;
-            
-            if (questionTriggerPoints.includes(playerScore)) {
-                if (!questionTriggered) {
-                    questionTriggered = true;
-                    gameRunning = false;
-                    generateMathQuestion();
+            const gMajorScale = {
+                'G3': 196.00, 'A3': 220.00, 'B3': 246.94, 'D4': 293.66,
+                'E4': 329.63, 'F#4': 369.99, 'G4': 392.00, 'A4': 440.00,
+                'B4': 493.88, 'D5': 587.33, 'E5': 659.25, 'G5': 783.99
+            };
+
+            const cheerfulPianoMelody = [
+                { main: 'G4', bass: 'G3', duration: 0.2 },
+                { main: 'B4', duration: 0.2 },
+                { main: 'D5', duration: 0.2 },
+                { main: 'E5', bass: 'G3', duration: 0.4 },
+                { main: 'D5', duration: 0.2 },
+                { main: 'B4', bass: 'A3', duration: 0.4 },
+                { main: 'A4', duration: 0.2 },
+                { main: 'G4', bass: 'G3', duration: 0.8 },
+
+                { main: 'G4', bass: 'G3', duration: 0.2 },
+                { main: 'D5', duration: 0.2 },
+                { main: 'B4', duration: 0.2 },
+                { main: 'E5', bass: 'G3', duration: 0.4 },
+                { main: 'D5', duration: 0.2 },
+                { main: 'B4', bass: 'A3', duration: 0.4 },
+                { main: 'A4', duration: 0.2 },
+                { main: 'G4', bass: 'G3', duration: 0.8 },
+            ];
+
+            // قائمة الأسئلة المحدثة بصيغة LaTeX
+            const questions = [
+                {
+                    question: "اكتب العدد العشري \\(0.75\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
+                    options: ["\\( \\frac{3}{4} \\)", "\\( \\frac{7}{5} \\)", "\\( \\frac{75}{10} \\)", "\\( \\frac{1}{4} \\)"],
+                    correctAnswerIndex: 0
+                },
+                {
+                    question: "اكتب العدد العشري \\(1.2\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
+                    options: ["\\( \\frac{12}{100} \\)", "\\( \\frac{12}{10} \\)", "\\( \\frac{1}{2} \\)", "\\( \\frac{2}{10} \\)"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "اكتب العدد الكسري \\(2\\frac{1}{4}\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
+                    options: ["\\( \\frac{9}{4} \\)", "\\( \\frac{10}{4} \\)", "\\( \\frac{21}{4} \\)", "\\( \\frac{4}{9} \\)"],
+                    correctAnswerIndex: 0
+                },
+                {
+                    question: "أي من الخيارات التالية يمثل العدد \\(-5\\) على صورة \\( \\frac{a}{b} \\)؟",
+                    options: ["\\( \\frac{5}{1} \\)", "\\( \\frac{-5}{1} \\)", "\\( \\frac{-1}{5} \\)", "\\( \\frac{5}{5} \\)"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "اكتب العدد العشري الدوري \\(0.333...\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
+                    options: ["\\( \\frac{3}{10} \\)", "\\( \\frac{3}{11} \\)", "\\( \\frac{1}{3} \\)", "\\( \\frac{3}{99} \\)"],
+                    correctAnswerIndex: 2
+                },
+                {
+                    question: "أي من الأعداد التالية ليس عددًا نسبيًا؟",
+                    options: ["\\( -\\frac{3}{2} \\)", "\\( 0.25 \\)", "\\( \\sqrt{25} \\)", "\\( \\pi \\)"],
+                    correctAnswerIndex: 3
+                },
+                {
+                    question: "اكتب العدد \\(0.15\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
+                    options: ["\\( \\frac{15}{100} \\)", "\\( \\frac{3}{20} \\)", "\\( \\frac{1}{5} \\)", "\\( \\frac{1.5}{10} \\)"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "اكتب العدد الكسري \\(-3\\frac{2}{5}\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
+                    options: ["\\( -\\frac{17}{5} \\)", "\\( -\\frac{32}{5} \\)", "\\( -\\frac{15}{5} \\)", "\\( -\\frac{5}{17} \\)"],
+                    correctAnswerIndex: 0
+                },
+                {
+                    question: "اكتب العدد \\(0.08\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
+                    options: ["\\( \\frac{8}{10} \\)", "\\( \\frac{8}{100} \\)", "\\( \\frac{1}{8} \\)", "\\( \\frac{1}{10} \\)"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "أي من الأعداد التالية يمثل عددًا نسبيًا؟",
+                    options: ["\\( \\sqrt{7} \\)", "\\( 0.121212... \\)", "\\( -1.2345... \\)", "\\( 1.2345... \\)"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "اكتب العدد \\(4\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
+                    options: ["\\( \\frac{4}{4} \\)", "\\( \\frac{4}{1} \\)", "\\( \\frac{1}{4} \\)", "\\( \\frac{8}{3} \\)"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "اكتب الكسر \\( \\frac{12}{100} \\) في أبسط صورة.",
+                    options: ["\\( \\frac{6}{50} \\)", "\\( \\frac{3}{25} \\)", "\\( \\frac{1}{8} \\)", "\\( \\frac{12}{10} \\)"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "العدد النسبي \\(7.1\\) يكتب على صورة \\( \\frac{a}{b} \\) كـ:",
+                    options: ["\\( \\frac{71}{100} \\)", "\\( \\frac{71}{10} \\)", "\\( \\frac{7}{1} \\)", "\\( \\frac{1}{7} \\)"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "أي من التالي هو طريقة لكتابة \\(0.2\\) كعدد نسبي؟",
+                    options: ["\\( \\frac{2}{10} \\)", "\\( \\frac{1}{2} \\)", "\\( \\frac{2}{100} \\)", "\\( \\frac{20}{10} \\)"],
+                    correctAnswerIndex: 0
+                },
+                {
+                    question: "ما هو العدد النسبي الذي يمثل \\(-0.5\\)؟",
+                    options: ["\\( -\\frac{5}{10} \\)", "\\( \\frac{1}{2} \\)", "\\( \\frac{5}{100} \\)", "\\( -\\frac{1}{5} \\)"],
+                    correctAnswerIndex: 0
+                },
+                {
+                    question: "اكتب العدد الكسري \\(1\\frac{1}{2}\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
+                    options: ["\\( \\frac{3}{2} \\)", "\\( \\frac{1}{2} \\)", "\\( \\frac{2}{3} \\)", "\\( \\frac{11}{2} \\)"],
+                    correctAnswerIndex: 0
+                },
+                {
+                    question: "أي من الأعداد التالية يساوي \\(2.5\\)؟",
+                    options: ["\\( \\frac{5}{2} \\)", "\\( \\frac{2}{5} \\)", "\\( \\frac{25}{100} \\)", "\\( \\frac{1}{4} \\)"],
+                    correctAnswerIndex: 0
+                },
+                {
+                    question: "الكسر \\( \\frac{8}{4} \\) يمثل العدد النسبي:",
+                    options: ["\\(4\\)", "\\(8\\)", "\\(2\\)", "\\(0.5\\)"],
+                    correctAnswerIndex: 2
+                },
+                {
+                    question: "اكتب \\(-10\\) على صورة كسر مقامه \\(2\\).",
+                    options: ["\\( -\\frac{10}{2} \\)", "\\( -\\frac{20}{2} \\)", "\\( -\\frac{5}{2} \\)", "\\( \\frac{10}{2} \\)"],
+                    correctAnswerIndex: 1
+                },
+                {
+                    question: "العدد النسبي الذي يمثل \\(0.4\\) هو:",
+                    options: ["\\( \\frac{4}{10} \\)", "\\( \\frac{1}{4} \\)", "\\( \\frac{2}{10} \\)", "\\( \\frac{1}{2} \\)"],
+                    correctAnswerIndex: 0
                 }
-            } else {
-                questionTriggered = false;
-            }
-        }
-        
-        function flashScreen(color) {
-            flashEffect.style.backgroundColor = color;
-            flashEffect.style.opacity = '0.7';
-            setTimeout(() => {
-                flashEffect.style.opacity = '0';
-            }, 300);
-        }
-        
-        // تفعيل القدرات الخاصة
-        function activatePowerUp(type) {
-            switch(type) {
-                case 'slowBall':
-                    powerUps.slowBall.active = true;
-                    powerUps.slowBall.timeLeft = 500;
-                    ballSpeedX *= 0.6;
-                    ballSpeedY *= 0.6;
-                    break;
-                    
-                case 'bigPaddle':
-                    powerUps.bigPaddle.active = true;
-                    powerUps.bigPaddle.timeLeft = 500;
-                    paddleBottom.style.width = '35%';
-                    break;
-                    
-                case 'doublePoints':
-                    powerUps.doublePoints.active = true;
-                    powerUps.doublePoints.timeLeft = 500;
-                    break;
-            }
-        }
-        
-        // تحديث اللعبة
-        function update() {
-            if (gamePaused) return;
-            
-            const containerHeight = gameContainer.offsetHeight;
-            const containerWidth = gameContainer.offsetWidth;
-            const paddleWidth = paddleTop.offsetWidth;
-            const paddleHeight = paddleTop.offsetHeight;
-            const ballSize = ball.offsetWidth;
-            
-            // تحريك المضارب بناءً على وضع اللعب
-            if (gameMode === 'computer') {
-                moveComputerPaddle();
-            }
-            
-            // تحريك الكرة
-            if (!waitingForAnswer) {
-                ballX += ballSpeedX;
-                ballY += ballSpeedY;
-            }
-            
-            // كشف التصادم مع الجدران الجانبية
-            if (ballX <= 0 || ballX >= containerWidth - ballSize) {
-                ballSpeedX *= -1;
-                playSound(349.23, 'square', 0.1);
-            }
-            
-            // كشف التصادم مع المضرب العلوي
-            if (
-                ballY <= paddleTop.offsetTop + paddleHeight &&
-                ballY >= paddleTop.offsetTop &&
-                ballX + ballSize >= paddleTop.offsetLeft &&
-                ballX <= paddleTop.offsetLeft + paddleWidth
-            ) {
-                ballSpeedY = Math.abs(ballSpeedY);
-                const hitPosition = (ballX - paddleTop.offsetLeft) / paddleWidth;
-                ballSpeedX = (hitPosition - 0.5) * 12;
-                ballY = paddleTop.offsetTop + paddleHeight + 1;
-                
-                playSound(523.25, 'sine', 0.1);
-            }
-            
-            // كشف التصادم مع المضرب السفلي
-            if (
-                ballY + ballSize >= paddleBottom.offsetTop &&
-                ballY + ballSize <= paddleBottom.offsetTop + paddleHeight &&
-                ballX + ballSize >= paddleBottom.offsetLeft &&
-                ballX <= paddleBottom.offsetLeft + paddleWidth
-            ) {
-                ballSpeedY = -Math.abs(ballSpeedY);
-                const hitPosition = (ballX - paddleBottom.offsetLeft) / paddleWidth;
-                ballSpeedX = (hitPosition - 0.5) * 12;
-                ballY = paddleBottom.offsetTop - ballSize - 1;
-                
-                playSound(659.25, 'sine', 0.1);
-            }
-            
-            // تسجيل النقاط
-            if (ballY < 0) {
-                bottomScore += powerUps.doublePoints.active ? 2 : 1;
-                lastScorer = 'bottom';
-                updateScore();
-                gameRunning = false;
-                flashScreen('#00ff00');
-                playSound(783.99, 'sine', 0.3);
-                
-                checkQuestionPoints();
-                
-                if (!waitingForAnswer) {
-                    setTimeout(() => {
-                        resetBall();
-                        gameRunning = true;
-                        gameLoop();
-                    }, 1000);
+            ];
+            let currentQuestion = null;
+
+            function playSound(frequency, type = 'sine', duration = 0.5, volume = 0.5) {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 }
+
+                if (!soundEnabled) return;
+
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.type = type;
+                oscillator.frequency.value = frequency;
+
+                const currentTime = audioContext.currentTime;
+                gainNode.gain.setValueAtTime(0, currentTime);
+                gainNode.gain.linearRampToValueAtTime(volume, currentTime + 0.02);
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, currentTime + duration);
+
+                oscillator.start(currentTime);
+                oscillator.stop(currentTime + duration);
             }
-            
-            if (ballY > containerHeight) {
-                topScore += powerUps.doublePoints.active ? 2 : 1;
-                lastScorer = 'top';
-                updateScore();
-                gameRunning = false;
-                flashScreen('#ff0000');
-                playSound(783.99, 'sine', 0.3);
-                
-                if (gameMode === 'friend') {
-                    checkQuestionPoints();
-                }
-                
-                if (!waitingForAnswer) {
-                    setTimeout(() => {
-                        resetBall();
-                        gameRunning = true;
-                        gameLoop();
-                    }, 1000);
-                }
-            }
-            
-            // تحديث موضع الكرة
-            ball.style.left = ballX + 'px';
-            ball.style.top = ballY + 'px';
-        }
-        
-        // تحديث النتيجة
-        function updateScore() {
-            scoreElement.textContent = `${topScore} - ${bottomScore}`;
-            
-            // زيادة مستوى اللعبة
-            const totalScore = topScore + bottomScore;
-            const newLevel = Math.floor(totalScore / 5) + 1;
-            
-            if (newLevel > level) {
-                level = newLevel;
-                ballSpeedX = originalBallSpeed * (1 + level * 0.1);
-                ballSpeedY = originalBallSpeed * (1 + level * 0.1);
-                computerErrorRate = Math.max(0.1, computerErrorRate - 0.05);
-                playSound(1046.5, 'sine', 0.5);
-            }
-            
-            // نهاية اللعبة عند الوصول إلى 10 نقاط
-            if (topScore >= 10 || bottomScore >= 10) {
-                gameRunning = false;
-                const winner = topScore >= 10 ? "الفريق العلوي" : "الفريق السفلي";
-                
-                setTimeout(() => {
-                    startScreen.innerHTML = `
-                        <h1 class="game-title">🎉 ${winner} فاز! 🎉</h1>
-                        <p>النتيجة النهائية: ${topScore} - ${bottomScore}</p>
-                        <p>المستوى النهائي: ${level}</p>
-                        <div id="mode-selection">
-                            <button class="mode-btn" id="play-again">
-                                <i class="fas fa-redo"></i> لعب مرة أخرى
-                            </button>
-                        </div>
-                    `;
-                    startScreen.style.display = 'flex';
-                    
-                    document.getElementById('play-again').addEventListener('click', () => {
-                        location.reload();
-                    });
-                }, 1000);
-            }
-        }
-        
-        // حلقة تحديث القدرات
-        function powerUpLoop() {
-            if (!gameRunning) return;
-            
-            // تحديث القدرات النشطة
-            for (const type in powerUps) {
-                if (powerUps[type].active) {
-                    powerUps[type].timeLeft--;
-                    
-                    if (powerUps[type].timeLeft <= 0) {
-                        powerUps[type].active = false;
-                        
-                        // إعادة الإعدادات الأصلية
-                        switch(type) {
-                            case 'slowBall':
-                                ballSpeedX = originalBallSpeed * (1 + level * 0.1);
-                                ballSpeedY = originalBallSpeed * (1 + level * 0.1);
-                                break;
-                                
-                            case 'bigPaddle':
-                                paddleBottom.style.width = '25%';
-                                break;
+
+            function playNoteOrChord(notes, duration, volume) {
+                if (Array.isArray(notes)) {
+                    notes.forEach(note => {
+                        const frequency = gMajorScale[note];
+                        if (frequency) {
+                            playSound(frequency, 'sine', duration, volume);
                         }
+                    });
+                } else {
+                    const frequency = gMajorScale[notes];
+                    if (frequency) {
+                        playSound(frequency, 'sine', duration, volume);
                     }
                 }
             }
             
-            requestAnimationFrame(powerUpLoop);
-        }
-        
-        // حلقة اللعبة الرئيسية
-        function gameLoop() {
-            if (gameRunning && !waitingForAnswer && !gamePaused) {
-                update();
+            function playContinuousMelody(melody, index = 0) {
+                if (!isBackgroundMelodyPlaying) {
+                    return;
+                }
+
+                const noteData = melody[index];
+                const nextIndex = (index + 1) % melody.length;
+                const delay = noteData.duration * 1000;
+                
+                playNoteOrChord(noteData.main, noteData.duration, 0.4);
+
+                if (noteData.bass) {
+                    playSound(gMajorScale[noteData.bass], 'sine', noteData.duration, 0.4);
+                }
+
+                backgroundMelodyTimeoutId = setTimeout(() => {
+                    playContinuousMelody(melody, nextIndex);
+                }, delay);
+            }
+            
+            function startBackgroundMelody() {
+                if (!soundEnabled) return;
+                if (isBackgroundMelodyPlaying) return;
+                
+                isBackgroundMelodyPlaying = true;
+                playContinuousMelody(cheerfulPianoMelody);
+            }
+            
+            function stopBackgroundMelody() {
+                if (!isBackgroundMelodyPlaying) return;
+                
+                clearTimeout(backgroundMelodyTimeoutId);
+                isBackgroundMelodyPlaying = false;
+            }
+
+            function playLevelUpSound() {
+                playSound(880, 'sine', 0.1, 0.4);
+                setTimeout(() => playSound(1320, 'sine', 0.1, 0.4), 100);
+            }
+
+            function playCollisionSound() {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const now = audioContext.currentTime;
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                
+                oscillator.frequency.setValueAtTime(400, now);
+                oscillator.frequency.linearRampToValueAtTime(100, now + 0.3);
+                
+                gainNode.gain.setValueAtTime(0.6, now);
+                gainNode.gain.linearRampToValueAtTime(0.001, now + 0.4);
+                
+                oscillator.start(now);
+                oscillator.stop(now + 0.4);
+            }
+
+            // صوت الإجابة الصحيحة
+            function playCorrectSound() {
+                playSound(1000, 'sine', 0.2, 0.6);
+                setTimeout(() => playSound(1500, 'sine', 0.2, 0.6), 100);
+            }
+
+            // صوت الإجابة الخاطئة
+            function playIncorrectSound() {
+                playSound(400, 'triangle', 0.3, 0.5);
+                setTimeout(() => playSound(200, 'triangle', 0.3, 0.5), 100);
+            }
+
+            function startThrusterSound() {
+                if (!soundEnabled) return;
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (thrusterOscillator) return;
+                
+                thrusterOscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                thrusterOscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                thrusterOscillator.type = 'sine';
+                thrusterOscillator.frequency.value = 80;
+                gainNode.gain.value = 0.1;
+                
+                thrusterOscillator.start();
+            }
+
+            function stopThrusterSound() {
+                if (thrusterOscillator) {
+                    thrusterOscillator.stop();
+                    thrusterOscillator.disconnect();
+                    thrusterOscillator = null;
+                }
+            }
+            
+            let thrusterParticles = [];
+
+            const ship = {
+                x: 0,
+                y: 0,
+                width: 30,
+                height: 50,
+                velocity: { x: 0, y: 0 },
+                maxSpeed: 8,
+                rotation: Math.PI / 2,
+                color: '#4fc3f7',
+                draw: function() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+
+                    ctx.fillStyle = this.color;
+                    ctx.shadowColor = this.color;
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.moveTo(0, -this.height / 2);
+                    ctx.lineTo(-this.width / 2, this.height / 2);
+                    ctx.lineTo(-this.width / 4, this.height / 4);
+                    ctx.lineTo(this.width / 4, this.height / 4);
+                    ctx.lineTo(this.width / 2, this.height / 2);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    ctx.fillStyle = '#e1f5fe';
+                    ctx.shadowBlur = 5;
+                    ctx.beginPath();
+                    ctx.arc(0, -this.height / 4, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                    ctx.shadowBlur = 0;
+                }
+            };
+
+            function generateThrusterParticles() {
+                const particleCount = 3;
+                for (let i = 0; i < particleCount; i++) {
+                    const angle = Math.PI;
+                    const spread = Math.random() * Math.PI / 8 - Math.PI / 16;
+                    const pAngle = angle + spread;
+                    const pSpeed = Math.random() * 3 + 2;
+                    
+                    thrusterParticles.push({
+                        x: ship.x,
+                        y: ship.y,
+                        vx: Math.cos(pAngle) * pSpeed,
+                        vy: Math.sin(pAngle) * pSpeed,
+                        size: Math.random() * 8 + 3,
+                        life: 60,
+                        color: `rgba(255, 100, 50, ${Math.random() * 0.7 + 0.3})`
+                    });
+                }
+            }
+
+            function updateThrusterParticles() {
+                thrusterParticles = thrusterParticles.filter(p => p.life > 0);
+                thrusterParticles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life--;
+                    p.size *= 0.95;
+                });
+            }
+
+            function drawThrusterParticles() {
+                thrusterParticles.forEach(p => {
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = 'rgba(255, 100, 50, 0.8)';
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+            }
+
+            function createStars() {
+                stars = [];
+                for (let i = 0; i < numStars; i++) {
+                    stars.push({
+                        x: Math.random() * GAME_WIDTH,
+                        y: Math.random() * GAME_HEIGHT,
+                        size: Math.random() * 2,
+                        speed: Math.random() * starSpeed + 0.1,
+                        color: `rgba(255, 255, 255, ${Math.random() * 0.7 + 0.3})`
+                    });
+                }
+            }
+
+            function drawStars() {
+                stars.forEach(star => {
+                    ctx.fillStyle = star.color;
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+            function updateStars() {
+                stars.forEach(star => {
+                    star.x -= star.speed * gameState.pathSpeed / 2;
+                    if (star.x < 0) {
+                        star.x = GAME_WIDTH;
+                        star.y = Math.random() * GAME_HEIGHT;
+                    }
+                });
+            }
+            
+            function getSawtoothPathY(x, timeOffset) {
+                const period = 500;
+                const amplitude = 150;
+                const speedFactor = 0.5;
+
+                const adjustedX = x + timeOffset * gameState.pathSpeed * speedFactor;
+                const normalizedX = (adjustedX % period) / period;
+
+                let yOffset;
+                if (normalizedX < 0.5) {
+                    yOffset = normalizedX * 2;
+                } else {
+                    yOffset = (1 - normalizedX) * 2;
+                }
+
+                return yOffset * amplitude - amplitude / 2;
+            }
+            
+            function initializePath() {
+                gameState.pathPoints = [];
+                const segments = 100;
+                const segmentWidth = GAME_WIDTH / 10;
+                const initialYOffset = GAME_HEIGHT / 2;
+
+                for (let i = 0; i <= segments; i++) {
+                    const x = -GAME_WIDTH + i * segmentWidth;
+                    const y = getSawtoothPathY(x, gameState.gameTime) + initialYOffset;
+                    gameState.pathPoints.push({ x: x, y: y });
+                }
+            }
+            
+            function updatePath() {
+                gameState.pathPoints.forEach(point => {
+                    point.x -= gameState.pathSpeed;
+                });
+
+                if (gameState.pathPoints[0].x < -GAME_WIDTH) {
+                    const firstPoint = gameState.pathPoints.shift();
+                    const lastPoint = gameState.pathPoints[gameState.pathPoints.length - 1];
+                    
+                    const newX = lastPoint.x + (GAME_WIDTH / 10);
+                    const newY = getSawtoothPathY(newX, gameState.gameTime) + GAME_HEIGHT / 2;
+                    gameState.pathPoints.push({ x: newX, y: newY });
+                }
+            }
+            
+            function drawPath() {
+                ctx.strokeStyle = 'rgba(79, 195, 247, 0.4)';
+                ctx.lineWidth = gameState.pathWidth;
+                ctx.lineCap = 'butt';
+                ctx.lineJoin = 'miter';
+                
+                ctx.beginPath();
+                gameState.pathPoints.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point.x, point.y);
+                    } else {
+                        ctx.lineTo(point.x, point.y);
+                    }
+                });
+                ctx.stroke();
+                
+                ctx.strokeStyle = '#4fc3f7';
+                ctx.lineWidth = 4;
+                
+                ctx.beginPath();
+                gameState.pathPoints.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point.x, point.y - gameState.pathWidth / 2);
+                    } else {
+                        ctx.lineTo(point.x, point.y - gameState.pathWidth / 2);
+                    }
+                });
+                ctx.stroke();
+                
+                ctx.beginPath();
+                gameState.pathPoints.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point.x, point.y + gameState.pathWidth / 2);
+                    } else {
+                        ctx.lineTo(point.x, point.y + gameState.pathWidth / 2);
+                    }
+                });
+                ctx.stroke();
+                
+                ctx.strokeStyle = '#26d0ce';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 10]);
+                
+                ctx.beginPath();
+                gameState.pathPoints.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point.x, point.y - gameState.pathWidth / 4);
+                    } else {
+                        ctx.lineTo(point.x, point.y - gameState.pathWidth / 4);
+                    }
+                });
+                ctx.stroke();
+                
+                ctx.beginPath();
+                gameState.pathPoints.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point.x, point.y + gameState.pathWidth / 4);
+                    } else {
+                        ctx.lineTo(point.x, point.y + gameState.pathWidth / 4);
+                    }
+                });
+                ctx.stroke();
+                
+                ctx.setLineDash([]);
+            }
+            
+            let lastObstacleTime = 0;
+            function generateObstacles(timestamp) {
+                if (timestamp - lastObstacleTime > gameState.obstacleGenerationInterval) {
+                    const pathPoint = gameState.pathPoints.find(p => p.x > GAME_WIDTH * 0.9);
+                    
+                    if (pathPoint) {
+                        const obstacleRadius = Math.random() * 5 + 10;
+                        let randomY;
+                        
+                        // وضع العوائق على حدود المسار
+                        if (Math.random() > 0.5) {
+                            // على الحد العلوي للمسار
+                            randomY = pathPoint.y - gameState.pathWidth / 2 + obstacleRadius;
+                        } else {
+                            // على الحد السفلي للمسار
+                            randomY = pathPoint.y + gameState.pathWidth / 2 - obstacleRadius;
+                        }
+
+                        const colorIndex = (gameState.level - 1) % levelColors.length;
+                        const obstacleColor = levelColors[colorIndex];
+
+                        gameState.obstacles.push({
+                            x: GAME_WIDTH,
+                            y: randomY,
+                            radius: obstacleRadius,
+                            color: obstacleColor
+                        });
+                    }
+                    
+                    lastObstacleTime = timestamp;
+                    // تقليل الفاصل الزمني لتوليد العوائق مع تقدم المستوى لزيادة الصعوبة
+                    gameState.obstacleGenerationInterval = Math.max(500, 1000 - gameState.level * 50);
+                }
+            }
+            
+            function drawObstacles() {
+                gameState.obstacles.forEach(obstacle => {
+                    ctx.fillStyle = obstacle.color; 
+                    ctx.shadowColor = obstacle.color;
+                    ctx.shadowBlur = 20;
+
+                    const spikes = 8;
+                    const outerRadius = obstacle.radius * 1.5;
+                    const innerRadius = obstacle.radius * 0.7;
+                    const rotationAngle = gameState.gameTime * 0.5;
+
+                    ctx.save();
+                    ctx.translate(obstacle.x, obstacle.y);
+                    ctx.rotate(rotationAngle);
+                    
+                    ctx.beginPath();
+                    for (let i = 0; i < spikes * 2; i++) {
+                        const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                        const angle = (Math.PI / spikes) * i;
+                        const x = Math.cos(angle) * radius;
+                        const y = Math.sin(angle) * radius;
+                        if (i === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = '#000000';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, innerRadius * 0.8, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                    ctx.shadowBlur = 0;
+                });
+            }
+
+            function updateObstacles() {
+                gameState.obstacles.forEach(obstacle => {
+                    obstacle.x -= gameState.pathSpeed;
+                });
+                gameState.obstacles = gameState.obstacles.filter(obstacle => obstacle.x + obstacle.radius > 0);
+            }
+
+            function checkPathCollision() {
+                let minDistance = Infinity;
+                
+                for (let i = 0; i < gameState.pathPoints.length - 1; i++) {
+                    const pointA = gameState.pathPoints[i];
+                    const pointB = gameState.pathPoints[i + 1];
+                    
+                    const dx = pointB.x - pointA.x;
+                    const dy = pointB.y - pointA.y;
+                    const length = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (length === 0) continue;
+
+                    const t = Math.max(0, Math.min(1, 
+                        ((ship.x - pointA.x) * dx + (ship.y - pointA.y) * dy) / (length * length)
+                    ));
+                    
+                    const projectionX = pointA.x + t * dx;
+                    const projectionY = pointA.y + t * dy;
+                    
+                    const distance = Math.sqrt(
+                        Math.pow(ship.x - projectionX, 2) + 
+                        Math.pow(ship.y - projectionY, 2)
+                    );
+                    
+                    minDistance = Math.min(minDistance, distance);
+                }
+                
+                if (minDistance > gameState.pathWidth / 2 - 25) { 
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            function checkObstacleCollision() {
+                for (const obstacle of gameState.obstacles) {
+                    const distance = Math.sqrt(
+                        Math.pow(ship.x - obstacle.x, 2) + 
+                        Math.pow(ship.y - obstacle.y, 2)
+                    );
+                    if (distance < (ship.height / 2) + obstacle.radius) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // التحقق من الاصطدام الآن يؤدي إلى إظهار سؤال بدلاً من إنهاء اللعبة
+            function checkCollision() {
+                if (checkPathCollision() || checkObstacleCollision()) {
+                    handleQuestionCollision();
+                }
+            }
+
+            // دالة لإدارة الاصطدام وإظهار السؤال
+            function handleQuestionCollision() {
+                playCollisionSound();
+                gameState.paused = true;
+                gameState.isQuestionActive = true;
+                stopThrusterSound();
+                stopBackgroundMelody();
+
+                // اختيار سؤال عشوائي
+                const questionIndex = Math.floor(Math.random() * questions.length);
+                currentQuestion = questions[questionIndex];
+
+                showQuestion(currentQuestion);
+            }
+
+            // دالة لخلط عناصر مصفوفة
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // دالة لإظهار السؤال على الشاشة باستخدام MathJax
+            function showQuestion(question) {
+                questionTextElement.innerHTML = question.question;
+                answerOptionsContainer.innerHTML = '';
+                feedbackMessageElement.textContent = '';
+                
+                const correctAnswerText = question.options[question.correctAnswerIndex];
+                const shuffledOptions = shuffleArray([...question.options]);
+                
+                // إعادة تعيين فهرس الإجابة الصحيحة بعد خلط الخيارات
+                const newCorrectAnswerIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
+                currentQuestion.correctAnswerIndex = newCorrectAnswerIndex;
+                
+                shuffledOptions.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.classList.add('answer-btn');
+                    button.innerHTML = option;
+                    button.addEventListener('click', () => handleAnswer(index));
+                    answerOptionsContainer.appendChild(button);
+                });
+                
+                questionOverlay.classList.remove('hidden');
+
+                // إضافة تأخير بسيط قبل طلب إعادة العرض لضمان تحميل MathJax
+                setTimeout(() => {
+                     if (window.MathJax) {
+                        window.MathJax.typesetPromise([questionTextElement, answerOptionsContainer]).catch((err) => console.error('MathJax typesetting failed:', err));
+                    }
+                }, 100); // 100 مللي ثانية كافية عادةً
+            }
+
+            // دالة للتعامل مع الإجابة
+            function handleAnswer(selectedIndex) {
+                const isCorrect = (selectedIndex === currentQuestion.correctAnswerIndex);
+                const buttons = answerOptionsContainer.querySelectorAll('.answer-btn');
+                
+                buttons.forEach((btn, index) => {
+                    btn.disabled = true;
+                    if (index === currentQuestion.correctAnswerIndex) {
+                        btn.classList.add('correct');
+                    } else if (index === selectedIndex) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+
+                if (isCorrect) {
+                    playCorrectSound();
+                    feedbackMessageElement.textContent = "إجابة صحيحة! استمر في اللعب.";
+                    feedbackMessageElement.style.color = "#00b09b";
+                    
+                    // إضافة نقاط إضافية للإجابة الصحيحة إلى نقاط المستوى الحالي
+                    gameState.currentLevelScore += 50; 
+                    scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
+
+                    setTimeout(() => {
+                        questionOverlay.classList.add('hidden');
+                        gameState.isQuestionActive = false;
+                        gameState.paused = false;
+                        
+                        // إعادة سرعة المركبة إلى السرعة البطيئة ثم تزداد تدريجياً
+                        gameState.pathSpeed = 1;
+                        
+                        // إفراغ مصفوفة العوائق
+                        gameState.obstacles = [];
+                        
+                        // إعادة وضع المركبة في مكان آمن بعد الإجابة الصحيحة
+                        positionShipOnPath();
+                        gameState.lastTime = performance.now(); // إعادة ضبط الوقت عند استئناف اللعبة
+                        startBackgroundMelody(); // استئناف الموسيقى الخلفية
+                        startThrusterSound(); // استئناف صوت الدفع
+                    }, 1500);
+                } else {
+                    // التغيير المطلوب هنا: إنهاء اللعبة عند الإجابة الخاطئة
+                    playIncorrectSound();
+                    feedbackMessageElement.textContent = "إجابة خاطئة. انتهت اللعبة!";
+                    feedbackMessageElement.style.color = "#c04848";
+                    setTimeout(() => {
+                        questionOverlay.classList.add('hidden');
+                        gameState.gameOver = true; // إنهاء اللعبة
+                    }, 1500);
+                }
+            }
+
+            // دالة لوضع المركبة في منتصف المسار الآمن
+            function positionShipOnPath() {
+                const shipX = GAME_WIDTH * 0.2;
+                let foundSegment = false;
+                
+                for (let i = 0; i < gameState.pathPoints.length - 1; i++) {
+                    const pointA = gameState.pathPoints[i];
+                    const pointB = gameState.pathPoints[i + 1];
+                    
+                    if (pointA.x <= shipX && pointB.x >= shipX) {
+                        const t = (shipX - pointA.x) / (pointB.x - pointA.x);
+                        ship.y = pointA.y + t * (pointB.y - pointA.y);
+                        ship.x = shipX;
+                        foundSegment = true;
+                        break;
+                    }
+                }
+                
+                if (!foundSegment && gameState.pathPoints.length > 0) {
+                    ship.x = gameState.pathPoints[0].x;
+                    ship.y = gameState.pathPoints[0].y;
+                }
+            }
+
+            function resizeCanvas() {
+                GAME_WIDTH = window.innerWidth;
+                GAME_HEIGHT = window.innerHeight;
+                
+                canvas.width = GAME_WIDTH;
+                canvas.height = GAME_HEIGHT;
+
+                if (gameState.gameStarted) {
+                    initializePath();
+                    positionShipOnPath();
+                }
+            }
+
+            canvas.addEventListener('touchstart', handleTouchStart);
+            canvas.addEventListener('touchmove', handleTouchMove);
+            canvas.addEventListener('touchend', handleTouchEnd);
+            canvas.addEventListener('touchcancel', handleTouchEnd);
+
+            function handleTouchStart(e) {
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted || gameState.isLevelComplete) return;
+                e.preventDefault();
+                touchState.isTouched = true;
+                const touch = e.changedTouches[0];
+                touchState.lastY = touch.clientY;
+            }
+
+            function handleTouchMove(e) {
+                if (!touchState.isTouched) return;
+                e.preventDefault();
+                const touch = e.changedTouches[0];
+                const deltaY = touch.clientY - touchState.lastY;
+                ship.y += deltaY;
+                touchState.lastY = touch.clientY;
+                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
+            }
+            
+            function handleTouchEnd(e) {
+                touchState.isTouched = false;
+                touchState.lastY = null;
+            }
+
+            function moveShip() {
+                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
+                ship.rotation = Math.PI / 2;
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                
+                updateStars();
+                drawStars();
+                
+                drawPath();
+                
+                drawObstacles();
+
+                generateThrusterParticles();
+                updateThrusterParticles();
+                drawThrusterParticles();
+                
+                ship.draw();
+            }
+            
+            // دالة للبدء بالمستوى التالي
+            function nextLevel() {
+                // إضافة نقاط المستوى الحالي إلى النقاط الإجمالية
+                gameState.totalScore += gameState.currentLevelScore;
+                
+                // زيادة الصعوبة للمستوى التالي
+                gameState.level++;
+                gameState.gameTime = 0;
+                gameState.isLevelComplete = false;
+                gameState.paused = false;
+                
+                // إعادة تعيين نقاط المستوى الحالي
+                gameState.currentLevelScore = 0;
+                
+                // تحديث سرعة المسار لزيادة الصعوبة
+                gameState.pathSpeed = 1 + (gameState.level - 1) * 0.5; // سرعة ابتدائية أسرع
+                gameState.targetPathSpeed = gameState.pathSpeed + 3 + (gameState.level - 1) * 1; // سرعة مستهدفة أعلى
+                
+                // تضييق المسار
+                gameState.pathWidth = 150 - (gameState.level - 1) * 10;
+                gameState.pathWidth = Math.max(50, gameState.pathWidth);
+                
+                levelElement.textContent = gameState.level;
+                scoreElement.textContent = gameState.totalScore;
+                timeElement.textContent = gameState.gameTime;
+                
+                gameState.obstacles = []; // إعادة تعيين العوائق
+                
+                initializePath();
+                positionShipOnPath();
+                
+                gameState.lastTime = performance.now();
+                
+                startThrusterSound();
+                startBackgroundMelody();
+            }
+
+            function update(timestamp) {
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted || gameState.isQuestionActive) return;
+                
+                const deltaTime = timestamp - gameState.lastTime;
+                gameState.lastTime = timestamp;
+                
+                gameState.gameTime += deltaTime / 1000;
+                timeElement.textContent = Math.floor(gameState.gameTime);
+
+                // زيادة سرعة المركبة تدريجياً حتى تصل للسرعة المستهدفة
+                if (gameState.pathSpeed < gameState.targetPathSpeed) {
+                    gameState.pathSpeed += 0.01;
+                }
+
+                // التحقق من انتهاء المستوى بعد 30 ثانية
+                if (Math.floor(gameState.gameTime) >= 30 && !gameState.isLevelComplete) {
+                    gameState.paused = true;
+                    gameState.isLevelComplete = true;
+                    playLevelUpSound();
+                    stopThrusterSound();
+                    stopBackgroundMelody();
+                    return; // إيقاف تحديث اللعبة
+                }
+                
+                // نقاط الوقت للمستوى الحالي
+                gameState.currentLevelScore = Math.floor(gameState.gameTime * 10);
+                scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
+                
+                moveShip();
+                updatePath();
+                updateObstacles();
+                generateObstacles(timestamp);
+                
+                checkCollision();
+            }
+            
+            function gameLoop(timestamp) {
+                update(timestamp);
+                draw();
+                
+                if (gameState.gameOver) {
+                    overlayTitle.textContent = 'انتهت اللعبة!';
+                    overlayMessage.textContent = `نقاطك الإجمالية: ${gameState.totalScore}`;
+                    overlayBtn.textContent = 'إعادة التشغيل';
+                    overlay.classList.remove('hidden');
+                    stopThrusterSound();
+                    stopBackgroundMelody();
+                } else if (gameState.isLevelComplete) { // حالة جديدة لانتهاء المستوى
+                    overlayTitle.textContent = 'انتهى المستوى!';
+                    overlayMessage.textContent = `لقد جمعت ${gameState.currentLevelScore} نقطة في هذا المستوى.\nنقاطك الإجمالية: ${gameState.totalScore + gameState.currentLevelScore}`;
+                    overlayBtn.textContent = 'المستوى التالي';
+                    overlay.classList.remove('hidden');
+                } else if (gameState.paused && !gameState.isQuestionActive) {
+                    overlayTitle.textContent = 'إيقاف مؤقت';
+                    overlayMessage.textContent = 'اللعبة في وضع الإيقاف المؤقت';
+                    overlayBtn.textContent = 'استمرار';
+                    overlay.classList.remove('hidden');
+                    stopThrusterSound();
+                    stopBackgroundMelody();
+                } else {
+                    overlay.classList.add('hidden');
+                    if (gameState.gameStarted && !gameState.isQuestionActive) {
+                        startThrusterSound();
+                        startBackgroundMelody();
+                    }
+                }
+                
                 requestAnimationFrame(gameLoop);
             }
-        }
-        
-        // ضبط أحجام العناصر عند تغيير حجم الشاشة
-        function resizeGame() {
-            const containerWidth = gameContainer.offsetWidth;
-            const paddleRenderedWidth = paddleTop.offsetWidth;
-            paddleTop.style.left = `calc(${topPaddleX}% - ${paddleRenderedWidth/2}px)`;
-            paddleBottom.style.left = `calc(${bottomPaddleX}% - ${paddleRenderedWidth/2}px)`;
             
-            if (!gameRunning) resetBall();
-        }
-        
-        window.addEventListener('resize', resizeGame);
-        
-        // تهيئة اللعبة عند تحميل الصفحة
-        window.onload = function() {
-            resizeGame();
-            resetBall();
-        };
+            function startGame() {
+                gameState = {
+                    level: 1,
+                    currentLevelScore: 0,
+                    totalScore: 0,
+                    gameTime: 0,
+                    gameOver: false,
+                    gameStarted: true,
+                    paused: false,
+                    isLevelComplete: false,
+                    isQuestionActive: false,
+                    pathPoints: [],
+                    pathWidth: 150,
+                    pathSpeed: 1, // سرعة المسار الابتدائية
+                    targetPathSpeed: 4, // السرعة المستهدفة
+                    lastTime: 0,
+                    
+                    obstacles: [],
+                    obstacleGenerationInterval: 1000
+                };
+                
+                initializePath();
+                positionShipOnPath();
+                ship.velocity.x = 0;
+                ship.velocity.y = 0;
+                
+                scoreElement.textContent = '0';
+                timeElement.textContent = '0';
+                levelElement.textContent = '1';
+                
+                thrusterParticles = [];
+                
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                startThrusterSound();
+                startBackgroundMelody();
+            }
+            
+            overlayBtn.addEventListener('click', () => {
+                if (gameState.gameOver || !gameState.gameStarted) {
+                    startGame();
+                } else if (gameState.isLevelComplete) { // التعامل مع زر "المستوى التالي"
+                    nextLevel();
+                } else if (gameState.paused) {
+                    gameState.paused = false;
+                    gameState.lastTime = performance.now();
+                }
+            });
+
+            soundToggleBtn.addEventListener('click', () => {
+                soundEnabled = !soundEnabled;
+                soundToggleBtn.textContent = `الصوت: ${soundEnabled ? 'تشغيل' : 'إيقاف'}`;
+
+                if (soundEnabled && gameState.gameStarted && !gameState.gameOver && !gameState.paused) {
+                    startThrusterSound();
+                    startBackgroundMelody();
+                } else {
+                    stopThrusterSound();
+                    stopBackgroundMelody();
+                }
+            });
+            
+            window.addEventListener('blur', () => {
+                if (gameState.gameStarted && !gameState.gameOver && !gameState.isQuestionActive) {
+                    gameState.paused = true;
+                    stopThrusterSound();
+                    stopBackgroundMelody();
+                }
+            });
+            
+            resizeCanvas();
+            createStars();
+            
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                 startGame();
+            } else {
+                 overlayTitle.textContent = 'Space Waves';
+                 overlayMessage.textContent = 'العب وتجنب الاصطدام بالجدران';
+                 overlayBtn.textContent = 'بدء اللعبة';
+                 overlay.classList.remove('hidden');
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            
+            window.addEventListener('keydown', (e) => {
+                if (!gameState.gameStarted || gameState.paused || gameState.gameOver) return;
+                
+                if (e.key === 'ArrowUp' || e.key === 'w') {
+                    // Up movement logic (already handled by touch)
+                } else if (e.key === 'ArrowDown' || e.key === 's') {
+                    // Down movement logic (already handled by touch)
+                }
+            });
+            
+            window.addEventListener('keyup', (e) => {
+                if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'ArrowDown' || e.key === 's') {
+                }
+            });
+            
+            requestAnimationFrame(gameLoop);
+        });
     </script>
 </body>
 </html>
+
