@@ -144,15 +144,6 @@
             border-left: 3px solid var(--gold);
         }
         
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--royal-blue);
-            color: white;
-            border-top: 3px solid var(--gold);
-            font-size: 1rem;
-        }
-
         /* NEW STYLES FOR INTERACTIVE ELEMENTS */
         .interactive-area {
             margin-top: 20px;
@@ -242,11 +233,14 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 20px;
+            margin: 20px 0;
+            padding: 0 25px;
         }
 
         .navigation a {
             display: inline-block;
+            flex-grow: 1;
+            max-width: 300px;
             padding: 12px 25px;
             background-color: var(--gold);
             color: var(--royal-blue);
@@ -255,12 +249,22 @@
             font-size: 1.1rem;
             font-weight: 700;
             transition: background-color 0.3s ease, transform 0.2s ease;
+            text-align: center;
         }
 
         .navigation a:hover {
             background-color: #e8a834;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border-top: 3px solid var(--gold);
+            font-size: 1rem;
         }
 
         @media (max-width: 768px) {
@@ -425,15 +429,16 @@
                 </div>
             </section>
         </main>
-        
+
+        <div class="navigation">
+            <a href="u2l6p1.html" class="nav-button">السابق</a>
+            <a href="u2.html" class="nav-button">الصفحة الرئيسية</a>
+            <a href="u2l6p3.html" class="nav-button">التالي</a>
+        </div>
+
         <footer>
             <p>مادة الرياضيات - الوحدة الثانية | الصف السابع</p>
             <p>جميع الحقوق محفوظة © 2025</p>
-            <div class="navigation">
-                <a href="u2l6p1.html" class="nav-button">السابق</a>
-                <a href="u2.html" class="nav-button">الصفحة الرئيسية</a>
-                <a href="u2l6p3.html" class="nav-button">التالي</a>
-            </div>
         </footer>
     </div>
     
@@ -464,3 +469,4 @@
     </script>
 </body>
 </html>
+
