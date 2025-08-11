@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أتدرّب وأحلّ المسائل - الوحدة 2</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --royal-blue: #0c2461;
+            --gold: #f6b93b;
+            --light-blue: #1e3799;
+            --sky-blue: #4a69bd;
+            --pale-blue: #dff9fb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.8;
+            padding: 20px;
+            min-height: 100vh;
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid var(--gold);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            padding: 0 25px 25px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--sky-blue);
+        }
+        
+        .section-title {
+            color: var(--royal-blue);
+            margin-bottom: 15px;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .section-title::before {
+            content: "•";
+            color: var(--gold);
+            font-size: 2.2rem;
+            margin-left: 10px;
+        }
+        
+        .problem-statement {
+            background: #f9fbe7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--gold);
+        }
+
+        .problem-statement p {
+            font-size: 1.3rem;
+        }
+
+        .problem-title {
+            color: var(--light-blue);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .math-expression {
+            font-size: 1.3rem;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .math-expression p {
+            margin-bottom: 5px;
+        }
+        
+        .explanation, .note {
+            font-size: 1.15rem;
+            line-height: 1.7;
+        }
+
+        .explanation {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid var(--sky-blue);
+        }
+        
+        .note {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid var(--gold);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border-top: 3px solid var(--gold);
+            font-size: 1rem;
+        }
+
+        /* NEW STYLES FOR INTERACTIVE ELEMENTS */
+        .interactive-area {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f4f7;
+            border-radius: 10px;
+            border: 1px dashed var(--sky-blue);
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .input-group input {
+            flex-grow: 1;
+            max-width: 400px;
+            padding: 12px 15px;
+            border: 2px solid var(--sky-blue);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+            text-align: right;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--royal-blue);
+            box-shadow: 0 0 0 3px rgba(12, 36, 97, 0.2);
+        }
+
+        .input-group button {
+            padding: 12px 25px;
+            background-color: var(--royal-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .input-group button:hover {
+            background-color: var(--light-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.5s ease;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .feedback.show {
+            opacity: 1;
+            height: auto;
+            padding: 12px;
+        }
+
+        .feedback.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .feedback.error {
+            background-color: #ffebee;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+        }
+        
+        /* NEW STYLES FOR NAVIGATION BUTTONS */
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .navigation a {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--gold);
+            color: var(--royal-blue);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .navigation a:hover {
+            background-color: #e8a834;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .page-title {
+                font-size: 1.6rem;
+            }
+            
+            .check-understanding {
+                padding: 25px 15px;
+            }
+            
+            .exercise {
+                padding: 20px;
+            }
+            body {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+                line-height: 1.3;
+            }
+            .problem-title {
+                font-size: 1.3rem;
+            }
+            .problem-statement p {
+                font-size: 1.2rem;
+            }
+            .input-group input, .input-group button {
+                font-size: 1rem;
+            }
+            .input-group {
+                flex-direction: column;
+            }
+            .feedback {
+                font-size: 1rem;
+            }
+            .success-banner {
+                font-size: 1.2rem;
+            }
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            .navigation a {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>أتدرّب وأحلّ المسائل</h1>
+            <div class="page-title">الوحدة 2</div>
+        </header>
+        
+        <main class="content">
+            <!-- Problem 1 -->
+            <section class="section">
+                <h2 class="section-title">1. أعمار</h2>
+                <div class="problem-statement">
+                    <p>يزيد عُمر سَمّاح عن عُمر أختها شَهْد 4 سنوات، إذا كان مجموع عُمرَيهما 20 سنة، فكم عُمرُ كلٍّ منهما؟</p>
+                </div>
+                <!-- Interactive Area -->
+                <div class="interactive-area">
+                    <div class="input-group">
+                        <input type="text" name="sammah-age" placeholder="عمر سماح" aria-label="عمر سماح">
+                        <input type="text" name="shahd-age" placeholder="عمر شهد" aria-label="عمر شهد">
+                        <button class="submit-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+            </section>
+            
+            <!-- Problem 2 -->
+            <section class="section">
+                <h2 class="section-title">2. محيط</h2>
+                <div class="problem-statement">
+                    <p>قطعة أرض مستطيلة الشكل، طولها مثلي عرضها. إذا كان محيطها 210 أمتار، فكم مترًا كل من طولها وعرضها؟</p>
+                </div>
+                <!-- Interactive Area -->
+                <div class="interactive-area">
+                    <div class="input-group">
+                        <input type="text" name="length" placeholder="الطول" aria-label="الطول">
+                        <input type="text" name="width" placeholder="العرض" aria-label="العرض">
+                        <button class="submit-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+            </section>
+            
+            <!-- Problem 3 -->
+            <section class="section">
+                <h2 class="section-title">3. نقود</h2>
+                <div class="problem-statement">
+                    <p>مع فاضل 12 ورقة نقدية من فئتي 5 دنانير، و10 دنانير، قيمتُها الكلية 85 دينارًا. كم ورقة نقدية من كل فئة معه؟</p>
+                </div>
+                <!-- Interactive Area -->
+                <div class="interactive-area">
+                    <div class="input-group">
+                        <input type="text" name="five-dinar-notes" placeholder="عدد فئة 5 دنانير" aria-label="عدد فئة 5 دنانير">
+                        <input type="text" name="ten-dinar-notes" placeholder="عدد فئة 10 دنانير" aria-label="عدد فئة 10 دنانير">
+                        <button class="submit-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+            </section>
+
+            <!-- Problem 4 -->
+            <section class="section">
+                <h2 class="section-title">4. مساعدات</h2>
+                <div class="problem-statement">
+                    <p>تصدّق شخص بـ 8 أكياس تموينية على 8 فقراء، فأعطى كل واحد منهم كيس سُكّر ثمنُه 4 دنانير، أو كيس أرز ثمنه 7 دنانير، وكان ثمن الأكياس جميعها 41 دينارًا. ما عدد الأكياس التي وزّعها من كل نوع؟</p>
+                </div>
+                <!-- Interactive Area -->
+                <div class="interactive-area">
+                    <div class="input-group">
+                        <input type="text" name="sugar-bags" placeholder="عدد أكياس السكر" aria-label="عدد أكياس السكر">
+                        <input type="text" name="rice-bags" placeholder="عدد أكياس الأرز" aria-label="عدد أكياس الأرز">
+                        <button class="submit-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+            </section>
+
+            <!-- Problem 5 -->
+            <section class="section">
+                <h2 class="section-title">5. جوائز</h2>
+                <div class="problem-statement">
+                    <p>اشترت مدرسة 20 جائزة لطلبتها المتفوّقين بمبلغ 68 دينارًا. إذا كان ثمن الجائزة للطلبة الكبار 4 دنانير، وثمن الجائزة للطلبة الصغار 3 دنانير، فما عدد كلٍّ من جوائز الطلبة الكبار والصغار التي اشترتها المدرسة؟</p>
+                </div>
+                <!-- Interactive Area -->
+                <div class="interactive-area">
+                    <div class="input-group">
+                        <input type="text" name="large-prizes" placeholder="عدد جوائز الكبار" aria-label="عدد جوائز الكبار">
+                        <input type="text" name="small-prizes" placeholder="عدد جوائز الصغار" aria-label="عدد جوائز الصغار">
+                        <button class="submit-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+            </section>
+            
+            <!-- Problem 6 -->
+            <section class="section">
+                <h2 class="section-title">6. رياضة</h2>
+                <div class="problem-statement">
+                    <p>في منافسات كرة القدم يكسَب الفريق 3 نقاط في حالة فوزه في المباراة، ويكسَب نقطة واحدة في حالة التعادل. إذا كان رصيد أحد الفرق 22 نقطة من 10 مباريات، وانتهت جميعها بالفوز أو التعادل، فكم عدد المباريات التي فاز فيها؟ وكم عدد المباريات التي تعادل فيها؟</p>
+                </div>
+                <!-- Interactive Area -->
+                <div class="interactive-area">
+                    <div class="input-group">
+                        <input type="text" name="wins" placeholder="عدد مرات الفوز" aria-label="عدد مرات الفوز">
+                        <input type="text" name="draws" placeholder="عدد مرات التعادل" aria-label="عدد مرات التعادل">
+                        <button class="submit-btn">تحقق</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>مادة الرياضيات - الوحدة الثانية | الصف السابع</p>
+            <p>جميع الحقوق محفوظة © 2025</p>
+            <div class="navigation">
+                <a href="u2l6p1.html" class="nav-button">السابق</a>
+                <a href="u2.html" class="nav-button">الصفحة الرئيسية</a>
+                <a href="u2l6p3.html" class="nav-button">التالي</a>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitButtons = document.querySelectorAll('.submit-btn');
+
+            submitButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const interactiveArea = button.closest('.interactive-area');
+                    const inputs = interactiveArea.querySelectorAll('input');
+                    const feedback = interactiveArea.querySelector('.feedback');
+                    
+                    feedback.classList.remove('success', 'error', 'show');
+
+                    const allInputsFilled = Array.from(inputs).every(input => input.value.trim() !== '');
+
+                    if (allInputsFilled) {
+                        feedback.textContent = 'شكراً على إجابتك! يمكنك الآن التفكير في طريقة الحل.';
+                        feedback.classList.add('success', 'show');
+                    } else {
+                        feedback.textContent = 'الرجاء إدخال إجابتين قبل التحقق.';
+                        feedback.classList.add('error', 'show');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
