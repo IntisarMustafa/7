@@ -312,7 +312,10 @@
             // حالة اللعبة
             let gameState = {
                 level: 1,
-                score: 0,
+                // نقاط المستوى الحالي (تُستخدم لإضافة النقاط إلى النقاط الإجمالية عند نهاية المستوى)
+                currentLevelScore: 0, 
+                // النقاط الإجمالية التراكمية
+                totalScore: 0,
                 gameTime: 0,
                 gameOver: false,
                 gameStarted: false,
@@ -883,6 +886,7 @@
                     }
                     
                     lastObstacleTime = timestamp;
+                    // تقليل الفاصل الزمني لتوليد العوائق مع تقدم المستوى لزيادة الصعوبة
                     gameState.obstacleGenerationInterval = Math.max(500, 1000 - gameState.level * 50);
                 }
             }
@@ -1004,13 +1008,35 @@
                 showQuestion(currentQuestion);
             }
 
+            // دالة لخلط عناصر مصفوفة
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
             // دالة لإظهار السؤال على الشاشة
             function showQuestion(question) {
                 questionTextElement.textContent = question.question;
                 answerOptionsContainer.innerHTML = '';
-                feedbackMessageElement.textContent = ''; // إفراغ رسالة الإجابة
+                feedbackMessageElement.textContent = '';
                 
-                question.options.forEach((option, index) => {
+                // حفظ نص الإجابة الصحيحة
+                const correctAnswerText = question.options[question.correctAnswerIndex];
+
+                // خلط خيارات الإجابة
+                const shuffledOptions = shuffleArray([...question.options]);
+                
+                // البحث عن الموقع الجديد للإجابة الصحيحة
+                const newCorrectAnswerIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
+                
+                // تحديث مؤشر الإجابة الصحيحة في الكائن الحالي
+                // هذا يضمن أن دالة handleAnswer تعمل بشكل صحيح
+                currentQuestion.correctAnswerIndex = newCorrectAnswerIndex;
+                
+                shuffledOptions.forEach((option, index) => {
                     const button = document.createElement('button');
                     button.classList.add('answer-btn');
                     button.textContent = option;
@@ -1038,8 +1064,11 @@
                     playCorrectSound();
                     feedbackMessageElement.textContent = "إجابة صحيحة! استمر في اللعب.";
                     feedbackMessageElement.style.color = "#00b09b";
-                    gameState.score += 50; // نقاط إضافية على الإجابة الصحيحة
-                    scoreElement.textContent = gameState.score;
+                    
+                    // إضافة نقاط إضافية للإجابة الصحيحة إلى نقاط المستوى الحالي
+                    gameState.currentLevelScore += 50; 
+                    scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
+
                     setTimeout(() => {
                         questionOverlay.classList.add('hidden');
                         gameState.isQuestionActive = false;
@@ -1158,24 +1187,34 @@
             
             // دالة للبدء بالمستوى التالي
             function nextLevel() {
+                // إضافة نقاط المستوى الحالي إلى النقاط الإجمالية
+                gameState.totalScore += gameState.currentLevelScore;
+                
+                // زيادة الصعوبة للمستوى التالي
                 gameState.level++;
-                gameState.score = 0;
                 gameState.gameTime = 0;
                 gameState.isLevelComplete = false;
                 gameState.paused = false;
                 
+                // إعادة تعيين نقاط المستوى الحالي
+                gameState.currentLevelScore = 0;
+                
+                // تحديث سرعة المسار لزيادة الصعوبة
+                gameState.pathSpeed = 1 + (gameState.level - 1) * 0.5; // سرعة ابتدائية أسرع
+                gameState.targetPathSpeed = gameState.pathSpeed + 3 + (gameState.level - 1) * 1; // سرعة مستهدفة أعلى
+                
+                // تضييق المسار
+                gameState.pathWidth = 150 - (gameState.level - 1) * 10;
+                gameState.pathWidth = Math.max(50, gameState.pathWidth);
+                
                 levelElement.textContent = gameState.level;
-                scoreElement.textContent = gameState.score;
+                scoreElement.textContent = gameState.totalScore;
                 timeElement.textContent = gameState.gameTime;
                 
                 gameState.obstacles = []; // إعادة تعيين العوائق
                 
                 initializePath();
                 positionShipOnPath();
-                
-                // ضبط سرعة المركبة الابتدائية والمستهدفة للمستوى الجديد
-                gameState.pathSpeed = 1;
-                gameState.targetPathSpeed += 2; // زيادة السرعة المستهدفة
                 
                 gameState.lastTime = performance.now();
                 
@@ -1197,17 +1236,19 @@
                     gameState.pathSpeed += 0.01;
                 }
 
-                // التحقق من انتهاء المستوى بعد 20 ثانية
-                if (Math.floor(gameState.gameTime) >= 20 && !gameState.isLevelComplete) {
+                // التحقق من انتهاء المستوى بعد 30 ثانية
+                if (Math.floor(gameState.gameTime) >= 30 && !gameState.isLevelComplete) {
                     gameState.paused = true;
                     gameState.isLevelComplete = true;
+                    playLevelUpSound();
                     stopThrusterSound();
                     stopBackgroundMelody();
                     return; // إيقاف تحديث اللعبة
                 }
                 
-                gameState.score = Math.floor(gameState.gameTime * 10);
-                scoreElement.textContent = gameState.score;
+                // نقاط الوقت للمستوى الحالي
+                gameState.currentLevelScore = Math.floor(gameState.gameTime * 10);
+                scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
                 
                 moveShip();
                 updatePath();
@@ -1223,14 +1264,14 @@
                 
                 if (gameState.gameOver) {
                     overlayTitle.textContent = 'انتهت اللعبة!';
-                    overlayMessage.textContent = `نقاطك النهائية: ${gameState.score}`;
+                    overlayMessage.textContent = `نقاطك الإجمالية: ${gameState.totalScore}`;
                     overlayBtn.textContent = 'إعادة التشغيل';
                     overlay.classList.remove('hidden');
                     stopThrusterSound();
                     stopBackgroundMelody();
                 } else if (gameState.isLevelComplete) { // حالة جديدة لانتهاء المستوى
                     overlayTitle.textContent = 'انتهى المستوى!';
-                    overlayMessage.textContent = `نقاطك في هذا المستوى: ${gameState.score}`;
+                    overlayMessage.textContent = `لقد جمعت ${gameState.currentLevelScore} نقطة في هذا المستوى.\nنقاطك الإجمالية: ${gameState.totalScore + gameState.currentLevelScore}`;
                     overlayBtn.textContent = 'المستوى التالي';
                     overlay.classList.remove('hidden');
                 } else if (gameState.paused && !gameState.isQuestionActive) {
@@ -1254,7 +1295,8 @@
             function startGame() {
                 gameState = {
                     level: 1,
-                    score: 0,
+                    currentLevelScore: 0,
+                    totalScore: 0,
                     gameTime: 0,
                     gameOver: false,
                     gameStarted: true,
@@ -1355,3 +1397,4 @@
     </script>
 </body>
 </html>
+
