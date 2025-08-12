@@ -1016,7 +1016,7 @@
                 return false;
             }
 
-            // التحقق من الاصطدام الآن يؤدي إلى إظهار سؤال بدلاً من إنهاء اللعبة
+            // تحقق من الاصطدام: إذا حدث أي اصطدام، سيتم إظهار السؤال.
             function checkCollision() {
                 if (checkPathCollision() || checkObstacleCollision()) {
                     handleQuestionCollision();
@@ -1119,7 +1119,7 @@
                         startThrusterSound(); // استئناف صوت الدفع
                     }, 1500);
                 } else {
-                    // التغيير المطلوب هنا: إنهاء اللعبة عند الإجابة الخاطئة
+                    // التغيير المطلوب: إنهاء اللعبة عند الإجابة الخاطئة
                     playIncorrectSound();
                     feedbackMessageElement.textContent = "إجابة خاطئة. انتهت اللعبة!";
                     feedbackMessageElement.style.color = "#c04848";
