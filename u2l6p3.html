@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Waves - لعبة الموجات الفضائية مع أسئلة</title>
+    <title>Space Waves - لعبة الموجات الفضائية</title>
+    <!-- تم إزالة مكتبة MathJax لأن الأسئلة أصبحت نصية وليست معادلات رياضية -->
     <style>
-        /* CSS Styling from the original code */
+        /* أنماط CSS الأساسية للجسم والتنسيق العام */
         * {
             margin: 0;
             padding: 0;
@@ -25,6 +26,7 @@
             position: relative;
         }
 
+        /* خلفية النجوم المتحركة */
         body::before {
             content: "";
             position: absolute;
@@ -44,8 +46,10 @@
             touch-action: none;
             width: 100vw;
             height: 100vh;
+            cursor: none; /* إخفاء مؤشر الفأرة داخل اللعبة */
         }
-
+        
+        /* الطبقات الشفافة التي تظهر فوق اللعبة (شاشة البداية، الأسئلة، إلخ) */
         .game-overlay, .question-overlay {
             position: absolute;
             top: 0;
@@ -104,6 +108,7 @@
             transform: translateY(1px);
         }
 
+        /* شريط الإحصائيات في الأعلى */
         .stats {
             position: absolute;
             top: 15px;
@@ -207,7 +212,7 @@
             margin-bottom: 20px;
             text-shadow: 0 0 10px #4fc3f7;
         }
-
+        
         .question-overlay .answer-options {
             display: flex;
             flex-direction: column;
@@ -269,7 +274,7 @@
         <div class="question-content">
             <h2 id="questionText"></h2>
             <div id="answerOptions" class="answer-options">
-                <!-- Answer buttons will be injected here -->
+                <!-- أزرار الإجابات يتم إدراجها هنا -->
             </div>
             <p id="feedbackMessage" class="message-box"></p>
         </div>
@@ -312,24 +317,30 @@
             // حالة اللعبة
             let gameState = {
                 level: 1,
-                // نقاط المستوى الحالي (تُستخدم لإضافة النقاط إلى النقاط الإجمالية عند نهاية المستوى)
                 currentLevelScore: 0, 
-                // النقاط الإجمالية التراكمية
                 totalScore: 0,
                 gameTime: 0,
                 gameOver: false,
                 gameStarted: false,
-                paused: false,
+                paused: true,
                 isLevelComplete: false,
                 isQuestionActive: false,
                 pathPoints: [],
                 pathWidth: 150,
-                pathSpeed: 1, // سرعة المسار الابتدائية
-                targetPathSpeed: 4, // السرعة المستهدفة
+                pathSpeed: 1,
+                targetPathSpeed: 4,
                 lastTime: 0,
                 
                 obstacles: [],
-                obstacleGenerationInterval: 1000
+                obstacleGenerationInterval: 1000,
+                
+                // إضافة حالة أزرار لوحة المفاتيح
+                keys: {
+                    ArrowUp: false,
+                    ArrowDown: false,
+                    w: false,
+                    s: false
+                }
             };
             
             // مصفوفة ألوان العوائق لكل مستوى
@@ -381,106 +392,81 @@
                 { main: 'G4', bass: 'G3', duration: 0.8 },
             ];
 
-            // قائمة الأسئلة الجديدة
+            // قائمة الأسئلة الجديدة الخاصة بدرس "التخمين والتحقق"
             const questions = [
                 {
-                    question: "عمر أحمد يزيد عن عمر أخيه 3 سنوات، وإذا كان مجموع عمريهما 25 سنة، فكم عمر كل منهما؟",
-                    options: ["14 سنة و 11 سنة", "15 سنة و 10 سنوات", "13 سنة و 12 سنة", "16 سنة و 9 سنوات"],
+                    question: "عمر أحمد يزيد عن عمر أخيه بـ 3 سنوات، وإذا كان مجموع عمريهما 25 سنة، فكم عمر كل منهما؟",
+                    options: ["14 سنة و 11 سنة", "13 سنة و 10 سنوات", "15 سنة و 12 سنة", "12 سنة و 9 سنوات"],
                     correctAnswerIndex: 0
                 },
                 {
-                    question: "قطعة أرض طولها يزيد عن عرضها بمقدار 5 أمتار، وإذا كان محيطها 50 مترًا، فما طولها وعرضها؟",
-                    options: ["15 مترًا و 10 أمتار", "20 مترًا و 15 مترًا", "18 مترًا و 13 مترًا", "12.5 مترًا و 7.5 مترًا"],
+                    question: "قطعة أرض مستطيلة طولها يزيد عن عرضها بـ 5 أمتار، وإذا كان محيطها 50 مترًا، فما طولها وعرضها؟",
+                    options: ["15 مترًا و 10 أمتار", "20 مترًا و 5 أمتار", "18 مترًا و 13 مترًا", "22 مترًا و 17 مترًا"],
                     correctAnswerIndex: 0
                 },
                 {
-                    question: "مع يوسف 15 ورقة نقدية من فئة 1 دينار وفئة 5 دنانير، وكان مجموع المبلغ 47 دينارًا، فكم ورقة من كل فئة معه؟",
-                    options: ["10 ورقات من فئة 1 و 5 ورقات من فئة 5", "7 ورقات من فئة 1 و 8 ورقات من فئة 5", "5 ورقات من فئة 1 و 10 ورقات من فئة 5", "8 ورقات من فئة 1 و 7 ورقات من فئة 5"],
-                    correctAnswerIndex: 1
+                    question: "لدى يوسف 15 ورقة نقدية من فئة 1 دينار و 5 دنانير، وكان مجموع المبلغ 43 دينارًا، فكم ورقة من كل فئة معه؟",
+                    options: ["8 ورقات من فئة 1 و 7 ورقات من فئة 5", "10 ورقات من فئة 1 و 5 ورقات من فئة 5", "5 ورقات من فئة 1 و 10 ورقات من فئة 5", "9 ورقات من فئة 1 و 6 ورقات من فئة 5"],
+                    correctAnswerIndex: 0
                 },
                 {
-                    question: "اشترى سامي 7 دفاتر و5 أقلام بمبلغ 24 دينارًا، وإذا كان ثمن القلم 2 دينار، فما ثمن الدفتر الواحد؟",
+                    question: "اشترى سامي 4 دفاتر و 3 أقلام بمبلغ 14 دينارًا، وإذا كان ثمن القلم الواحد 2 دينار، فما ثمن الدفتر الواحد؟",
                     options: ["2 دينار", "3 دنانير", "4 دنانير", "5 دنانير"],
                     correctAnswerIndex: 0
                 },
                 {
-                    question: "تصدّقت عائلة بـ 3 صناديق طعام و4 صناديق ملابس على الفقراء، وكان ثمن الصندوق الواحد من الطعام 10 دنانير، وثمن الصندوق الواحد من الملابس 15 دينارًا، فما مجموع ما تصدقوا به؟",
-                    options: ["60 دينارًا", "70 دينارًا", "80 دينارًا", "90 دينارًا"],
-                    correctAnswerIndex: 3
-                },
-                {
-                    question: "في بطولة كرة السلة، يحصل الفريق على نقطتين للفوز، ونقطة واحدة للتعادل. إذا جمع فريق 17 نقطة بعد 10 مباريات، فكم مرة فاز وكم مرة تعادل؟",
-                    options: ["7 انتصارات و 3 تعادلات", "6 انتصارات و 4 تعادلات", "8 انتصارات و 2 تعادلات", "5 انتصارات و 5 تعادلات"],
+                    question: "في بطولة كرة السلة، يحصل الفريق على نقطتين للفوز ونقطة واحدة للتعادل. إذا جمع فريق 17 نقطة بعد 10 مباريات، فكم مرة فاز وكم مرة تعادل؟",
+                    options: ["7 انتصارات و 3 تعادلات", "5 انتصارات و 5 تعادلات", "8 انتصارات و 2 تعادل", "6 انتصارات و 4 تعادلات"],
                     correctAnswerIndex: 0
                 },
                 {
-                    question: "لدى سارة 10 دنانير اشترت بها 15 قطعة (دفاتر وأقلام)، إذا كان ثمن الدفتر 1 دينار وثمن القلم 0.5 دينار، فما عدد الدفاتر والأقلام التي اشترتها؟",
-                    options: ["5 دفاتر و 10 أقلام", "6 دفاتر و 8 أقلام", "4 دفاتر و 12 قلم", "7 دفاتر و 6 أقلام"],
+                    question: "لدى سارة 10 دنانير اشترت بها 15 قطعة (دفاتر وأقلام). إذا كان ثمن الدفتر 1 دينار وثمن القلم 0.5 دينار، فما عدد الدفاتر والأقلام؟",
+                    options: ["5 دفاتر و 10 أقلام", "6 دفاتر و 9 أقلام", "8 دفاتر و 7 أقلام", "10 دفاتر و 5 أقلام"],
                     correctAnswerIndex: 0
                 },
                 {
                     question: "في حديقة مستطيلة الشكل، طولها ضعف عرضها، وكان محيطها 36 مترًا، فما طولها وعرضها؟",
-                    options: ["12 مترًا و 6 أمتار", "10 أمتار و 8 أمتار", "14 مترًا و 4 أمتار", "9 أمتار و 9 أمتار"],
+                    options: ["12 مترًا و 6 أمتار", "10 أمتار و 8 أمتار", "14 مترًا و 7 أمتار", "16 مترًا و 8 أمتار"],
                     correctAnswerIndex: 0
                 },
                 {
                     question: "في معرض فني، ثمن تذكرة الكبار 3 دنانير وثمن تذكرة الصغار 2 دينار. إذا باع المعرض 50 تذكرة بمبلغ 120 دينارًا، فكم تذكرة من كل نوع بيعت؟",
-                    options: ["20 تذكرة للكبار و 30 تذكرة للصغار", "30 تذكرة للكبار و 20 تذكرة للصغار", "25 تذكرة للكبار و 25 تذكرة للصغار", "40 تذكرة للكبار و 10 تذاكر للصغار"],
+                    options: ["20 تذكرة للكبار و 30 للصغار", "25 تذكرة للكبار و 25 للصغار", "15 تذكرة للكبار و 35 للصغار", "30 تذكرة للكبار و 20 للصغار"],
                     correctAnswerIndex: 0
                 },
                 {
-                    question: "ربح فريق كرة القدم 3 نقاط في الفوز، و1 نقطة في التعادل. إذا لعب 8 مباريات وجمع 20 نقطة، فكم مرة فاز وكم مرة تعادل؟",
-                    options: ["6 انتصارات و 2 تعادلات", "5 انتصارات و 3 تعادلات", "7 انتصارات و 1 تعادل", "4 انتصارات و 4 تعادلات"],
+                    question: "ربح فريق كرة القدم 3 نقاط في الفوز، و 1 نقطة في التعادل. إذا لعب 8 مباريات وجمع 20 نقطة، فكم مرة فاز وكم مرة تعادل؟",
+                    options: ["6 انتصارات و 2 تعادل", "5 انتصارات و 3 تعادلات", "7 انتصارات و 1 تعادل", "4 انتصارات و 4 تعادلات"],
                     correctAnswerIndex: 0
                 },
                 {
                     question: "لدى محمد وعلي مبلغ 90 دينارًا، نصيب محمد أكبر من نصيب علي بـ 10 دنانير، فكم مع كل منهما؟",
-                    options: ["محمد 50 دينارًا وعلي 40 دينارًا", "محمد 55 دينارًا وعلي 35 دينارًا", "محمد 45 دينارًا وعلي 45 دينارًا", "محمد 60 دينارًا وعلي 30 دينارًا"],
+                    options: ["50 دينارًا لمحمد و 40 لعلي", "45 دينارًا لمحمد و 45 لعلي", "60 دينارًا لمحمد و 30 لعلي", "55 دينارًا لمحمد و 35 لعلي"],
                     correctAnswerIndex: 0
                 },
                 {
-                    question: "قطعة أرض طولها يزيد عن عرضها بـ 8 أمتار، ومحيطها 64 مترًا، فما أبعادها؟",
-                    options: ["20 مترًا و 12 مترًا", "18 مترًا و 10 أمتار", "22 مترًا و 14 مترًا", "16 مترًا و 16 مترًا"],
+                    question: "قطعة أرض مستطيلة طولها يزيد عن عرضها بـ 8 أمتار، ومحيطها 64 مترًا، فما أبعادها؟",
+                    options: ["20 مترًا و 12 مترًا", "24 مترًا و 16 مترًا", "18 مترًا و 10 أمتار", "26 مترًا و 18 مترًا"],
                     correctAnswerIndex: 0
                 },
                 {
-                    question: "اشترت ندى 4 كتب و3 دفاتر بمبلغ 26 دينارًا، وكان ثمن الدفتر الواحد 2 دينار، فما ثمن الكتاب الواحد؟",
+                    question: "اشترت ندى 4 كتب و 3 دفاتر بمبلغ 26 دينارًا، وكان ثمن الدفتر الواحد 2 دينار، فما ثمن الكتاب الواحد؟",
                     options: ["5 دنانير", "4 دنانير", "6 دنانير", "7 دنانير"],
                     correctAnswerIndex: 0
                 },
                 {
-                    question: "في مكتبة، سعر الكتاب 5 دنانير وسعر القلم 1 دينار. إذا دفع شخص 23 دينارًا مقابل كتب وأقلام مجموعها 7 قطع، فكم كتابًا وكم قلمًا اشترى؟",
-                    options: ["4 كتب و 3 أقلام", "3 كتب و 4 أقلام", "5 كتب و 2 قلم", "2 كتاب و 5 أقلام"],
+                    question: "في مكتبة، سعر الكتاب 5 دنانير وسعر القلم 1 دينار. إذا دفع شخص 23 دينارًا مقابل 7 قطع (كتب وأقلام)، فكم كتابًا وكم قلمًا اشترى؟",
+                    options: ["4 كتب و 3 أقلام", "5 كتب و 2 قلم", "3 كتب و 4 أقلام", "6 كتب و 1 قلم"],
                     correctAnswerIndex: 0
                 },
                 {
                     question: "إذا كان مجموع عددين 50 وأحدهما أكبر من الآخر بـ 12، فما العددان؟",
-                    options: ["31 و 19", "25 و 25", "30 و 20", "28 و 22"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "في مطعم، سعر وجبة الفطور 4 دنانير وسعر وجبة الغداء 7 دنانير. إذا دفع زبون 50 دينارًا مقابل 8 وجبات، فكم وجبة من كل نوع طلب؟",
-                    options: ["6 وجبات غداء ووجبتين فطور", "4 وجبات غداء و 4 وجبات فطور", "5 وجبات غداء و 3 وجبات فطور", "3 وجبات غداء و 5 وجبات فطور"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "إذا كان نصف عمر الأب يساوي ضعف عمر الابن، وكان مجموع عمريهما 50 سنة، فما عمر كل منهما؟",
-                    options: ["الأب 40 سنة والابن 10 سنوات", "الأب 44 سنة والابن 11 سنة", "الأب 42 سنة و 8 سنوات", "الأب 36 سنة و 9 سنوات"],
+                    options: ["31 و 19", "30 و 20", "28 و 22", "32 و 18"],
                     correctAnswerIndex: 0
                 },
                 {
                     question: "في حديقة حيوانات، تذكرة الكبار بـ 6 دنانير وتذكرة الصغار بـ 4 دنانير. إذا بلغ عدد الزوار 100 ودخل الحديقة 480 دينارًا، فكم تذكرة من كل نوع بيعت؟",
                     options: ["40 تذكرة للكبار و 60 تذكرة للصغار", "50 تذكرة للكبار و 50 تذكرة للصغار", "60 تذكرة للكبار و 40 تذكرة للصغار", "30 تذكرة للكبار و 70 تذكرة للصغار"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "إذا كان طول المستطيل يساوي 3 أضعاف عرضه، ومحيطه 48 مترًا، فما أبعاده؟",
-                    options: ["18 مترًا و 6 أمتار", "15 مترًا و 9 أمتار", "20 مترًا و 4 أمتار", "12 مترًا و 12 مترًا"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "في مسابقة رياضية، يحصل اللاعب على 10 نقاط للفوز و5 نقاط للتعادل، فإذا حصل لاعب على 80 نقطة بعد 10 مباريات، فكم فاز وكم تعادل؟",
-                    options: ["6 انتصارات و 4 تعادلات", "8 انتصارات و 2 تعادلات", "7 انتصارات و 3 تعادلات", "5 انتصارات و 5 تعادلات"],
                     correctAnswerIndex: 0
                 }
             ];
@@ -556,10 +542,10 @@
             }
             
             function stopBackgroundMelody() {
-                if (!isBackgroundMelodyPlaying) return;
-                
-                clearTimeout(backgroundMelodyTimeoutId);
-                isBackgroundMelodyPlaying = false;
+                if (isBackgroundMelodyPlaying) {
+                    clearTimeout(backgroundMelodyTimeoutId);
+                    isBackgroundMelodyPlaying = false;
+                }
             }
 
             function playLevelUpSound() {
@@ -762,14 +748,20 @@
                 return yOffset * amplitude - amplitude / 2;
             }
             
+            // تم تعديل هذه الدالة لحل المشكلة الأساسية.
+            // الآن يتم إنشاء المسار ليغطي الشاشة بأكملها من البداية.
             function initializePath() {
                 gameState.pathPoints = [];
+                // زيادة عدد النقاط لتحسين سلاسة المسار
                 const segments = 100;
-                const segmentWidth = GAME_WIDTH / 10;
+                // تحديد عرض كل مقطع من المسار بحيث يغطي الشاشة
+                const segmentWidth = GAME_WIDTH / 20; 
                 const initialYOffset = GAME_HEIGHT / 2;
-
-                for (let i = 0; i <= segments; i++) {
-                    const x = -GAME_WIDTH + i * segmentWidth;
+                
+                // بدء توليد النقاط من موقع بعيد على يسار الشاشة لضمان أن
+                // المركبة تكون دائمًا على المسار عند البدء.
+                for (let i = -20; i <= segments; i++) {
+                    const x = i * segmentWidth;
                     const y = getSawtoothPathY(x, gameState.gameTime) + initialYOffset;
                     gameState.pathPoints.push({ x: x, y: y });
                 }
@@ -780,11 +772,12 @@
                     point.x -= gameState.pathSpeed;
                 });
 
+                // إضافة نقطة جديدة عند نهاية المسار عند الحاجة
                 if (gameState.pathPoints[0].x < -GAME_WIDTH) {
-                    const firstPoint = gameState.pathPoints.shift();
+                    gameState.pathPoints.shift();
                     const lastPoint = gameState.pathPoints[gameState.pathPoints.length - 1];
                     
-                    const newX = lastPoint.x + (GAME_WIDTH / 10);
+                    const newX = lastPoint.x + (GAME_WIDTH / 20); // استخدام نفس عرض المقطع
                     const newY = getSawtoothPathY(newX, gameState.gameTime) + GAME_HEIGHT / 2;
                     gameState.pathPoints.push({ x: newX, y: newY });
                 }
@@ -862,7 +855,16 @@
                     const pathPoint = gameState.pathPoints.find(p => p.x > GAME_WIDTH * 0.9);
                     
                     if (pathPoint) {
-                        const obstacleRadius = Math.random() * 5 + 10;
+                        // تعديل: زيادة حجم العوائق بعد الثانية 16
+                        let obstacleRadius;
+                        if (gameState.gameTime >= 16) {
+                            // حجم أكبر بعد 16 ثانية
+                            obstacleRadius = Math.random() * 10 + 15; // حجم بين 15 و 25
+                        } else {
+                            // الحجم الأصلي
+                            obstacleRadius = Math.random() * 5 + 10; // حجم بين 10 و 15
+                        }
+
                         let randomY;
                         
                         // وضع العوائق على حدود المسار
@@ -986,7 +988,7 @@
                 return false;
             }
 
-            // التحقق من الاصطدام الآن يؤدي إلى إظهار سؤال بدلاً من إنهاء اللعبة
+            // تحقق من الاصطدام: إذا حدث أي اصطدام، سيتم إظهار السؤال.
             function checkCollision() {
                 if (checkPathCollision() || checkObstacleCollision()) {
                     handleQuestionCollision();
@@ -1023,17 +1025,11 @@
                 answerOptionsContainer.innerHTML = '';
                 feedbackMessageElement.textContent = '';
                 
-                // حفظ نص الإجابة الصحيحة
                 const correctAnswerText = question.options[question.correctAnswerIndex];
-
-                // خلط خيارات الإجابة
                 const shuffledOptions = shuffleArray([...question.options]);
                 
-                // البحث عن الموقع الجديد للإجابة الصحيحة
+                // إعادة تعيين فهرس الإجابة الصحيحة بعد خلط الخيارات
                 const newCorrectAnswerIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
-                
-                // تحديث مؤشر الإجابة الصحيحة في الكائن الحالي
-                // هذا يضمن أن دالة handleAnswer تعمل بشكل صحيح
                 currentQuestion.correctAnswerIndex = newCorrectAnswerIndex;
                 
                 shuffledOptions.forEach((option, index) => {
@@ -1043,6 +1039,7 @@
                     button.addEventListener('click', () => handleAnswer(index));
                     answerOptionsContainer.appendChild(button);
                 });
+                
                 questionOverlay.classList.remove('hidden');
             }
 
@@ -1087,7 +1084,7 @@
                         startThrusterSound(); // استئناف صوت الدفع
                     }, 1500);
                 } else {
-                    // التغيير المطلوب هنا: إنهاء اللعبة عند الإجابة الخاطئة
+                    // التغيير المطلوب: إنهاء اللعبة عند الإجابة الخاطئة
                     playIncorrectSound();
                     feedbackMessageElement.textContent = "إجابة خاطئة. انتهت اللعبة!";
                     feedbackMessageElement.style.color = "#c04848";
@@ -1135,6 +1132,15 @@
                 }
             }
 
+            // إضافة معالج أحداث حركة الفأرة لتحريك المركبة
+            canvas.addEventListener('mousemove', (e) => {
+                // التحكم بالماوس متاح فقط إذا لم يكن الجهاز يدعم اللمس
+                if (!('ontouchstart' in window || navigator.maxTouchPoints > 0) && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
+                    ship.y = e.clientY;
+                }
+            });
+
+            // معالجات أحداث اللمس
             canvas.addEventListener('touchstart', handleTouchStart);
             canvas.addEventListener('touchmove', handleTouchMove);
             canvas.addEventListener('touchend', handleTouchEnd);
@@ -1161,11 +1167,6 @@
             function handleTouchEnd(e) {
                 touchState.isTouched = false;
                 touchState.lastY = null;
-            }
-
-            function moveShip() {
-                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
-                ship.rotation = Math.PI / 2;
             }
 
             function draw() {
@@ -1236,8 +1237,8 @@
                     gameState.pathSpeed += 0.01;
                 }
 
-                // التحقق من انتهاء المستوى بعد 30 ثانية
-                if (Math.floor(gameState.gameTime) >= 30 && !gameState.isLevelComplete) {
+                // التحقق من انتهاء المستوى بعد 25 ثانية
+                if (Math.floor(gameState.gameTime) >= 25 && !gameState.isLevelComplete) {
                     gameState.paused = true;
                     gameState.isLevelComplete = true;
                     playLevelUpSound();
@@ -1250,15 +1251,39 @@
                 gameState.currentLevelScore = Math.floor(gameState.gameTime * 10);
                 scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
                 
-                moveShip();
+                // === هذا الجزء من الكود هو ما يضمن أن المركبة لا تتحرك تلقائياً ===
+                // تحديث موقع المركبة بناءً على ضغط المفاتيح فقط.
+                // إذا لم يضغط اللاعب على أي مفتاح، فإن قيمة dy ستكون صفرًا، وبالتالي لن تتحرك المركبة.
+                let dy = 0;
+                const speed = 5; // سرعة الحركة بالأسهم
+                if (gameState.keys.ArrowUp || gameState.keys.w) {
+                    dy = -speed;
+                }
+                if (gameState.keys.ArrowDown || gameState.keys.s) {
+                    dy = speed;
+                }
+                ship.y += dy;
+                // =================================================================
+
+                // التأكد من أن المركبة لا تخرج عن حدود الشاشة
+                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
+
+                // تحديث المسار والعوائق
                 updatePath();
                 updateObstacles();
                 generateObstacles(timestamp);
                 
+                // التحقق من الاصطدامات
                 checkCollision();
             }
             
             function gameLoop(timestamp) {
+                if (!gameState.gameStarted) {
+                    // اللعبة لم تبدأ بعد، لا تفعل شيئًا
+                    requestAnimationFrame(gameLoop);
+                    return;
+                }
+
                 update(timestamp);
                 draw();
                 
@@ -1307,16 +1332,20 @@
                     pathWidth: 150,
                     pathSpeed: 1, // سرعة المسار الابتدائية
                     targetPathSpeed: 4, // السرعة المستهدفة
-                    lastTime: 0,
+                    lastTime: performance.now(), // تحديث الوقت عند البدء
                     
                     obstacles: [],
-                    obstacleGenerationInterval: 1000
+                    obstacleGenerationInterval: 1000,
+                    keys: {
+                        ArrowUp: false,
+                        ArrowDown: false,
+                        w: false,
+                        s: false
+                    }
                 };
                 
                 initializePath();
                 positionShipOnPath();
-                ship.velocity.x = 0;
-                ship.velocity.y = 0;
                 
                 scoreElement.textContent = '0';
                 timeElement.textContent = '0';
@@ -1329,6 +1358,9 @@
                 }
                 startThrusterSound();
                 startBackgroundMelody();
+                
+                // إخفاء الشاشة الرئيسية
+                overlay.classList.add('hidden');
             }
             
             overlayBtn.addEventListener('click', () => {
@@ -1363,36 +1395,28 @@
                 }
             });
             
-            resizeCanvas();
-            createStars();
-            
-            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-                 startGame();
-            } else {
-                 overlayTitle.textContent = 'Space Waves';
-                 overlayMessage.textContent = 'العب وتجنب الاصطدام بالجدران';
-                 overlayBtn.textContent = 'بدء اللعبة';
-                 overlay.classList.remove('hidden');
-            }
-
-            window.addEventListener('resize', resizeCanvas);
-            
+            // إضافة معالجات أحداث لوحة المفاتيح
             window.addEventListener('keydown', (e) => {
-                if (!gameState.gameStarted || gameState.paused || gameState.gameOver) return;
-                
-                if (e.key === 'ArrowUp' || e.key === 'w') {
-                    // Up movement logic (already handled by touch)
-                } else if (e.key === 'ArrowDown' || e.key === 's') {
-                    // Down movement logic (already handled by touch)
+                // تحقق من المفاتيح المسموحة فقط
+                if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'ArrowDown' || e.key === 's') {
+                    e.preventDefault();
+                    gameState.keys[e.key] = true;
                 }
             });
             
             window.addEventListener('keyup', (e) => {
                 if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'ArrowDown' || e.key === 's') {
+                    gameState.keys[e.key] = false;
                 }
             });
             
+            resizeCanvas();
+            createStars();
+            
+            // استدعاء gameLoop لبدء حلقة اللعبة بعد تحميل الصفحة
             requestAnimationFrame(gameLoop);
+            
+            // لا تبدأ اللعبة تلقائيًا، بل انتظر ضغط زر "بدء اللعبة"
         });
     </script>
 </body>
