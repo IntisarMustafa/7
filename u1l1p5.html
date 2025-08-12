@@ -868,7 +868,16 @@
                     const pathPoint = gameState.pathPoints.find(p => p.x > GAME_WIDTH * 0.9);
                     
                     if (pathPoint) {
-                        const obstacleRadius = Math.random() * 5 + 10;
+                        // تعديل: زيادة حجم العوائق بعد الثانية 16
+                        let obstacleRadius;
+                        if (gameState.gameTime >= 16) {
+                            // حجم أكبر بعد 16 ثانية
+                            obstacleRadius = Math.random() * 10 + 15; // حجم بين 15 و 25
+                        } else {
+                            // الحجم الأصلي
+                            obstacleRadius = Math.random() * 5 + 10; // حجم بين 10 و 15
+                        }
+
                         let randomY;
                         
                         // وضع العوائق على حدود المسار
@@ -1248,8 +1257,8 @@
                     gameState.pathSpeed += 0.01;
                 }
 
-                // التحقق من انتهاء المستوى بعد 30 ثانية
-                if (Math.floor(gameState.gameTime) >= 30 && !gameState.isLevelComplete) {
+                // التحقق من انتهاء المستوى بعد 25 ثانية
+                if (Math.floor(gameState.gameTime) >= 25 && !gameState.isLevelComplete) {
                     gameState.paused = true;
                     gameState.isLevelComplete = true;
                     playLevelUpSound();
