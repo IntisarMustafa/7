@@ -329,20 +329,18 @@
             // حالة اللعبة
             let gameState = {
                 level: 1,
-                // نقاط المستوى الحالي (تُستخدم لإضافة النقاط إلى النقاط الإجمالية عند نهاية المستوى)
                 currentLevelScore: 0, 
-                // النقاط الإجمالية التراكمية
                 totalScore: 0,
                 gameTime: 0,
                 gameOver: false,
                 gameStarted: false,
-                paused: true, // تغيير الحالة الابتدائية إلى متوقفة
+                paused: true,
                 isLevelComplete: false,
                 isQuestionActive: false,
                 pathPoints: [],
                 pathWidth: 150,
-                pathSpeed: 1, // سرعة المسار الابتدائية
-                targetPathSpeed: 4, // السرعة المستهدفة
+                pathSpeed: 1,
+                targetPathSpeed: 4,
                 lastTime: 0,
                 
                 obstacles: [],
@@ -581,10 +579,10 @@
             }
             
             function stopBackgroundMelody() {
-                if (!isBackgroundMelodyPlaying) return;
-                
-                clearTimeout(backgroundMelodyTimeoutId);
-                isBackgroundMelodyPlaying = false;
+                if (isBackgroundMelodyPlaying) {
+                    clearTimeout(backgroundMelodyTimeoutId);
+                    isBackgroundMelodyPlaying = false;
+                }
             }
 
             function playLevelUpSound() {
@@ -661,8 +659,6 @@
             const ship = {
                 x: 0,
                 y: 0,
-                // `yOffset` يحدد مدى بعد المركبة عن منتصف المسار
-                yOffset: 0, 
                 width: 30,
                 height: 50,
                 velocity: { x: 0, y: 0 },
@@ -789,14 +785,20 @@
                 return yOffset * amplitude - amplitude / 2;
             }
             
+            // تم تعديل هذه الدالة لحل المشكلة الأساسية.
+            // الآن يتم إنشاء المسار ليغطي الشاشة بأكملها من البداية.
             function initializePath() {
                 gameState.pathPoints = [];
+                // زيادة عدد النقاط لتحسين سلاسة المسار
                 const segments = 100;
-                const segmentWidth = GAME_WIDTH / 10;
+                // تحديد عرض كل مقطع من المسار بحيث يغطي الشاشة
+                const segmentWidth = GAME_WIDTH / 20; 
                 const initialYOffset = GAME_HEIGHT / 2;
-
-                for (let i = 0; i <= segments; i++) {
-                    const x = -GAME_WIDTH + i * segmentWidth;
+                
+                // بدء توليد النقاط من موقع بعيد على يسار الشاشة لضمان أن
+                // المركبة تكون دائمًا على المسار عند البدء.
+                for (let i = -20; i <= segments; i++) {
+                    const x = i * segmentWidth;
                     const y = getSawtoothPathY(x, gameState.gameTime) + initialYOffset;
                     gameState.pathPoints.push({ x: x, y: y });
                 }
@@ -807,11 +809,12 @@
                     point.x -= gameState.pathSpeed;
                 });
 
+                // إضافة نقطة جديدة عند نهاية المسار عند الحاجة
                 if (gameState.pathPoints[0].x < -GAME_WIDTH) {
-                    const firstPoint = gameState.pathPoints.shift();
+                    gameState.pathPoints.shift();
                     const lastPoint = gameState.pathPoints[gameState.pathPoints.length - 1];
                     
-                    const newX = lastPoint.x + (GAME_WIDTH / 10);
+                    const newX = lastPoint.x + (GAME_WIDTH / 20); // استخدام نفس عرض المقطع
                     const newY = getSawtoothPathY(newX, gameState.gameTime) + GAME_HEIGHT / 2;
                     gameState.pathPoints.push({ x: newX, y: newY });
                 }
@@ -965,9 +968,38 @@
                 gameState.obstacles = gameState.obstacles.filter(obstacle => obstacle.x + obstacle.radius > 0);
             }
 
-            // تم تعطيل هذه الدالة لأن المركبة الآن تلتزم بالمسار
             function checkPathCollision() {
-                // لم يعد هناك حاجة للتحقق من الاصطدام بالمسار لأن المركبة تلتزم بحدوده الآن.
+                let minDistance = Infinity;
+                
+                for (let i = 0; i < gameState.pathPoints.length - 1; i++) {
+                    const pointA = gameState.pathPoints[i];
+                    const pointB = gameState.pathPoints[i + 1];
+                    
+                    const dx = pointB.x - pointA.x;
+                    const dy = pointB.y - pointA.y;
+                    const length = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (length === 0) continue;
+
+                    const t = Math.max(0, Math.min(1, 
+                        ((ship.x - pointA.x) * dx + (ship.y - pointA.y) * dy) / (length * length)
+                    ));
+                    
+                    const projectionX = pointA.x + t * dx;
+                    const projectionY = pointA.y + t * dy;
+                    
+                    const distance = Math.sqrt(
+                        Math.pow(ship.x - projectionX, 2) + 
+                        Math.pow(ship.y - projectionY, 2)
+                    );
+                    
+                    minDistance = Math.min(minDistance, distance);
+                }
+                
+                if (minDistance > gameState.pathWidth / 2 - 25) { 
+                    return true;
+                }
+                
                 return false;
             }
             
@@ -986,7 +1018,7 @@
 
             // التحقق من الاصطدام الآن يؤدي إلى إظهار سؤال بدلاً من إنهاء اللعبة
             function checkCollision() {
-                if (checkObstacleCollision()) {
+                if (checkPathCollision() || checkObstacleCollision()) {
                     handleQuestionCollision();
                 }
             }
@@ -1080,7 +1112,7 @@
                         // إفراغ مصفوفة العوائق
                         gameState.obstacles = [];
                         
-                        // إعادة وضع المركبة في منتصف المسار
+                        // إعادة وضع المركبة في مكان آمن بعد الإجابة الصحيحة
                         positionShipOnPath();
                         gameState.lastTime = performance.now(); // إعادة ضبط الوقت عند استئناف اللعبة
                         startBackgroundMelody(); // استئناف الموسيقى الخلفية
@@ -1098,11 +1130,28 @@
                 }
             }
 
-            // دالة لوضع المركبة في منتصف المسار
+            // دالة لوضع المركبة في منتصف المسار الآمن
             function positionShipOnPath() {
-                // ببساطة قم بإعادة تعيين إزاحة y للمركبة
-                ship.x = GAME_WIDTH * 0.2;
-                ship.yOffset = 0; 
+                const shipX = GAME_WIDTH * 0.2;
+                let foundSegment = false;
+                
+                for (let i = 0; i < gameState.pathPoints.length - 1; i++) {
+                    const pointA = gameState.pathPoints[i];
+                    const pointB = gameState.pathPoints[i + 1];
+                    
+                    if (pointA.x <= shipX && pointB.x >= shipX) {
+                        const t = (shipX - pointA.x) / (pointB.x - pointA.x);
+                        ship.y = pointA.y + t * (pointB.y - pointA.y);
+                        ship.x = shipX;
+                        foundSegment = true;
+                        break;
+                    }
+                }
+                
+                if (!foundSegment && gameState.pathPoints.length > 0) {
+                    ship.x = gameState.pathPoints[0].x;
+                    ship.y = gameState.pathPoints[0].y;
+                }
             }
 
             function resizeCanvas() {
@@ -1120,14 +1169,9 @@
 
             // إضافة معالج أحداث حركة الفأرة لتحريك المركبة
             canvas.addEventListener('mousemove', (e) => {
+                // التحكم بالماوس متاح فقط إذا لم يكن الجهاز يدعم اللمس
                 if (!('ontouchstart' in window || navigator.maxTouchPoints > 0) && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
-                    // حساب الإزاحة y للمركبة بناءً على موقع الفأرة
-                    const pathCenterY = getPathCenterYForShip();
-                    ship.yOffset = e.clientY - pathCenterY;
-                    // تقييد الإزاحة بحيث تبقى المركبة داخل المسار
-                    const halfShipHeight = ship.height / 2;
-                    const maxOffset = gameState.pathWidth / 2 - halfShipHeight;
-                    ship.yOffset = Math.max(-maxOffset, Math.min(maxOffset, ship.yOffset));
+                    ship.y = e.clientY;
                 }
             });
 
@@ -1150,36 +1194,14 @@
                 e.preventDefault();
                 const touch = e.changedTouches[0];
                 const deltaY = touch.clientY - touchState.lastY;
-                
-                // تحديث `yOffset` للمركبة بناءً على اللمس
-                ship.yOffset += deltaY;
-
-                // تقييد الإزاحة بحيث تبقى المركبة داخل المسار
-                const halfShipHeight = ship.height / 2;
-                const maxOffset = gameState.pathWidth / 2 - halfShipHeight;
-                ship.yOffset = Math.max(-maxOffset, Math.min(maxOffset, ship.yOffset));
-
+                ship.y += deltaY;
                 touchState.lastY = touch.clientY;
+                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
             }
             
             function handleTouchEnd(e) {
                 touchState.isTouched = false;
                 touchState.lastY = null;
-            }
-            
-            // دالة مساعدة للعثور على مركز المسار عند موقع المركبة X
-            function getPathCenterYForShip() {
-                const shipX = ship.x;
-                for (let i = 0; i < gameState.pathPoints.length - 1; i++) {
-                    const pointA = gameState.pathPoints[i];
-                    const pointB = gameState.pathPoints[i + 1];
-                    
-                    if (pointA.x <= shipX && pointB.x >= shipX) {
-                        const t = (shipX - pointA.x) / (pointB.x - pointA.x);
-                        return pointA.y + t * (pointB.y - pointA.y);
-                    }
-                }
-                return gameState.pathPoints.length > 0 ? gameState.pathPoints[0].y : GAME_HEIGHT / 2;
             }
 
             function draw() {
@@ -1189,10 +1211,6 @@
                 drawStars();
                 
                 drawPath();
-
-                // تحديث الموقع الفعلي للمركبة للرسم بناءً على إزاحة y
-                const pathCenterY = getPathCenterYForShip();
-                ship.y = pathCenterY + ship.yOffset;
                 
                 drawObstacles();
 
@@ -1268,21 +1286,19 @@
                 gameState.currentLevelScore = Math.floor(gameState.gameTime * 10);
                 scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
                 
-                // تحديث إزاحة y للمركبة بناءً على ضغط المفاتيح
-                let dyOffset = 0;
+                // تحديث موقع المركبة بناءً على ضغط المفاتيح
+                let dy = 0;
                 const speed = 5; // سرعة الحركة بالأسهم
                 if (gameState.keys.ArrowUp || gameState.keys.w) {
-                    dyOffset = -speed;
+                    dy = -speed;
                 }
                 if (gameState.keys.ArrowDown || gameState.keys.s) {
-                    dyOffset = speed;
+                    dy = speed;
                 }
-                ship.yOffset += dyOffset;
+                ship.y += dy;
                 
-                // التأكد من أن المركبة لا تخرج عن حدود المسار
-                const halfShipHeight = ship.height / 2;
-                const maxOffset = gameState.pathWidth / 2 - halfShipHeight;
-                ship.yOffset = Math.max(-maxOffset, Math.min(maxOffset, ship.yOffset));
+                // التأكد من أن المركبة لا تخرج عن حدود الشاشة
+                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
 
                 // تحديث المسار والعوائق
                 updatePath();
