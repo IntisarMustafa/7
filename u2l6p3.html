@@ -1136,7 +1136,11 @@
             canvas.addEventListener('mousemove', (e) => {
                 // التحكم بالماوس متاح فقط إذا لم يكن الجهاز يدعم اللمس
                 if (!('ontouchstart' in window || navigator.maxTouchPoints > 0) && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
-                    ship.y = e.clientY;
+                    // تصحيح: بدلاً من القفز مباشرة إلى موضع الماوس،
+                    // اجعل المركبة تتحرك بسلاسة نحوه.
+                    const targetY = e.clientY;
+                    const easingFactor = 0.1; // عامل التخفيف، قيمة أصغر تعني حركة أبطأ وأكثر سلاسة
+                    ship.y += (targetY - ship.y) * easingFactor;
                 }
             });
 
@@ -1408,6 +1412,12 @@
                 if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'ArrowDown' || e.key === 's') {
                     gameState.keys[e.key] = false;
                 }
+            });
+            
+            // إضافة معالج حدث لتغيير حجم النافذة
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                createStars();
             });
             
             resizeCanvas();
