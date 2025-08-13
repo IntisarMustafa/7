@@ -364,6 +364,12 @@
                 lastY: null
             };
 
+            // متغيرات جديدة للتحكم بالفأرة
+            let mouseState = {
+                isDown: false,
+                lastY: null
+            };
+
             // مصفوفة نجوم الخلفية
             let stars = [];
             const numStars = 200;
@@ -1150,14 +1156,31 @@
                 }
             }
 
-            // إضافة معالج أحداث حركة الفأرة لتحريك المركبة
-            canvas.addEventListener('mousemove', (e) => {
-                // التحكم بالماوس متاح فقط إذا لم يكن الجهاز يدعم اللمس
-                if (!('ontouchstart' in window || navigator.maxTouchPoints > 0) && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
-                    ship.y = e.clientY;
+            // ===== تحديث: تعديل معالجات أحداث الفأرة لتعمل مثل اللمس =====
+            canvas.addEventListener('mousedown', (e) => {
+                if (gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
+                    mouseState.isDown = true;
+                    mouseState.lastY = e.clientY;
                 }
             });
 
+            canvas.addEventListener('mouseup', () => {
+                mouseState.isDown = false;
+                mouseState.lastY = null;
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                // التحكم بالفأرة يعمل فقط إذا كان زر الفأرة مضغوطاً
+                if (mouseState.isDown && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
+                    const deltaY = e.clientY - mouseState.lastY;
+                    ship.y += deltaY;
+                    mouseState.lastY = e.clientY;
+                    // التأكد من أن المركبة لا تخرج عن حدود الشاشة
+                    ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
+                }
+            });
+            // ===== نهاية التعديل =====
+            
             // معالجات أحداث اللمس
             canvas.addEventListener('touchstart', handleTouchStart);
             canvas.addEventListener('touchmove', handleTouchMove);
@@ -1284,7 +1307,8 @@
                 // =================================================================
 
                 // التأكد من أن المركبة لا تخرج عن حدود الشاشة
-                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
+                // هذا الجزء من الكود تم نقله للتحكم بالفأرة واللمس
+                // ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
 
                 // تحديث المسار والعوائق
                 updatePath();
