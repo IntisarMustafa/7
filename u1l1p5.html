@@ -489,7 +489,10 @@
                     correctAnswerIndex: 0
                 }
             ];
+            // متغير لتتبع السؤال الحالي
             let currentQuestion = null;
+            // متغير جديد لتخزين فهرس الإجابة الصحيحة بعد خلط الخيارات
+            let currentCorrectIndex = -1;
 
             function playSound(frequency, type = 'sine', duration = 0.5, volume = 0.5) {
                 if (!audioContext) {
@@ -1042,12 +1045,14 @@
                 answerOptionsContainer.innerHTML = '';
                 feedbackMessageElement.textContent = '';
                 
+                // === التعديل هنا: نحصل على الإجابة الصحيحة قبل الخلط ===
+                // هذا يمنع تعديل الفهرس الأصلي للسؤال في المصفوفة
                 const correctAnswerText = question.options[question.correctAnswerIndex];
+                
                 const shuffledOptions = shuffleArray([...question.options]);
                 
-                // إعادة تعيين فهرس الإجابة الصحيحة بعد خلط الخيارات
-                const newCorrectAnswerIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
-                currentQuestion.correctAnswerIndex = newCorrectAnswerIndex;
+                // === التعديل هنا: نجد الفهرس الجديد للإجابة الصحيحة ونخزنه في متغير مؤقت ===
+                currentCorrectIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
                 
                 shuffledOptions.forEach((option, index) => {
                     const button = document.createElement('button');
@@ -1069,12 +1074,13 @@
 
             // دالة للتعامل مع الإجابة
             function handleAnswer(selectedIndex) {
-                const isCorrect = (selectedIndex === currentQuestion.correctAnswerIndex);
+                // === التعديل هنا: نقارن الفهرس المختار بالفهرس الصحيح المؤقت ===
+                const isCorrect = (selectedIndex === currentCorrectIndex);
                 const buttons = answerOptionsContainer.querySelectorAll('.answer-btn');
                 
                 buttons.forEach((btn, index) => {
                     btn.disabled = true;
-                    if (index === currentQuestion.correctAnswerIndex) {
+                    if (index === currentCorrectIndex) {
                         btn.classList.add('correct');
                     } else if (index === selectedIndex) {
                         btn.classList.add('incorrect');
