@@ -1087,17 +1087,17 @@
                     setTimeout(() => {
                         questionOverlay.classList.add('hidden');
                         gameState.isQuestionActive = false;
-                        gameState.paused = false;
                         
-                        // إعادة سرعة المركبة إلى السرعة البطيئة ثم تزداد تدريجياً
-                        gameState.pathSpeed = 1;
-                        
-                        // إفراغ مصفوفة العوائق
+                        // ===== التعديل لحل المشكلة: إعادة تهيئة اللعبة بالكامل بعد الإجابة الصحيحة =====
+                        // إعادة تهيئة المسار وجميع عناصر اللعبة لتوفير بيئة آمنة للبدء من جديد.
+                        initializePath();
                         gameState.obstacles = [];
-                        
-                        // إعادة وضع المركبة في مكان آمن بعد الإجابة الصحيحة
+                        gameState.pathSpeed = 1; // إعادة السرعة إلى نقطة البداية
                         positionShipOnPath();
+                        gameState.paused = false;
                         gameState.lastTime = performance.now(); // إعادة ضبط الوقت عند استئناف اللعبة
+                        // ====================================================================================
+
                         startBackgroundMelody(); // استئناف الموسيقى الخلفية
                         startThrusterSound(); // استئناف صوت الدفع
                     }, 1500);
