@@ -471,6 +471,8 @@
                 }
             ];
             let currentQuestion = null;
+            // إضافة متغير جديد لحفظ الفهرس الصحيح للخيارات بعد خلطها
+            let shuffledCorrectIndex = -1;
 
             function playSound(frequency, type = 'sine', duration = 0.5, volume = 0.5) {
                 if (!audioContext) {
@@ -1007,7 +1009,8 @@
                 const questionIndex = Math.floor(Math.random() * questions.length);
                 currentQuestion = questions[questionIndex];
 
-                showQuestion(currentQuestion);
+                // تمرير الفهرس الأصلي للسؤال إلى دالة showQuestion
+                showQuestion(currentQuestion, currentQuestion.correctAnswerIndex);
             }
 
             // دالة لخلط عناصر مصفوفة
@@ -1020,23 +1023,24 @@
             }
 
             // دالة لإظهار السؤال على الشاشة
-            function showQuestion(question) {
+            // تم تعديل الدالة لتستقبل الفهرس الصحيح الأصلي
+            function showQuestion(question, originalCorrectIndex) {
                 questionTextElement.textContent = question.question;
                 answerOptionsContainer.innerHTML = '';
                 feedbackMessageElement.textContent = '';
                 
-                const correctAnswerText = question.options[question.correctAnswerIndex];
+                const correctAnswerText = question.options[originalCorrectIndex];
                 const shuffledOptions = shuffleArray([...question.options]);
                 
-                // إعادة تعيين فهرس الإجابة الصحيحة بعد خلط الخيارات
+                // البحث عن الفهرس الصحيح الجديد بعد الخلط
                 const newCorrectAnswerIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
-                currentQuestion.correctAnswerIndex = newCorrectAnswerIndex;
                 
                 shuffledOptions.forEach((option, index) => {
                     const button = document.createElement('button');
                     button.classList.add('answer-btn');
                     button.textContent = option;
-                    button.addEventListener('click', () => handleAnswer(index));
+                    // تمرير الفهرس الصحيح الجديد إلى دالة handleAnswer
+                    button.addEventListener('click', () => handleAnswer(index, newCorrectAnswerIndex));
                     answerOptionsContainer.appendChild(button);
                 });
                 
@@ -1044,13 +1048,14 @@
             }
 
             // دالة للتعامل مع الإجابة
-            function handleAnswer(selectedIndex) {
-                const isCorrect = (selectedIndex === currentQuestion.correctAnswerIndex);
+            // تم تعديل الدالة لتستقبل الفهرس الصحيح الجديد
+            function handleAnswer(selectedIndex, correctIndex) {
+                const isCorrect = (selectedIndex === correctIndex);
                 const buttons = answerOptionsContainer.querySelectorAll('.answer-btn');
                 
                 buttons.forEach((btn, index) => {
                     btn.disabled = true;
-                    if (index === currentQuestion.correctAnswerIndex) {
+                    if (index === correctIndex) {
                         btn.classList.add('correct');
                     } else if (index === selectedIndex) {
                         btn.classList.add('incorrect');
