@@ -761,18 +761,16 @@
                 return yOffset * amplitude - amplitude / 2;
             }
             
-            // تم تعديل هذه الدالة لحل المشكلة الأساسية.
-            // الآن يتم إنشاء المسار ليغطي الشاشة بأكملها من البداية.
+            // تم تعديل هذه الدالة لحل مشكلة الاصطدام السريع.
+            // الآن يتم إنشاء المسار ليبدأ قبل المركبة بمسافة كافية لضمان عدم الاصطدام.
             function initializePath() {
                 gameState.pathPoints = [];
-                // زيادة عدد النقاط لتحسين سلاسة المسار
                 const segments = 100;
-                // تحديد عرض كل مقطع من المسار بحيث يغطي الشاشة
-                const segmentWidth = GAME_WIDTH / 20; 
+                const segmentWidth = GAME_WIDTH / 10; 
                 const initialYOffset = GAME_HEIGHT / 2;
                 
-                // بدء توليد النقاط من موقع بعيد على يسار الشاشة لضمان أن
-                // المركبة تكون دائمًا على المسار عند البدء.
+                // نبدأ توليد النقاط من موقع أبعد على اليسار لتجنب الاصطدام الفوري.
+                // يتم توليد نقاط المسار الآن من -GAME_WIDTH*2 لضمان وجود مسار آمن.
                 for (let i = -20; i <= segments; i++) {
                     const x = i * segmentWidth;
                     const y = getSawtoothPathY(x, gameState.gameTime) + initialYOffset;
@@ -790,7 +788,7 @@
                     gameState.pathPoints.shift();
                     const lastPoint = gameState.pathPoints[gameState.pathPoints.length - 1];
                     
-                    const newX = lastPoint.x + (GAME_WIDTH / 20); // استخدام نفس عرض المقطع
+                    const newX = lastPoint.x + (GAME_WIDTH / 10);
                     const newY = getSawtoothPathY(newX, gameState.gameTime) + GAME_HEIGHT / 2;
                     gameState.pathPoints.push({ x: newX, y: newY });
                 }
