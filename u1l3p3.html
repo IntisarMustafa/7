@@ -1545,7 +1545,7 @@
             const shieldMaterial = new THREE.MeshPhongMaterial({ color: 0xffd700, transparent: true, opacity: 0.3, wireframe: true });
             const shield = new THREE.Mesh(shieldGeometry, shieldMaterial);
             shield.name = 'shield';
-            shield.position.y = 0.5 * scale;
+            shield.position.y = 1.5 * scale;
             shield.visible = false;
             motorcycle.add(shield);
 
@@ -1588,14 +1588,14 @@
                     texture.repeat.set(2, 1);
                     material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.8 });
                     obstacle = new THREE.Mesh(geometry, material);
-                    obstacle.position.y = 0.4;
+                    obstacle.position.y = .8;
                     obstacle.userData = { isJumpable: true, type: 'barrier' };
 
                 } else if (obstacleType === 2) { // حاجز على شكل سن مدبب (spike)
                     geometry = new THREE.ConeGeometry(0.4, 1, 8);
                     material = new THREE.MeshStandardMaterial({ color: 0x808080, metalness: 0.7, roughness: 0.5 });
                     obstacle = new THREE.Mesh(geometry, material);
-                    obstacle.position.y = 0.5;
+                    obstacle.position.y = 0.8;
                     obstacle.userData = { isJumpable: false, type: 'spike' };
 
                 } else { // حاجز على شكل أنبوب (pipe)
@@ -1603,7 +1603,7 @@
                     material = new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.9, roughness: 0.1 });
                     obstacle = new THREE.Mesh(geometry, material);
                     obstacle.rotation.x = Math.PI / 2;
-                    obstacle.position.y = 0.5;
+                    obstacle.position.y = 0.8;
                     obstacle.userData = { isJumpable: true, type: 'pipe' };
                 }
 
