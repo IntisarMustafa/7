@@ -614,7 +614,6 @@
         let targetLanePosition = 0;
         let isJumping = false;
         let jumpProgress = 0;
-        // زيادة ارتفاع القفز من 2 إلى 3
         const jumpHeight = 3;
         const jumpDuration = 1000;
         let shieldActive = false, boostActive = false;
@@ -1492,14 +1491,14 @@
             
             motorcycle.add(riderGroup);
 
-            // الدرع - تم تغيير اللون إلى الأزرق
+            // الدرع - تم تغيير اللون إلى الأزرق وغير شفاف
             const shieldGeometry = new THREE.CylinderGeometry(1.5 * scale, 1.5 * scale, 0.1 * scale, 32);
             const shieldMaterial = new THREE.MeshPhongMaterial({ 
                 color: 0x1e90ff, 
                 emissive: 0x1e90ff,
                 emissiveIntensity: 0.6,
-                transparent: true, 
-                opacity: 0.5,
+                transparent: false, 
+                opacity: 1,
                 side: THREE.DoubleSide 
             });
             const shield = new THREE.Mesh(shieldGeometry, shieldMaterial);
@@ -1518,54 +1517,60 @@
             motorcycle.position.y = 0;
         }
 
-        // إنشاء العوائق (مصغرة وبمستوى الأرض)
+        // إنشاء العوائق (مكبرة وباللون الرمادي)
         function createObstacles() {
             clearSceneObjects(obstacles);
             const obstacleTypes = ['cone', 'barrier', 'spike', 'pipe'];
+            const OBSTACLE_SCALE = 1.2; // عامل تكبير العوائق
+            
             for (let i = 0; i < 30; i++) {
                 const obstacleType = Math.floor(Math.random() * obstacleTypes.length);
                 let obstacle;
                 let geometry, material;
+                let baseHeight;
 
-                if (obstacleType === 0) { // حاجز مخروطي
-                    geometry = new THREE.ConeGeometry(0.3, 0.75, 16); // حجم أصغر
-                    material = new THREE.MeshStandardMaterial({ color: 0xffcc00, roughness: 0.8 });
+                if (obstacleType === 0) { // حاجز مخروطي - رمادي
+                    geometry = new THREE.ConeGeometry(0.3, 0.75, 16);
+                    material = new THREE.MeshStandardMaterial({ color: 0x00008B, roughness: 0.8 }); // رمادي
                     obstacle = new THREE.Mesh(geometry, material);
+                    
                     // شريط للرؤية الواضحة
                     const stripeGeometry = new THREE.CylinderGeometry(0.35, 0.35, 0.2, 16);
                     const stripeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
                     const stripe = new THREE.Mesh(stripeGeometry, stripeMaterial);
                     stripe.position.y = -0.25;
                     obstacle.add(stripe);
-                    obstacle.position.y = 0.375; // ارتفاع مناسب للأرض
-                    obstacle.userData = { isJumpable: false, type: 'cone', baseHeight: 0.375 };
+                    baseHeight = 0.375;
+                    obstacle.userData = { isJumpable: false, type: 'cone', baseHeight: baseHeight * OBSTACLE_SCALE };
 
                 } else if (obstacleType === 1) { // حاجز على شكل صندوق
-                    geometry = new THREE.BoxGeometry(1.0, 0.4, 0.25); // حجم أصغر
+                    geometry = new THREE.BoxGeometry(1.0, 0.5, 0.35);
                     const texture = new THREE.CanvasTexture(createStripePattern());
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.repeat.set(2, 1);
                     material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.8 });
                     obstacle = new THREE.Mesh(geometry, material);
-                    obstacle.position.y = 0.2; // ارتفاع مناسب للأرض
-                    obstacle.userData = { isJumpable: true, type: 'barrier', baseHeight: 0.2 };
+                    baseHeight = 0.2;
+                    obstacle.userData = { isJumpable: true, type: 'barrier', baseHeight: baseHeight * OBSTACLE_SCALE };
 
                 } else if (obstacleType === 2) { // حاجز على شكل سن مدبب
-                    geometry = new THREE.ConeGeometry(0.2, 0.5, 8); // حجم أصغر
+                    geometry = new THREE.ConeGeometry(0.2, 0.5, 8);
                     material = new THREE.MeshStandardMaterial({ color: 0x808080, metalness: 0.7, roughness: 0.5 });
                     obstacle = new THREE.Mesh(geometry, material);
-                    obstacle.position.y = 0.25; // ارتفاع مناسب للأرض
-                    obstacle.userData = { isJumpable: false, type: 'spike', baseHeight: 0.25 };
+                    baseHeight = 0.25;
+                    obstacle.userData = { isJumpable: false, type: 'spike', baseHeight: baseHeight * OBSTACLE_SCALE };
 
                 } else { // حاجز على شكل أنبوب
-                    geometry = new THREE.CylinderGeometry(0.25, 0.25, 0.75, 16); // حجم أصغر
+                    geometry = new THREE.CylinderGeometry(0.25, 0.25, 0.75, 16);
                     material = new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.9, roughness: 0.1 });
                     obstacle = new THREE.Mesh(geometry, material);
                     obstacle.rotation.x = Math.PI / 2;
-                    obstacle.position.y = 0.375; // ارتفاع مناسب للأرض
-                    obstacle.userData = { isJumpable: true, type: 'pipe', baseHeight: 0.375 };
+                    baseHeight = 0.375;
+                    obstacle.userData = { isJumpable: true, type: 'pipe', baseHeight: baseHeight * OBSTACLE_SCALE };
                 }
 
+                obstacle.scale.set(OBSTACLE_SCALE, OBSTACLE_SCALE, OBSTACLE_SCALE);
+                obstacle.position.y = obstacle.userData.baseHeight;
                 obstacle.castShadow = true;
                 scene.add(obstacle);
                 obstacles.push(obstacle);
@@ -1585,7 +1590,7 @@
             return canvas;
         }
 
-        // إنشاء الكائنات القابلة للجمع - تم تحسين الحلقات الذهبية
+        // إنشاء الكائنات القابلة للجمع - تم تصغير الحلقات الذهبية
         function createCollectibles() {
             clearSceneObjects(collectibles);
             const collectibleTypes = ['shield', 'boost', 'time', 'ring'];
@@ -1599,25 +1604,24 @@
                     const material = new THREE.MeshPhongMaterial({ color: 0xffd700, emissive: 0xffd700, emissiveIntensity: 0.5 });
                     collectible = new THREE.Mesh(geometry, material);
                     collectible.userData = { type: 'shield', baseHeight: 0.5 };
-                    collectible.position.y = 0.5; // ارتفاع مناسب للأرض
+                    collectible.position.y = 0.5;
                 } else if (collectibleType === 1) { // تسارع
                     const geometry = new THREE.ConeGeometry(0.4, 0.8, 4);
                     const material = new THREE.MeshPhongMaterial({ color: 0xff0000, emissive: 0xff0000, emissiveIntensity: 0.3 });
                     collectible = new THREE.Mesh(geometry, material);
                     collectible.rotation.x = Math.PI;
                     collectible.userData = { type: 'boost', baseHeight: 0.5 };
-                    collectible.position.y = 0.5; // ارتفاع مناسب للأرض
+                    collectible.position.y = 0.5;
                 } else if (collectibleType === 2) { // وقت
                     const geometry = new THREE.RingGeometry(0.3, 0.5, 32);
                     const material = new THREE.MeshPhongMaterial({ color: 0x00ff00, emissive: 0x00ff00, emissiveIntensity: 0.5, side: THREE.DoubleSide });
                     collectible = new THREE.Mesh(geometry, material);
                     collectible.rotation.x = Math.PI / 2;
                     collectible.userData = { type: 'time', baseHeight: 0.5 };
-                    collectible.position.y = 0.5; // ارتفاع مناسب للأرض
-                } else { // الحلقات الذهبية - تم تحسينها لتكون أكبر وأكثر ارتفاعاً
-                    // زيادة حجم الحلقة بنسبة 40%
-                    const geometry = new THREE.TorusGeometry(0.9, 0.2, 16, 32);
-                    // زيادة شدة الإضاءة الذاتية
+                    collectible.position.y = 0.5;
+                } else { // الحلقات الذهبية - تم تصغيرها
+                    const ringScale = 0.8; // عامل تصغير الحلقات
+                    const geometry = new THREE.TorusGeometry(0.9 * ringScale, 0.2 * ringScale, 16, 32);
                     const material = new THREE.MeshPhongMaterial({ 
                         color: 0xffd700, 
                         emissive: 0xffd700, 
@@ -1626,7 +1630,7 @@
                     });
                     collectible = new THREE.Mesh(geometry, material);
                     collectible.userData = { type: 'ring', baseHeight: 0.5 };
-                    collectible.position.y = 0.5; // ارتفاع مناسب للأرض
+                    collectible.position.y = 0.5;
                 }
                 
                 scene.add(collectible);
@@ -1811,7 +1815,7 @@
                 obstacle.position.copy(point.clone().add(normal.multiplyScalar(offset)));
                 obstacle.rotation.y = Math.atan2(tangent.z, tangent.x) + Math.PI / 2;
                 obstacle.userData.t = t;
-                obstacle.position.y = obstacle.userData.baseHeight; // استخدام الارتفاع الأساسي
+                obstacle.position.y = obstacle.userData.baseHeight;
             });
 
             collectibles.forEach(collectible => {
@@ -1823,7 +1827,7 @@
                 collectible.position.copy(point.clone().add(normal.clone().multiplyScalar(offset)));
                 collectible.rotation.y = Math.atan2(tangent.z, tangent.x) + Math.PI / 2;
                 collectible.userData.t = t;
-                collectible.position.y = collectible.userData.baseHeight; // استخدام الارتفاع الأساسي
+                collectible.position.y = collectible.userData.baseHeight;
             });
             
             sceneryObjects.forEach(sceneryObj => {
@@ -2008,7 +2012,7 @@
                     obstacle.position.copy(newPoint.clone().add(newNormal.multiplyScalar(newOffset)));
                     obstacle.rotation.y = Math.atan2(newTangent.z, newTangent.x) + Math.PI / 2;
                     obstacle.userData.t = newT;
-                    obstacle.position.y = obstacle.userData.baseHeight; // استخدام الارتفاع الأساسي
+                    obstacle.position.y = obstacle.userData.baseHeight;
                     score += 10;
                     scoreDisplay.textContent = `النقاط: ${score}`;
                 }
@@ -2062,7 +2066,7 @@
                     collectible.position.copy(newPoint.clone().add(newNormal.multiplyScalar(newOffset)));
                     collectible.rotation.y = Math.atan2(newTangent.z, newTangent.x) + Math.PI / 2;
                     collectible.userData.t = newT;
-                    collectible.position.y = collectible.userData.baseHeight; // استخدام الارتفاع الأساسي
+                    collectible.position.y = collectible.userData.baseHeight;
                 }
             }
 
