@@ -2,1438 +2,2141 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Waves - لعبة الموجات الفضائية</title>
-    <!-- تم إزالة مكتبة MathJax لأن الأسئلة أصبحت نصية وليست معادلات رياضية -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>لعبة الدراجة النارية التعليمية لمقارنة الأعداد النسبية</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        /* أنماط CSS الأساسية للجسم والتنسيق العام */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            user-select: none;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* خلفية النجوم المتحركة */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></svg>');
-            background-size: 150px 150px;
-            opacity: 0.3;
-            z-index: -1;
-        }
-
-        #gameCanvas {
-            background: #000428;
-            display: block;
-            touch-action: none;
-            width: 100vw;
-            height: 100vh;
-            cursor: none; /* إخفاء مؤشر الفأرة داخل اللعبة */
+            touch-action: manipulation;
         }
         
-        /* الطبقات الشفافة التي تظهر فوق اللعبة (شاشة البداية، الأسئلة، إلخ) */
-        .game-overlay, .question-overlay {
-            position: absolute;
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        body {
+            font-family: 'Tajawal', sans-serif;
+            direction: rtl;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        #startScreen {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(0, 10, 30, 0.95);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
             text-align: center;
             padding: 20px;
-            z-index: 50;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.8s ease-out;
+            backdrop-filter: blur(5px);
         }
 
-        .game-overlay.hidden, .question-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .game-overlay h1 {
-            font-size: clamp(2rem, 8vw, 4rem);
-            color: #4fc3f7;
-            text-shadow: 0 0 15px rgba(79, 195, 247, 0.9);
-            letter-spacing: 2px;
+        #startScreen h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
             margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
         }
 
-        .game-overlay p {
-            font-size: clamp(1rem, 4vw, 1.5rem);
-            color: #bbdefb;
+        #startScreen p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
             margin-bottom: 30px;
+            max-width: 80%;
+            color: #e0f7ff;
+            line-height: 1.6;
         }
 
-        .game-overlay .btn {
-            background: linear-gradient(to right, #1a2980, #26d0ce);
+        .start-btn {
+            padding: 15px 40px;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            background: linear-gradient(to bottom, #ff8c00, #ff4500);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: clamp(1rem, 4vw, 1.5rem);
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 10px #26d0ce;
-            margin-top: 10px;
-        }
-
-        .game-overlay .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px #26d0ce;
-        }
-
-        .game-overlay .btn:active {
-            transform: translateY(1px);
-        }
-
-        /* شريط الإحصائيات في الأعلى */
-        .stats {
-            position: absolute;
-            top: 15px;
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            padding: 0 20px;
-            z-index: 10;
-        }
-
-        .stat-item {
-            font-size: clamp(1rem, 3vw, 1.3rem);
-            background: rgba(0, 30, 60, 0.7);
-            padding: 8px 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
-        }
-
-        .stat-value {
+            transition: all 0.3s;
             font-weight: bold;
-            color: #4fc3f7;
-            text-shadow: 0 0 5px #4fc3f7;
-        }
-        
-        #soundToggle {
-            background: rgba(26, 41, 128, 0.7);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
-            transition: all 0.2s ease;
-            margin-top: 10px;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
 
-        #soundToggle:hover {
-            background: rgba(38, 208, 206, 0.7);
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to bottom, #ff9d00, #ff5500);
+        }
+
+        .start-btn:active {
+            transform: scale(0.95);
+        }
+
+        .floatingMotorcycle {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            animation: float 3s infinite ease-in-out;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.7));
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: none;
+            box-shadow: none;
+            margin: 0;
+            transform-style: preserve-3d;
+            transition: all 0.5s;
+            flex-grow: 1;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .game-stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2rem;
+            color: white;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            gap: 5px;
+        }
+
+        .game-stats span {
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin: 0 2px;
+            min-width: 90px;
+            display: inline-flex;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .game-stats #speedDisplay {
+            font-weight: bold;
+            color: #ffeb3b;
+        }
+
+        .game-stats #scoreDisplay {
+            color: #4caf50;
+            font-weight: bold;
         }
         
-        #levelUpMessage {
+        #musicToggleBtn {
+            padding: 8px 12px !important;
+            background: linear-gradient(to bottom, #5cb85c, #4cae4c);
+            font-size: 1.2rem;
+            min-width: 40px !important;
+            min-height: 40px;
+        }
+
+        #gameOver {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: clamp(2rem, 10vw, 5rem);
-            color: #26d0ce;
-            text-shadow: 0 0 20px #26d0ce, 0 0 40px #26d0ce;
-            opacity: 0;
-            animation: fadeInOut 2s forwards;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            border: 4px solid #ff8c00;
+            text-align: center;
             z-index: 100;
+            display: none;
+            box-shadow: 0 0 30px rgba(255, 140, 0, 0.5);
+            width: 90%;
+            max-width: 500px;
+            animation: gameOverAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes gameOverAppear {
+            0% {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+
+        #gameOver h2 {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            color: #ffc107;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(255, 193, 7, 0.7);
+        }
+
+        #finalScore {
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            color: #fff;
+            margin: 20px 0;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
         }
         
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            25% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-            75% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+        #highScore {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: #ccc;
+            margin-bottom: 20px;
         }
-        
-        .difficulty-indicator {
+
+        #gameOver p {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(255, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            z-index: 1000;
+            display: none;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .control-btn {
+            padding: 15px 40px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            min-width: 150px;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        #boostBtn {
+            background: linear-gradient(to bottom, #ffd700, #ff8c00);
+        }
+
+        #jumpBtn {
+            background: linear-gradient(to bottom, #1e90ff, #0077cc);
+        }
+
+        .slider-thumb::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease-in-out;
+        }
+        .slider-thumb::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease-in-out;
+        }
+
+        #touchLeft, #touchRight {
             position: absolute;
-            bottom: 20px;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 5;
+        }
+
+        #touchLeft {
+            left: 0;
+        }
+
+        #touchRight {
+            right: 0;
+        }
+
+        .collectible-effect {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 255, 0, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 20;
+            display: none;
+            animation: collectPulse 0.6s ease-out;
+        }
+
+        @keyframes collectPulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        .collision-effect {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.8) 0%, rgba(255, 0, 0, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 20;
+            display: none;
+            animation: collisionFlash 0.5s ease-out;
+        }
+
+        @keyframes collisionFlash {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .road {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, #8B4513, #5D2906);
+            z-index: -1;
+            border-top: 4px solid #654321;
+        }
+
+        .road-lines {
+            position: absolute;
+            bottom: 50%;
+            width: 100%;
+            height: 10px;
+            background: repeating-linear-gradient(to right, transparent, transparent 30px, #ffd700 30px, #ffd700 60px);
+            z-index: -1;
+        }
+
+        .instructions {
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+        
+        #musicControls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            width: auto;
+            max-width: none;
+        }
+        
+        #questionScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            display: none;
+        }
+        
+        .question-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .question-container h1 {
+            color: #1a2a6c;
+            margin-bottom: 1rem;
+        }
+        
+        .question-container .math-symbol {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .option-btn {
+            padding: 15px 30px;
+            background: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 100px;
+        }
+        
+        .option-btn:hover {
+            background: #0077cc;
+            transform: scale(1.05);
+        }
+        
+        .result-message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .correct {
+            color: #4CAF50;
+        }
+        
+        .incorrect {
+            color: #f44336;
+        }
+        
+        /* رسالة توضيحية للتحكم بالأسهم */
+        .keyboard-info {
+            position: absolute;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: clamp(0.8rem, 3vw, 1.2rem);
-            background: rgba(255, 50, 50, 0.7);
-            padding: 5px 15px;
-            border-radius: 20px;
-            text-align: center;
-            z-index: 20;
-            animation: pulse 1.5s infinite;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 10px;
+            color: #ff9900;
+            font-size: 0.9rem;
+            z-index: 100;
+            display: none;
+            backdrop-filter: blur(5px);
+            animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
-            0% { box-shadow: 0 0 5px rgba(255, 50, 50, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(255, 50, 50, 0.8); }
-            100% { box-shadow: 0 0 5px rgba(255, 50, 50, 0.5); }
-        }
-
-        /* --- Question Overlay Styles --- */
-        .question-overlay {
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .question-overlay .question-content {
-            background: rgba(15, 32, 39, 0.95);
-            padding: clamp(20px, 5vw, 40px);
-            border-radius: 20px;
-            max-width: 90%;
-            width: 600px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px #4fc3f7;
-            border: 2px solid #2c5364;
-        }
-
-        .question-overlay h2 {
-            font-size: clamp(1.5rem, 6vw, 2.5rem);
-            color: #fff;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #4fc3f7;
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
         }
         
-        .question-overlay .answer-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
+        @media (min-width: 768px) {
+            .keyboard-info {
+                display: block;
+            }
         }
 
-        .question-overlay .answer-btn {
-            background: linear-gradient(to right, #005aa7, #fffde4);
-            color: #0f2027;
-            border: none;
-            padding: 15px;
-            font-size: clamp(1rem, 4vw, 1.2rem);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            font-weight: bold;
-        }
+        @media (max-width: 768px) {
+            .game-stats {
+                font-size: 0.8rem;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
 
-        .question-overlay .answer-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-        }
+            .game-stats span {
+                padding: 4px 8px;
+                margin: 5px;
+                min-width: 80px;
+                font-size: 0.7rem;
+            }
 
-        .question-overlay .answer-btn:active {
-            transform: translateY(0);
-        }
+            #gameOver {
+                padding: 20px;
+                width: 95%;
+            }
 
-        .question-overlay .answer-btn.correct {
-            background: linear-gradient(to right, #00b09b, #96c93d);
-            color: white;
-        }
-
-        .question-overlay .answer-btn.incorrect {
-            background: linear-gradient(to right, #c04848, #d84545);
-            color: white;
-        }
-
-        .question-overlay .message-box {
-            margin-top: 20px;
-            font-size: clamp(1rem, 4vw, 1.3rem);
-            font-weight: bold;
+            .control-btn {
+                padding: 12px 25px;
+                min-width: 120px;
+                font-size: 0.9rem;
+            }
+            
+            .question-container {
+                padding: 1rem;
+            }
+            
+            .option-btn {
+                padding: 10px 20px;
+                font-size: 1.2rem;
+                min-width: 80px;
+            }
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
+    <div id="startScreen">
+        <div class="floatingMotorcycle">🏍️</div>
+        <h1>🚀 لعبة الدراجة النارية التعليمية لمقارنة الأعداد النسبية</h1>
+      <p>اضغط على يمين الشاشة للتحريك لليمين و على يسار الشاشة للتحريك لليسار واقفز لتجنب العوائق
+! عندما تصطدم بعائق، ستحل سؤالًا تعليميًا. إذا أجبت بشكل صحيح، ستواصل اللعب. إذا أخطأت، تنتهي اللعبة!</p>
+        <button id="startGameBtn" class="start-btn">ابدأ اللعب</button>
+    </div>
 
-    <div id="gameOverlay" class="game-overlay">
-        <h1 id="overlayTitle">Space Waves</h1>
-        <p id="overlayMessage">العب وتجنب الاصطدام بالجدران</p>
-        <button id="overlayBtn" class="btn">بدء اللعبة</button>
+    <div class="container">
+        <div id="gameContainer">
+            <div id="touchLeft"></div>
+            <div id="touchRight"></div>
+            <div class="road"></div>
+            <div class="road-lines"></div>
+            <!-- رسالة توضيحية للتحكم بالأسهم على الكمبيوتر -->
+            <div class="keyboard-info">
+                على الكمبيوتر: السهم الأيمن ← يسار | السهم الأيسر ← يمين
+            </div>
+
+            <div class="game-stats flex-row items-center gap-4">
+                <span id="scoreDisplay">النقاط: 0</span>
+                <span id="shieldDisplay">الدرع: 0</span>
+                <span id="speedDisplay">السرعة: 0</span>
+                <span id="timerDisplay">الوقت: 60</span>
+                <button id="musicToggleBtn" class="control-btn rounded-full min-w-0">🎶</button>
+            </div>
+
+            <div id="gameOver">
+                <h2>انتهت اللعبة!</h2>
+                <p id="gameOverReason">لقد اصطدمت بعائق</p>
+                <div id="finalScore">النقاط: 0</div>
+                <div id="highScore">أفضل نتيجة: 0</div>
+                <button id="restart-btn" class="start-btn">العب مرة أخرى</button>
+            </div>
+            <div class="collectible-effect" id="collectEffect"></div>
+            <div class="collision-effect" id="collisionEffect"></div>
+        </div>
+
+        <div class="controls-container">
+            <div class="flex flex-row items-center justify-center gap-4 w-full">
+                <button id="jumpBtn" class="control-btn">القفز</button>
+                <button id="boostBtn" class="control-btn">التسارع</button>
+            </div>
+            <div class="instructions">استخدم الجانب الأيسر للتحرك لليسار، الجانب الأيمن للتحرك لليمين</div>
+        </div>
     </div>
     
-    <!-- Question Overlay -->
-    <div id="questionOverlay" class="question-overlay hidden">
-        <div class="question-content">
-            <h2 id="questionText"></h2>
-            <div id="answerOptions" class="answer-options">
-                <!-- أزرار الإجابات يتم إدراجها هنا -->
+    <!-- شاشة السؤال التعليمي -->
+    <div id="questionScreen">
+        <div class="question-container">
+            <h1 id="question-title">سؤال: مقارنة الأعداد النسبية</h1>
+            <div id="question-container" class="mb-8">
+                <p class="text-xl sm:text-2xl text-gray-700">قارن بين العددين النسبيين:</p>
+                <div class="flex justify-center items-center my-4">
+                    <span id="number1" class="text-4xl font-semibold text-blue-600"></span>
+                    <span class="math-symbol mx-4 text-gray-500"> □ </span>
+                    <span id="number2" class="text-4xl font-semibold text-blue-600"></span>
+                </div>
             </div>
-            <p id="feedbackMessage" class="message-box"></p>
+
+            <div id="options-container" class="options-container">
+                <!-- الخيارات سيتم إضافتها هنا بواسطة JavaScript -->
+            </div>
+
+            <div id="result-message" class="result-message"></div>
         </div>
     </div>
 
-    <div id="levelUpMessage" style="display:none;"></div>
-
-    <div class="stats">
-        <div class="stat-item">المستوى: <span id="level" class="stat-value">1</span></div>
-        <div class="stat-item">النقاط: <span id="score" class="stat-value">0</span></div>
-        <div class="stat-item">الزمن: <span id="time" class="stat-value">0</span> ثانية</div>
-        <button id="soundToggle">الصوت: تشغيل</button>
-    </div>
-    
-    <div class="difficulty-indicator">مسار جبلي حاد وعقبات داخلية!</div>
-    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const canvas = document.getElementById('gameCanvas');
-            const ctx = canvas.getContext('2d');
-            const scoreElement = document.getElementById('score');
-            const timeElement = document.getElementById('time');
-            const levelElement = document.getElementById('level');
-            const overlay = document.getElementById('gameOverlay');
-            const overlayTitle = document.getElementById('overlayTitle');
-            const overlayMessage = document.getElementById('overlayMessage');
-            const overlayBtn = document.getElementById('overlayBtn');
-            const soundToggleBtn = document.getElementById('soundToggle');
-            const levelUpMessageElement = document.getElementById('levelUpMessage');
+        // العناصر الأساسية للعبة
+        let scene, camera, renderer, motorcycle;
+        let obstacles = [], collectibles = [], roadMarkings = [], sceneryObjects = [];
+        let score = 0, timer = 60, gameActive = false, highScore = 0;
+        let baseSpeed = 0.0003;
+        let currentSpeed = baseSpeed;
+        let maxBoostSpeed = baseSpeed * 2.5;
+        let acceleration = 0.00002;
+        let laneWidth = 4;
+        let targetLanePosition = 0;
+        let isJumping = false;
+        let jumpProgress = 0;
+        const jumpHeight = 3;
+        const jumpDuration = 1000;
+        let shieldActive = false, boostActive = false;
+        let shieldCount = 0, boostCount = 0;
+        let touchStartX = null;
+        let touchStartY = null;
+        let timerInterval = null;
+        let animationFrameId = null;
+        let steeringAngle = 0;
+        const maxSteeringAngle = Math.PI / 6;
+        let steeringSpeed = 0.06;
+        let steeringReturnSpeed = 0.02;
 
-            // عناصر لوحة الأسئلة
-            const questionOverlay = document.getElementById('questionOverlay');
-            const questionTextElement = document.getElementById('questionText');
-            const answerOptionsContainer = document.getElementById('answerOptions');
-            const feedbackMessageElement = document.getElementById('feedbackMessage');
+        // متغيرات المسار والموضع للطريق المنحني
+        let curve;
+        let t = 0;
+        const curveLength = 1000;
+
+        // عناصر واجهة المستخدم
+        const restartBtn = document.getElementById('restart-btn');
+        const gameOverScreen = document.getElementById('gameOver');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const highScoreDisplay = document.getElementById('highScore');
+        const gameContainer = document.getElementById('gameContainer');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const shieldDisplay = document.getElementById('shieldDisplay');
+        const speedDisplay = document.getElementById('speedDisplay');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const gameStatsContainer = document.querySelector('.game-stats');
+        const startScreen = document.getElementById('startScreen');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const gameOverReason = document.getElementById('gameOverReason');
+        const jumpBtn = document.getElementById('jumpBtn');
+        const boostBtn = document.getElementById('boostBtn');
+        const controlsContainer = document.querySelector('.controls-container');
+        const touchLeft = document.getElementById('touchLeft');
+        const touchRight = document.getElementById('touchRight');
+        const collectEffect = document.getElementById('collectEffect');
+        const collisionEffect = document.getElementById('collisionEffect');
+        
+        // عناصر السؤال التعليمي
+        const questionScreen = document.getElementById('questionScreen');
+        const number1El = document.getElementById('number1');
+        const number2El = document.getElementById('number2');
+        const optionsContainer = document.getElementById('options-container');
+        const resultMessageEl = document.getElementById('result-message');
+        const questionTitle = document.getElementById('question-title');
+        
+        // قائمة برموز المقارنة
+        const comparisonSymbols = ['<', '>', '='];
+        
+        // دالة لتوليد عدد صحيح عشوائي بين min و max
+        const getRandomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+        
+        // دالة لتوليد عدد عشوائي بين min و max
+        const getRandomNumber = (min, max) => Math.random() * (max - min) + min;
+
+        // دالة لتوليد كسر عادي
+        const generateFraction = () => {
+            const numerator = getRandomInteger(-10, 10);
+            let denominator = getRandomInteger(1, 10);
+            if (denominator === 0) {
+                denominator = 1;
+            }
+            const value = numerator / denominator;
+            const latex = `$$\\frac{${numerator}}{${denominator}}$$`;
+            return { value, latex };
+        };
+
+        // دالة لتوليد كسر عشري
+        const generateDecimal = () => {
+            const integerPart = getRandomInteger(-10, 10);
+            let decimalPart = getRandomInteger(0, 999);
+            if (integerPart === 0 && decimalPart === 0) {
+                decimalPart = getRandomInteger(1, 999);
+            }
+            const value = parseFloat(`${integerPart}.${decimalPart}`);
+            const latex = `$$${value}$$`;
+            return { value, latex };
+        };
+        
+        // دالة لتوليد عدد كسري
+        const generateMixedNumber = () => {
+            const wholeNumber = getRandomInteger(-10, 10);
+            const numerator = getRandomInteger(1, 9);
+            let denominator = getRandomInteger(numerator + 1, 10);
+            if (denominator === 0) {
+                denominator = 1;
+            }
+            const value = wholeNumber + (numerator / denominator);
+            const latex = `$$${wholeNumber}\\frac{${numerator}}{${denominator}}$$`;
+            return { value, latex };
+        }
+
+        // دالة لاختيار وتوليد نوع عشوائي من الأعداد النسبية
+        const generateRandomRationalNumber = () => {
+            const numberTypes = ['fraction', 'decimal', 'mixed'];
+            const selectedType = numberTypes[getRandomInteger(0, numberTypes.length - 1)];
             
-            let GAME_WIDTH;
-            let GAME_HEIGHT;
+            switch (selectedType) {
+                case 'fraction':
+                    return generateFraction();
+                case 'decimal':
+                    return generateDecimal();
+                case 'mixed':
+                    return generateMixedNumber();
+                default:
+                    return generateFraction();
+            }
+        };
+        
+        // دالة لخلط المصفوفة
+        const shuffleArray = (array) => {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        };
+
+        // دالة لتوليد السؤال والخيارات
+        const generateQuestion = () => {
+            const number1 = generateRandomRationalNumber();
+            const number2 = generateRandomRationalNumber();
             
-            // حالة اللعبة
-            let gameState = {
-                level: 1,
-                currentLevelScore: 0, 
-                totalScore: 0,
-                gameTime: 0,
-                gameOver: false,
-                gameStarted: false,
-                paused: true,
-                isLevelComplete: false,
-                isQuestionActive: false,
-                pathPoints: [],
-                pathWidth: 150,
-                pathSpeed: 1,
-                targetPathSpeed: 4,
-                lastTime: 0,
+            // عرض الأعداد على الشاشة باستخدام تنسيق LaTeX
+            number1El.innerHTML = number1.latex;
+            number2El.innerHTML = number2.latex;
+            
+            // تشغيل MathJax لعرض الصيغ الرياضية
+            MathJax.typesetPromise([number1El, number2El]);
+
+            let correctAnswer;
+            if (number1.value < number2.value) {
+                correctAnswer = '<';
+            } else if (number1.value > number2.value) {
+                correctAnswer = '>';
+            } else {
+                correctAnswer = '=';
+            }
+
+            // إضافة الإجابات الخاطئة
+            const wrongAnswers = comparisonSymbols.filter(symbol => symbol !== correctAnswer);
+            const allAnswers = shuffleArray([correctAnswer, ...wrongAnswers]);
+
+            optionsContainer.innerHTML = '';
+            resultMessageEl.textContent = '';
+            resultMessageEl.classList.remove('correct', 'incorrect');
+
+            allAnswers.forEach(symbol => {
+                const button = document.createElement('button');
+                button.textContent = symbol;
+                button.classList.add('option-btn');
+                button.addEventListener('click', () => checkAnswer(button, symbol, correctAnswer));
+                optionsContainer.appendChild(button);
+            });
+            
+            return correctAnswer;
+        };
+
+        // دالة للتحقق من الإجابة
+        const checkAnswer = (button, selectedSymbol, correctAnswer) => {
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+            });
+
+            if (selectedSymbol === correctAnswer) {
+                resultMessageEl.textContent = 'إجابة صحيحة! 🎉';
+                resultMessageEl.classList.add('correct');
+                resultMessageEl.style.display = 'block';
+                button.classList.remove('option-btn');
+                button.classList.add('option-btn', 'bg-green-500');
                 
-                obstacles: [],
-                obstacleGenerationInterval: 1000,
+                setTimeout(() => {
+                    moveToSafePosition();
+                    questionScreen.style.display = 'none';
+                    gameActive = true;
+                    animate();
+                }, 1500);
+            } else {
+                resultMessageEl.textContent = 'إجابة خاطئة! 😔';
+                resultMessageEl.classList.add('incorrect');
+                resultMessageEl.style.display = 'block';
+                button.classList.remove('option-btn');
+                button.classList.add('option-btn', 'bg-red-500');
                 
-                // إضافة حالة أزرار لوحة المفاتيح
-                keys: {
-                    ArrowUp: false,
-                    ArrowDown: false,
-                    w: false,
-                    s: false
+                const correctButton = Array.from(buttons).find(btn => btn.textContent === correctAnswer);
+                if (correctButton) {
+                    correctButton.classList.remove('option-btn');
+                    correctButton.classList.add('option-btn', 'bg-green-500');
                 }
-            };
+                
+                setTimeout(() => {
+                    endGame(false, "إجابة خاطئة على السؤال!");
+                }, 1500);
+            }
+        };
+        
+        // --- متغيرات ووظائف الموسيقى المدمجة ---
+        let musicAudioContext;
+        let melodyInterval;
+        let bassInterval;
+        let drumInterval;
+        let isMusicPlaying = false;
+        let musicEnabled = true;
+
+        const musicToggleBtn = document.getElementById('musicToggleBtn');
+        
+        const chords = {
+            "Cmaj": [130.81, 164.81, 196.00],
+            "Gmaj": [196.00, 246.94, 293.66],
+            "Amin": [220.00, 261.63, 329.63],
+            "Fmaj": [174.61, 220.00, 261.63]
+        };
+        const chordProgression = ["Cmaj", "Amin", "Fmaj", "Gmaj"];
+        const bassNotes = {
+            "Cmaj": 65.41,
+            "Gmaj": 97.99,
+            "Amin": 110.00,
+            "Fmaj": 87.31
+        };
+
+        function playMusicNote(frequency, type = 'sine', duration = 0.5, volume = 0.3, release = 0.3) {
+            if (!musicAudioContext || !isMusicPlaying) return;
             
-            // مصفوفة ألوان العوائق لكل مستوى
-            const levelColors = ['#ff6b6b', '#ffd166', '#06d6a0', '#118ab2', '#073b4c'];
-
-            // حالة التحكم باللمس
-            let touchState = {
-                isTouched: false,
-                lastY: null
-            };
-
-            // مصفوفة نجوم الخلفية
-            let stars = [];
-            const numStars = 200;
-            const starSpeed = 0.7;
+            const oscillator = musicAudioContext.createOscillator();
+            const gainNode = musicAudioContext.createGain();
             
-            // متغير التحكم بالصوت
-            let soundEnabled = true;
-
-            // إعداد الصوت
-            let audioContext;
-            let thrusterOscillator = null;
-            let backgroundMelodyTimeoutId = null;
-            let isBackgroundMelodyPlaying = false;
+            oscillator.connect(gainNode);
+            gainNode.connect(musicAudioContext.destination);
             
-            const gMajorScale = {
-                'G3': 196.00, 'A3': 220.00, 'B3': 246.94, 'D4': 293.66,
-                'E4': 329.63, 'F#4': 369.99, 'G4': 392.00, 'A4': 440.00,
-                'B4': 493.88, 'D5': 587.33, 'E5': 659.25, 'G5': 783.99
-            };
+            oscillator.type = type;
+            oscillator.frequency.value = frequency;
+            
+            const now = musicAudioContext.currentTime;
+            gainNode.gain.setValueAtTime(0, now);
+            gainNode.gain.linearRampToValueAtTime(volume, now + 0.02);
+            gainNode.gain.linearRampToValueAtTime(volume * 0.7, now + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, now + duration + release);
 
-            const cheerfulPianoMelody = [
-                { main: 'G4', bass: 'G3', duration: 0.2 },
-                { main: 'B4', duration: 0.2 },
-                { main: 'D5', duration: 0.2 },
-                { main: 'E5', bass: 'G3', duration: 0.4 },
-                { main: 'D5', duration: 0.2 },
-                { main: 'B4', bass: 'A3', duration: 0.4 },
-                { main: 'A4', duration: 0.2 },
-                { main: 'G4', bass: 'G3', duration: 0.8 },
+            oscillator.start(now);
+            oscillator.stop(now + duration + release);
+        }
 
-                { main: 'G4', bass: 'G3', duration: 0.2 },
-                { main: 'D5', duration: 0.2 },
-                { main: 'B4', duration: 0.2 },
-                { main: 'E5', bass: 'G3', duration: 0.4 },
-                { main: 'D5', duration: 0.2 },
-                { main: 'B4', bass: 'A3', duration: 0.4 },
-                { main: 'A4', duration: 0.2 },
-                { main: 'G4', bass: 'G3', duration: 0.8 },
+        function playKick() {
+            if (!musicAudioContext || !isMusicPlaying) return;
+            const now = musicAudioContext.currentTime;
+            
+            const osc = musicAudioContext.createOscillator();
+            const gain = musicAudioContext.createGain();
+            osc.connect(gain);
+            gain.connect(musicAudioContext.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(30, now + 0.5);
+            
+            gain.gain.setValueAtTime(1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            
+            osc.start(now);
+            osc.stop(now + 0.5);
+        }
+
+        function playSnare() {
+            if (!musicAudioContext || !isMusicPlaying) return;
+            const now = musicAudioContext.currentTime;
+            
+            const noise = musicAudioContext.createBufferSource();
+            const buffer = musicAudioContext.createBuffer(1, musicAudioContext.sampleRate, musicAudioContext.sampleRate);
+            const output = buffer.getChannelData(0);
+            for (let i = 0; i < buffer.length; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            noise.buffer = buffer;
+            const noiseGain = musicAudioContext.createGain();
+            noise.connect(noiseGain);
+            noiseGain.connect(musicAudioContext.destination);
+            noiseGain.gain.setValueAtTime(0.5, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            noise.start(now);
+            noise.stop(now + 0.2);
+
+            const osc = musicAudioContext.createOscillator();
+            const oscGain = musicAudioContext.createGain();
+            osc.connect(oscGain);
+            oscGain.connect(musicAudioContext.destination);
+            osc.type = 'triangle';
+            osc.frequency.value = 220;
+            oscGain.gain.setValueAtTime(0.5, now);
+            oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            osc.start(now);
+            osc.stop(now + 0.2);
+        }
+        
+        function playHiHat() {
+            if (!musicAudioContext || !isMusicPlaying) return;
+            const now = musicAudioContext.currentTime;
+
+            const noise = musicAudioContext.createBufferSource();
+            const buffer = musicAudioContext.createBuffer(1, musicAudioContext.sampleRate, musicAudioContext.sampleRate);
+            const output = buffer.getChannelData(0);
+            for (let i = 0; i < buffer.length; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            noise.buffer = buffer;
+            const gain = musicAudioContext.createGain();
+            noise.connect(gain);
+            gain.connect(musicAudioContext.destination);
+            
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            
+            noise.start(now);
+            noise.stop(now + 0.05);
+        }
+
+        function toggleMusic() {
+            const tempo = 120;
+            const intervalTime = (60 / tempo) * 1000;
+
+            if (isMusicPlaying) {
+                clearInterval(melodyInterval);
+                clearInterval(bassInterval);
+                clearInterval(drumInterval);
+                isMusicPlaying = false;
+                musicToggleBtn.textContent = '🎶';
+            } else {
+                if (!musicAudioContext) {
+                    musicAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                let melodyIndex = 0;
+                const beatsPerChord = 4;
+
+                melodyInterval = setInterval(() => {
+                    const chordName = chordProgression[Math.floor(melodyIndex / beatsPerChord) % chordProgression.length];
+                    const chordNotes = chords[chordName];
+                    const noteFrequency = chordNotes[Math.floor(Math.random() * chordNotes.length)];
+                    
+                    const randomVolume = 0.3 + Math.random() * 0.2;
+                    const randomDuration = 0.2 + Math.random() * 0.2;
+
+                    playMusicNote(noteFrequency, 'triangle', randomDuration, randomVolume);
+                    melodyIndex++;
+                }, intervalTime / 4);
+
+                let bassIndex = 0;
+                bassInterval = setInterval(() => {
+                    const chordName = chordProgression[bassIndex % chordProgression.length];
+                    const bassFrequency = bassNotes[chordName];
+                    playMusicNote(bassFrequency, 'sine', 1, 0.2);
+                    bassIndex++;
+                }, intervalTime);
+
+                let drumIndex = 0;
+                drumInterval = setInterval(() => {
+                    if (drumIndex % 4 === 0) {
+                        playKick();
+                    }
+                    if (drumIndex % 4 === 2) {
+                        playSnare();
+                    }
+                    if (drumIndex % 2 === 0) {
+                        playHiHat();
+                    }
+                    drumIndex++;
+                }, intervalTime / 4);
+
+                isMusicPlaying = true;
+                musicToggleBtn.textContent = '🔇';
+            }
+        }
+        
+        // --- نهاية متغيرات ووظائف الموسيقى المدمجة ---
+        
+        // إنشاء مؤثرات صوتية للعبة
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let soundEnabled = false;
+
+        function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = type;
+            oscillator.frequency.value = frequency;
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        function playCollisionSound() {
+            if (!soundEnabled) return;
+            const oscillator1 = audioContext.createOscillator();
+            const gainNode1 = audioContext.createGain();
+            oscillator1.connect(gainNode1);
+            gainNode1.connect(audioContext.destination);
+            oscillator1.type = 'sine';
+            oscillator1.frequency.setValueAtTime(100, audioContext.currentTime);
+            gainNode1.gain.setValueAtTime(0.7, audioContext.currentTime);
+            gainNode1.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.3);
+            oscillator1.start(audioContext.currentTime);
+            oscillator1.stop(audioContext.currentTime + 0.3);
+
+            const oscillator2 = audioContext.createOscillator();
+            const gainNode2 = audioContext.createGain();
+            oscillator2.connect(gainNode2);
+            gainNode2.connect(audioContext.destination);
+            oscillator2.type = 'sine';
+            oscillator2.frequency.setValueAtTime(200, audioContext.currentTime);
+            gainNode2.gain.setValueAtTime(0.5, audioContext.currentTime);
+            gainNode2.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1);
+            oscillator2.start(audioContext.currentTime);
+            oscillator2.stop(audioContext.currentTime + 0.1);
+        }
+
+        function playStartDrumSound() {
+            if (!soundEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'triangle';
+            
+            oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+            oscillator.frequency.linearRampToValueAtTime(50, audioContext.currentTime + 0.2);
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.8, audioContext.currentTime + 0.01);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.4);
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.4);
+        }
+
+        // تنظيف الكائنات من المشهد
+        function clearSceneObjects(objectsArray) {
+            for (let i = objectsArray.length - 1; i >= 0; i--) {
+                scene.remove(objectsArray[i]);
+            }
+            objectsArray.length = 0;
+        }
+
+        // تهيئة المشهد
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a2a6c);
+            scene.fog = new THREE.Fog(0x1a2a6c, 50, 200);
+
+            if (!gameContainer) return;
+
+            camera = new THREE.PerspectiveCamera(75, gameContainer.offsetWidth / gameContainer.offsetHeight, 0.1, 1000);
+            camera.position.set(0, 10, 15);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+            updateRendererSize();
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            gameContainer.appendChild(renderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const hemiLight = new THREE.HemisphereLight(0xffffff, 0x404040, 1);
+            scene.add(hemiLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            directionalLight.position.set(20, 30, 20);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 100;
+            directionalLight.shadow.camera.left = -20;
+            directionalLight.shadow.camera.right = 20;
+            directionalLight.shadow.camera.top = 20;
+            directionalLight.shadow.camera.bottom = -20;
+            scene.add(directionalLight);
+
+            createGroundAndPath();
+            createMotorcycle();
+            createObstacles();
+            createCollectibles();
+            createScenery();
+
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
+
+            if (restartBtn) {
+                restartBtn.addEventListener('click', restartGame);
+            }
+
+            if (startGameBtn) {
+                startGameBtn.addEventListener('click', function() {
+                    soundEnabled = true;
+                    if (startScreen) {
+                        startScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            startScreen.style.display = 'none';
+                            startGame();
+                        }, 800);
+                    }
+                });
+            }
+
+            musicToggleBtn.addEventListener('click', toggleMusic);
+
+            initTouchControls();
+            initButtonControls();
+
+            highScore = localStorage.getItem('motorcycleHighScore') || 0;
+            if (highScoreDisplay) highScoreDisplay.textContent = `أفضل نتيجة: ${highScore}`;
+
+            renderer.render(scene, camera);
+        }
+
+        // تحديث حجم العارض عند تغيير حجم النافذة
+        function updateRendererSize() {
+            const gameContainer = document.getElementById('gameContainer');
+            if (!gameContainer) return;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            if (width > 0 && height > 0) {
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            }
+        }
+
+        // إنشاء الأرض والطريق
+        function createGroundAndPath() {
+            const roadPoints = [
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(20, 0, -20),
+                new THREE.Vector3(40, 0, -10),
+                new THREE.Vector3(60, 0, -40),
+                new THREE.Vector3(80, 0, -20),
+                new THREE.Vector3(100, 0, -50),
+                new THREE.Vector3(120, 0, -30),
+                new THREE.Vector3(140, 0, -70),
+                new THREE.Vector3(160, 0, -50),
+                new THREE.Vector3(180, 0, -90),
+                new THREE.Vector3(200, 0, -70),
+                new THREE.Vector3(220, 0, -50),
+                new THREE.Vector3(240, 0, -80),
+                new THREE.Vector3(260, 0, -60),
+                new THREE.Vector3(280, 0, -100),
+                new THREE.Vector3(300, 0, -80),
+                new THREE.Vector3(320, 0, -120),
+                new THREE.Vector3(340, 0, -100),
+                new THREE.Vector3(360, 0, -140),
+                new THREE.Vector3(380, 0, -120),
+                new THREE.Vector3(400, 0, -160),
+                new THREE.Vector3(420, 0, -140),
+                new THREE.Vector3(440, 0, -180),
+                new THREE.Vector3(460, 0, -160),
+                new THREE.Vector3(480, 0, -200),
+                new THREE.Vector3(500, 0, -180),
             ];
+            curve = new THREE.CatmullRomCurve3(roadPoints);
+            const segments = 200;
 
-            // قائمة الأسئلة الجديدة الخاصة بدرس "التخمين والتحقق"
-            const questions = [
-                {
-                    question: "عمر أحمد يزيد عن عمر أخيه بـ 3 سنوات، وإذا كان مجموع عمريهما 25 سنة، فكم عمر كل منهما؟",
-                    options: ["14 سنة و 11 سنة", "13 سنة و 10 سنوات", "15 سنة و 12 سنة", "12 سنة و 9 سنوات"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "قطعة أرض مستطيلة طولها يزيد عن عرضها بـ 5 أمتار، وإذا كان محيطها 50 مترًا، فما طولها وعرضها؟",
-                    options: ["15 مترًا و 10 أمتار", "20 مترًا و 5 أمتار", "18 مترًا و 13 مترًا", "22 مترًا و 17 مترًا"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "لدى يوسف 15 ورقة نقدية من فئة 1 دينار و 5 دنانير، وكان مجموع المبلغ 43 دينارًا، فكم ورقة من كل فئة معه؟",
-                    options: ["8 ورقات من فئة 1 و 7 ورقات من فئة 5", "10 ورقات من فئة 1 و 5 ورقات من فئة 5", "5 ورقات من فئة 1 و 10 ورقات من فئة 5", "9 ورقات من فئة 1 و 6 ورقات من فئة 5"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "اشترى سامي 4 دفاتر و 3 أقلام بمبلغ 14 دينارًا، وإذا كان ثمن القلم الواحد 2 دينار، فما ثمن الدفتر الواحد؟",
-                    options: ["2 دينار", "3 دنانير", "4 دنانير", "5 دنانير"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "في بطولة كرة السلة، يحصل الفريق على نقطتين للفوز ونقطة واحدة للتعادل. إذا جمع فريق 17 نقطة بعد 10 مباريات، فكم مرة فاز وكم مرة تعادل؟",
-                    options: ["7 انتصارات و 3 تعادلات", "5 انتصارات و 5 تعادلات", "8 انتصارات و 2 تعادل", "6 انتصارات و 4 تعادلات"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "لدى سارة 10 دنانير اشترت بها 15 قطعة (دفاتر وأقلام). إذا كان ثمن الدفتر 1 دينار وثمن القلم 0.5 دينار، فما عدد الدفاتر والأقلام؟",
-                    options: ["5 دفاتر و 10 أقلام", "6 دفاتر و 9 أقلام", "8 دفاتر و 7 أقلام", "10 دفاتر و 5 أقلام"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "في حديقة مستطيلة الشكل، طولها ضعف عرضها، وكان محيطها 36 مترًا، فما طولها وعرضها؟",
-                    options: ["12 مترًا و 6 أمتار", "10 أمتار و 8 أمتار", "14 مترًا و 7 أمتار", "16 مترًا و 8 أمتار"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "في معرض فني، ثمن تذكرة الكبار 3 دنانير وثمن تذكرة الصغار 2 دينار. إذا باع المعرض 50 تذكرة بمبلغ 120 دينارًا، فكم تذكرة من كل نوع بيعت؟",
-                    options: ["20 تذكرة للكبار و 30 للصغار", "25 تذكرة للكبار و 25 للصغار", "15 تذكرة للكبار و 35 للصغار", "30 تذكرة للكبار و 20 للصغار"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "ربح فريق كرة القدم 3 نقاط في الفوز، و 1 نقطة في التعادل. إذا لعب 8 مباريات وجمع 20 نقطة، فكم مرة فاز وكم مرة تعادل؟",
-                    options: ["6 انتصارات و 2 تعادل", "5 انتصارات و 3 تعادلات", "7 انتصارات و 1 تعادل", "4 انتصارات و 4 تعادلات"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "لدى محمد وعلي مبلغ 90 دينارًا، نصيب محمد أكبر من نصيب علي بـ 10 دنانير، فكم مع كل منهما؟",
-                    options: ["50 دينارًا لمحمد و 40 لعلي", "45 دينارًا لمحمد و 45 لعلي", "60 دينارًا لمحمد و 30 لعلي", "55 دينارًا لمحمد و 35 لعلي"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "قطعة أرض مستطيلة طولها يزيد عن عرضها بـ 8 أمتار، ومحيطها 64 مترًا، فما أبعادها؟",
-                    options: ["20 مترًا و 12 مترًا", "24 مترًا و 16 مترًا", "18 مترًا و 10 أمتار", "26 مترًا و 18 مترًا"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "اشترت ندى 4 كتب و 3 دفاتر بمبلغ 26 دينارًا، وكان ثمن الدفتر الواحد 2 دينار، فما ثمن الكتاب الواحد؟",
-                    options: ["5 دنانير", "4 دنانير", "6 دنانير", "7 دنانير"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "في مكتبة، سعر الكتاب 5 دنانير وسعر القلم 1 دينار. إذا دفع شخص 23 دينارًا مقابل 7 قطع (كتب وأقلام)، فكم كتابًا وكم قلمًا اشترى؟",
-                    options: ["4 كتب و 3 أقلام", "5 كتب و 2 قلم", "3 كتب و 4 أقلام", "6 كتب و 1 قلم"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "إذا كان مجموع عددين 50 وأحدهما أكبر من الآخر بـ 12، فما العددان؟",
-                    options: ["31 و 19", "30 و 20", "28 و 22", "32 و 18"],
-                    correctAnswerIndex: 0
-                },
-                {
-                    question: "في حديقة حيوانات، تذكرة الكبار بـ 6 دنانير وتذكرة الصغار بـ 4 دنانير. إذا بلغ عدد الزوار 100 ودخل الحديقة 480 دينارًا، فكم تذكرة من كل نوع بيعت؟",
-                    options: ["40 تذكرة للكبار و 60 تذكرة للصغار", "50 تذكرة للكبار و 50 تذكرة للصغار", "60 تذكرة للكبار و 40 تذكرة للصغار", "30 تذكرة للكبار و 70 تذكرة للصغار"],
-                    correctAnswerIndex: 0
-                }
-            ];
-            let currentQuestion = null;
-            // إضافة متغير جديد لحفظ الفهرس الصحيح للخيارات بعد خلطها
-            let shuffledCorrectIndex = -1;
+            clearSceneObjects(roadMarkings);
 
-            function playSound(frequency, type = 'sine', duration = 0.5, volume = 0.5) {
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                }
+            const groundGeometry = new THREE.PlaneGeometry(2000, 2000);
+            const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x558b2f, roughness: 1, metalness: 0 });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.2;
+            ground.receiveShadow = true;
+            scene.add(ground);
 
-                if (!soundEnabled) return;
+            const roadWidth = laneWidth;
+            const positions = [];
+            const indices = [];
+            const uvs = [];
 
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
+            for (let i = 0; i <= segments; i++) {
+                const t = i / segments;
+                const point = curve.getPointAt(t);
+                const tangent = curve.getTangentAt(t).normalize();
+                const up = new THREE.Vector3(0, 1, 0);
+                const side = new THREE.Vector3().crossVectors(up, tangent).normalize();
 
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
+                const left = point.clone().add(side.clone().multiplyScalar(-roadWidth / 2));
+                const right = point.clone().add(side.clone().multiplyScalar(roadWidth / 2));
 
-                oscillator.type = type;
-                oscillator.frequency.value = frequency;
+                positions.push(left.x, left.y, left.z);
+                positions.push(right.x, right.y, right.z);
+                uvs.push(0, t * 10);
+                uvs.push(1, t * 10);
 
-                const currentTime = audioContext.currentTime;
-                gainNode.gain.setValueAtTime(0, currentTime);
-                gainNode.gain.linearRampToValueAtTime(volume, currentTime + 0.02);
-                gainNode.gain.exponentialRampToValueAtTime(0.0001, currentTime + duration);
-
-                oscillator.start(currentTime);
-                oscillator.stop(currentTime + duration);
-            }
-
-            function playNoteOrChord(notes, duration, volume) {
-                if (Array.isArray(notes)) {
-                    notes.forEach(note => {
-                        const frequency = gMajorScale[note];
-                        if (frequency) {
-                            playSound(frequency, 'sine', duration, volume);
-                        }
-                    });
-                } else {
-                    const frequency = gMajorScale[notes];
-                    if (frequency) {
-                        playSound(frequency, 'sine', duration, volume);
-                    }
-                }
-            }
-            
-            function playContinuousMelody(melody, index = 0) {
-                if (!isBackgroundMelodyPlaying) {
-                    return;
-                }
-
-                const noteData = melody[index];
-                const nextIndex = (index + 1) % melody.length;
-                const delay = noteData.duration * 1000;
-                
-                playNoteOrChord(noteData.main, noteData.duration, 0.4);
-
-                if (noteData.bass) {
-                    playSound(gMajorScale[noteData.bass], 'sine', noteData.duration, 0.4);
-                }
-
-                backgroundMelodyTimeoutId = setTimeout(() => {
-                    playContinuousMelody(melody, nextIndex);
-                }, delay);
-            }
-            
-            function startBackgroundMelody() {
-                if (!soundEnabled) return;
-                if (isBackgroundMelodyPlaying) return;
-                
-                isBackgroundMelodyPlaying = true;
-                playContinuousMelody(cheerfulPianoMelody);
-            }
-            
-            function stopBackgroundMelody() {
-                if (isBackgroundMelodyPlaying) {
-                    clearTimeout(backgroundMelodyTimeoutId);
-                    isBackgroundMelodyPlaying = false;
+                if (i < segments) {
+                    const base = i * 2;
+                    indices.push(base, base + 1, base + 2);
+                    indices.push(base + 1, base + 3, base + 2);
                 }
             }
 
-            function playLevelUpSound() {
-                playSound(880, 'sine', 0.1, 0.4);
-                setTimeout(() => playSound(1320, 'sine', 0.1, 0.4), 100);
+            const roadGeometry = new THREE.BufferGeometry();
+            roadGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            roadGeometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+            roadGeometry.setIndex(new THREE.Uint16BufferAttribute(indices, 1));
+            roadGeometry.computeVertexNormals();
+
+            const roadMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.9, metalness: 0, side: THREE.DoubleSide });
+            const road = new THREE.Mesh(roadGeometry, roadMaterial);
+            road.receiveShadow = true;
+            scene.add(road);
+            roadMarkings.push(road);
+
+            const centerlineMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 });
+            for (let i = 0; i < segments; i += 2) {
+                const t = i / segments;
+                const startPoint = curve.getPointAt(t);
+                const tangent = curve.getTangentAt(t).normalize();
+                const normal = new THREE.Vector3(0, 1, 0).cross(tangent).normalize();
+
+                const dashGeometry = new THREE.PlaneGeometry(0.5, 2);
+                const dash = new THREE.Mesh(dashGeometry, centerlineMaterial);
+                const pointOnCurve = curve.getPointAt(t + 0.01);
+                const directionVector = pointOnCurve.clone().sub(startPoint).normalize();
+
+                dash.position.copy(startPoint);
+                dash.position.y = 0.01;
+                dash.lookAt(startPoint.clone().add(directionVector));
+                scene.add(dash);
+                roadMarkings.push(dash);
             }
+        }
 
-            function playCollisionSound() {
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                const now = audioContext.currentTime;
+        // إنشاء كائنات المناظر الطبيعية
+        function createScenery() {
+            clearSceneObjects(sceneryObjects);
+            const numObjects = 50;
+            const treeColors = [0x228B22, 0x006400, 0x556B2F];
+
+            for (let i = 0; i < numObjects; i++) {
+                let sceneryObj;
+                const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.5, 2, 8);
+                const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 });
+                const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
                 
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
+                const leavesGeometry = new THREE.ConeGeometry(2, 3, 16);
+                const leavesMaterial = new THREE.MeshStandardMaterial({ color: treeColors[i % treeColors.length], roughness: 0.6 });
+                const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+                leaves.position.y = 2.5;
+
+                sceneryObj = new THREE.Group();
+                sceneryObj.add(trunk);
+                sceneryObj.add(leaves);
+                sceneryObj.position.y = 1;
+                sceneryObj.castShadow = true;
                 
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
+                const t = Math.random();
+                const point = curve.getPointAt(t);
+                const tangent = curve.getTangentAt(t).normalize();
+                const normal = new THREE.Vector3(0, 1, 0).cross(tangent).normalize();
+
+                const side = Math.random() > 0.5 ? 1 : -1;
+                const offset = (Math.random() * 30 + 15) * side;
+
+                sceneryObj.position.copy(point.clone().add(normal.clone().multiplyScalar(offset)));
+                sceneryObj.lookAt(point.clone().add(tangent));
+                sceneryObj.userData.t = t;
                 
-                oscillator.type = 'sine';
-                
-                oscillator.frequency.setValueAtTime(400, now);
-                oscillator.frequency.linearRampToValueAtTime(100, now + 0.3);
-                
-                gainNode.gain.setValueAtTime(0.6, now);
-                gainNode.gain.linearRampToValueAtTime(0.001, now + 0.4);
-                
-                oscillator.start(now);
-                oscillator.stop(now + 0.4);
+                scene.add(sceneryObj);
+                sceneryObjects.push(sceneryObj);
             }
+        }
 
-            // صوت الإجابة الصحيحة
-            function playCorrectSound() {
-                playSound(1000, 'sine', 0.2, 0.6);
-                setTimeout(() => playSound(1500, 'sine', 0.2, 0.6), 100);
-            }
-
-            // صوت الإجابة الخاطئة
-            function playIncorrectSound() {
-                playSound(400, 'triangle', 0.3, 0.5);
-                setTimeout(() => playSound(200, 'triangle', 0.3, 0.5), 100);
-            }
-
-            function startThrusterSound() {
-                if (!soundEnabled) return;
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (thrusterOscillator) return;
-                
-                thrusterOscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-
-                thrusterOscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-
-                thrusterOscillator.type = 'sine';
-                thrusterOscillator.frequency.value = 80;
-                gainNode.gain.value = 0.1;
-                
-                thrusterOscillator.start();
-            }
-
-            function stopThrusterSound() {
-                if (thrusterOscillator) {
-                    thrusterOscillator.stop();
-                    thrusterOscillator.disconnect();
-                    thrusterOscillator = null;
-                }
-            }
-            
-            let thrusterParticles = [];
-
-            const ship = {
-                x: 0,
-                y: 0,
-                width: 30,
-                height: 50,
-                velocity: { x: 0, y: 0 },
-                maxSpeed: 8,
-                rotation: Math.PI / 2,
-                color: '#4fc3f7',
-                draw: function() {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(this.rotation);
-
-                    ctx.fillStyle = this.color;
-                    ctx.shadowColor = this.color;
-                    ctx.shadowBlur = 10;
-                    ctx.beginPath();
-                    ctx.moveTo(0, -this.height / 2);
-                    ctx.lineTo(-this.width / 2, this.height / 2);
-                    ctx.lineTo(-this.width / 4, this.height / 4);
-                    ctx.lineTo(this.width / 4, this.height / 4);
-                    ctx.lineTo(this.width / 2, this.height / 2);
-                    ctx.closePath();
-                    ctx.fill();
-                    
-                    ctx.fillStyle = '#e1f5fe';
-                    ctx.shadowBlur = 5;
-                    ctx.beginPath();
-                    ctx.arc(0, -this.height / 4, 10, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    ctx.restore();
-                    ctx.shadowBlur = 0;
-                }
-            };
-
-            function generateThrusterParticles() {
-                const particleCount = 3;
-                for (let i = 0; i < particleCount; i++) {
-                    const angle = Math.PI;
-                    const spread = Math.random() * Math.PI / 8 - Math.PI / 16;
-                    const pAngle = angle + spread;
-                    const pSpeed = Math.random() * 3 + 2;
-                    
-                    thrusterParticles.push({
-                        x: ship.x,
-                        y: ship.y,
-                        vx: Math.cos(pAngle) * pSpeed,
-                        vy: Math.sin(pAngle) * pSpeed,
-                        size: Math.random() * 8 + 3,
-                        life: 60,
-                        color: `rgba(255, 100, 50, ${Math.random() * 0.7 + 0.3})`
-                    });
-                }
-            }
-
-            function updateThrusterParticles() {
-                thrusterParticles = thrusterParticles.filter(p => p.life > 0);
-                thrusterParticles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life--;
-                    p.size *= 0.95;
-                });
-            }
-
-            function drawThrusterParticles() {
-                thrusterParticles.forEach(p => {
-                    ctx.fillStyle = p.color;
-                    ctx.shadowColor = 'rgba(255, 100, 50, 0.8)';
-                    ctx.shadowBlur = 10;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-                });
-            }
-
-            function createStars() {
-                stars = [];
-                for (let i = 0; i < numStars; i++) {
-                    stars.push({
-                        x: Math.random() * GAME_WIDTH,
-                        y: Math.random() * GAME_HEIGHT,
-                        size: Math.random() * 2,
-                        speed: Math.random() * starSpeed + 0.1,
-                        color: `rgba(255, 255, 255, ${Math.random() * 0.7 + 0.3})`
-                    });
-                }
-            }
-
-            function drawStars() {
-                stars.forEach(star => {
-                    ctx.fillStyle = star.color;
-                    ctx.beginPath();
-                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-            }
-
-            function updateStars() {
-                stars.forEach(star => {
-                    star.x -= star.speed * gameState.pathSpeed / 2;
-                    if (star.x < 0) {
-                        star.x = GAME_WIDTH;
-                        star.y = Math.random() * GAME_HEIGHT;
-                    }
-                });
-            }
-            
-            function getSawtoothPathY(x, timeOffset) {
-                const period = 500;
-                const amplitude = 150;
-                const speedFactor = 0.5;
-
-                const adjustedX = x + timeOffset * gameState.pathSpeed * speedFactor;
-                const normalizedX = (adjustedX % period) / period;
-
-                let yOffset;
-                if (normalizedX < 0.5) {
-                    yOffset = normalizedX * 2;
-                } else {
-                    yOffset = (1 - normalizedX) * 2;
-                }
-
-                return yOffset * amplitude - amplitude / 2;
-            }
-            
-            // تم تعديل هذه الدالة لحل المشكلة الأساسية.
-            // الآن يتم إنشاء المسار ليغطي الشاشة بأكملها من البداية.
-            function initializePath() {
-                gameState.pathPoints = [];
-                // زيادة عدد النقاط لتحسين سلاسة المسار
-                const segments = 100;
-                // تحديد عرض كل مقطع من المسار بحيث يغطي الشاشة
-                const segmentWidth = GAME_WIDTH / 20; 
-                const initialYOffset = GAME_HEIGHT / 2;
-                
-                // بدء توليد النقاط من موقع بعيد على يسار الشاشة لضمان أن
-                // المركبة تكون دائمًا على المسار عند البدء.
-                for (let i = -20; i <= segments; i++) {
-                    const x = i * segmentWidth;
-                    const y = getSawtoothPathY(x, gameState.gameTime) + initialYOffset;
-                    gameState.pathPoints.push({ x: x, y: y });
-                }
-            }
-            
-            function updatePath() {
-                gameState.pathPoints.forEach(point => {
-                    point.x -= gameState.pathSpeed;
-                });
-
-                // إضافة نقطة جديدة عند نهاية المسار عند الحاجة
-                if (gameState.pathPoints[0].x < -GAME_WIDTH) {
-                    gameState.pathPoints.shift();
-                    const lastPoint = gameState.pathPoints[gameState.pathPoints.length - 1];
-                    
-                    const newX = lastPoint.x + (GAME_WIDTH / 20); // استخدام نفس عرض المقطع
-                    const newY = getSawtoothPathY(newX, gameState.gameTime) + GAME_HEIGHT / 2;
-                    gameState.pathPoints.push({ x: newX, y: newY });
-                }
-            }
-            
-            function drawPath() {
-                ctx.strokeStyle = 'rgba(79, 195, 247, 0.4)';
-                ctx.lineWidth = gameState.pathWidth;
-                ctx.lineCap = 'butt';
-                ctx.lineJoin = 'miter';
-                
-                ctx.beginPath();
-                gameState.pathPoints.forEach((point, index) => {
-                    if (index === 0) {
-                        ctx.moveTo(point.x, point.y);
-                    } else {
-                        ctx.lineTo(point.x, point.y);
-                    }
-                });
-                ctx.stroke();
-                
-                ctx.strokeStyle = '#4fc3f7';
-                ctx.lineWidth = 4;
-                
-                ctx.beginPath();
-                gameState.pathPoints.forEach((point, index) => {
-                    if (index === 0) {
-                        ctx.moveTo(point.x, point.y - gameState.pathWidth / 2);
-                    } else {
-                        ctx.lineTo(point.x, point.y - gameState.pathWidth / 2);
-                    }
-                });
-                ctx.stroke();
-                
-                ctx.beginPath();
-                gameState.pathPoints.forEach((point, index) => {
-                    if (index === 0) {
-                        ctx.moveTo(point.x, point.y + gameState.pathWidth / 2);
-                    } else {
-                        ctx.lineTo(point.x, point.y + gameState.pathWidth / 2);
-                    }
-                });
-                ctx.stroke();
-                
-                ctx.strokeStyle = '#26d0ce';
-                ctx.lineWidth = 2;
-                ctx.setLineDash([5, 10]);
-                
-                ctx.beginPath();
-                gameState.pathPoints.forEach((point, index) => {
-                    if (index === 0) {
-                        ctx.moveTo(point.x, point.y - gameState.pathWidth / 4);
-                    } else {
-                        ctx.lineTo(point.x, point.y - gameState.pathWidth / 4);
-                    }
-                });
-                ctx.stroke();
-                
-                ctx.beginPath();
-                gameState.pathPoints.forEach((point, index) => {
-                    if (index === 0) {
-                        ctx.moveTo(point.x, point.y + gameState.pathWidth / 4);
-                    } else {
-                        ctx.lineTo(point.x, point.y + gameState.pathWidth / 4);
-                    }
-                });
-                ctx.stroke();
-                
-                ctx.setLineDash([]);
-            }
-            
-            let lastObstacleTime = 0;
-            function generateObstacles(timestamp) {
-                if (timestamp - lastObstacleTime > gameState.obstacleGenerationInterval) {
-                    const pathPoint = gameState.pathPoints.find(p => p.x > GAME_WIDTH * 0.9);
-                    
-                    if (pathPoint) {
-                        // تعديل: زيادة حجم العوائق بعد الثانية 16
-                        let obstacleRadius;
-                        if (gameState.gameTime >= 16) {
-                            // حجم أكبر بعد 16 ثانية
-                            obstacleRadius = Math.random() * 10 + 15; // حجم بين 15 و 25
-                        } else {
-                            // الحجم الأصلي
-                            obstacleRadius = Math.random() * 5 + 10; // حجم بين 10 و 15
-                        }
-
-                        let randomY;
-                        
-                        // وضع العوائق على حدود المسار
-                        if (Math.random() > 0.5) {
-                            // على الحد العلوي للمسار
-                            randomY = pathPoint.y - gameState.pathWidth / 2 + obstacleRadius;
-                        } else {
-                            // على الحد السفلي للمسار
-                            randomY = pathPoint.y + gameState.pathWidth / 2 - obstacleRadius;
-                        }
-
-                        const colorIndex = (gameState.level - 1) % levelColors.length;
-                        const obstacleColor = levelColors[colorIndex];
-
-                        gameState.obstacles.push({
-                            x: GAME_WIDTH,
-                            y: randomY,
-                            radius: obstacleRadius,
-                            color: obstacleColor
-                        });
-                    }
-                    
-                    lastObstacleTime = timestamp;
-                    // تقليل الفاصل الزمني لتوليد العوائق مع تقدم المستوى لزيادة الصعوبة
-                    gameState.obstacleGenerationInterval = Math.max(500, 1000 - gameState.level * 50);
-                }
-            }
-            
-            function drawObstacles() {
-                gameState.obstacles.forEach(obstacle => {
-                    ctx.fillStyle = obstacle.color; 
-                    ctx.shadowColor = obstacle.color;
-                    ctx.shadowBlur = 20;
-
-                    const spikes = 8;
-                    const outerRadius = obstacle.radius * 1.5;
-                    const innerRadius = obstacle.radius * 0.7;
-                    const rotationAngle = gameState.gameTime * 0.5;
-
-                    ctx.save();
-                    ctx.translate(obstacle.x, obstacle.y);
-                    ctx.rotate(rotationAngle);
-                    
-                    ctx.beginPath();
-                    for (let i = 0; i < spikes * 2; i++) {
-                        const radius = i % 2 === 0 ? outerRadius : innerRadius;
-                        const angle = (Math.PI / spikes) * i;
-                        const x = Math.cos(angle) * radius;
-                        const y = Math.sin(angle) * radius;
-                        if (i === 0) {
-                            ctx.moveTo(x, y);
-                        } else {
-                            ctx.lineTo(x, y);
-                        }
-                    }
-                    ctx.closePath();
-                    ctx.fill();
-
-                    ctx.fillStyle = '#000000';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, innerRadius * 0.8, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    ctx.restore();
-                    ctx.shadowBlur = 0;
-                });
-            }
-
-            function updateObstacles() {
-                gameState.obstacles.forEach(obstacle => {
-                    obstacle.x -= gameState.pathSpeed;
-                });
-                gameState.obstacles = gameState.obstacles.filter(obstacle => obstacle.x + obstacle.radius > 0);
-            }
-
-            function checkPathCollision() {
-                let minDistance = Infinity;
-                
-                for (let i = 0; i < gameState.pathPoints.length - 1; i++) {
-                    const pointA = gameState.pathPoints[i];
-                    const pointB = gameState.pathPoints[i + 1];
-                    
-                    const dx = pointB.x - pointA.x;
-                    const dy = pointB.y - pointA.y;
-                    const length = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (length === 0) continue;
-
-                    const t = Math.max(0, Math.min(1, 
-                        ((ship.x - pointA.x) * dx + (ship.y - pointA.y) * dy) / (length * length)
-                    ));
-                    
-                    const projectionX = pointA.x + t * dx;
-                    const projectionY = pointA.y + t * dy;
-                    
-                    const distance = Math.sqrt(
-                        Math.pow(ship.x - projectionX, 2) + 
-                        Math.pow(ship.y - projectionY, 2)
-                    );
-                    
-                    minDistance = Math.min(minDistance, distance);
-                }
-                
-                if (minDistance > gameState.pathWidth / 2 - 25) { 
-                    return true;
-                }
-                
-                return false;
-            }
-            
-            function checkObstacleCollision() {
-                for (const obstacle of gameState.obstacles) {
-                    const distance = Math.sqrt(
-                        Math.pow(ship.x - obstacle.x, 2) + 
-                        Math.pow(ship.y - obstacle.y, 2)
-                    );
-                    if (distance < (ship.height / 2) + obstacle.radius) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            // تحقق من الاصطدام: إذا حدث أي اصطدام، سيتم إظهار السؤال.
-            function checkCollision() {
-                if (checkPathCollision() || checkObstacleCollision()) {
-                    handleQuestionCollision();
-                }
-            }
-
-            // دالة لإدارة الاصطدام وإظهار السؤال
-            function handleQuestionCollision() {
-                playCollisionSound();
-                gameState.paused = true;
-                gameState.isQuestionActive = true;
-                stopThrusterSound();
-                stopBackgroundMelody();
-
-                // اختيار سؤال عشوائي
-                const questionIndex = Math.floor(Math.random() * questions.length);
-                currentQuestion = questions[questionIndex];
-
-                // تمرير الفهرس الأصلي للسؤال إلى دالة showQuestion
-                showQuestion(currentQuestion, currentQuestion.correctAnswerIndex);
-            }
-
-            // دالة لخلط عناصر مصفوفة
-            function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                return array;
-            }
-
-            // دالة لإظهار السؤال على الشاشة
-            // تم تعديل الدالة لتستقبل الفهرس الصحيح الأصلي
-            function showQuestion(question, originalCorrectIndex) {
-                questionTextElement.textContent = question.question;
-                answerOptionsContainer.innerHTML = '';
-                feedbackMessageElement.textContent = '';
-                
-                const correctAnswerText = question.options[originalCorrectIndex];
-                const shuffledOptions = shuffleArray([...question.options]);
-                
-                // البحث عن الفهرس الصحيح الجديد بعد الخلط
-                const newCorrectAnswerIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
-                
-                shuffledOptions.forEach((option, index) => {
-                    const button = document.createElement('button');
-                    button.classList.add('answer-btn');
-                    button.textContent = option;
-                    // تمرير الفهرس الصحيح الجديد إلى دالة handleAnswer
-                    button.addEventListener('click', () => handleAnswer(index, newCorrectAnswerIndex));
-                    answerOptionsContainer.appendChild(button);
-                });
-                
-                questionOverlay.classList.remove('hidden');
-            }
-
-            // دالة للتعامل مع الإجابة
-            // تم تعديل الدالة لتستقبل الفهرس الصحيح الجديد
-            function handleAnswer(selectedIndex, correctIndex) {
-                const isCorrect = (selectedIndex === correctIndex);
-                const buttons = answerOptionsContainer.querySelectorAll('.answer-btn');
-                
-                buttons.forEach((btn, index) => {
-                    btn.disabled = true;
-                    if (index === correctIndex) {
-                        btn.classList.add('correct');
-                    } else if (index === selectedIndex) {
-                        btn.classList.add('incorrect');
-                    }
-                });
-
-                if (isCorrect) {
-                    playCorrectSound();
-                    feedbackMessageElement.textContent = "إجابة صحيحة! استمر في اللعب.";
-                    feedbackMessageElement.style.color = "#00b09b";
-                    
-                    // إضافة نقاط إضافية للإجابة الصحيحة إلى نقاط المستوى الحالي
-                    gameState.currentLevelScore += 50; 
-                    scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
-
-                    setTimeout(() => {
-                        questionOverlay.classList.add('hidden');
-                        gameState.isQuestionActive = false;
-                        gameState.paused = false;
-                        
-                        // إعادة سرعة المركبة إلى السرعة البطيئة ثم تزداد تدريجياً
-                        gameState.pathSpeed = 1;
-                        
-                        // إفراغ مصفوفة العوائق
-                        gameState.obstacles = [];
-                        
-                        // إعادة وضع المركبة في مكان آمن بعد الإجابة الصحيحة
-                        positionShipOnPath();
-                        gameState.lastTime = performance.now(); // إعادة ضبط الوقت عند استئناف اللعبة
-                        startBackgroundMelody(); // استئناف الموسيقى الخلفية
-                        startThrusterSound(); // استئناف صوت الدفع
-                    }, 1500);
-                } else {
-                    // التغيير المطلوب: إنهاء اللعبة عند الإجابة الخاطئة
-                    playIncorrectSound();
-                    feedbackMessageElement.textContent = "إجابة خاطئة. انتهت اللعبة!";
-                    feedbackMessageElement.style.color = "#c04848";
-                    setTimeout(() => {
-                        questionOverlay.classList.add('hidden');
-                        gameState.gameOver = true; // إنهاء اللعبة
-                    }, 1500);
-                }
-            }
-
-            // دالة لوضع المركبة في منتصف المسار الآمن
-            function positionShipOnPath() {
-                const shipX = GAME_WIDTH * 0.2;
-                let foundSegment = false;
-                
-                for (let i = 0; i < gameState.pathPoints.length - 1; i++) {
-                    const pointA = gameState.pathPoints[i];
-                    const pointB = gameState.pathPoints[i + 1];
-                    
-                    if (pointA.x <= shipX && pointB.x >= shipX) {
-                        const t = (shipX - pointA.x) / (pointB.x - pointA.x);
-                        ship.y = pointA.y + t * (pointB.y - pointA.y);
-                        ship.x = shipX;
-                        foundSegment = true;
-                        break;
-                    }
-                }
-                
-                if (!foundSegment && gameState.pathPoints.length > 0) {
-                    ship.x = gameState.pathPoints[0].x;
-                    ship.y = gameState.pathPoints[0].y;
-                }
-            }
-
-            function resizeCanvas() {
-                GAME_WIDTH = window.innerWidth;
-                GAME_HEIGHT = window.innerHeight;
-                
-                canvas.width = GAME_WIDTH;
-                canvas.height = GAME_HEIGHT;
-
-                if (gameState.gameStarted) {
-                    initializePath();
-                    positionShipOnPath();
-                }
-            }
-
-            // إضافة معالج أحداث حركة الفأرة لتحريك المركبة
-            canvas.addEventListener('mousemove', (e) => {
-                // التحكم بالماوس متاح فقط إذا لم يكن الجهاز يدعم اللمس
-                if (!('ontouchstart' in window || navigator.maxTouchPoints > 0) && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
-                    // تصحيح: بدلاً من القفز مباشرة إلى موضع الماوس،
-                    // اجعل المركبة تتحرك بسلاسة نحوه.
-                    const targetY = e.clientY;
-                    const easingFactor = 0.1; // عامل التخفيف، قيمة أصغر تعني حركة أبطأ وأكثر سلاسة
-                    ship.y += (targetY - ship.y) * easingFactor;
-                }
-            });
-
-            // معالجات أحداث اللمس
-            canvas.addEventListener('touchstart', handleTouchStart);
-            canvas.addEventListener('touchmove', handleTouchMove);
-            canvas.addEventListener('touchend', handleTouchEnd);
-            canvas.addEventListener('touchcancel', handleTouchEnd);
-
-            function handleTouchStart(e) {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted || gameState.isLevelComplete) return;
-                e.preventDefault();
-                touchState.isTouched = true;
-                const touch = e.changedTouches[0];
-                touchState.lastY = touch.clientY;
-            }
-
-            function handleTouchMove(e) {
-                if (!touchState.isTouched) return;
-                e.preventDefault();
-                const touch = e.changedTouches[0];
-                const deltaY = touch.clientY - touchState.lastY;
-                ship.y += deltaY;
-                touchState.lastY = touch.clientY;
-                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
-            }
-            
-            function handleTouchEnd(e) {
-                touchState.isTouched = false;
-                touchState.lastY = null;
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-                
-                updateStars();
-                drawStars();
-                
-                drawPath();
-                
-                drawObstacles();
-
-                generateThrusterParticles();
-                updateThrusterParticles();
-                drawThrusterParticles();
-                
-                ship.draw();
-            }
-            
-            // دالة للبدء بالمستوى التالي
-            function nextLevel() {
-                // إضافة نقاط المستوى الحالي إلى النقاط الإجمالية
-                gameState.totalScore += gameState.currentLevelScore;
-                
-                // زيادة الصعوبة للمستوى التالي
-                gameState.level++;
-                gameState.gameTime = 0;
-                gameState.isLevelComplete = false;
-                gameState.paused = false;
-                
-                // إعادة تعيين نقاط المستوى الحالي
-                gameState.currentLevelScore = 0;
-                
-                // تحديث سرعة المسار لزيادة الصعوبة
-                gameState.pathSpeed = 1 + (gameState.level - 1) * 0.5; // سرعة ابتدائية أسرع
-                gameState.targetPathSpeed = gameState.pathSpeed + 3 + (gameState.level - 1) * 1; // سرعة مستهدفة أعلى
-                
-                // تضييق المسار
-                gameState.pathWidth = 150 - (gameState.level - 1) * 10;
-                gameState.pathWidth = Math.max(50, gameState.pathWidth);
-                
-                levelElement.textContent = gameState.level;
-                scoreElement.textContent = gameState.totalScore;
-                timeElement.textContent = gameState.gameTime;
-                
-                gameState.obstacles = []; // إعادة تعيين العوائق
-                
-                initializePath();
-                positionShipOnPath();
-                
-                gameState.lastTime = performance.now();
-                
-                startThrusterSound();
-                startBackgroundMelody();
-            }
-
-            function update(timestamp) {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted || gameState.isQuestionActive) return;
-                
-                const deltaTime = timestamp - gameState.lastTime;
-                gameState.lastTime = timestamp;
-                
-                gameState.gameTime += deltaTime / 1000;
-                timeElement.textContent = Math.floor(gameState.gameTime);
-
-                // زيادة سرعة المركبة تدريجياً حتى تصل للسرعة المستهدفة
-                if (gameState.pathSpeed < gameState.targetPathSpeed) {
-                    gameState.pathSpeed += 0.01;
-                }
-
-                // التحقق من انتهاء المستوى بعد 25 ثانية
-                if (Math.floor(gameState.gameTime) >= 25 && !gameState.isLevelComplete) {
-                    gameState.paused = true;
-                    gameState.isLevelComplete = true;
-                    playLevelUpSound();
-                    stopThrusterSound();
-                    stopBackgroundMelody();
-                    return; // إيقاف تحديث اللعبة
-                }
-                
-                // نقاط الوقت للمستوى الحالي
-                gameState.currentLevelScore = Math.floor(gameState.gameTime * 10);
-                scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
-                
-                // === هذا الجزء من الكود هو ما يضمن أن المركبة لا تتحرك تلقائياً ===
-                // تحديث موقع المركبة بناءً على ضغط المفاتيح فقط.
-                // إذا لم يضغط اللاعب على أي مفتاح، فإن قيمة dy ستكون صفرًا، وبالتالي لن تتحرك المركبة.
-                let dy = 0;
-                const speed = 5; // سرعة الحركة بالأسهم
-                if (gameState.keys.ArrowUp || gameState.keys.w) {
-                    dy = -speed;
-                }
-                if (gameState.keys.ArrowDown || gameState.keys.s) {
-                    dy = speed;
-                }
-                ship.y += dy;
-                // =================================================================
-
-                // التأكد من أن المركبة لا تخرج عن حدود الشاشة
-                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
-
-                // تحديث المسار والعوائق
-                updatePath();
-                updateObstacles();
-                generateObstacles(timestamp);
-                
-                // التحقق من الاصطدامات
-                checkCollision();
-            }
-            
-            function gameLoop(timestamp) {
-                if (!gameState.gameStarted) {
-                    // اللعبة لم تبدأ بعد، لا تفعل شيئًا
-                    requestAnimationFrame(gameLoop);
-                    return;
-                }
-
-                update(timestamp);
-                draw();
-                
-                if (gameState.gameOver) {
-                    overlayTitle.textContent = 'انتهت اللعبة!';
-                    overlayMessage.textContent = `نقاطك الإجمالية: ${gameState.totalScore}`;
-                    overlayBtn.textContent = 'إعادة التشغيل';
-                    overlay.classList.remove('hidden');
-                    stopThrusterSound();
-                    stopBackgroundMelody();
-                } else if (gameState.isLevelComplete) { // حالة جديدة لانتهاء المستوى
-                    overlayTitle.textContent = 'انتهى المستوى!';
-                    overlayMessage.textContent = `لقد جمعت ${gameState.currentLevelScore} نقطة في هذا المستوى.\nنقاطك الإجمالية: ${gameState.totalScore + gameState.currentLevelScore}`;
-                    overlayBtn.textContent = 'المستوى التالي';
-                    overlay.classList.remove('hidden');
-                } else if (gameState.paused && !gameState.isQuestionActive) {
-                    overlayTitle.textContent = 'إيقاف مؤقت';
-                    overlayMessage.textContent = 'اللعبة في وضع الإيقاف المؤقت';
-                    overlayBtn.textContent = 'استمرار';
-                    overlay.classList.remove('hidden');
-                    stopThrusterSound();
-                    stopBackgroundMelody();
-                } else {
-                    overlay.classList.add('hidden');
-                    if (gameState.gameStarted && !gameState.isQuestionActive) {
-                        startThrusterSound();
-                        startBackgroundMelody();
-                    }
-                }
-                
-                requestAnimationFrame(gameLoop);
-            }
-            
-            function startGame() {
-                gameState = {
-                    level: 1,
-                    currentLevelScore: 0,
-                    totalScore: 0,
-                    gameTime: 0,
-                    gameOver: false,
-                    gameStarted: true,
-                    paused: false,
-                    isLevelComplete: false,
-                    isQuestionActive: false,
-                    pathPoints: [],
-                    pathWidth: 150,
-                    pathSpeed: 1, // سرعة المسار الابتدائية
-                    targetPathSpeed: 4, // السرعة المستهدفة
-                    lastTime: performance.now(), // تحديث الوقت عند البدء
-                    
-                    obstacles: [],
-                    obstacleGenerationInterval: 1000,
-                    keys: {
-                        ArrowUp: false,
-                        ArrowDown: false,
-                        w: false,
-                        s: false
-                    }
-                };
-                
-                initializePath();
-                positionShipOnPath();
-                
-                scoreElement.textContent = '0';
-                timeElement.textContent = '0';
-                levelElement.textContent = '1';
-                
-                thrusterParticles = [];
-                
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                startThrusterSound();
-                startBackgroundMelody();
-                
-                // إخفاء الشاشة الرئيسية
-                overlay.classList.add('hidden');
-            }
-            
-            overlayBtn.addEventListener('click', () => {
-                if (gameState.gameOver || !gameState.gameStarted) {
-                    startGame();
-                } else if (gameState.isLevelComplete) { // التعامل مع زر "المستوى التالي"
-                    nextLevel();
-                } else if (gameState.paused) {
-                    gameState.paused = false;
-                    gameState.lastTime = performance.now();
-                }
-            });
-
-            soundToggleBtn.addEventListener('click', () => {
-                soundEnabled = !soundEnabled;
-                soundToggleBtn.textContent = `الصوت: ${soundEnabled ? 'تشغيل' : 'إيقاف'}`;
-
-                if (soundEnabled && gameState.gameStarted && !gameState.gameOver && !gameState.paused) {
-                    startThrusterSound();
-                    startBackgroundMelody();
-                } else {
-                    stopThrusterSound();
-                    stopBackgroundMelody();
-                }
-            });
-            
-            window.addEventListener('blur', () => {
-                if (gameState.gameStarted && !gameState.gameOver && !gameState.isQuestionActive) {
-                    gameState.paused = true;
-                    stopThrusterSound();
-                    stopBackgroundMelody();
-                }
-            });
-            
-            // إضافة معالجات أحداث لوحة المفاتيح
-            window.addEventListener('keydown', (e) => {
-                // تحقق من المفاتيح المسموحة فقط
-                if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'ArrowDown' || e.key === 's') {
+        // تهيئة عناصر التحكم باللمس
+        function initTouchControls() {
+            if (touchLeft && touchRight) {
+                touchLeft.addEventListener('touchstart', (e) => {
                     e.preventDefault();
-                    gameState.keys[e.key] = true;
+                    if (gameActive) {
+                        targetLanePosition = Math.min(1, targetLanePosition + 1);
+                        steeringAngle = Math.max(-maxSteeringAngle, steeringAngle - steeringSpeed);
+                    }
+                });
+                touchRight.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    if (gameActive) {
+                        targetLanePosition = Math.max(-1, targetLanePosition - 1);
+                        steeringAngle = Math.min(maxSteeringAngle, steeringAngle + steeringSpeed);
+                    }
+                });
+                touchLeft.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (gameActive) {
+                        steeringAngle = Math.max(-maxSteeringAngle, steeringAngle - steeringSpeed * 0.5);
+                    }
+                });
+                touchRight.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (gameActive) {
+                        steeringAngle = Math.min(maxSteeringAngle, steeringAngle + steeringSpeed * 0.5);
+                    }
+                });
+            }
+
+            if (gameContainer) {
+                gameContainer.addEventListener('touchstart', (e) => {
+                    if (gameActive) {
+                        touchStartY = e.touches[0].clientY;
+                    }
+                });
+                gameContainer.addEventListener('touchend', (e) => {
+                    if (gameActive && touchStartY !== null) {
+                        const touchEndY = e.changedTouches[0].clientY;
+                        const deltaY = touchEndY - touchStartY;
+                        if (deltaY < -50) {
+                            performJump();
+                        }
+                        touchStartY = null;
+                    }
+                });
+            }
+        }
+
+        // تهيئة عناصر التحكم بالأزرار
+        function initButtonControls() {
+            if (jumpBtn) {
+                jumpBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (gameActive && !isJumping) {
+                        performJump();
+                    }
+                });
+            }
+
+            if (boostBtn) {
+                boostBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (gameActive) {
+                        activateBoost();
+                    }
+                });
+            }
+        }
+
+        // إنشاء الدراجة النارية
+        function createMotorcycle() {
+            const scale = 0.5;
+            motorcycle = new THREE.Group();
+
+            const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, metalness: 0.9, roughness: 0.2 });
+            const secondaryBodyMaterial = new THREE.MeshStandardMaterial({ color: 0xc0c0c0, metalness: 0.9, roughness: 0.1 });
+            const engineMaterial = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.9, roughness: 0.1 });
+            const tireMaterial = new THREE.MeshPhongMaterial({ color: 0x111111, shininess: 10 });
+            const seatMaterial = new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 0.8 });
+
+            // جسم الدراجة
+            const bodyMain = new THREE.Mesh(new THREE.BoxGeometry(1.5 * scale, 0.6 * scale, 2.5 * scale), bodyMaterial);
+            bodyMain.position.set(0, 0.4 * scale, 0);
+            motorcycle.add(bodyMain);
+
+            // خزان الوقود
+            const tankGeometry = new THREE.BoxGeometry(1.2 * scale, 0.5 * scale, 1.0 * scale);
+            const tank = new THREE.Mesh(tankGeometry, bodyMaterial);
+            tank.position.set(0, 0.8 * scale, 0.8 * scale);
+            motorcycle.add(tank);
+
+            // المقعد
+            const seatGeometry = new THREE.BoxGeometry(1.0 * scale, 0.2 * scale, 1.2 * scale);
+            const seat = new THREE.Mesh(seatGeometry, seatMaterial);
+            seat.position.set(0, 0.8 * scale, -0.2 * scale);
+            motorcycle.add(seat);
+
+            // المحرك
+            const engineGeometry = new THREE.BoxGeometry(1.0 * scale, 0.8 * scale, 1.2 * scale);
+            const engineMesh = new THREE.Mesh(engineGeometry, engineMaterial);
+            engineMesh.position.set(0, -0.1 * scale, 0.1 * scale);
+            motorcycle.add(engineMesh);
+
+            // العجلات الأمامية والخلفية
+            const tireGeometry = new THREE.TorusGeometry(0.8 * scale, 0.3 * scale, 16, 32);
+            const frontWheel = new THREE.Mesh(tireGeometry, tireMaterial);
+            frontWheel.rotation.y = Math.PI / 2;
+            frontWheel.position.set(0, -0.6 * scale, 2.0 * scale);
+            motorcycle.add(frontWheel);
+            
+            const backWheel = new THREE.Mesh(tireGeometry, tireMaterial);
+            backWheel.rotation.y = Math.PI / 2;
+            backWheel.position.set(0, -0.6 * scale, -2.0 * scale);
+            motorcycle.add(backWheel);
+
+            // الشوكات والمقود
+            const forkGeometry = new THREE.CylinderGeometry(0.1 * scale, 0.1 * scale, 2.5 * scale, 8);
+            const forkMaterial = new THREE.MeshStandardMaterial({ color: 0xc0c0c0, metalness: 1.0, roughness: 0.1 });
+            const leftFork = new THREE.Mesh(forkGeometry, forkMaterial);
+            leftFork.position.set(-0.5 * scale, 0.5 * scale, 1.9 * scale);
+            leftFork.rotation.x = Math.PI / 6;
+            motorcycle.add(leftFork);
+
+            const rightFork = new THREE.Mesh(forkGeometry, forkMaterial);
+            rightFork.position.set(0.5 * scale, 0.5 * scale, 1.9 * scale);
+            rightFork.rotation.x = Math.PI / 6;
+            motorcycle.add(rightFork);
+
+            const handlebarGeometry = new THREE.CylinderGeometry(0.08 * scale, 0.08 * scale, 1.5 * scale, 8);
+            handlebarGeometry.rotateZ(Math.PI / 2);
+            const handlebar = new THREE.Mesh(handlebarGeometry, forkMaterial);
+            handlebar.position.set(0, 1.2 * scale, 1.5 * scale);
+            handlebar.rotation.x = Math.PI / 8;
+            handlebar.name = 'handlebar';
+            motorcycle.add(handlebar);
+
+            // الأضواء الأمامية والخلفية
+            const headlightGeometry = new THREE.SphereGeometry(0.4 * scale, 32, 32);
+            const headlightMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.5, metalness: 0.8, roughness: 0.2 });
+            const headlight = new THREE.Mesh(headlightGeometry, headlightMaterial);
+            headlight.position.set(0, 0.8 * scale, 2.2 * scale);
+            motorcycle.add(headlight);
+
+            const taillightGeometry = new THREE.BoxGeometry(0.4 * scale, 0.2 * scale, 0.1 * scale);
+            const taillightMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0xff0000, emissiveIntensity: 0.3, metalness: 0.8, roughness: 0.2 });
+            const taillight = new THREE.Mesh(taillightGeometry, taillightMaterial);
+            taillight.position.set(0, 0.7 * scale, -2.5 * scale);
+            motorcycle.add(taillight);
+
+            // السائق
+            const riderGroup = new THREE.Group();
+            riderGroup.name = 'rider';
+            const suitMaterial = new THREE.MeshStandardMaterial({ color: 0x00bfff, metalness: 0.2, roughness: 0.8 });
+            const helmetMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9, roughness: 0.2 });
+            const limbMaterial = new THREE.MeshStandardMaterial({ color: 0xffa500, metalness: 0.2, roughness: 0.8 });
+
+            const headGeometry = new THREE.BoxGeometry(0.8 * scale, 0.8 * scale, 0.8 * scale);
+            const head = new THREE.Mesh(headGeometry, helmetMaterial);
+            head.position.set(0, 1.5 * scale, 0.2 * scale);
+            riderGroup.add(head);
+
+            const bodyGeometryRider = new THREE.BoxGeometry(1.0 * scale, 1.5 * scale, 0.8 * scale);
+            const bodyRider = new THREE.Mesh(bodyGeometryRider, suitMaterial);
+            bodyRider.position.set(0, 0.8 * scale, 0);
+            riderGroup.add(bodyRider);
+
+            const armGeometry = new THREE.CylinderGeometry(0.15 * scale, 0.15 * scale, 1.0 * scale, 8);
+            const leftArm = new THREE.Mesh(armGeometry, limbMaterial);
+            leftArm.position.set(-0.6 * scale, 0.9 * scale, 0.7 * scale);
+            leftArm.rotation.z = Math.PI / 4;
+            riderGroup.add(leftArm);
+
+            const rightArm = new THREE.Mesh(armGeometry, limbMaterial);
+            rightArm.position.set(0.6 * scale, 0.9 * scale, 0.7 * scale);
+            rightArm.rotation.z = -Math.PI / 4;
+            riderGroup.add(rightArm);
+
+            const legGeometry = new THREE.CylinderGeometry(0.18 * scale, 0.18 * scale, 1.2 * scale, 8);
+            const leftLeg = new THREE.Mesh(legGeometry, limbMaterial);
+            leftLeg.position.set(-0.3 * scale, 0.1 * scale, 0);
+            leftLeg.rotation.x = Math.PI / 2;
+            riderGroup.add(leftLeg);
+
+            const rightLeg = new THREE.Mesh(legGeometry, limbMaterial);
+            rightLeg.position.set(0.3 * scale, 0.1 * scale, 0);
+            rightLeg.rotation.x = Math.PI / 2;
+            riderGroup.add(rightLeg);
+            
+            motorcycle.add(riderGroup);
+
+            // الدرع - تم تغيير اللون إلى الأزرق وغير شفاف
+            const shieldGeometry = new THREE.CylinderGeometry(1.5 * scale, 1.5 * scale, 0.1 * scale, 32);
+            const shieldMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x1e90ff, 
+                emissive: 0x1e90ff,
+                emissiveIntensity: 0.6,
+                transparent: false, 
+                opacity: 1,
+                side: THREE.DoubleSide 
+            });
+            const shield = new THREE.Mesh(shieldGeometry, shieldMaterial);
+            shield.name = 'shield';
+            shield.position.y = 0.5 * scale;
+            shield.rotation.x = Math.PI / 2;
+            shield.visible = false;
+            motorcycle.add(shield);
+
+            motorcycle.castShadow = true;
+
+            const pathFollower = new THREE.Group();
+            pathFollower.name = "pathFollower";
+            pathFollower.add(motorcycle);
+            scene.add(pathFollower);
+            motorcycle.position.y = 0;
+        }
+
+        // إنشاء العوائق (مكبرة وباللون الرمادي)
+        function createObstacles() {
+            clearSceneObjects(obstacles);
+            const obstacleTypes = ['cone', 'barrier', 'spike', 'pipe'];
+            const OBSTACLE_SCALE = 1.2; // عامل تكبير العوائق
+            
+            for (let i = 0; i < 30; i++) {
+                const obstacleType = Math.floor(Math.random() * obstacleTypes.length);
+                let obstacle;
+                let geometry, material;
+                let baseHeight;
+
+                if (obstacleType === 0) { // حاجز مخروطي - رمادي
+                    geometry = new THREE.ConeGeometry(0.3, 0.75, 16);
+                    material = new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.8 }); // رمادي
+                    obstacle = new THREE.Mesh(geometry, material);
+                    
+                    // شريط للرؤية الواضحة
+                    const stripeGeometry = new THREE.CylinderGeometry(0.35, 0.35, 0.2, 16);
+                    const stripeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+                    const stripe = new THREE.Mesh(stripeGeometry, stripeMaterial);
+                    stripe.position.y = -0.25;
+                    obstacle.add(stripe);
+                    baseHeight = 0.375;
+                    obstacle.userData = { isJumpable: false, type: 'cone', baseHeight: baseHeight * OBSTACLE_SCALE };
+
+                } else if (obstacleType === 1) { // حاجز على شكل صندوق
+                    geometry = new THREE.BoxGeometry(1.0, 0.5, 0.35);
+                    const texture = new THREE.CanvasTexture(createStripePattern());
+                    texture.wrapS = THREE.RepeatWrapping;
+                    texture.repeat.set(2, 1);
+                    material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.8 });
+                    obstacle = new THREE.Mesh(geometry, material);
+                    baseHeight = 0.2;
+                    obstacle.userData = { isJumpable: true, type: 'barrier', baseHeight: baseHeight * OBSTACLE_SCALE };
+
+                } else if (obstacleType === 2) { // حاجز على شكل سن مدبب
+                    geometry = new THREE.ConeGeometry(0.2, 0.5, 8);
+                    material = new THREE.MeshStandardMaterial({ color: 0x808080, metalness: 0.7, roughness: 0.5 });
+                    obstacle = new THREE.Mesh(geometry, material);
+                    baseHeight = 0.25;
+                    obstacle.userData = { isJumpable: false, type: 'spike', baseHeight: baseHeight * OBSTACLE_SCALE };
+
+                } else { // حاجز على شكل أنبوب
+                    geometry = new THREE.CylinderGeometry(0.25, 0.25, 0.75, 16);
+                    material = new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.9, roughness: 0.1 });
+                    obstacle = new THREE.Mesh(geometry, material);
+                    obstacle.rotation.x = Math.PI / 2;
+                    baseHeight = 0.375;
+                    obstacle.userData = { isJumpable: true, type: 'pipe', baseHeight: baseHeight * OBSTACLE_SCALE };
                 }
-            });
-            
-            window.addEventListener('keyup', (e) => {
-                if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'ArrowDown' || e.key === 's') {
-                    gameState.keys[e.key] = false;
+
+                obstacle.scale.set(OBSTACLE_SCALE, OBSTACLE_SCALE, OBSTACLE_SCALE);
+                obstacle.position.y = obstacle.userData.baseHeight;
+                obstacle.castShadow = true;
+                scene.add(obstacle);
+                obstacles.push(obstacle);
+            }
+        }
+
+        // دالة لإنشاء نقش مخطط
+        function createStripePattern() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 16;
+            canvas.height = 16;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#ffcc00';
+            context.fillRect(0, 0, 16, 16);
+            context.fillStyle = '#000000';
+            context.fillRect(0, 0, 8, 16);
+            return canvas;
+        }
+
+        // إنشاء الكائنات القابلة للجمع - تم تصغير الحلقات الذهبية
+        function createCollectibles() {
+            clearSceneObjects(collectibles);
+            const collectibleTypes = ['shield', 'boost', 'time', 'ring'];
+
+            for (let i = 0; i < 30; i++) {
+                const collectibleType = Math.floor(Math.random() * collectibleTypes.length);
+                let collectible;
+
+                if (collectibleType === 0) { // درع
+                    const geometry = new THREE.TorusGeometry(0.4, 0.1, 16, 32);
+                    const material = new THREE.MeshPhongMaterial({ color: 0xffd700, emissive: 0xffd700, emissiveIntensity: 0.5 });
+                    collectible = new THREE.Mesh(geometry, material);
+                    collectible.userData = { type: 'shield', baseHeight: 0.5 };
+                    collectible.position.y = 0.5;
+                } else if (collectibleType === 1) { // تسارع
+                    const geometry = new THREE.ConeGeometry(0.4, 0.8, 4);
+                    const material = new THREE.MeshPhongMaterial({ color: 0xff0000, emissive: 0xff0000, emissiveIntensity: 0.3 });
+                    collectible = new THREE.Mesh(geometry, material);
+                    collectible.rotation.x = Math.PI;
+                    collectible.userData = { type: 'boost', baseHeight: 0.5 };
+                    collectible.position.y = 0.5;
+                } else if (collectibleType === 2) { // وقت
+                    const geometry = new THREE.RingGeometry(0.3, 0.5, 32);
+                    const material = new THREE.MeshPhongMaterial({ color: 0x00ff00, emissive: 0x00ff00, emissiveIntensity: 0.5, side: THREE.DoubleSide });
+                    collectible = new THREE.Mesh(geometry, material);
+                    collectible.rotation.x = Math.PI / 2;
+                    collectible.userData = { type: 'time', baseHeight: 0.5 };
+                    collectible.position.y = 0.5;
+                } else { // الحلقات الذهبية - تم تصغيرها
+                    const ringScale = 0.8; // عامل تصغير الحلقات
+                    const geometry = new THREE.TorusGeometry(0.9 * ringScale, 0.2 * ringScale, 16, 32);
+                    const material = new THREE.MeshPhongMaterial({ 
+                        color: 0xffd700, 
+                        emissive: 0xffd700, 
+                        emissiveIntensity: 1.5,
+                        shininess: 100
+                    });
+                    collectible = new THREE.Mesh(geometry, material);
+                    collectible.userData = { type: 'ring', baseHeight: 0.5 };
+                    collectible.position.y = 0.5;
                 }
+                
+                scene.add(collectible);
+                collectibles.push(collectible);
+            }
+        }
+
+        function onWindowResize() {
+            updateRendererSize();
+        }
+
+        // التعامل مع ضغطات المفاتيح - تم تعديلها لعكس اتجاه الأسهم
+        function handleKeyDown(event) {
+            if (!gameActive) return;
+            // عكس اتجاه الأسهم على الكمبيوتر فقط
+            if (event.key === 'ArrowLeft') {
+                targetLanePosition = Math.min(1, targetLanePosition + 1);
+                steeringAngle = Math.max(-maxSteeringAngle, steeringAngle - steeringSpeed);
+            } else if (event.key === 'ArrowRight') {
+                targetLanePosition = Math.max(-1, targetLanePosition - 1);
+                steeringAngle = Math.min(maxSteeringAngle, steeringAngle + steeringSpeed);
+            } else if (event.key === ' ' || event.key === 'ArrowUp') {
+                performJump();
+            } else if (event.key === 'Enter') {
+                activateBoost();
+            }
+        }
+
+        function handleKeyUp(event) {
+            // لا حاجة حاليًا
+        }
+        
+        function performJump() {
+            if (!isJumping) {
+                isJumping = true;
+                jumpProgress = 0;
+                playSound(440, 'sine', 0.1, 0.5); 
+            }
+        }
+
+        // بدء اللعبة
+        function startGame() {
+            if (timerInterval) clearInterval(timerInterval);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+            gameActive = true;
+            score = 0;
+            timer = 60;
+            currentSpeed = baseSpeed;
+            t = 0;
+            steeringAngle = 0;
+            const pathFollower = scene.getObjectByName("pathFollower");
+            if (pathFollower) {
+                pathFollower.position.set(0, 0, 0);
+            }
+            targetLanePosition = 0;
+            shieldCount = 0;
+            boostCount = 0;
+            isJumping = false;
+
+            if (gameOverScreen) gameOverScreen.style.display = 'none';
+            if (gameStatsContainer) gameStatsContainer.style.display = 'flex';
+            if (controlsContainer) controlsContainer.style.display = 'flex';
+            if (shieldDisplay) shieldDisplay.textContent = `الدرع: ${shieldCount}`;
+            if (speedDisplay) speedDisplay.textContent = `السرعة: ${Math.round(currentSpeed * 10000)}`;
+            if (scoreDisplay) scoreDisplay.textContent = `النقاط: ${score}`;
+            if (timerDisplay) timerDisplay.textContent = `الوقت: ${timer}`;
+            if (gameOverReason) gameOverReason.textContent = "";
+
+            const shieldMesh = motorcycle.getObjectByName('shield');
+            if (shieldMesh) shieldMesh.visible = false;
+            shieldActive = false;
+            boostActive = false;
+
+            document.body.style.background = 'linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c)';
+
+            placeObjectsOnCurve();
+            animate();
+            startTimer();
+            toggleMusic();
+        }
+
+        // بدء المؤقت
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (gameActive) {
+                    timer--;
+                    if (timerDisplay) timerDisplay.textContent = `الوقت: ${timer}`;
+                    if (timer <= 0) {
+                        clearInterval(timerInterval);
+                        endGame(true, "انتهى الوقت!");
+                    }
+                } else {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
+        // إنهاء اللعبة
+        function endGame(isWin, reason = "اصطدام!") {
+            gameActive = false;
+            if (timerInterval) clearInterval(timerInterval);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            toggleMusic();
+
+            if (finalScoreDisplay) finalScoreDisplay.textContent = `النقاط: ${score}`;
+            if (gameStatsContainer) gameStatsContainer.style.display = 'none';
+            if (controlsContainer) controlsContainer.style.display = 'none';
+            if (gameOverReason) gameOverReason.textContent = reason;
+
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('motorcycleHighScore', highScore);
+                if (highScoreDisplay) {
+                    highScoreDisplay.textContent = `أفضل نتيجة جديدة: ${highScore}`;
+                    highScoreDisplay.style.color = '#ffc107';
+                    highScoreDisplay.style.fontWeight = 'bold';
+                }
+            } else {
+                if (highScoreDisplay) {
+                    highScoreDisplay.textContent = `أفضل نتيجة: ${highScore}`;
+                    highScoreDisplay.style.color = '#ccc';
+                }
+            }
+
+            if (gameOverScreen) gameOverScreen.style.display = 'block';
+
+            playStartDrumSound();
+        }
+
+        // إعادة تشغيل اللعبة
+        function restartGame() {
+            if (gameOverScreen) gameOverScreen.style.display = 'none';
+            gameActive = false;
+            if (timerInterval) clearInterval(timerInterval);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            startGame();
+        }
+
+        // تفعيل الدرع الواقي
+        function activateShield() {
+            if (shieldCount > 0 && gameActive && !shieldActive) {
+                shieldCount--;
+                shieldActive = true;
+                const shieldMesh = motorcycle.getObjectByName('shield');
+                if (shieldMesh) shieldMesh.visible = true;
+                if (shieldDisplay) shieldDisplay.textContent = `الدرع: ${shieldCount}`;
+                setTimeout(() => {
+                    if (gameActive) {
+                        shieldActive = false;
+                        if (shieldMesh) shieldMesh.visible = false;
+                    }
+                }, 5000);
+            }
+        }
+
+        // تفعيل التسارع
+        function activateBoost() {
+            if (boostCount > 0 && gameActive && !boostActive) {
+                boostCount--;
+                boostActive = true;
+                playSound(600, 'triangle', 0.1, 0.6); 
+                document.body.style.background = 'linear-gradient(135deg, #ffeb3b, #ff8c00)';
+                setTimeout(() => {
+                    if (gameActive) {
+                        boostActive = false;
+                        document.body.style.background = 'linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c)';
+                    }
+                }, 3000);
+            }
+        }
+
+        // وضع الكائنات على المسار
+        function placeObjectsOnCurve() {
+            obstacles.forEach(obstacle => {
+                const t = Math.random() * 0.9 + 0.1;
+                const point = curve.getPointAt(t);
+                const tangent = curve.getTangentAt(t).normalize();
+                const normal = new THREE.Vector3(0, 1, 0).cross(tangent).normalize();
+                let laneIndex = Math.floor(Math.random() * 3) - 1;
+                if (Math.random() < 0.5) laneIndex = laneIndex === 0 ? (Math.random() > 0.5 ? 1 : -1) : laneIndex;
+                const offset = laneIndex * laneWidth * 0.5;
+                obstacle.position.copy(point.clone().add(normal.multiplyScalar(offset)));
+                obstacle.rotation.y = Math.atan2(tangent.z, tangent.x) + Math.PI / 2;
+                obstacle.userData.t = t;
+                obstacle.position.y = obstacle.userData.baseHeight;
+            });
+
+            collectibles.forEach(collectible => {
+                const t = Math.random() * 0.9 + 0.1;
+                const point = curve.getPointAt(t);
+                const tangent = curve.getTangentAt(t).normalize();
+                const normal = new THREE.Vector3(0, 1, 0).cross(tangent).normalize();
+                const offset = (Math.floor(Math.random() * 3) - 1) * laneWidth * 0.5;
+                collectible.position.copy(point.clone().add(normal.clone().multiplyScalar(offset)));
+                collectible.rotation.y = Math.atan2(tangent.z, tangent.x) + Math.PI / 2;
+                collectible.userData.t = t;
+                collectible.position.y = collectible.userData.baseHeight;
             });
             
-            // إضافة معالج حدث لتغيير حجم النافذة
-            window.addEventListener('resize', () => {
-                resizeCanvas();
-                createStars();
+            sceneryObjects.forEach(sceneryObj => {
+                const t = Math.random();
+                const point = curve.getPointAt(t);
+                const tangent = curve.getTangentAt(t).normalize();
+                const normal = new THREE.Vector3(0, 1, 0).cross(tangent).normalize();
+
+                const side = Math.random() > 0.5 ? 1 : -1;
+                const offset = (Math.random() * 30 + 15) * side;
+
+                sceneryObj.position.copy(point.clone().add(normal.clone().multiplyScalar(offset)));
+                sceneryObj.position.y = sceneryObj.geometry instanceof THREE.DodecahedronGeometry ? 0.5 : 1;
+                sceneryObj.lookAt(point.clone().add(tangent));
+                sceneryObj.userData.t = t;
             });
+        }
+
+        // عرض تأثير الجمع
+        function showCollectEffect(x, y) {
+            collectEffect.style.display = 'block';
+            collectEffect.style.left = `${x - 20}px`;
+            collectEffect.style.top = `${y - 20}px`;
+            setTimeout(() => {
+                collectEffect.style.display = 'none';
+            }, 600);
+        }
+
+        // عرض تأثير الاصطدام
+        function showCollisionEffect(x, y) {
+            collisionEffect.style.display = 'block';
+            collisionEffect.style.left = `${x - 50}px`;
+            collisionEffect.style.top = `${y - 50}px`;
+            setTimeout(() => {
+                collisionEffect.style.display = 'none';
+            }, 500);
+        }
+        
+        // نقل الدراجة إلى مكان آمن بعد الإجابة الصحيحة
+        function moveToSafePosition() {
+            t += 0.05;
+            const position = curve.getPointAt(t);
+            const tangent = curve.getTangentAt(t).normalize();
+            const normal = new THREE.Vector3(0, 1, 0).cross(tangent).normalize();
             
-            resizeCanvas();
-            createStars();
+            const motorcyclePosition = position.clone().add(normal.clone().multiplyScalar(0));
+            motorcyclePosition.y = 0.8;
             
-            // استدعاء gameLoop لبدء حلقة اللعبة بعد تحميل الصفحة
-            requestAnimationFrame(gameLoop);
-            
-            // لا تبدأ اللعبة تلقائيًا، بل انتظر ضغط زر "بدء اللعبة"
-        });
+            const pathFollower = scene.getObjectByName("pathFollower");
+            if (pathFollower) {
+                pathFollower.position.copy(motorcyclePosition);
+                pathFollower.lookAt(motorcyclePosition.clone().add(tangent));
+            }
+        }
+
+        // حلقة الرسوم المتحركة
+        function animate() {
+            if (!gameActive) {
+                return;
+            }
+
+            animationFrameId = requestAnimationFrame(animate);
+
+            // إدارة السرعة
+            if (boostActive) {
+                currentSpeed += acceleration;
+                if (currentSpeed > maxBoostSpeed) {
+                    currentSpeed = maxBoostSpeed;
+                }
+            } else {
+                if (currentSpeed > baseSpeed) {
+                    currentSpeed -= acceleration;
+                    if (currentSpeed < baseSpeed) {
+                        currentSpeed = baseSpeed;
+                    }
+                }
+            }
+
+            if (speedDisplay) speedDisplay.textContent = `السرعة: ${Math.round(currentSpeed * 10000)}`;
+
+            t += currentSpeed;
+            if (t > 1) {
+                t = 0;
+                placeObjectsOnCurve();
+            }
+
+            const position = curve.getPointAt(t);
+            const tangent = curve.getTangentAt(t).normalize();
+            const normal = new THREE.Vector3(0, 1, 0).cross(tangent).normalize();
+
+            const targetLaneOffset = targetLanePosition * laneWidth * 0.5;
+            const currentLaneOffset = motorcycle.parent.position.clone().sub(position).dot(normal);
+            const newLaneOffset = currentLaneOffset + (targetLaneOffset - currentLaneOffset) * 0.3;
+
+            const motorcyclePosition = position.clone().add(normal.clone().multiplyScalar(newLaneOffset));
+
+            if (Math.abs(newLaneOffset) > (laneWidth * 1.5)) {
+                console.log("Out of lane at offset:", newLaneOffset);
+                endGame(false, "أحسنت وصلت نهاية المسار!");
+                return;
+            }
+
+            if (isJumping) {
+                jumpProgress += 16 / jumpDuration;
+                const jumpY = Math.sin(jumpProgress * Math.PI) * jumpHeight;
+                motorcyclePosition.y = jumpY + 0.8;
+                if (jumpProgress >= 1) {
+                    isJumping = false;
+                    jumpProgress = 0;
+                }
+            } else {
+                motorcyclePosition.y = 0.8;
+            }
+
+            motorcycle.parent.position.copy(motorcyclePosition);
+            motorcycle.parent.lookAt(motorcycle.parent.position.clone().add(tangent));
+
+            // تطبيق دوران المقود
+            const handlebar = motorcycle.getObjectByName('handlebar');
+            if (handlebar) {
+                handlebar.rotation.z = -steeringAngle * 2;
+            }
+
+            // العودة التدريجية للمقود إلى المنتصف
+            if (steeringAngle > 0) {
+                steeringAngle = Math.max(0, steeringAngle - steeringReturnSpeed);
+            } else if (steeringAngle < 0) {
+                steeringAngle = Math.min(0, steeringAngle + steeringReturnSpeed);
+            }
+
+            const cameraOffset = new THREE.Vector3(0, 3, -5).applyQuaternion(motorcycle.parent.quaternion);
+            camera.position.copy(motorcycle.parent.position).add(cameraOffset);
+            camera.lookAt(motorcycle.parent.position);
+
+            const motorcycleBbox = new THREE.Box3().setFromObject(motorcycle);
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obstacle = obstacles[i];
+                obstacle.rotation.y += currentSpeed * 50;
+                const obstacleBbox = new THREE.Box3().setFromObject(obstacle);
+
+                const distance = Math.abs(obstacle.userData.t - t);
+                const sideDistance = motorcycle.parent.position.clone().sub(obstacle.position).dot(normal);
+
+                if (motorcycleBbox.intersectsBox(obstacleBbox) && distance < 0.02) {
+                    if (Math.abs(sideDistance) > 0.5) {
+                        console.log("Ignored collision due to side distance:", sideDistance);
+                        continue;
+                    }
+                    console.log("Collision with obstacle:", obstacle.userData.type, "at distance:", distance, "side:", sideDistance);
+                    
+                    const isJumpable = obstacle.userData.isJumpable;
+                    if (isJumpable && isJumping) {
+                        // تجاوز الحاجز بالقفز
+                    } else if (shieldActive) {
+                        obstacle.position.x = -1000;
+                        score += 50;
+                        scoreDisplay.textContent = `النقاط: ${score}`;
+                    } else {
+                        const screenPosition = obstacle.position.clone().project(camera);
+                        const x = (screenPosition.x * 0.5 + 0.5) * window.innerWidth;
+                        const y = (-screenPosition.y * 0.5 + 0.5) * window.innerHeight;
+                        showCollisionEffect(x, y);
+                        playCollisionSound();
+                        
+                        gameActive = false;
+                        cancelAnimationFrame(animationFrameId);
+                        generateQuestion();
+                        questionScreen.style.display = 'flex';
+                        return;
+                    }
+                }
+
+                if (obstacle.userData.t < t - 0.2) {
+                    const newT = t + Math.random() * 0.2 + 0.2;
+                    const newPoint = curve.getPointAt(newT % 1);
+                    const newTangent = curve.getTangentAt(newT % 1).normalize();
+                    const newNormal = new THREE.Vector3(0, 1, 0).cross(newTangent).normalize();
+                    let laneIndex = Math.floor(Math.random() * 3) - 1;
+                    if (Math.random() < 0.5) laneIndex = laneIndex === 0 ? (Math.random() > 0.5 ? 1 : -1) : laneIndex;
+                    const newOffset = laneIndex * laneWidth * 0.5;
+                    obstacle.position.copy(newPoint.clone().add(newNormal.multiplyScalar(newOffset)));
+                    obstacle.rotation.y = Math.atan2(newTangent.z, newTangent.x) + Math.PI / 2;
+                    obstacle.userData.t = newT;
+                    obstacle.position.y = obstacle.userData.baseHeight;
+                    score += 10;
+                    scoreDisplay.textContent = `النقاط: ${score}`;
+                }
+            }
+
+            for (let i = collectibles.length - 1; i >= 0; i--) {
+                const collectible = collectibles[i];
+                
+                // زيادة سرعة دوران الحلقات الذهبية لتكون أكثر وضوحاً
+                if (collectible.userData.type === 'ring') {
+                    collectible.rotation.y += 0.25; // زيادة سرعة الدوران
+                } else {
+                    collectible.rotation.y += 0.05;
+                }
+                
+                const collectibleBbox = new THREE.Box3().setFromObject(collectible);
+                
+                if (motorcycleBbox.intersectsBox(collectibleBbox)) {
+                    if (collectible.userData.type === 'shield') {
+                        shieldCount++;
+                        if (shieldDisplay) shieldDisplay.textContent = `الدرع: ${shieldCount}`;
+                    } else if (collectible.userData.type === 'boost') {
+                        boostCount++;
+                    } else if (collectible.userData.type === 'time') {
+                        timer += 5;
+                        if (timerDisplay) timerDisplay.textContent = `الوقت: ${timer}`;
+                    } else if (collectible.userData.type === 'ring') {
+                        score += 100;
+                        scoreDisplay.textContent = `النقاط: ${score}`;
+                    }
+                    
+                    playSound(880, 'sine', 0.1, 0.4); 
+
+                    const screenPosition = collectible.position.clone().project(camera);
+                    const x = (screenPosition.x * 0.5 + 0.5) * window.innerWidth;
+                    const y = (-screenPosition.y * 0.5 + 0.5) * window.innerHeight;
+                    showCollectEffect(x, y);
+
+                    collectible.position.x = -1000;
+                    score += 25;
+                    scoreDisplay.textContent = `النقاط: ${score}`;
+                }
+
+                if (collectible.userData.t < t - 0.1) {
+                    const newT = t + Math.random() * 0.2 + 0.1;
+                    const newPoint = curve.getPointAt(newT % 1);
+                    const newTangent = curve.getTangentAt(newT % 1).normalize();
+                    const newNormal = new THREE.Vector3(0, 1, 0).cross(newTangent).normalize();
+                    const newOffset = (Math.floor(Math.random() * 3) - 1) * laneWidth * 0.5;
+
+                    collectible.position.copy(newPoint.clone().add(newNormal.multiplyScalar(newOffset)));
+                    collectible.rotation.y = Math.atan2(newTangent.z, newTangent.x) + Math.PI / 2;
+                    collectible.userData.t = newT;
+                    collectible.position.y = collectible.userData.baseHeight;
+                }
+            }
+
+            for (let i = sceneryObjects.length - 1; i >= 0; i--) {
+                const sceneryObj = sceneryObjects[i];
+                if (sceneryObj.userData.t < t - 0.1) {
+                    const newT = t + Math.random() * 0.5 + 0.1;
+                    const point = curve.getPointAt(newT % 1);
+                    const tangent = curve.getTangentAt(newT % 1).normalize();
+                    const normal = new THREE.Vector3(0, 1, 0).cross(tangent).normalize();
+
+                    const side = Math.random() > 0.5 ? 1 : -1;
+                    const offset = (Math.random() * 30 + 15) * side;
+
+                    sceneryObj.position.copy(point.clone().add(normal.clone().multiplyScalar(offset)));
+                    sceneryObj.position.y = sceneryObj.geometry instanceof THREE.DodecahedronGeometry ? 0.5 : 1;
+                    sceneryObj.lookAt(point.clone().add(tangent));
+                    sceneryObj.userData.t = newT;
+                }
+            }
+
+            // جعل الدرع يدور حول الدراجة
+            if (shieldActive) {
+                const shield = motorcycle.getObjectByName('shield');
+                if (shield) {
+                    shield.rotation.z += 0.1;
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            init();
+        };
     </script>
 </body>
 </html>
-
