@@ -25,7 +25,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family:  sans-serif;
+            font-family: 'Cairo', sans-serif;
         }
 
         body {
@@ -74,20 +74,8 @@
         .page {
             padding: 35px;
             border-bottom: 1px solid #e0f0ff;
-            display: none;
         }
 
-        .page.active {
-            display: block;
-            animation: fadeIn 0.6s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* NEW STYLES FROM THE SECOND PAGE TEMPLATE */
         .section {
             background: white;
             border-radius: 10px;
@@ -165,6 +153,7 @@
             font-size: 24px;
             color: var(--royal-blue);
             font-weight: bold;
+            /* التعديل المطلوب: حذف الخط المخصص والسماح لـ MathJax بالتحكم */
         }
 
         .symbols {
@@ -217,8 +206,19 @@
             border: 3px solid var(--gold);
             overflow-x: auto;
             color: var(--royal-blue);
+            /* التعديل المطلوب: حذف الخط المخصص للسماح لـ MathJax بالتحكم */
         }
-
+        
+        /* New style for inline math expressions to fit better with text flow */
+        .inline-math {
+            font-size: 1.3rem;
+            font-weight: normal; /* تم تغييرها لتجنب المشاكل في بعض الخطوط */
+            color: var(--gold);
+            display: inline-block;
+            margin: 0 4px; 
+            /* التعديل المطلوب: حذف الخط المخصص للسماح لـ MathJax بالتحكم */
+        }
+        
         .exercise h3, .exercise-title {
             color: var(--royal-blue-2); /* استخدام اللون الأزرق الملكي الجديد */
             font-size: 1.4rem;
@@ -448,31 +448,6 @@
             background: linear-gradient(to bottom, #87ceeb, #e0f7fa);
         }
         
-        .overlay {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 10px;
-            z-index: 10;
-            pointer-events: none;
-            max-width: 400px;
-        }
-
-        .title {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #4CAF50;
-            text-align: center;
-        }
-
-        .subtitle {
-            font-size: 16px;
-            opacity: 0.8;
-            text-align: center;
-        }
-        
         .scene-container {
             flex: 1;
             border-radius: 15px;
@@ -539,18 +514,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
         
-        .mobile-info {
-            position: absolute;
-            bottom: 180px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-size: 14px;
-            max-width: 80%;
-            z-index: 100;
-        }
-        
         .problem-box {
             background: rgba(255, 255, 255, 0.98);
             border-radius: 20px;
@@ -594,7 +557,7 @@
             background: rgba(255, 248, 225, 0.85);
             border-radius: 12px;
             display: inline-block;
-            font-family: 'Times New Roman', serif;
+            /* التعديل المطلوب: حذف الخط المخصص للسماح لـ MathJax بالتحكم */
             border: 2px solid #ffcc80;
             box-shadow: 0 5px 10px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
@@ -686,45 +649,102 @@
             .mobile-controls { padding: 0 10px; }
             .control-btn { width: 60px; height: 60px; font-size: 20px; }
         }
+        .interactive-info {
+            text-align: center;
+            padding: 15px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .interactive-info h3 {
+            font-size: 1.6rem;
+            color: var(--royal-blue);
+            margin-bottom: 10px;
+        }
+        .interactive-info p {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        /* إضافة نمط جديد لزر ملء الشاشة */
+        #fullscreenBtn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.4);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: var(--royal-blue);
+            z-index: 101;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #fullscreenBtn:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(1.05);
+        }
+        
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="page1" class="page active">
-            <div class="header-explore">
-                <h1><i class="fas fa-divide"></i> ضرب الأعداد النسبية وقسمتها</h1>
+        <div id="page1" class="page">
+            <header>
+                <!-- التعديل المطلوب: حذف أيقونة القسمة من العنوان -->
+                <h1>ضرب الأعداد النسبية وقسمتها</h1>
                 <div class="subtitle">الرياضيات - الصف السابع</div>
+            </header>
+            
+            <!-- التعديل المطلوب: نقل فكرة الدرس إلى أعلى الصفحة -->
+            <div class="lesson-idea">
+                <h3><i class="fas fa-lightbulb"></i> فكرة الدرس</h3>
+                <p>أضرب أعداداً نسبية وأقسمها.</p>
             </div>
             
-            <!-- المشهد التفاعلي للحديقة المدرسية -->
-            <div class="interactive-scene">
-                <div class="overlay">
-                    <div class="title">حديقة المدرسة التفاعلية</div>
-                    <div class="subtitle">تجول في المشهد وحل المسألة الرياضية!</div>
-                </div>
+            <!-- الكتابة التي تم نقلها من المشهد التفاعلي -->
+            <div class="interactive-info">
+                <h3>حديقة المدرسة التفاعلية</h3>
+                <p>تجول في المشهد وحل المسألة الرياضية!</p>
+                <!-- تحديث الإرشادات لتشمل التحكم بالكمبيوتر -->
+                <p><strong>إرشادات:</strong> اسحب بإصبعك على الشاشة (أو استخدم الماوس) للنظر حولك، واستخدم أزرار التحكم (أو مفاتيح W, A, S, D) للحركة.</p>
+            </div>
 
+            <!-- المشهد التفاعلي للحديقة المدرسية -->
+            <div class="interactive-scene" id="interactive-scene">
                 <div class="scene-container">
                     <canvas id="schoolScene"></canvas>
                 </div>
+                
+                <!-- زر ملء الشاشة الجديد -->
+                <button id="fullscreenBtn" title="ملء الشاشة">
+                    <i class="fas fa-expand"></i>
+                </button>
 
                 <div class="mobile-controls">
                     <div class="movement-controls">
                         <div class="control-row">
                             <div class="control-btn" id="forwardBtn">↑</div>
                         </div>
+                        <!-- تم عكس مواضع أزرار اليمين واليسار هنا -->
                         <div class="control-row">
-                            <div class="control-btn" id="leftBtn">←</div>
-                            <div class="control-btn" id="backwardBtn">↓</div>
                             <div class="control-btn" id="rightBtn">→</div>
+                            <div class="control-btn" id="backwardBtn">↓</div>
+                            <div class="control-btn" id="leftBtn">←</div>
                         </div>
                     </div>
                     <div class="camera-controls">
                         <!-- يمكن إضافة عناصر للتحكم بالكاميرا إذا لزم -->
                     </div>
-                </div>
-
-                <div class="mobile-info">
-                    اسحب بإصبعك على الشاشة للنظر حولك، واستخدم أزرار التحكم للحركة
                 </div>
             </div>
             
@@ -733,10 +753,10 @@
                 <div class="problem-title">أستكشف</div>
                 <div class="problem-text">
                     زرع أحمد وزملاؤه عدداً من الأشجار في حديقة المدرسة، وبعد الانتهاء من زراعتها، أضافوا إلى كل شجرة 
-                    <span class="math-expression">\( \frac{3}{4} \)</span> 
+                    <span class="inline-math">\( \frac{3}{4} \)</span> 
                     الكوب من السماد لتزويد التربة بالعناصر الضرورية. 
                     إذا كان لديهم 
-                    <span class="math-expression">60 كوباً</span> 
+                    <span class="inline-math">60 كوباً</span> 
                     من السماد، فكم شجرة يمكنهم أن يضيفوا إليها سماداً؟
                 </div>
                 
@@ -776,11 +796,6 @@
             </div>
             
             <!-- بقية محتوى الصفحة -->
-            <div class="lesson-idea">
-                <h3><i class="fas fa-lightbulb"></i> فكرة الدرس</h3>
-                <p>أضرب أعداداً نسبية وأقسمها.</p>
-            </div>
-            
             <div class="basic-concept">
                 <h3><i class="fas fa-book"></i> مفهوم أساسي</h3>
                 <p>بالكلمات: عند ضرب كسرين، أضرب البسط في البسط، ثم أضرب المقام في المقام.</p>
@@ -824,12 +839,15 @@
                     <div class="math-expression">
                         3) \( 2 \frac{1}{2} \times 4 \frac{2}{3} \)
                     </div>
+                    <p>تحويل الأعداد الكسرية إلى كسور غير فعلية:</p>
                     <div class="math-expression">
                         \( 2 \frac{1}{2} \times 4 \frac{2}{3} = \frac{5}{2} \times \frac{14}{3} \)
                     </div>
+                    <p>إيجاد ناتج الضرب:</p>
                     <div class="math-expression">
                         \( = \frac{5 \times 14}{2 \times 3} = \frac{70}{6} \)
                     </div>
+                    <p>التبسيط وإعادة الكتابة على شكل عدد كسري:</p>
                     <div class="math-expression">
                         \( = \frac{35}{3} = 11 \frac{2}{3} \)
                     </div>
@@ -839,199 +857,14 @@
             <div class="page-number">27</div>
         </div>
         
-        <div id="page2" class="page">
-            <header>
-                <h1><i class="fas fa-divide"></i> ضرب الأعداد النسبية وقسمتها</h1>
-                <div class="subtitle">الرياضيات - الصف السابع</div>
-            </header>
-            <div class="basic-concept">
-                <h3><i class="fas fa-info-circle"></i> خطوات الضرب</h3>
-                <ol>
-                    <li>أحول الأعداد الكسرية إلى كسور غير فعلية.</li>
-                    <li>أقسم على العوامل المشتركة.</li>
-                    <li>أحدد إشارة الناتج.</li>
-                    <li>أضرب البسطين.</li>
-                    <li>أضرب المقامين.</li>
-                </ol>
-            </div>
-            
-            <div class="exercise">
-                <h3><i class="fas fa-tasks"></i> أتحقق من فهمي:</h3>
-                <div class="question-grid">
-                    <div class="question-item">
-                        <div class="question-text">4) \( \frac{-12}{15} \times \frac{3}{6} \)</div>
-                        <input type="text" class="answer-input" id="answer-2-4" placeholder="أدخل الإجابة">
-                        <button class="check-button" onclick="checkAnswer('2-4')">تحقق</button>
-                        <div class="result-message" id="result-2-4"></div>
-                    </div>
-                    
-                    <div class="question-item">
-                        <div class="question-text">5) \( (-\frac{2}{6}) \times (-\frac{1}{5}) \)</div>
-                        <input type="text" class="answer-input" id="answer-2-5" placeholder="أدخل الإجابة">
-                        <button class="check-button" onclick="checkAnswer('2-5')">تحقق</button>
-                        <div class="result-message" id="result-2-5"></div>
-                    </div>
-                    
-                    <div class="question-item">
-                        <div class="question-text">6) \( 2 \times (-3 \frac{1}{5}) \)</div>
-                        <input type="text" class="answer-input" id="answer-2-6" placeholder="أدخل الإجابة">
-                        <button class="check-button" onclick="checkAnswer('2-6')">تحقق</button>
-                        <div class="result-message" id="result-2-6"></div>
-                    </div>
-                    
-                    <div class="question-item">
-                        <div class="question-text">7) \( (-6 \frac{1}{2}) \times (2 \frac{1}{3}) \)</div>
-                        <input type="text" class="answer-input" id="answer-2-7" placeholder="أدخل الإجابة">
-                        <button class="check-button" onclick="checkAnswer('2-7')">تحقق</button>
-                        <div class="result-message" id="result-2-7"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="example">
-                <h3>مثال 2: أجد ناتج الضرب في كل مما يلي:</h3>
-                
-                <div class="math-expression">
-                    1) \( -2.5 \times -8 \)
-                </div>
-                <div class="math-expression">
-                    \( -25 \times -8 = 200 \)
-                </div>
-                <div class="math-expression">
-                    \( -2.5 \times -8 = 20.0 = 20 \)
-                </div>
-                <p>أحدد إشارة الناتج، ثم أضرب العددين من دون فواصل عشرية.</p>
-                
-                <div class="math-expression">
-                    2) \( -1.25 \times 1.64 \)
-                </div>
-                <div class="math-expression">
-                    \( -125 \times 164 = -20500 \)
-                </div>
-                <div class="math-expression">
-                    \( -1.25 \times 1.64 = -2.0500 = -2.05 \)
-                </div>
-                <p>أحدد إشارة الناتج، ثم أضرب العددين من دون فواصل عشرية.</p>
-                <p>أضع الفاصلة العشرية بعد 4 منازل من اليمين.</p>
-            </div>
-            
-            <div class="page-number">28</div>
-        </div>
-        
-        <div id="page3" class="page">
-            <header>
-                <h1><i class="fas fa-divide"></i> ضرب الأعداد النسبية وقسمتها</h1>
-                <div class="subtitle">الرياضيات - الصف السابع</div>
-            </header>
-            
-            <div class="full-example">
-                <h3>مثال 2</h3>
-                <p>أجد ناتج القسمة في أبسط صورة:</p>
-                
-                <div class="example-section">
-                    <div class="math-expression">
-                        1) \( \frac{3}{4} \div \frac{2}{3} \)
-                    </div>
-                    <p>للقسمة على كسر، اضرب في مقلوبه.</p>
-                    <div class="math-expression">
-                        \( = \frac{3}{4} \times \frac{3}{2} = \frac{9}{8} \)
-                    </div>
-                    <div class="math-expression">
-                        \( = 1 \frac{1}{8} \)
-                    </div>
-                </div>
-                
-                <div class="example-section">
-                    <div class="math-expression">
-                        2) \( -4 \frac{1}{2} \div 2 \frac{1}{4} \)
-                    </div>
-                    <p>أحول العددين الكسريين إلى كسور غير فعلية.</p>
-                    <div class="math-expression">
-                        \( = -\frac{9}{2} \div \frac{9}{4} \)
-                    </div>
-                    <p>للقسمة على كسر، اضرب في مقلوبه.</p>
-                    <div class="math-expression">
-                        \( = -\frac{9}{2} \times \frac{4}{9} = -\frac{36}{18} = -2 \)
-                    </div>
-                </div>
-            </div>
-            
-            <div class="example">
-                <h3></h3>
-                
-                <div class="math-expression">
-                    3) \( -4.2 \times 1 \frac{1}{2} \)
-                </div>
-                <p>أحول العددين الكسري إلى الصورة نفسها.</p>
-                
-                <div class="method-box">
-                    <div class="method-title">الطريقة 1: كتابتها بصورة كسر غير فعلي</div>
-                    <div class="math-expression">
-                        \( -4.2 \times 1 \frac{1}{2} = -4 \frac{2}{10} \times \frac{3}{2} \)
-                    </div>
-                    <div class="math-expression">
-                        \( = -\frac{42}{10} \times \frac{3}{2} = -\frac{126}{20} = -\frac{63}{10} = -6.3 \)
-                    </div>
-                </div>
-                
-                <div class="method-box">
-                    <div class="method-title">الطريقة 2: كتابتها بصورة عشرية</div>
-                    <div class="math-expression">
-                        \( -4.2 \times 1 \frac{1}{2} = -4.2 \times 1.5 \)
-                    </div>
-                    <div class="math-expression">
-                        \( = -6.30 = -6.3 \)
-                    </div>
-                </div>
-            </div>
-            
-            <div class="exercise">
-                <h3><i class="fas fa-tasks"></i> أتحقق من فهمي:</h3>
-                <div class="question-grid">
-                    <div class="question-item">
-                        <div class="question-text">4) \( -4.6 \times 5 \)</div>
-                        <input type="text" class="answer-input" id="answer-3-4" placeholder="أدخل الإجابة">
-                        <button class="check-button" onclick="checkAnswer('3-4')">تحقق</button>
-                        <div class="result-message" id="result-3-4"></div>
-                    </div>
-                    
-                    <div class="question-item">
-                        <div class="question-text">5) \( -2.4 \times -0.66 \)</div>
-                        <input type="text" class="answer-input" id="answer-3-5" placeholder="أدخل الإجابة">
-                        <button class="check-button" onclick="checkAnswer('3-5')">تحقق</button>
-                        <div class="result-message" id="result-3-5"></div>
-                    </div>
-                    
-                    <div class="question-item">
-                        <div class="question-text">6) \( -6.4 \times -2 \frac{1}{5} \)</div>
-                        <input type="text" class="answer-input" id="answer-3-6" placeholder="أدخل الإجابة">
-                        <button class="check-button" onclick="checkAnswer('3-6')">تحقق</button>
-                        <div class="result-message" id="result-3-6"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="basic-concept">
-                <h3><i class="fas fa-book"></i> مفهوم أساسي</h3>
-                <p>إذا كان ناتج ضرب عددين يساوي (1) فإن كلاً منهما يسمى معكوساً ضربياً (multiplicative inverse) للآخر، أو مقلوباً للعدد الآخر.</p>
-                <div class="math-expression">
-                    فمثلاً يسمى كل من \( \frac{2}{5} \) و \( \frac{5}{2} \) معكوساً ضربياً للآخر؛ لأن \( \frac{2}{5} \times \frac{5}{2} = 1 \)
-                </div>
-            </div>
-            
-            <div class="page-number">29</div>
-        </div>
-        
+        <!-- إضافة قسم التنقل في نهاية الصفحة -->
         <div class="nav-buttons">
-            <button class="nav-button" onclick="showPage(1)">الصفحة 1</button>
-            <button class="nav-button" onclick="showPage(2)">الصفحة 2</button>
-            <button class="nav-button" onclick="showPage(3)">الصفحة 3</button>
-            <!-- التعديل المطلوب 2: إضافة زر التالي -->
-            <button class="nav-button next-button" onclick="window.location.href='u1l5p2.html'">
-                <i class="fas fa-arrow-left"></i> التالي
-            </button>
+            <!-- الزر الذي طلبته، مع رابط لصفحة u1l5p2.html -->
+            <a href="u1l5p2.html" class="nav-button next-button">
+                التالي
+            </a>
         </div>
-       
+
         <div class="footer-note">
             <h3>الوحدة 1: الأعداد النسبية</h3>
             <p>الصف السابع - الفصل الدراسي الأول</p>
@@ -1041,12 +874,14 @@
     <script>
         // تهيئة مشهد Three.js للحديقة المدرسية
         function initScene() {
+            const sceneContainer = document.getElementById('interactive-scene');
+            const canvas = document.getElementById('schoolScene');
+            
             // تهيئة المشهد
             const scene = new THREE.Scene();
             scene.background = new THREE.Color(0x87CEEB);
             scene.fog = new THREE.Fog(0x87CEEB, 20, 100);
 
-            const canvas = document.getElementById('schoolScene');
             const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
             renderer.setSize(canvas.clientWidth, canvas.clientHeight);
             renderer.shadowMap.enabled = true;
@@ -1114,7 +949,8 @@
                 schoolGroup.add(door);
 
                 // إضافة نوافذ
-                const windowMaterial = new THREE.MeshStandardMaterial({ color: 0xADD8E6, transparent: true, opacity: 0.8 });
+                // التعديل المطلوب: تغيير لون النوافذ إلى الأزرق
+                const windowMaterial = new THREE.MeshStandardMaterial({ color: 0x4a69bd, transparent: true, opacity: 0.8 });
 
                 for (let i = -15; i <= 15; i += 10) {
                     const windowGeometry = new THREE.BoxGeometry(5, 5, 0.5);
@@ -1406,7 +1242,7 @@
                         return braidGroup;
                     }
 
-                    const hairGeometry = new THREE.SphereGeometry(headSize * 1.02, 32, 32);
+                    const hairGeometry = new THREE.SphereGeometry(headSize * 1.02, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
                     const hair = new THREE.Mesh(hairGeometry, hairMaterial);
                     hair.position.z = -headSize * 0.05;
                     headGroup.add(hair);
@@ -1442,7 +1278,10 @@
             createSchool(0, -60);
 
             const clothingColors = [0x4169E1];
-            const count = 15;
+            
+            // # التعديل المطلوب: تغيير عدد الأشجار والشخصيات من 15 إلى 80
+            // # لتتناسب مع حل المسألة الرياضية
+            const count = 80;
 
             for (let i = 0; i < count; i++) {
                 const treeX = Math.random() * 180 - 90;
@@ -1610,6 +1449,34 @@
                 camera.updateProjectionMatrix();
                 renderer.setSize(canvas.clientWidth, canvas.clientHeight);
             });
+            
+            // # التعديلات الجديدة هنا:
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            // دالة للتبديل بين وضع ملء الشاشة ووضع النافذة
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    sceneContainer.requestFullscreen().catch(err => {
+                        console.error(`Error attempting to enable fullscreen mode: ${err.message}`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+            
+            // معالج حدث عند الضغط على زر ملء الشاشة
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+            // معالج حدث لتحديث حجم الشاشة عند الدخول أو الخروج من وضع ملء الشاشة
+            document.addEventListener('fullscreenchange', () => {
+                setTimeout(() => {
+                    const width = document.fullscreenElement ? window.innerWidth : sceneContainer.clientWidth;
+                    const height = document.fullscreenElement ? window.innerHeight : sceneContainer.clientHeight;
+                    renderer.setSize(width, height);
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                }, 100);
+            });
 
             // بدء الحركة
             animate();
@@ -1618,60 +1485,6 @@
         // تهيئة المشهد عند تحميل الصفحة
         window.addEventListener('load', initScene);
         
-        function showPage(pageNumber) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            const activePage = document.getElementById(`page${pageNumber}`);
-            activePage.classList.add('active');
-            
-            window.scrollTo(0, 0);
-
-            if (window.MathJax) {
-                MathJax.typeset();
-            }
-        }
-        
-        const correctAnswers = {
-            '2-4': '-2/5',
-            '2-5': '1/15',
-            '2-6': '-32/5',
-            '2-7': '-91/6',
-            '3-4': '-23',
-            '3-5': '1.584',
-            '3-6': '14.08'
-        };
-        
-        const questionSolutions = {
-            '2-4': 'الحل: \\( \\frac{-12}{15} \\times \\frac{3}{6} = \\frac{-36}{90} = -\\frac{2}{5} \\)',
-            '2-5': 'الحل: \\( (-\\frac{2}{6}) \\times (-\\frac{1}{5}) = \\frac{2}{30} = \\frac{1}{15} \\)',
-            '2-6': 'الحل: \\( 2 \\times (-3 \\frac{1}{5}) = 2 \\times (-\\frac{16}{5}) = -\\frac{32}{5} \\)',
-            '2-7': 'الحل: \\( (-6 \\frac{1}{2}) \\times (2 \\frac{1}{3}) = (-\\frac{13}{2}) \\times (\\frac{7}{3}) = -\\frac{91}{6} \\)',
-            '3-4': 'الحل: \\( -4.6 \\times 5 = -23 \\)',
-            '3-5': 'الحل: \\( -2.4 \\times -0.66 = 1.584 \\)',
-            '3-6': 'الحل: \\( -6.4 \\times -2 \\frac{1}{5} = -6.4 \\times -2.2 = 14.08 \\)'
-        };
-        
-        function checkAnswer(questionId) {
-            const answerInput = document.getElementById(`answer-${questionId}`);
-            const resultDiv = document.getElementById(`result-${questionId}`);
-            const userAnswer = answerInput.value.trim();
-            const correctAnswer = correctAnswers[questionId];
-            
-            const normalizedUserAnswer = userAnswer.replace(/\s+/g, '');
-            
-            if (normalizedUserAnswer === correctAnswer) {
-                resultDiv.innerHTML = '<span class="correct">✓ الإجابة صحيحة! أحسنت!</span>';
-            } else {
-                resultDiv.innerHTML = `<span class="incorrect">✗ الإجابة غير صحيحة. حاول مرة أخرى.</span>
-                                      <div class="solution">${questionSolutions[questionId]}</div>`;
-            }
-            if (window.MathJax) {
-                MathJax.typesetPromise([resultDiv]);
-            }
-        }
-
         function toggleSolution() {
             const solution = document.getElementById('solution');
             const btn = document.querySelector('.solution-btn');
@@ -1690,4 +1503,3 @@
     </script>
 </body>
 </html>
-
