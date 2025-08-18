@@ -1,58 +1,74 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ضرب الأعداد النسبية وقسمتها - الصف السابع</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
+        /* تعريف المتغيرات لألوان جذابة وباردة من القالب المطلوب */
+        :root {
+            --royal-blue: #0c2461;
+            --gold: #f6b93b;
+            --light-blue: #81c7ff;
+            --sky-blue: #4a69bd;
+            --pale-blue: #e0f7fa;
+            --royal-blue-2: #4169e1; /* لون أزرق ملكي جديد */
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, 'Arial', sans-serif;
+            font-family: 'Cairo', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #e6f7ff, #f0f8ff);
+            background-color: var(--pale-blue);
             color: #333;
-            line-height: 1.6;
+            line-height: 1.8;
             padding: 20px;
             min-height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scroll for animations */
+            overflow-x: hidden;
+            font-size: 1.1rem;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background-color: white;
-            box-shadow: 0 0 25px rgba(0, 0, 100, 0.15);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
-            border: 1px solid #d0e8ff;
         }
 
-        /* Original Header style (retained for other pages) */
+        /* التعديل المطلوب 1: تغيير لون خلفية عنوان الدرس إلى أزرق ملكي */
         header {
-            background: linear-gradient(135deg, #1a5f7a, #2c7873);
+            background-color: var(--royal-blue-2); /* استخدام اللون الأزرق الملكي الجديد */
             color: white;
             padding: 25px;
             text-align: center;
-            border-bottom: 5px solid #4da0a0;
+            border-bottom: 5px solid var(--gold);
+            position: relative;
+            overflow: hidden;
         }
 
         h1 {
-            font-size: 32px;
+            color: white;
+            font-size: 2.8rem;
             margin-bottom: 10px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
         }
-
+        
         .subtitle {
-            font-size: 20px;
-            opacity: 0.9;
-            margin-top: 5px;
+            color: var(--gold);
+            font-size: 1.6rem;
+            font-weight: 700;
         }
 
         .page {
@@ -71,132 +87,84 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .explore-box { /* This will be replaced by the new section in page 1 */
-            background: linear-gradient(to right, #e3f2fd, #f0f7ff);
-            border-left: 5px solid #2196f3;
+        /* NEW STYLES FROM THE SECOND PAGE TEMPLATE */
+        .section {
+            background: white;
+            border-radius: 10px;
             padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--sky-blue);
             margin: 25px 0;
-            border-radius: 0 12px 12px 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 100, 0.05);
+        }
+
+        .section h2 {
+            color: var(--royal-blue-2); /* استخدام اللون الأزرق الملكي الجديد */
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--gold);
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            gap: 10px;
+        }
+
+        .section h2::before {
+            content: "•";
+            color: var(--gold);
+            font-size: 2.2rem;
+            margin-left: 10px;
+        }
+        
+        .lesson-idea, .basic-concept, .full-example, .example, .exercise {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--sky-blue);
+            margin: 25px 0;
         }
 
         .lesson-idea {
-            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
-            border-left: 5px solid #4caf50;
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 0 12px 12px 0;
-            box-shadow: 0 4px 8px rgba(0, 100, 0, 0.05);
+            border-left: 5px solid var(--gold);
+        }
+        
+        .lesson-idea h3 {
+            color: var(--royal-blue-2); /* استخدام اللون الأزرق الملكي الجديد */
+            border-bottom: 3px solid var(--gold);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
         }
 
-        .basic-concept {
-            background: linear-gradient(to right, #fff3e0, #fff8e1);
-            border-left: 5px solid #ff9800;
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 0 12px 12px 0;
-            box-shadow: 0 4px 8px rgba(100, 50, 0, 0.05);
+        .basic-concept h3 {
+            color: var(--royal-blue-2); /* استخدام اللون الأزرق الملكي الجديد */
+            border-bottom: 3px solid var(--gold);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
         }
-
-        .example {
-            background: linear-gradient(to bottom, #f9f9f9, #f5f5f5);
-            border: 1px solid #e0e0e0;
-            padding: 25px;
-            margin: 25px 0;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
-        }
-
+        
         .formula-container {
             text-align: center;
             margin: 20px 0;
             padding: 20px;
-            background: linear-gradient(to bottom, #f8f9fa, #f0f4f8);
+            background: var(--pale-blue);
             border-radius: 10px;
-            border: 1px dashed #4da0a0;
+            border: 1px dashed var(--royal-blue);
         }
 
         .math-formula {
             font-size: 24px;
-            color: #1a5f7a;
+            color: var(--royal-blue);
             font-weight: bold;
-        }
-
-        .exercise {
-            background: linear-gradient(to bottom, #e8eaf6, #e3e5f3);
-            border: 2px dashed #3f51b5;
-            padding: 25px;
-            margin: 25px 0;
-            border-radius: 12px;
-        }
-
-        .exercise-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .exercise-item {
-            background: linear-gradient(135deg, #d1c4e9, #e1d7f1);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .exercise-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .page-number {
-            text-align: center;
-            font-weight: bold;
-            margin-top: 20px;
-            color: #1a5f7a;
-            font-size: 18px;
-            padding: 10px;
-            background-color: #e0f7fa;
-            border-radius: 5px;
-        }
-
-        .highlight {
-            background-color: #fff9c4;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            color: #b71c1c;
-        }
-
-        h2 {
-            color: #1a5f7a;
-            margin-bottom: 20px;
-            font-size: 26px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #4da0a0;
-        }
-
-        h3 {
-            color: #2c7873;
-            margin: 20px 0;
-            font-size: 22px;
-            position: relative;
-            padding-left: 15px;
-        }
-
-        h3::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 8px;
-            height: 8px;
-            background-color: #2c7873;
-            border-radius: 50%;
         }
 
         .symbols {
@@ -204,200 +172,67 @@
             font-size: 20px;
             text-align: center;
             margin: 20px 0;
-            color: #b71c1c;
+            color: var(--gold);
             font-weight: bold;
         }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: center;
-            padding: 25px;
-            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
-            gap: 20px;
+        
+        .full-example, .exercise {
+            border: 3px solid var(--gold);
+            background-color: #f9fbe7;
         }
-
-        .nav-button {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #1a5f7a, #2c7873);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            min-width: 150px;
-        }
-
-        .nav-button:hover {
-            background: linear-gradient(135deg, #2c7873, #4da0a0);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-        }
-
-        .nav-button:active {
-            transform: translateY(1px);
-        }
-
-        .unit-title {
-            background: linear-gradient(135deg, #1a5f7a, #2c7873);
-            color: white;
-            padding: 15px;
+        
+        .full-example h3 {
+            color: var(--royal-blue-2); /* استخدام اللون الأزرق الملكي الجديد */
+            font-size: 1.8rem;
             text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--royal-blue);
+        }
+        
+        .example-section {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: var(--pale-blue);
             border-radius: 10px;
-            margin: 25px 0;
-            font-size: 24px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--royal-blue);
         }
 
-        .method-box {
-            background: linear-gradient(to bottom, #e1f5fe, #e8f7ff);
-            border: 1px solid #81d4fa;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 100, 200, 0.08);
-        }
-
-        .method-title {
-            color: #0277bd;
+        .example h3 {
+            color: var(--royal-blue-2); /* استخدام اللون الأزرق الملكي الجديد */
             margin-bottom: 15px;
-            font-size: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--gold);
+            font-size: 1.8rem;
         }
 
-        .footer-note {
-            text-align: center;
-            padding: 15px;
-            background-color: #e3f2fd;
-            font-size: 16px;
-            color: #1a5f7a;
-            border-top: 1px solid #bbdefb;
-        }
-
-        @media (max-width: 768px) {
-            .exercise-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .page {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 28px;
-            }
-            
-            .nav-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .nav-button {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .exercise-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-            
-            h2 {
-                font-size: 22px;
-            }
-            
-            h3 {
-                font-size: 20px;
-            }
-        }
-        
         .math-expression {
-            font-size: 20px;
-            padding: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
             margin: 15px 0;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #2c7873;
-            text-align: center;
+            padding: 15px;
+            background: #fff8e1;
+            border-radius: 10px;
+            border: 3px solid var(--gold);
+            overflow-x: auto;
+            color: var(--royal-blue);
         }
-        
-        /* أنماط جديدة للأسئلة التفاعلية */
-        .interactive-question {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .question-text {
-            font-size: 18px;
+
+        .exercise h3, .exercise-title {
+            color: var(--royal-blue-2); /* استخدام اللون الأزرق الملكي الجديد */
+            font-size: 1.4rem;
+            font-weight: bold;
             margin-bottom: 15px;
-            font-weight: bold;
-            color: #1a5f7a;
+            border-bottom: 3px solid var(--royal-blue);
+            padding-bottom: 10px;
         }
         
-        .answer-input {
-            padding: 10px;
-            border: 2px solid #4da0a0;
-            border-radius: 8px;
-            font-size: 16px;
-            width: 100%;
-            max-width: 250px;
-            margin: 10px 0;
-            text-align: center;
+        .exercise-title i {
+            margin-left: 10px;
+            color: var(--gold);
         }
-        
-        .check-button {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #1a5f7a, #2c7873);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px 0;
-            transition: all 0.3s;
-        }
-        
-        .check-button:hover {
-            background: linear-gradient(135deg, #2c7873, #4da0a0);
-            transform: translateY(-2px);
-        }
-        
-        .result-message {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            display: none;
-        }
-        
-        .correct {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            border: 2px solid #4caf50;
-            display: block;
-        }
-        
-        .incorrect {
-            background-color: #ffebee;
-            color: #c62828;
-            border: 2px solid #f44336;
-            display: block;
-        }
-        
-        .solution {
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        
+
         .question-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -412,45 +247,174 @@
             border: 1px solid #e0e0e0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
-        
-        /* تمييز المثال الكامل */
-        .full-example {
-            border: 2px solid #4da0a0;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 30px 0;
-            background: linear-gradient(to bottom, #ffffff, #f5f5f5);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--royal-blue);
         }
         
-        .full-example h3 {
-            color: #1a5f7a;
-            font-size: 26px;
+        .answer-input {
+            padding: 10px;
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 250px;
+            margin: 10px 0;
             text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #4da0a0;
         }
         
-        .example-section {
+        .check-button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 14px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            font-weight: 700;
+            display: block;
+            margin: 15px auto;
+            width: 100%;
+            max-width: 250px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .check-button:hover {
+            background: #ffd166;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        
+        .result-message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            display: none;
+            text-align: center;
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #a5d6a7;
+            display: block;
+        }
+        
+        .incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 2px solid #ef9a9a;
+            display: block;
+        }
+        
+        .solution {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #666;
+            text-align: center;
+        }
+        
+        .page-number {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+            color: var(--royal-blue);
+            font-size: 1.1rem;
+            padding: 10px;
+            background-color: var(--pale-blue);
+            border-radius: 5px;
+        }
+        
+        .highlight {
+            background: var(--gold);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--royal-blue);
+        }
+        
+        .method-box {
+            background: var(--pale-blue);
+            border: 1px solid var(--sky-blue);
+            padding: 20px;
             margin: 20px 0;
-            padding: 15px;
-            background-color: #f0f8ff;
-            border-radius: 10px;
-            border-left: 4px solid #1a5f7a;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 100, 200, 0.08);
         }
 
-        /* NEW STYLES FOR EXPLORE SECTION */
-        .main-container {
-            max-width: 900px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            margin: 0 auto; /* Center the main container */
+        .method-title {
+            color: var(--royal-blue);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
         }
         
-        .header-explore { /* Renamed to avoid conflict with existing header */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .nav-button:hover {
+            background: #ffd166;
+            transform: translateY(-3px);
+        }
+
+        .nav-button:active {
+            transform: translateY(1px);
+        }
+
+        /* التعديل المطلوب 2: إضافة زر التالي */
+        .nav-button.next-button {
+            background: var(--royal-blue-2); /* اللون الأزرق الملكي */
+            color: white;
+            border: 2px solid var(--gold);
+        }
+
+        .nav-button.next-button:hover {
+            background: #2a4c9e;
+        }
+
+        .unit-title {
+            background: var(--royal-blue);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 25px 0;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* NEW STYLES FOR EXPLORE SECTION */
+        .header-explore {
             text-align: center;
             margin-bottom: 10px;
             padding: 15px;
@@ -460,554 +424,172 @@
             backdrop-filter: blur(8px);
         }
         
-        .header-explore h1 { /* Renamed to avoid conflict with existing h1 */
-            color: #1a5f7a;
-            font-size: 42px;
+        .header-explore h1 {
+            color: var(--royal-blue);
+            font-size: 2.5rem;
             margin-bottom: 15px;
             font-weight: 800;
-            background: linear-gradient(to right, #1a5f7a, #0d3a4d);
+            background: linear-gradient(to right, var(--royal-blue), #0d3a4d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             position: relative;
             overflow: hidden;
         }
         
-        .header-explore h1::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: shine 3s infinite;
-        }
-        
-        @keyframes shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .illustration-container {
+        .interactive-scene {
             position: relative;
             width: 100%;
             height: 500px;
-            background: linear-gradient(to bottom, #87ceeb, #e0f7fa);
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
             perspective: 1000px;
-            margin-top: 20px; /* Added margin to separate from the header */
+            margin-top: 20px;
+            background: linear-gradient(to bottom, #87ceeb, #e0f7fa);
         }
         
-        /* السماء */
-        .sky {
+        .overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 45%;
-            background: linear-gradient(to bottom, #87ceeb, #b3e5fc);
-            z-index: 1;
-        }
-        
-        /* الشمس */
-        .sun {
-            position: absolute;
-            top: 40px;
-            right: 60px;
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle, #fff176 0%, #ffd54f 70%, #ffb300 100%);
-            border-radius: 50%;
-            box-shadow: 0 0 50px rgba(255, 213, 79, 0.8);
-            z-index: 2;
-            animation: sun-glow 4s infinite alternate ease-in-out;
-        }
-        
-        @keyframes sun-glow {
-            0% { 
-                box-shadow: 0 0 40px rgba(255, 213, 79, 0.8), 
-                          0 0 60px rgba(255, 213, 79, 0.6); 
-                transform: scale(1); 
-            }
-            100% { 
-                box-shadow: 0 0 60px rgba(255, 213, 79, 0.9), 
-                          0 0 90px rgba(255, 213, 79, 0.7); 
-                transform: scale(1.05); 
-            }
-        }
-        
-        /* السحاب */
-        .cloud {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.97);
-            border-radius: 50px;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
-            z-index: 2;
-            animation: cloud-float 25s infinite linear;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.05));
-        }
-        
-        .cloud-1 {
-            top: 50px;
-            left: 100px;
-            width: 100px;
-            height: 50px;
-            animation-duration: 35s;
-        }
-        
-        .cloud-2 {
-            top: 30px;
-            left: 400px;
-            width: 140px;
-            height: 60px;
-            animation-duration: 40s;
-        }
-        
-        .cloud-3 {
-            top: 70px;
-            right: 200px;
-            width: 110px;
-            height: 45px;
-            animation-duration: 30s;
-        }
-        
-        @keyframes cloud-float {
-            0% { transform: translateX(-20px); }
-            100% { transform: translateX(20px); }
-        }
-        
-        /* الأشجار - تم تعديل الحجم لتكون أكثر تناسقاً */
-        .tree {
-            position: absolute;
-            bottom: 0;
-            z-index: 5;
-            transition: transform 0.3s ease;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
-        }
-        
-        .tree:hover {
-            transform: scale(1.05);
-        }
-        
-        .tree-trunk {
-            width: 22px;
-            height: 70px;
-            background: linear-gradient(to right, #8b4513, #5d2906);
-            margin: 0 auto;
-            border-radius: 5px 5px 0 0;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        
-        .tree-top {
-            width: 90px;
-            height: 90px;
-            background: radial-gradient(ellipse at center, #388e3c 0%, #2e7d32 100%);
-            border-radius: 50%;
-            margin-top: -45px;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            animation: tree-sway 8s infinite alternate ease-in-out;
-        }
-        
-        @keyframes tree-sway {
-            0% { transform: rotate(-3deg); }
-            100% { transform: rotate(3deg); }
-        }
-        
-        /* الشجرة الجديدة على اليسار */
-        .tree-0 {
+            top: 20px;
             left: 20px;
-            bottom: 60px;
-            transform: rotate(-4deg);
-        }
-        
-        .tree-1 {
-            left: 130px;
-            bottom: 60px;
-            transform: rotate(3deg);
-        }
-        
-        .tree-2 {
-            left: 250px;
-            bottom: 60px;
-            transform: rotate(-1deg);
-        }
-        
-        .tree-3 {
-            left: 370px;
-            bottom: 60px;
-            transform: rotate(2deg);
-        }
-        
-        .tree-4 {
-            left: 490px;
-            bottom: 60px;
-            transform: rotate(-3deg);
-        }
-        
-        .tree-5 {
-            left: 610px;
-            bottom: 60px;
-            transform: rotate(1deg);
-        }
-        
-        /* الطلاب - على الأرض بشكل طبيعي */
-        .student {
-            position: absolute;
-            width: 55px;
-            height: 110px;
-            z-index: 10;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .student:hover {
-            transform: translateY(-5px) scale(1.05);
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
-        }
-        
-        .student-1 {
-            bottom: 15px;
-            left: 70px;
-        }
-        
-        .student-2 {
-            bottom: 15px;
-            left: 220px;
-        }
-        
-        .student-3 {
-            bottom: 15px;
-            left: 370px;
-        }
-        
-        .student-4 {
-            bottom: 15px;
-            left: 520px;
-        }
-        
-        .student-5 {
-            bottom: 15px;
-            left: 670px;
-        }
-        
-        .student-head {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(to bottom, #ffccbc, #e0b7a7);
-            border-radius: 50%;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-            border: 2px solid #e6a294;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-        
-        .student-body {
-            width: 45px;
-            height: 60px;
-            background: linear-gradient(to bottom, #1a5f7a, #0d3a4d);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
             border-radius: 10px;
-            margin: 0 auto;
-            position: relative;
-            top: -8px;
-            z-index: 1;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            z-index: 10;
+            pointer-events: none;
+            max-width: 400px;
         }
-        
-        .student-arms {
-            position: absolute;
-            top: 55px;
-            left: -17px;
-            width: 90px;
-            height: 12px;
-            background: linear-gradient(to bottom, #1a5f7a, #0d3a4d);
-            border-radius: 5px;
-            z-index: 0;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+
+        .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #4CAF50;
+            text-align: center;
         }
-        
-        /* ظل الطالب - أكبر وأكثر وضوحاً */
-        .student-shadow {
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
-            z-index: 0;
-            filter: blur(3px);
-        }
-        
-        /* الطالبة (الفتاة) */
-        .girl .student-head::after {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            width: 45px;
-            height: 20px;
-            background: #8d6e63;
-            border-radius: 50% 50% 0 0;
-            z-index: 3;
-        }
-        
-        .girl .student-body {
-            background: linear-gradient(to bottom, #e91e63, #c2185b);
-        }
-        
-        .girl .student-arms {
-            background: linear-gradient(to bottom, #e91e63, #c2185b);
-        }
-        
-        /* أكواب السماد تحت الأشجار */
-        .cup-at-tree {
-            position: absolute;
-            width: 35px;
-            height: 45px;
-            background: linear-gradient(to bottom, #ff9800, #e65100);
-            border-radius: 0 0 12px 12px;
-            border: 3px solid #e65100;
-            z-index: 6;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            animation: cup-pulse 3s infinite alternate;
-        }
-        
-        .cup-at-tree::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 5px;
-            width: 25px;
-            height: 30px;
-            background: linear-gradient(to bottom, #8d6e63, #5d4037);
-            border-radius: 0 0 10px 10px;
-        }
-        
-        .cup-at-tree::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 4px;
-            width: 27px;
-            height: 6px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
-            z-index: -1;
-        }
-        
-        .cup-label {
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 3px 8px;
-            border-radius: 8px;
+
+        .subtitle {
             font-size: 16px;
-            font-weight: bold;
-            color: #1a5f7a;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
-            border: 2px solid #e0f7fa;
-            animation: label-pulse 1.5s infinite alternate;
+            opacity: 0.8;
+            text-align: center;
         }
         
-        @keyframes label-pulse {
-            0% { transform: translateX(-50%) scale(1); }
-            100% { transform: translateX(-50%) scale(1.05); }
-        }
-        
-        .cup-at-tree:hover {
-            transform: translateY(-5px) scale(1.1);
-            animation: none;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-        }
-        
-        @keyframes cup-pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.05); }
-        }
-        
-        /* الأرض */
-        .ground {
-            position: absolute;
-            bottom: 0;
+        .scene-container {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            position: relative;
             width: 100%;
+            height: 100%;
+        }
+
+        #schoolScene {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+        }
+        
+        .mobile-controls {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .movement-controls, .camera-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .control-btn {
+            width: 70px;
             height: 70px;
-            background: linear-gradient(to top, #795548, #5d4037);
-            border-top: 7px solid #4e342e;
-            z-index: 4;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
-        }
-        
-        /* النباتات الصغيرة - تم تعديل التوزيع */
-        .small-plant {
-            position: absolute;
-            bottom: 70px;
-            width: 12px;
-            height: 25px;
-            background: linear-gradient(to top, #4caf50, #2e7d32);
-            border-radius: 5px;
-            z-index: 3;
-            animation: plant-grow 4s infinite alternate;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px;
+            color: white;
+            font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            user-select: none;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-btn:active {
+            background: rgba(76, 175, 80, 0.5);
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
         
-        @keyframes plant-grow {
-            0% { transform: scaleY(0.95); }
-            100% { transform: scaleY(1.05); }
-        }
-        
-        .small-plant::before {
-            content: '';
+        .mobile-info {
             position: absolute;
-            top: -15px;
-            left: -8px;
-            width: 28px;
-            height: 28px;
-            background: radial-gradient(circle, #4caf50, #2e7d32);
-            border-radius: 50%;
+            bottom: 180px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            max-width: 80%;
+            z-index: 100;
         }
         
-        .plant-1 { left: 180px; animation-delay: 0.2s; }
-        .plant-2 { left: 320px; animation-delay: 0.4s; }
-        .plant-3 { left: 480px; animation-delay: 0.6s; }
-        .plant-4 { left: 620px; animation-delay: 0.8s; }
-        
-        .small-plant:hover {
-            transform: scale(1.2);
-            animation: none;
-        }
-        
-        /* الأزهار - تم تعديل التوزيع */
-        .flower {
-            position: absolute;
-            bottom: 55px;
-            width: 18px;
-            height: 30px;
-            background: linear-gradient(to top, #4caf50, #2e7d32);
-            z-index: 3;
-            animation: flower-sway 5s infinite alternate ease-in-out;
-            cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-        
-        .flower::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -15px;
-            width: 48px;
-            height: 48px;
-            background: radial-gradient(circle, #fff176, #ffd54f);
-            border-radius: 50%;
-            z-index: 2;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-        
-        .flower::after {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -20px;
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            background: 
-                radial-gradient(circle at 10px 10px, #ff8a65 10%, transparent 11%),
-                radial-gradient(circle at 48px 10px, #ff8a65 10%, transparent 11%),
-                radial-gradient(circle at 10px 48px, #ff8a65 10%, transparent 11%),
-                radial-gradient(circle at 48px 48px, #ff8a65 10%, transparent 11%),
-                radial-gradient(circle at 29px 29px, #ff8a65 10%, transparent 11%);
-            z-index: 1;
-        }
-        
-        .flower-1 { left: 150px; animation-delay: 0.3s; }
-        .flower-2 { left: 300px; animation-delay: 0.6s; }
-        .flower-3 { left: 450px; animation-delay: 0.9s; }
-        .flower-4 { left: 600px; animation-delay: 1.2s; }
-        
-        @keyframes flower-sway {
-            0% { transform: rotate(-3deg); }
-            100% { transform: rotate(3deg); }
-        }
-        
-        .flower:hover {
-            transform: scale(1.2);
-            animation: none;
-        }
-        
-        /* تأثيرات تفاعلية إضافية */
-        .interactive-element {
-            transition: all 0.3s ease;
-        }
-        
-        .interactive-element:hover {
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
-        }
-        
-        /* مربع المسألة - تحت الصورة */
         .problem-box {
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(250, 250, 250, 0.95));
+            background: rgba(255, 255, 255, 0.98);
             border-radius: 20px;
             padding: 35px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(26, 95, 122, 0.15);
-            border: 3px solid #1a5f7a;
+            border: 3px solid var(--royal-blue);
             text-align: center;
             backdrop-filter: blur(8px);
             animation: box-float 5s infinite alternate ease-in-out;
             position: relative;
             overflow: hidden;
-            margin-top: 30px; /* Separates from illustration */
-        }
-        
-        .problem-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: linear-gradient(to right, #1a5f7a, #0d3a4d);
-        }
-        
-        @keyframes box-float {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-8px); }
+            margin-top: 30px;
         }
         
         .problem-title {
-            color: #1a5f7a;
-            font-size: 32px;
+            color: var(--royal-blue);
+            font-size: 2rem;
             margin-bottom: 25px;
             font-weight: 800;
             padding-bottom: 15px;
-            border-bottom: 3px solid #e0f7fa;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            border-bottom: 3px solid var(--pale-blue);
+            font-family: 'Cairo', sans-serif;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
         }
         
         .problem-text {
-            font-size: 24px;
+            font-size: 1.2rem;
             line-height: 1.8;
             color: #333;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Cairo', sans-serif;
             margin-bottom: 15px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         
-        .problem-text .math-expression { /* Adjusted for problem-box context */
-            font-size: 26px;
+        .problem-text .math-expression {
+            font-size: 1.3rem;
             font-weight: bold;
-            color: #e65100;
-            margin: 0 8px; /* Adjusted margin */
+            color: var(--gold);
+            margin: 0 8px;
             padding: 12px 18px;
             background: rgba(255, 248, 225, 0.85);
             border-radius: 12px;
@@ -1017,171 +599,92 @@
             box-shadow: 0 5px 10px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
         }
-        
-        .problem-text .math-expression:hover {
-            transform: scale(1.05);
-            background: rgba(255, 248, 225, 1);
-            box-shadow: 0 8px 15px rgba(230, 81, 0, 0.2);
-        }
-        
-        /* تحسينات إضافية للرموز الرياضية */
-        .math-container {
-            display: inline-block;
-            vertical-align: middle;
-            margin: 0 8px;
-        }
-        
-        /* تحسينات للاستجابة */
-        @media (max-width: 768px) {
-            .header-explore h1 {
-                font-size: 32px;
-            }
-            
-            .problem-title {
-                font-size: 26px;
-            }
-            
-            .problem-text {
-                font-size: 20px;
-            }
-            
-            .problem-text .math-expression {
-                font-size: 22px;
-            }
-            
-            .illustration-container {
-                height: 400px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header-explore h1 {
-                font-size: 28px;
-            }
-            
-            .problem-title {
-                font-size: 22px;
-            }
-            
-            .problem-text {
-                font-size: 18px;
-            }
-            
-            .illustration-container {
-                height: 350px;
-            }
-        }
-        
-        /* زر الحل */
+
         .solution-btn {
             margin-top: 25px;
             padding: 15px 40px;
-            font-size: 20px;
-            background: linear-gradient(to right, #1a5f7a, #0d3a4d);
-            color: white;
+            font-size: 1.2rem;
+            background: var(--gold);
+            color: var(--royal-blue);
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.4s ease;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             font-weight: bold;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .solution-btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -60%;
-            width: 20px;
-            height: 200%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(25deg);
-            transition: all 0.8s;
         }
         
         .solution-btn:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-            background: linear-gradient(to right, #0d3a4d, #1a5f7a);
+            background: #ffd166;
         }
         
-        .solution-btn:hover::after {
-            left: 120%;
-        }
-        
-        .solution-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-        }
-        
-        /* الحل */
-        .solution-content { /* Renamed to avoid conflict with .solution in other pages */
+        .solution-content {
             margin-top: 25px;
             padding: 25px;
             background: rgba(255, 255, 255, 0.92);
             border-radius: 15px;
-            border-left: 5px solid #1a5f7a;
+            border-left: 5px solid var(--royal-blue);
             display: none;
             animation: fadeIn 0.6s ease forwards;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
         .solution-content h3 {
-            color: #1a5f7a;
+            color: var(--royal-blue);
             margin-bottom: 15px;
-            font-size: 26px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        
-        .solution-content p {
-            font-size: 20px;
-            line-height: 1.8;
-            margin-bottom: 15px;
-            color: #333;
+            font-size: 1.8rem;
         }
         
         .solution-step {
             margin: 15px 0;
             padding: 15px;
-            background: rgba(230, 244, 255, 0.5);
+            background: var(--pale-blue);
             border-radius: 10px;
-            border-left: 3px solid #1a5f7a;
+            border-left: 3px solid var(--royal-blue);
             box-shadow: 0 3px 8px rgba(0,0,0,0.05);
         }
         
-        .highlight-solution { /* Renamed to avoid conflict with existing highlight */
-            background: linear-gradient(to right, rgba(255, 241, 118, 0.3), transparent);
+        .highlight-solution {
+            background: var(--gold);
             padding: 0 5px;
             border-radius: 4px;
             font-weight: bold;
+            color: var(--royal-blue);
         }
         
-        /* رسالة تفاعلية */
-        .interactive-message {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 10px 15px;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            display: none;
-            font-size: 16px;
+        .footer-note {
             text-align: center;
-            max-width: 200px;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            border: 1px solid #e0f7fa;
+            padding: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border-top: 3px solid var(--gold);
+            font-size: 1rem;
         }
-        
-        @keyframes popIn {
-            0% { transform: scale(0.5) translateY(20px); opacity: 0; }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
+
+        .footer-note h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            body { font-size: 1rem; padding: 10px; }
+            h1 { font-size: 2.2rem; }
+            .subtitle { font-size: 1.3rem; }
+            .section h2 { font-size: 1.5rem; }
+            .lesson-idea h3, .basic-concept h3 { font-size: 1.3rem; }
+            .math-expression { font-size: 1rem; }
+            .nav-buttons { flex-direction: column; align-items: center; }
+            .nav-button { width: 100%; max-width: 300px; }
+            .problem-title { font-size: 1.5rem; }
+            .problem-text { font-size: 1.1rem; }
+            .problem-text .math-expression { font-size: 1.2rem; }
+            .solution-btn { font-size: 1.1rem; padding: 12px 25px; }
+            .interactive-scene { height: 400px; }
+            .mobile-controls { padding: 0 10px; }
+            .control-btn { width: 60px; height: 60px; font-size: 20px; }
         }
     </style>
 </head>
@@ -1189,118 +692,48 @@
     <div class="container">
         <div id="page1" class="page active">
             <div class="header-explore">
-                <h1> ضرب الأعداد النسبية وقسمتها</h1>
+                <h1><i class="fas fa-divide"></i> ضرب الأعداد النسبية وقسمتها</h1>
+                <div class="subtitle">الرياضيات - الصف السابع</div>
             </div>
             
-            <div class="illustration-container">
-                <div class="sky">
-                    <div class="sun"></div>
-                    <div class="cloud cloud-1"></div>
-                    <div class="cloud cloud-2"></div>
-                    <div class="cloud cloud-3"></div>
+            <!-- المشهد التفاعلي للحديقة المدرسية -->
+            <div class="interactive-scene">
+                <div class="overlay">
+                    <div class="title">حديقة المدرسة التفاعلية</div>
+                    <div class="subtitle">تجول في المشهد وحل المسألة الرياضية!</div>
                 </div>
-                
-                <div class="tree tree-0">
-                    <div class="tree-top"></div>
-                    <div class="tree-trunk"></div>
-                    <div class="cup-at-tree" style="bottom: -25px; left: 50%; transform: translateX(-50%);">
-                        <div class="cup-label">¾</div>
+
+                <div class="scene-container">
+                    <canvas id="schoolScene"></canvas>
+                </div>
+
+                <div class="mobile-controls">
+                    <div class="movement-controls">
+                        <div class="control-row">
+                            <div class="control-btn" id="forwardBtn">↑</div>
+                        </div>
+                        <div class="control-row">
+                            <div class="control-btn" id="leftBtn">←</div>
+                            <div class="control-btn" id="backwardBtn">↓</div>
+                            <div class="control-btn" id="rightBtn">→</div>
+                        </div>
+                    </div>
+                    <div class="camera-controls">
+                        <!-- يمكن إضافة عناصر للتحكم بالكاميرا إذا لزم -->
                     </div>
                 </div>
-                
-                <div class="tree tree-1">
-                    <div class="tree-top"></div>
-                    <div class="tree-trunk"></div>
-                    <div class="cup-at-tree" style="bottom: -25px; left: 50%; transform: translateX(-50%);">
-                        <div class="cup-label">¾</div>
-                    </div>
+
+                <div class="mobile-info">
+                    اسحب بإصبعك على الشاشة للنظر حولك، واستخدم أزرار التحكم للحركة
                 </div>
-                
-                <div class="tree tree-2">
-                    <div class="tree-top"></div>
-                    <div class="tree-trunk"></div>
-                    <div class="cup-at-tree" style="bottom: -25px; left: 50%; transform: translateX(-50%);">
-                        <div class="cup-label">¾</div>
-                    </div>
-                </div>
-                
-                <div class="tree tree-3">
-                    <div class="tree-top"></div>
-                    <div class="tree-trunk"></div>
-                    <div class="cup-at-tree" style="bottom: -25px; left: 50%; transform: translateX(-50%);">
-                        <div class="cup-label">¾</div>
-                    </div>
-                </div>
-                
-                <div class="tree tree-4">
-                    <div class="tree-top"></div>
-                    <div class="tree-trunk"></div>
-                    <div class="cup-at-tree" style="bottom: -25px; left: 50%; transform: translateX(-50%);">
-                        <div class="cup-label">¾</div>
-                    </div>
-                </div>
-                
-                <div class="tree tree-5">
-                    <div class="tree-top"></div>
-                    <div class="tree-trunk"></div>
-                    <div class="cup-at-tree" style="bottom: -25px; left: 50%; transform: translateX(-50%);">
-                        <div class="cup-label">¾</div>
-                    </div>
-                </div>
-                
-                <div class="small-plant plant-1"></div>
-                <div class="small-plant plant-2"></div>
-                <div class="small-plant plant-3"></div>
-                <div class="small-plant plant-4"></div>
-                
-                <div class="flower flower-1"></div>
-                <div class="flower flower-2"></div>
-                <div class="flower flower-3"></div>
-                <div class="flower flower-4"></div>
-                
-                <div class="student student-1">
-                    <div class="student-shadow"></div>
-                    <div class="student-head"></div>
-                    <div class="student-body"></div>
-                    <div class="student-arms"></div>
-                </div>
-                
-                <div class="student girl student-2">
-                    <div class="student-shadow"></div>
-                    <div class="student-head"></div>
-                    <div class="student-body"></div>
-                    <div class="student-arms"></div>
-                </div>
-                
-                <div class="student student-3">
-                    <div class="student-shadow"></div>
-                    <div class="student-head"></div>
-                    <div class="student-body"></div>
-                    <div class="student-arms"></div>
-                </div>
-                
-                <div class="student girl student-4">
-                    <div class="student-shadow"></div>
-                    <div class="student-head"></div>
-                    <div class="student-body"></div>
-                    <div class="student-arms"></div>
-                </div>
-                
-                <div class="student student-5">
-                    <div class="student-shadow"></div>
-                    <div class="student-head"></div>
-                    <div class="student-body"></div>
-                    <div class="student-arms"></div>
-                </div>
-                
-                <div class="ground"></div>
             </div>
             
+            <!-- صندوق المسألة الرياضية -->
             <div class="problem-box">
                 <div class="problem-title">أستكشف</div>
                 <div class="problem-text">
                     زرع أحمد وزملاؤه عدداً من الأشجار في حديقة المدرسة، وبعد الانتهاء من زراعتها، أضافوا إلى كل شجرة 
-                    <span class="math-expression">\(\frac{3}{4}\)</span> 
+                    <span class="math-expression">\( \frac{3}{4} \)</span> 
                     الكوب من السماد لتزويد التربة بالعناصر الضرورية. 
                     إذا كان لديهم 
                     <span class="math-expression">60 كوباً</span> 
@@ -1341,16 +774,15 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- بقية محتوى الصفحة -->
             <div class="lesson-idea">
-                <h3>فكرة الدرس</h3>
+                <h3><i class="fas fa-lightbulb"></i> فكرة الدرس</h3>
                 <p>أضرب أعداداً نسبية وأقسمها.</p>
-                
-                <h3>المفردات</h3>
-                <p>التغير الضربي.</p>
             </div>
             
             <div class="basic-concept">
-                <h3>مفهوم أساسي</h3>
+                <h3><i class="fas fa-book"></i> مفهوم أساسي</h3>
                 <p>بالكلمات: عند ضرب كسرين، أضرب البسط في البسط، ثم أضرب المقام في المقام.</p>
                 
                 <div class="formula-container">
@@ -1401,7 +833,6 @@
                     <div class="math-expression">
                         \( = \frac{35}{3} = 11 \frac{2}{3} \)
                     </div>
-                    <p>عند ضرب الكسور، يمكن اختصار أي بسط مع أي مقام في أي كسر آخر.</p>
                 </div>
             </div>
             
@@ -1410,22 +841,22 @@
         
         <div id="page2" class="page">
             <header>
-                <h1>ضرب الأعداد النسبية وقسمتها</h1>
+                <h1><i class="fas fa-divide"></i> ضرب الأعداد النسبية وقسمتها</h1>
                 <div class="subtitle">الرياضيات - الصف السابع</div>
             </header>
             <div class="basic-concept">
-                <h3>خطوات الضرب</h3>
+                <h3><i class="fas fa-info-circle"></i> خطوات الضرب</h3>
                 <ol>
-                    <li>أحول الأعداد الكسرية إلى كسور غير فعلية</li>
-                    <li>أقسم على العوامل المشتركة</li>
-                    <li>أحدد إشارة الناتج</li>
-                    <li>أضرب البسطين</li>
-                    <li>أضرب المقامين</li>
+                    <li>أحول الأعداد الكسرية إلى كسور غير فعلية.</li>
+                    <li>أقسم على العوامل المشتركة.</li>
+                    <li>أحدد إشارة الناتج.</li>
+                    <li>أضرب البسطين.</li>
+                    <li>أضرب المقامين.</li>
                 </ol>
             </div>
             
             <div class="exercise">
-                <h3>أتحقق من فهمي:</h3>
+                <h3><i class="fas fa-tasks"></i> أتحقق من فهمي:</h3>
                 <div class="question-grid">
                     <div class="question-item">
                         <div class="question-text">4) \( \frac{-12}{15} \times \frac{3}{6} \)</div>
@@ -1455,8 +886,6 @@
                         <div class="result-message" id="result-2-7"></div>
                     </div>
                 </div>
-                
-                <p>يمكن ضرب عددين نسبيين على صورة كسرين عشريين، بحيث نطبق قواعد ضرب الأعداد الصحيحة لتحديد إشارة الناتج.</p>
             </div>
             
             <div class="example">
@@ -1491,12 +920,9 @@
         
         <div id="page3" class="page">
             <header>
-                <h1>ضرب الأعداد النسبية وقسمتها</h1>
+                <h1><i class="fas fa-divide"></i> ضرب الأعداد النسبية وقسمتها</h1>
                 <div class="subtitle">الرياضيات - الصف السابع</div>
             </header>
-            <div class="unit-title">
-               
-            </div>
             
             <div class="full-example">
                 <h3>مثال 2</h3>
@@ -1560,7 +986,7 @@
             </div>
             
             <div class="exercise">
-                <h3>أتحقق من فهمي:</h3>
+                <h3><i class="fas fa-tasks"></i> أتحقق من فهمي:</h3>
                 <div class="question-grid">
                     <div class="question-item">
                         <div class="question-text">4) \( -4.6 \times 5 \)</div>
@@ -1586,7 +1012,7 @@
             </div>
             
             <div class="basic-concept">
-                <h3>مفهوم أساسي</h3>
+                <h3><i class="fas fa-book"></i> مفهوم أساسي</h3>
                 <p>إذا كان ناتج ضرب عددين يساوي (1) فإن كلاً منهما يسمى معكوساً ضربياً (multiplicative inverse) للآخر، أو مقلوباً للعدد الآخر.</p>
                 <div class="math-expression">
                     فمثلاً يسمى كل من \( \frac{2}{5} \) و \( \frac{5}{2} \) معكوساً ضربياً للآخر؛ لأن \( \frac{2}{5} \times \frac{5}{2} = 1 \)
@@ -1594,101 +1020,629 @@
             </div>
             
             <div class="page-number">29</div>
-
         </div>
         
         <div class="nav-buttons">
             <button class="nav-button" onclick="showPage(1)">الصفحة 1</button>
             <button class="nav-button" onclick="showPage(2)">الصفحة 2</button>
             <button class="nav-button" onclick="showPage(3)">الصفحة 3</button>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة الدرس</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-
-        .next-button {
-            /* لون أخضر أغمق مائل للأزرق (Teal/Petroleum Blue) */
-            background-color: #008080; /* لون Teal قياسي، يمكنك تجربته */
-            /* لون آخر قريب: #005f60 (أغمق قليلاً) أو #20B2AA (Light Sea Green) */
-            color: white;
-            padding: 10px 20px;
-            font-size: 18px;
-            border: none;
-            border-radius: 25px; /* لجعل الحواف دائرية */
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-        }
-
-        .next-button:hover {
-            /* لون أغمق قليلاً لنفس الدرجة عند مرور المؤشر */
-            background-color: #006666; /* درجة أغمق من اللون السابق */
-        }
-    </style>
-</head>
-<body>
-
-    <a href="u1l5p2.html" class="next-button">
-        التالي: قسمة الأعداد النسبية
-    </a>
-
-</body>
+            <!-- التعديل المطلوب 2: إضافة زر التالي -->
+            <button class="nav-button next-button" onclick="window.location.href='u1l5p2.html'">
+                <i class="fas fa-arrow-left"></i> التالي
+            </button>
         </div>
        
-
         <div class="footer-note">
-            الصف السابع - الفصل الدراسي الأول
+            <h3>الوحدة 1: الأعداد النسبية</h3>
+            <p>الصف السابع - الفصل الدراسي الأول</p>
         </div>
     </div>
     
-    <div class="interactive-message" id="interactiveMessage"></div>
-
     <script>
-        // دالة لعرض صفحة محددة
+        // تهيئة مشهد Three.js للحديقة المدرسية
+        function initScene() {
+            // تهيئة المشهد
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog = new THREE.Fog(0x87CEEB, 20, 100);
+
+            const canvas = document.getElementById('schoolScene');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // إعداد الكاميرا
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            camera.position.set(0, 5, 10);
+
+            // الإضاءة
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xFDB813, 1);
+            sunLight.position.set(100, 200, 100);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 1024;
+            sunLight.shadow.mapSize.height = 1024;
+            sunLight.shadow.camera.near = 0.5;
+            sunLight.shadow.camera.far = 300;
+            scene.add(sunLight);
+
+            // إنشاء أرضية خضراء
+            const groundGeometry = new THREE.PlaneGeometry(200, 200, 100, 100);
+            const groundMaterial = new THREE.MeshStandardMaterial({
+                color: 0x228B22,
+                roughness: 0.9,
+                metalness: 0.1
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // دالة لإنشاء مبنى المدرسة
+            function createSchool(x, z) {
+                const schoolGroup = new THREE.Group();
+
+                // المبنى الرئيسي
+                const mainBuildingGeometry = new THREE.BoxGeometry(40, 20, 15);
+                const mainBuildingMaterial = new THREE.MeshStandardMaterial({ color: 0xB0E0E6, roughness: 0.8 });
+                const mainBuilding = new THREE.Mesh(mainBuildingGeometry, mainBuildingMaterial);
+                mainBuilding.position.y = 10;
+                mainBuilding.castShadow = true;
+                mainBuilding.receiveShadow = true;
+                schoolGroup.add(mainBuilding);
+
+                // السقف
+                const roofGeometry = new THREE.ConeGeometry(25, 10, 4);
+                const roofMaterial = new THREE.MeshStandardMaterial({ color: 0x8B0000 });
+                const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+                roof.position.y = 20 + 5;
+                roof.rotation.y = Math.PI / 4;
+                roof.castShadow = true;
+                roof.receiveShadow = true;
+                schoolGroup.add(roof);
+
+                // الأبواب
+                const doorGeometry = new THREE.BoxGeometry(4, 8, 0.5);
+                const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x5C4033 });
+                const door = new THREE.Mesh(doorGeometry, doorMaterial);
+                door.position.set(0, 4, 7.5);
+                door.castShadow = true;
+                schoolGroup.add(door);
+
+                // إضافة نوافذ
+                const windowMaterial = new THREE.MeshStandardMaterial({ color: 0xADD8E6, transparent: true, opacity: 0.8 });
+
+                for (let i = -15; i <= 15; i += 10) {
+                    const windowGeometry = new THREE.BoxGeometry(5, 5, 0.5);
+                    const windowLeft = new THREE.Mesh(windowGeometry, windowMaterial);
+                    windowLeft.position.set(i, 13, 7.5);
+                    windowLeft.castShadow = true;
+                    schoolGroup.add(windowLeft);
+
+                    const windowRight = new THREE.Mesh(windowGeometry, windowMaterial);
+                    windowRight.position.set(i, 13, -7.5);
+                    windowRight.castShadow = true;
+                    schoolGroup.add(windowRight);
+                }
+
+                schoolGroup.position.set(x, 0, z);
+                scene.add(schoolGroup);
+            }
+
+            // دالة لإنشاء شجرة
+            function createTree(x, z) {
+                const treeGroup = new THREE.Group();
+
+                // الجذع
+                const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.5, 3, 8);
+                const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+                const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                trunk.position.y = 1.5;
+                trunk.castShadow = true;
+                trunk.receiveShadow = true;
+                treeGroup.add(trunk);
+
+                // الأوراق
+                const leavesMaterial = new THREE.MeshStandardMaterial({
+                    color: 0x2E8B57,
+                    roughness: 0.7,
+                    metalness: 0.2
+                });
+
+                const baseSize = 2;
+                const leavesCount = 8;
+
+                for (let i = 0; i < leavesCount; i++) {
+                    const sphereGeometry = new THREE.SphereGeometry(
+                        baseSize * (0.6 + Math.random() * 0.4),
+                        16,
+                        16
+                    );
+
+                    const leavesPart = new THREE.Mesh(sphereGeometry, leavesMaterial);
+
+                    const offsetX = (Math.random() - 0.5) * baseSize * 1.5;
+                    const offsetY = (Math.random() - 0.5) * baseSize * 0.8;
+                    const offsetZ = (Math.random() - 0.5) * baseSize * 1.5;
+
+                    leavesPart.position.set(offsetX, 3.5 + offsetY, offsetZ);
+                    leavesPart.castShadow = true;
+                    leavesPart.receiveShadow = true;
+                    treeGroup.add(leavesPart);
+                }
+
+                treeGroup.position.set(x, 0, z);
+                treeGroup.scale.set(0.7, 0.7, 0.7);
+                scene.add(treeGroup);
+
+                return treeGroup;
+            }
+
+            // دالة لإنشاء سطل (دلو) مع نص
+            function createBucket(x, z) {
+                const bucketGroup = new THREE.Group();
+
+                // جسم الدلو
+                const bucketGeometry = new THREE.CylinderGeometry(0.8, 0.6, 0.8, 16);
+                const bucketMaterial = new THREE.MeshStandardMaterial({ color: 0xAAAAAA, roughness: 0.8 });
+                const bucket = new THREE.Mesh(bucketGeometry, bucketMaterial);
+                bucket.position.y = 0.4;
+                bucket.castShadow = true;
+                bucketGroup.add(bucket);
+
+                // مقبض الدلو
+                const handleGeometry = new THREE.TorusGeometry(0.8, 0.05, 8, 30, Math.PI);
+                const handleMaterial = new THREE.MeshStandardMaterial({ color: 0x666666 });
+                const handle = new THREE.Mesh(handleGeometry, handleMaterial);
+                handle.position.y = 0.8;
+                handle.rotation.x = Math.PI / 2;
+                handle.rotation.z = Math.PI;
+                handle.castShadow = true;
+                bucketGroup.add(handle);
+
+                // إنشاء لوح نصي
+                const textCanvas = document.createElement('canvas');
+                const context = textCanvas.getContext('2d');
+
+                textCanvas.width = 512;
+                textCanvas.height = 256;
+                context.fillStyle = 'white';
+                context.fillRect(0, 0, textCanvas.width, textCanvas.height);
+                context.font = 'bold 60px Cairo';
+                context.fillStyle = '#333333';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillText('3/4 الكوب سماد', textCanvas.width / 2, textCanvas.height / 2);
+
+                const texture = new THREE.CanvasTexture(textCanvas);
+                const textMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
+                const textPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 0.5), textMaterial);
+                textPlane.position.set(0, 0.6, 0.6);
+                textPlane.rotation.y = Math.PI;
+                bucketGroup.add(textPlane);
+
+                bucketGroup.position.set(x, 0, z);
+                bucketGroup.scale.set(0.7, 0.7, 0.7);
+                scene.add(bucketGroup);
+            }
+
+            // دالة لإنشاء شخصية
+            function createPerson(x, z, type, gender, bodyType = 'normal', clothingColor = 0x4169E1) {
+                const personGroup = new THREE.Group();
+
+                let bodyHeight, headSize, bodyWidth, armRadius, legRadius, armLength, legLength, hairColor, neckHeight;
+
+                if (type === 'adult') {
+                    bodyHeight = 2.0;
+                    headSize = 0.6;
+                    bodyWidth = 1.0;
+                    armRadius = 0.2;
+                    legRadius = 0.25;
+                    armLength = 1.0;
+                    legLength = 1.0;
+                    neckHeight = 0.3;
+                } else {
+                    bodyHeight = 1.5;
+                    headSize = 0.5;
+                    bodyWidth = 0.8;
+                    armRadius = 0.15;
+                    legRadius = 0.2;
+                    armLength = 0.8;
+                    legLength = 0.8;
+                    neckHeight = 0.2;
+                }
+
+                if (gender === 'male') {
+                    bodyWidth *= 1.2;
+                    hairColor = 0x5c3a21;
+                } else {
+                    bodyWidth *= 0.9;
+                    hairColor = 0x5c3a21;
+                }
+
+                if (bodyType === 'heavy') {
+                    bodyWidth *= 1.5;
+                    armRadius *= 1.5;
+                    legRadius *= 1.5;
+                }
+
+                const headColor = 0xF5DEB3;
+                const torsoYPosition = bodyHeight / 2 + legLength;
+                const neckYPosition = torsoYPosition + bodyHeight / 2 + neckHeight / 2;
+                const headYPosition = neckYPosition + neckHeight / 2 + headSize;
+                const armXPosition = bodyWidth * 0.6 + armRadius;
+                const handYPosition = torsoYPosition + bodyHeight * 0.4 - armLength * 0.5;
+                const legXPosition = bodyWidth * 0.3;
+
+                // الجذع
+                const torsoGeometry = new THREE.BoxGeometry(bodyWidth, bodyHeight, bodyWidth * 0.7);
+                const torsoMaterial = new THREE.MeshStandardMaterial({ color: clothingColor, roughness: 0.8 });
+                const torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
+                torso.position.y = torsoYPosition;
+                torso.castShadow = true;
+                personGroup.add(torso);
+
+                // العنق
+                const neckGeometry = new THREE.CylinderGeometry(headSize * 0.4, headSize * 0.4, neckHeight, 8);
+                const neckMaterial = new THREE.MeshStandardMaterial({ color: headColor, roughness: 0.8 });
+                const neck = new THREE.Mesh(neckGeometry, neckMaterial);
+                neck.position.y = neckYPosition;
+                neck.castShadow = true;
+                personGroup.add(neck);
+
+                // الأذرع
+                const armMaterial = new THREE.MeshStandardMaterial({ color: clothingColor, roughness: 0.8 });
+                const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(armRadius, armRadius, armLength, 8), armMaterial);
+                leftArm.position.set(-armXPosition, handYPosition, 0);
+                leftArm.rotation.z = -Math.PI / 4;
+                leftArm.castShadow = true;
+                personGroup.add(leftArm);
+
+                const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(armRadius, armRadius, armLength, 8), armMaterial);
+                rightArm.position.set(armXPosition, handYPosition, 0);
+                rightArm.rotation.z = Math.PI / 4;
+                rightArm.castShadow = true;
+                personGroup.add(rightArm);
+
+                // الأيدي
+                const handGeometry = new THREE.SphereGeometry(armRadius * 1.5, 8, 8);
+                const handMaterial = new THREE.MeshStandardMaterial({ color: headColor, roughness: 0.8 });
+                const leftHand = new THREE.Mesh(handGeometry, handMaterial);
+                leftHand.position.set(
+                    leftArm.position.x - Math.sin(Math.PI / 4) * armLength/2,
+                    leftArm.position.y - Math.cos(Math.PI / 4) * armLength/2,
+                    0
+                );
+                leftHand.castShadow = true;
+                personGroup.add(leftHand);
+
+                const rightHand = new THREE.Mesh(handGeometry, handMaterial);
+                rightHand.position.set(
+                    rightArm.position.x + Math.sin(Math.PI / 4) * armLength/2,
+                    rightArm.position.y - Math.cos(Math.PI / 4) * armLength/2,
+                    0
+                );
+                rightHand.castShadow = true;
+                personGroup.add(rightHand);
+
+                // الأرجل
+                const legMaterial = new THREE.MeshStandardMaterial({ color: 0x4B3721 });
+                const leftLeg = new THREE.Mesh(new THREE.CylinderGeometry(legRadius, legRadius, legLength, 8), legMaterial);
+                leftLeg.position.set(-legXPosition, legLength/2, 0);
+                leftLeg.castShadow = true;
+                personGroup.add(leftLeg);
+
+                const rightLeg = new THREE.Mesh(new THREE.CylinderGeometry(legRadius, legRadius, legLength, 8), legMaterial);
+                rightLeg.position.set(legXPosition, legLength/2, 0);
+                rightLeg.castShadow = true;
+                personGroup.add(rightLeg);
+
+                // الأحذية
+                const shoeGeometry = new THREE.BoxGeometry(legRadius * 2, 0.2, legRadius * 3);
+                const shoeMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+                const leftShoe = new THREE.Mesh(shoeGeometry, shoeMaterial);
+                leftShoe.position.set(leftLeg.position.x, 0.1, 0);
+                leftShoe.castShadow = true;
+                personGroup.add(leftShoe);
+
+                const rightShoe = new THREE.Mesh(shoeGeometry, shoeMaterial);
+                rightShoe.position.set(rightLeg.position.x, 0.1, 0);
+                rightShoe.castShadow = true;
+                personGroup.add(rightShoe);
+
+                // الشعر والقبعات
+                const hairMaterial = new THREE.MeshStandardMaterial({ color: hairColor, roughness: 0.8 });
+
+                const headGroup = new THREE.Group();
+                headGroup.position.y = headYPosition;
+                personGroup.add(headGroup);
+
+                const headGeometry = new THREE.SphereGeometry(headSize, 32, 32);
+                const head = new THREE.Mesh(headGeometry, neckMaterial);
+                headGroup.add(head);
+
+                const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+                const eyeGeometry = new THREE.SphereGeometry(headSize * 0.1, 16, 16);
+
+                const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+                leftEye.position.set(-headSize * 0.35, headSize * 0.25, headSize * 0.9);
+                head.add(leftEye);
+
+                const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+                rightEye.position.set(headSize * 0.35, headSize * 0.25, headSize * 0.9);
+                head.add(rightEye);
+
+                const mouthMaterial = new THREE.MeshStandardMaterial({ color: 0xff4d4d });
+                const mouthGeometry = new THREE.TorusGeometry(headSize * 0.2, headSize * 0.05, 16, 100, Math.PI);
+                const mouth = new THREE.Mesh(mouthGeometry, mouthMaterial);
+                mouth.position.set(0, -headSize * 0.2, headSize * 0.9);
+                mouth.rotation.x = Math.PI / 2;
+                head.add(mouth);
+
+                if (gender === 'female') {
+                    function createBraid(segments = 15, segmentHeight = 0.3) {
+                        const braidGroup = new THREE.Group();
+                        const segmentGeometry = new THREE.CylinderGeometry(0.1, 0.1, segmentHeight * 1.5, 8);
+
+                        for (let i = 0; i < segments; i++) {
+                            for (let j = 0; j < 3; j++) {
+                                const strand = new THREE.Mesh(segmentGeometry, hairMaterial);
+                                strand.position.y = -i * segmentHeight;
+
+                                const angle = (j / 3) * Math.PI * 2;
+                                strand.position.x = Math.cos(angle) * 0.1;
+                                strand.position.z = Math.sin(angle) * 0.1;
+
+                                strand.rotation.y = (i * Math.PI / 8) + angle;
+                                strand.rotation.x = Math.PI / 2;
+
+                                braidGroup.add(strand);
+                            }
+                        }
+                        return braidGroup;
+                    }
+
+                    const hairGeometry = new THREE.SphereGeometry(headSize * 1.02, 32, 32);
+                    const hair = new THREE.Mesh(hairGeometry, hairMaterial);
+                    hair.position.z = -headSize * 0.05;
+                    headGroup.add(hair);
+
+                    const leftBraid = createBraid();
+                    leftBraid.scale.set(headSize, headSize, headSize);
+                    leftBraid.position.set(-headSize * 0.9, 0, 0);
+                    leftBraid.rotation.z = Math.PI / 8;
+                    leftBraid.rotation.y = -Math.PI / 2;
+                    headGroup.add(leftBraid);
+
+                    const rightBraid = createBraid();
+                    rightBraid.scale.set(headSize, headSize, headSize);
+                    rightBraid.position.set(headSize * 0.9, 0, 0);
+                    rightBraid.rotation.z = -Math.PI / 8;
+                    rightBraid.rotation.y = Math.PI / 2;
+                    headGroup.add(rightBraid);
+
+                } else {
+                    const hairGeometry = new THREE.SphereGeometry(headSize * 0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+                    const hair = new THREE.Mesh(hairGeometry, hairMaterial);
+                    hair.position.y = headSize * 0.6;
+                    hair.castShadow = true;
+                    headGroup.add(hair);
+                }
+
+                personGroup.position.set(x, 0, z);
+                personGroup.scale.set(0.7, 0.7, 0.7);
+                scene.add(personGroup);
+            }
+
+            // إنشاء البيئة
+            createSchool(0, -60);
+
+            const clothingColors = [0x4169E1];
+            const count = 15;
+
+            for (let i = 0; i < count; i++) {
+                const treeX = Math.random() * 180 - 90;
+                const treeZ = Math.random() * 180 - 90;
+
+                createTree(treeX, treeZ);
+
+                const type = 'child';
+                const gender = Math.random() > 0.5 ? 'male' : 'female';
+                const bodyType = Math.random() > 0.7 ? 'heavy' : 'normal';
+                const randomColor = clothingColors[Math.floor(Math.random() * clothingColors.length)];
+
+                const personX = treeX + 2;
+                const personZ = treeZ + 2;
+
+                createPerson(personX, personZ, type, gender, bodyType, randomColor);
+                createBucket(personX + 1.5, personZ);
+            }
+
+            // التحكم في الكاميرا
+            const moveState = { forward: false, backward: false, left: false, right: false };
+            const velocity = new THREE.Vector3();
+            const direction = new THREE.Vector3();
+            const movementSpeed = 0.2;
+            const rotationSpeed = 0.005;
+
+            // ضوابط لوحة المفاتيح
+            document.addEventListener('keydown', (e) => {
+                switch(e.key.toLowerCase()) {
+                    case 'w': moveState.forward = true; break;
+                    case 's': moveState.backward = true; break;
+                    case 'a': moveState.left = true; break;
+                    case 'd': moveState.right = true; break;
+                }
+            });
+
+            document.addEventListener('keyup', (e) => {
+                switch(e.key.toLowerCase()) {
+                    case 'w': moveState.forward = false; break;
+                    case 's': moveState.backward = false; break;
+                    case 'a': moveState.left = false; break;
+                    case 'd': moveState.right = false;
+                }
+            });
+
+            // أزرار التحكم عبر الهاتف المحمول
+            document.getElementById('forwardBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.forward = true;
+            });
+            document.getElementById('forwardBtn').addEventListener('touchend', () => moveState.forward = false);
+
+            document.getElementById('backwardBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.backward = true;
+            });
+            document.getElementById('backwardBtn').addEventListener('touchend', () => moveState.backward = false);
+
+            document.getElementById('leftBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.left = true;
+            });
+            document.getElementById('leftBtn').addEventListener('touchend', () => moveState.left = false);
+
+            document.getElementById('rightBtn').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveState.right = true;
+            });
+            document.getElementById('rightBtn').addEventListener('touchend', () => moveState.right = false);
+
+            // تحكم الكاميرا بالماوس
+            let previousMouseX = 0;
+            let previousMouseY = 0;
+            let isDragging = false;
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMouseX = e.clientX;
+                previousMouseY = e.clientY;
+                canvas.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const deltaX = e.clientX - previousMouseX;
+                const deltaY = e.clientY - previousMouseY;
+
+                camera.rotation.y -= deltaX * rotationSpeed;
+                camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - deltaY * rotationSpeed));
+
+                previousMouseX = e.clientX;
+                previousMouseY = e.clientY;
+            });
+
+            // تحكم الكاميرا باللمس
+            let previousTouchX = 0;
+            let previousTouchY = 0;
+
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    previousTouchX = e.touches[0].clientX;
+                    previousTouchY = e.touches[0].clientY;
+                }
+            });
+
+            canvas.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDragging || e.touches.length !== 1) return;
+
+                const deltaX = e.touches[0].clientX - previousTouchX;
+                const deltaY = e.touches[0].clientY - previousTouchY;
+
+                camera.rotation.y -= deltaX * rotationSpeed;
+                camera.rotation.x = Math.max(-Math.PI/3, Math.min(Math.PI/3, camera.rotation.x - deltaY * rotationSpeed));
+
+                previousTouchX = e.touches[0].clientX;
+                previousTouchY = e.touches[0].clientY;
+            });
+
+            // حلقة الحركة (Animation Loop)
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // إعادة تعيين السرعة
+                velocity.x = 0;
+                velocity.z = 0;
+
+                // تطبيق الحركة
+                if (moveState.forward) velocity.z -= movementSpeed;
+                if (moveState.backward) velocity.z += movementSpeed;
+                if (moveState.left) velocity.x -= movementSpeed;
+                if (moveState.right) velocity.x += movementSpeed;
+
+                // تطبيق دوران الكاميرا على الحركة
+                direction.set(velocity.x, 0, velocity.z);
+                direction.applyQuaternion(camera.quaternion);
+                direction.y = 0;
+
+                // تحديث موضع الكاميرا
+                camera.position.add(direction);
+
+                // إبقاء الكاميرا فوق الأرض
+                camera.position.y = 5;
+
+                // فحص الحدود
+                camera.position.x = Math.max(-90, Math.min(90, camera.position.x));
+                camera.position.z = Math.max(-90, Math.min(90, camera.position.z));
+
+                renderer.render(scene, camera);
+            }
+
+            // التعامل مع تغيير حجم النافذة
+            window.addEventListener('resize', () => {
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            });
+
+            // بدء الحركة
+            animate();
+        }
+
+        // تهيئة المشهد عند تحميل الصفحة
+        window.addEventListener('load', initScene);
+        
         function showPage(pageNumber) {
-            // إخفاء جميع الصفحات
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
             
-            // إظهار الصفحة المطلوبة
-            document.getElementById(`page${pageNumber}`).classList.add('active');
+            const activePage = document.getElementById(`page${pageNumber}`);
+            activePage.classList.add('active');
             
-            // التمرير إلى أعلى الصفحة
             window.scrollTo(0, 0);
 
-            // إعادة تحميل MathJax للصفحة الجديدة
             if (window.MathJax) {
                 MathJax.typeset();
             }
         }
         
-        // الإجابات الصحيحة
         const correctAnswers = {
-            // الصفحة 2
-            '2-4': '-2/5', // أو -0.4
-            '2-5': '1/15', // أو 0.0667
-            '2-6': '-32/5', // أو -6.4
-            '2-7': '-91/6', // أو -15.1667
-            
-            // الصفحة 3
+            '2-4': '-2/5',
+            '2-5': '1/15',
+            '2-6': '-32/5',
+            '2-7': '-91/6',
             '3-4': '-23',
             '3-5': '1.584',
             '3-6': '14.08'
         };
         
-        // حلول الأسئلة
         const questionSolutions = {
             '2-4': 'الحل: \\( \\frac{-12}{15} \\times \\frac{3}{6} = \\frac{-36}{90} = -\\frac{2}{5} \\)',
             '2-5': 'الحل: \\( (-\\frac{2}{6}) \\times (-\\frac{1}{5}) = \\frac{2}{30} = \\frac{1}{15} \\)',
@@ -1699,77 +1653,25 @@
             '3-6': 'الحل: \\( -6.4 \\times -2 \\frac{1}{5} = -6.4 \\times -2.2 = 14.08 \\)'
         };
         
-        // دالة للتحقق من الإجابة
         function checkAnswer(questionId) {
             const answerInput = document.getElementById(`answer-${questionId}`);
             const resultDiv = document.getElementById(`result-${questionId}`);
             const userAnswer = answerInput.value.trim();
             const correctAnswer = correctAnswers[questionId];
             
-            // إزالة مسافات زائدة
             const normalizedUserAnswer = userAnswer.replace(/\s+/g, '');
             
-            // التحقق من الإجابة
             if (normalizedUserAnswer === correctAnswer) {
                 resultDiv.innerHTML = '<span class="correct">✓ الإجابة صحيحة! أحسنت!</span>';
             } else {
                 resultDiv.innerHTML = `<span class="incorrect">✗ الإجابة غير صحيحة. حاول مرة أخرى.</span>
                                       <div class="solution">${questionSolutions[questionId]}</div>`;
             }
-            if (window.MathJax) { // Ensure MathJax renders the solution
+            if (window.MathJax) {
                 MathJax.typesetPromise([resultDiv]);
             }
         }
 
-        // JavaScript for the new Explore section
-        // إضافة تفاعلية مع الأكواب والنباتات والطلاب
-        document.querySelectorAll('.cup-at-tree, .small-plant, .flower, .student').forEach(element => {
-            element.addEventListener('click', function() {
-                const message = document.getElementById('interactiveMessage');
-                
-                if (this.classList.contains('cup-at-tree')) {
-                    message.textContent = 'كوب السماد: ¾ لكل شجرة';
-                } else if (this.classList.contains('small-plant')) {
-                    message.textContent = 'شجيرة صغيرة تنمو';
-                } else if (this.classList.contains('flower')) {
-                    message.textContent = 'زهرة جميلة!';
-                } else if (this.classList.contains('student')) {
-                    const names = ['أحمد', 'فاطمة', 'محمد', 'سارة', 'خالد'];
-                    const studentElements = Array.from(document.querySelectorAll('.student')); // Get all student elements
-                    const index = studentElements.indexOf(this); // Find the index of the clicked student
-                    message.textContent = `الطالب: ${names[index]}`;
-                }
-                
-                message.style.display = 'block';
-                const rect = this.getBoundingClientRect();
-                message.style.top = (rect.top - 60) + 'px';
-                message.style.left = (rect.left + rect.width / 2 - message.offsetWidth / 2) + 'px';
-                
-                setTimeout(() => {
-                    message.style.display = 'none';
-                }, 2000);
-                
-                // تأثير خاص للعنصر
-                if (this.classList.contains('cup-at-tree')) {
-                    this.style.transform = 'translateX(-50%) translateY(-15px) rotate(5deg)';
-                } else if (this.classList.contains('student')) {
-                    this.style.transform = 'scale(1.15)';
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 500);
-                } else {
-                    this.style.transform = 'scale(1.2)';
-                }
-                
-                setTimeout(() => {
-                    if (!this.classList.contains('student') && !this.classList.contains('cup-at-tree')) {
-                        this.style.transform = '';
-                    }
-                }, 500);
-            });
-        });
-        
-        // وظيفة لإظهار/إخفاء الحل
         function toggleSolution() {
             const solution = document.getElementById('solution');
             const btn = document.querySelector('.solution-btn');
@@ -1780,67 +1682,11 @@
             } else {
                 solution.style.display = 'block';
                 btn.textContent = 'اخفي الحل';
-                // إعادة تحميل MathJax لرسم المعادلات الرياضية
                 if (window.MathJax) {
                     MathJax.typesetPromise([solution]);
                 }
             }
         }
-        
-        // تفاعل إضافي مع العنوان
-        const headerExplore = document.querySelector('.header-explore h1');
-        if (headerExplore) {
-            headerExplore.addEventListener('click', function() {
-                this.style.animation = 'none';
-                setTimeout(() => {
-                    this.style.animation = '';
-                }, 10);
-            });
-        }
-        
-        // تحسين تفاعل الأكواب
-        document.querySelectorAll('.cup-at-tree').forEach(cup => {
-            cup.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateX(-50%) translateY(-5px) scale(1.1)';
-                this.style.boxShadow = '0 12px 20px rgba(0,0,0,0.2)';
-            });
-            
-            cup.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateX(-50%)';
-                this.style.boxShadow = '';
-            });
-        });
-        
-        // تفاعل إضافي مع الطلاب
-        document.querySelectorAll('.student').forEach(student => {
-            student.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px) scale(1.1)';
-                this.style.filter = 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.7))';
-            });
-            
-            student.addEventListener('mouseleave', function() {
-                this.style.transform = '';
-                this.style.filter = '';
-            });
-        });
-        
-        // تفاعل إضافي مع الأشجار
-        document.querySelectorAll('.tree').forEach(tree => {
-            tree.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.05) rotate(3deg)';
-            });
-            
-            tree.addEventListener('mouseleave', function() {
-                this.style.transform = '';
-            });
-        });
-
-        // Initialize MathJax on load for all pages
-        window.addEventListener('load', function() {
-            if (window.MathJax) {
-                MathJax.typeset();
-            }
-        });
     </script>
 </body>
 </html>
