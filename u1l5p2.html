@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ضرب الأعداد النسبية وقسمتها - الصف السابع</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* تعريف المتغيرات لألوان جذابة وباردة من القالب المطلوب */
+        :root {
+            --royal-blue: #0c2461;
+            --gold: #f6b93b;
+            --light-blue: #81c7ff;
+            --sky-blue: #4a69bd;
+            --pale-blue: #e0f7fa;
+            --royal-blue-2: #4169e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--pale-blue);
+            color: #333;
+            line-height: 1.8;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--royal-blue-2);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: var(--gold);
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .page {
+            padding: 35px;
+            border-bottom: 1px solid #e0f0ff;
+            display: block;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--sky-blue);
+            margin: 25px 0;
+        }
+
+        .section h2 {
+            color: var(--royal-blue-2);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--gold);
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            gap: 10px;
+        }
+
+        .section h2::before {
+            content: "•";
+            color: var(--gold);
+            font-size: 2.2rem;
+            margin-left: 10px;
+        }
+        
+        .lesson-idea, .basic-concept, .full-example, .example, .exercise {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--sky-blue);
+            margin: 25px 0;
+        }
+
+        .basic-concept h3 {
+            color: var(--royal-blue-2);
+            border-bottom: 3px solid var(--gold);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+        
+        .exercise {
+            border: 3px solid var(--gold);
+            background-color: #f9fbe7;
+        }
+        
+        .exercise h3, .exercise-title {
+            color: var(--royal-blue-2);
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 3px solid var(--royal-blue);
+            padding-bottom: 10px;
+        }
+        
+        .exercise-title i {
+            margin-left: 10px;
+            color: var(--gold);
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .question-item {
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .question-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--royal-blue);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .option-label:hover {
+            border-color: var(--gold);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            background-color: #f8f9fa;
+        }
+
+        .option-label input[type="radio"] {
+            margin-left: 10px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: 2px solid var(--sky-blue);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            transition: all 0.2s ease;
+            position: relative;
+            top: -1px;
+        }
+
+        .option-label input[type="radio"]:checked {
+            background-color: var(--royal-blue-2);
+            border-color: var(--royal-blue-2);
+        }
+
+        .option-text {
+            flex-grow: 1;
+        }
+        
+        .check-button {
+            background: var(--gold);
+            color: var(--royal-blue);
+            border: none;
+            padding: 14px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            font-weight: 700;
+            display: block;
+            margin: 15px auto;
+            width: 100%;
+            max-width: 250px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .check-button:hover {
+            background: #ffd166;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        
+        .result-message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #a5d6a7;
+            display: block;
+        }
+        
+        .incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 2px solid #ef9a9a;
+            display: block;
+        }
+        
+        .page-number {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+            color: var(--royal-blue);
+            font-size: 1.1rem;
+            padding: 10px;
+            background-color: var(--pale-blue);
+            border-radius: 5px;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 0 10px;
+        }
+        
+        .nav-button {
+            background-color: var(--royal-blue-2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 1rem;
+        }
+
+        .nav-button:hover {
+            background-color: var(--royal-blue);
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border-top: 3px solid var(--gold);
+            font-size: 1rem;
+        }
+
+        .footer-note h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            body { font-size: 1rem; padding: 10px; }
+            h1 { font-size: 2.2rem; }
+            .subtitle { font-size: 1.3rem; }
+            .section h2 { font-size: 1.5rem; }
+            .basic-concept h3 { font-size: 1.3rem; }
+            .question-grid { grid-template-columns: 1fr; }
+            .navigation-buttons { flex-direction: column; gap: 10px; }
+            .nav-button { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- عنوان الدرس -->
+        <header>
+            <h1>ضرب الأعداد النسبية وقسمتها</h1>
+            <div class="subtitle">الرياضيات - الصف السابع</div>
+        </header>
+
+        <!-- محتوى الصفحة الثانية فقط -->
+        <div id="page2" class="page active">
+            <div class="basic-concept">
+                <h3><i class="fas fa-info-circle"></i> خطوات الضرب</h3>
+                <ol>
+                    <li>أحول الأعداد الكسرية إلى كسور غير فعلية.</li>
+                    <li>أقسم على العوامل المشتركة.</li>
+                    <li>أحدد إشارة الناتج.</li>
+                    <li>أضرب البسطين.</li>
+                    <li>أضرب المقامين.</li>
+                </ol>
+            </div>
+            
+            <div class="exercise">
+                <h3><i class="fas fa-tasks"></i> أتحقق من فهمي:</h3>
+                <div class="question-grid" id="question-grid">
+                    <!-- سيتم إنشاء الأسئلة هنا ديناميكياً باستخدام JavaScript -->
+                </div>
+            </div>
+
+            <!-- أزرار التنقل -->
+            <div class="navigation-buttons">
+                <a href="u1l5p2.html" class="nav-button">السابق</a>
+                <a href="#" class="nav-button">التالي</a>
+            </div>
+            
+            <div class="page-number">28</div>
+        </div>
+        
+        <div class="footer-note">
+            <h3>الوحدة 1: الأعداد النسبية</h3>
+            <p>الصف السابع - الفصل الدراسي الأول</p>
+        </div>
+    </div>
+    
+    <script>
+        // دالة لخلط عناصر مصفوفة بشكل عشوائي (Fisher-Yates shuffle)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // كائن يحتوي على بيانات الأسئلة مع الخيارات والإجابات الصحيحة
+        const questions = [
+            {
+                id: '2-4',
+                text: '4) \\( \\frac{-12}{15} \\times \\frac{3}{6} \\)',
+                correctAnswer: '-2/5',
+                options: ['-\\frac{2}{5}', '\\frac{2}{5}', '-\\frac{1}{3}', '-\\frac{3}{5}']
+            },
+            {
+                id: '2-5',
+                text: '5) \\( (-\\frac{2}{6}) \\times (-\\frac{1}{5}) \\)',
+                correctAnswer: '1/15',
+                options: ['\\frac{1}{15}', '-\\frac{1}{15}', '\\frac{2}{11}', '\\frac{1}{30}']
+            },
+            {
+                id: '2-6',
+                text: '6) \\( 2 \\times (-3 \\frac{1}{5}) \\)',
+                correctAnswer: '-32/5',
+                options: ['-\\frac{32}{5}', '\\frac{32}{5}', '-\\frac{16}{5}', '-\\frac{34}{5}']
+            },
+            {
+                id: '2-7',
+                text: '7) \\( (-6 \\frac{1}{2}) \\times (2 \\frac{1}{3}) \\)',
+                correctAnswer: '-91/6',
+                options: ['-\\frac{91}{6}', '\\frac{91}{6}', '-\\frac{21}{5}', '-\\frac{20}{5}']
+            }
+        ];
+        
+        // دالة لإنشاء الأسئلة ديناميكياً
+        function generateQuestions() {
+            const questionGrid = document.getElementById('question-grid');
+            
+            questions.forEach(q => {
+                // خلط الخيارات لكل سؤال
+                shuffleArray(q.options);
+                
+                const questionItem = document.createElement('div');
+                questionItem.className = 'question-item';
+                
+                // إضافة نص السؤال
+                const questionTextDiv = document.createElement('div');
+                questionTextDiv.className = 'question-text';
+                questionTextDiv.innerHTML = q.text;
+                questionItem.appendChild(questionTextDiv);
+                
+                // إضافة حاوية الخيارات
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+                
+                // إنشاء الخيارات المخلطة
+                q.options.forEach(option => {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.className = 'option-label';
+                    
+                    const optionInput = document.createElement('input');
+                    optionInput.type = 'radio';
+                    optionInput.name = `q-${q.id}`;
+                    optionInput.value = option;
+                    
+                    const optionTextSpan = document.createElement('span');
+                    optionTextSpan.className = 'option-text';
+                    optionTextSpan.innerHTML = `\\( ${option} \\)`;
+                    
+                    optionLabel.appendChild(optionInput);
+                    optionLabel.appendChild(optionTextSpan);
+                    optionsContainer.appendChild(optionLabel);
+                });
+                
+                questionItem.appendChild(optionsContainer);
+                
+                // إضافة زر التحقق
+                const checkButton = document.createElement('button');
+                checkButton.className = 'check-button';
+                checkButton.textContent = 'تحقق';
+                checkButton.onclick = function() {
+                    checkAnswer(this, q.correctAnswer);
+                };
+                questionItem.appendChild(checkButton);
+                
+                // إضافة رسالة النتيجة
+                const resultMessageDiv = document.createElement('div');
+                resultMessageDiv.className = 'result-message';
+                resultMessageDiv.id = `result-${q.id}`;
+                questionItem.appendChild(resultMessageDiv);
+                
+                questionGrid.appendChild(questionItem);
+            });
+            
+            // إعادة تشكيل المعادلات الرياضية باستخدام MathJax بعد إنشاء العناصر
+            if (window.MathJax) {
+                MathJax.typesetPromise([questionGrid]);
+            }
+        }
+        
+        // الدالة المعدلة للتحقق من الإجابة
+        function checkAnswer(buttonElement, correctAnswer) {
+            // العثور على العنصر الأب المشترك (question-item)
+            const questionItem = buttonElement.closest('.question-item');
+            // العثور على الإجابة المختارة ضمن هذا العنصر فقط
+            const selectedOption = questionItem.querySelector('input[type="radio"]:checked');
+            // العثور على عنصر النتيجة
+            const resultDiv = questionItem.querySelector('.result-message');
+            
+            // إذا لم يتم اختيار أي إجابة، يتم عرض رسالة خطأ
+            if (!selectedOption) {
+                resultDiv.innerHTML = '<span class="incorrect">الرجاء اختيار إجابة.</span>';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            
+            const userAnswer = selectedOption.value;
+            
+            // إخفاء جميع رسائل النتيجة السابقة
+            const allResultMessages = document.querySelectorAll('.result-message');
+            allResultMessages.forEach(msg => {
+                msg.style.display = 'none';
+            });
+            
+            // إعادة كتابة الإجابة الصحيحة بما يتوافق مع القيمة المخزنة
+            let simplifiedAnswer;
+            switch(correctAnswer) {
+                case '-2/5':
+                    simplifiedAnswer = '-\\frac{2}{5}';
+                    break;
+                case '1/15':
+                    simplifiedAnswer = '\\frac{1}{15}';
+                    break;
+                case '-32/5':
+                    simplifiedAnswer = '-\\frac{32}{5}';
+                    break;
+                case '-91/6':
+                    simplifiedAnswer = '-\\frac{91}{6}';
+                    break;
+                default:
+                    simplifiedAnswer = correctAnswer;
+            }
+
+            if (userAnswer === simplifiedAnswer) {
+                resultDiv.innerHTML = '<span class="correct">✓ الإجابة صحيحة! أحسنت!</span>';
+            } else {
+                resultDiv.innerHTML = `<span class="incorrect">✗ الإجابة غير صحيحة.</span>`;
+            }
+            
+            // إظهار رسالة النتيجة بعد تعبئتها
+            resultDiv.style.display = 'block';
+        }
+        
+        // استدعاء الدالة لإنشاء الأسئلة عند تحميل الصفحة
+        window.onload = generateQuestions;
+
+    </script>
+</body>
+</html>
