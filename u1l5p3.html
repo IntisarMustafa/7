@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ضرب الأعداد النسبية وقسمتها - الصف السابع</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- استخدام خط Tajawal ليتناسب مع المحتوى العربي -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- MathJax configuration must be before the script -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* تعريف المتغيرات لألوان جذابة وباردة من القالب المطلوب */
+        :root {
+            --royal-blue: #0c2461;
+            --gold: #f6b93b;
+            --light-blue: #81c7ff;
+            --sky-blue: #4a69bd;
+            --pale-blue: #e0f7fa;
+            --royal-blue-2: #4169e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--pale-blue);
+            color: #333;
+            line-height: 1.8;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* حجم خط أساسي أكبر قليلاً */
+            font-size: 1.2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--royal-blue-2);
+            color: white;
+            padding: 25px;
+            text-align: right;
+            border-bottom: 5px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* حجم خط أكبر للعنوان الرئيسي */
+        h1 {
+            color: white;
+            font-size: 5.5rem; /* تم تكبير حجم الخط بشكل كبير هنا */
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        /* حجم خط أكبر للعنوان الفرعي */
+        .subtitle {
+            color: var(--gold);
+            font-size: 2.5rem; /* تم تكبير حجم الخط بشكل كبير هنا */
+            font-weight: 700;
+        }
+
+        .page {
+            padding: 35px;
+            border-bottom: 1px solid #e0f0ff;
+            display: block;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--sky-blue);
+            margin: 25px 0;
+        }
+
+        /* حجم خط أكبر لعناوين الأقسام */
+        .section h2 {
+            color: var(--royal-blue-2);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--gold);
+            display: flex;
+            align-items: center;
+            font-size: 2.2rem;
+            gap: 10px;
+        }
+
+        .section h2::before {
+            content: "•";
+            color: var(--gold);
+            font-size: 2.8rem;
+            margin-left: 10px;
+        }
+        
+        .exercise {
+            border: 3px solid var(--gold);
+            background-color: #f9fbe7;
+        }
+        
+        /* حجم خط أكبر لعنوان قسم "أتحقق من فهمي" */
+        .exercise h2 {
+            color: var(--royal-blue-2);
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 3px solid var(--royal-blue);
+            padding-bottom: 10px;
+            text-align: center;
+            display: block;
+        }
+        
+        .exercise h2 i {
+            margin-left: 10px;
+            color: var(--gold);
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .question-item {
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .question-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* زيادة حجم خط عناوين الأسئلة */
+        .question-item h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .input-group input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .input-group input[type="number"]::-webkit-outer-spin-button,
+        .input-group input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .fraction-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fraction-line {
+            width: 100%;
+            height: 2px;
+            background-color: #333;
+            margin: 1px 0;
+        }
+        
+        .fraction-input input {
+            text-align: center;
+            width: 50px;
+        }
+        
+        .page-number {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+            color: var(--royal-blue);
+            font-size: 1.1rem;
+            padding: 10px;
+            background-color: var(--pale-blue);
+            border-radius: 5px;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 0 10px;
+        }
+        
+        .nav-button {
+            background-color: var(--royal-blue-2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 1rem;
+        }
+
+        .nav-button:hover {
+            background-color: var(--royal-blue);
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border-top: 3px solid var(--gold);
+            font-size: 1rem;
+        }
+
+        .footer-note h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--gold);
+        }
+        
+        .correct {
+            color: #2e7d32;
+        }
+
+        .incorrect {
+            color: #c62828;
+        }
+
+        /* Media Query لتناسب الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            body { font-size: 1rem; padding: 10px; }
+            h1 { font-size: 2.5rem; }
+            .subtitle { font-size: 1.5rem; }
+            .section h2 { font-size: 1.7rem; }
+            .exercise h2 { font-size: 1.8rem; }
+            .question-item h3 { font-size: 1.2rem; }
+            .basic-concept h3 { font-size: 1.3rem; }
+            .question-grid { grid-template-columns: 1fr; }
+            .navigation-buttons { flex-direction: column; gap: 10px; }
+            .nav-button { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- عنوان الدرس -->
+        <header>
+            <h1 class="text-right">ضرب الأعداد النسبية وقسمتها</h1>
+            <div class="subtitle text-right">الرياضيات - الصف السابع</div>
+        </header>
+
+        <!-- محتوى الصفحة الثانية فقط -->
+        <div id="page2" class="page active">
+            <!-- مثال 1: ضرب الأعداد العشرية -->
+            <div class="section" style="border-left-color: #4a69bd;">
+                <h2 class="text-right">مثال 1: ضرب الأعداد العشرية</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                    <div class="input-group">
+                        <input id="ex1-num1" type="number" step="0.1" value="-2.5" class="w-24 p-2 text-center rounded-md border-2 border-blue-400">
+                        <span class="text-xl font-bold text-gray-700">×</span>
+                        <input id="ex1-num2" type="number" step="0.1" value="-8" class="w-24 p-2 text-center rounded-md border-2 border-blue-400">
+                    </div>
+                    <div class="text-2xl font-bold text-blue-700 mt-4 md:mt-0">= <span id="ex1-result"></span></div>
+                </div>
+                <div class="mt-4 text-gray-700 text-right">
+                    <p><strong>الخطوات:</strong></p>
+                    <ul class="list-disc list-inside text-right">
+                        <li>نحدد إشارة الناتج: <span id="ex1-sign"></span></li>
+                        <li>نضرب العددين دون فواصل: <span id="ex1-int-mult"></span></li>
+                        <li>نضع الفاصلة العشرية في الناتج: <span id="ex1-final"></span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- مثال 2: ضرب الأعداد العشرية -->
+            <div class="section" style="border-left-color: #27ae60;">
+                <h2 class="text-right">مثال 2: ضرب الأعداد العشرية</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                    <div class="input-group">
+                        <input id="ex2-num1" type="number" step="0.01" value="-1.25" class="w-24 p-2 text-center rounded-md border-2 border-green-400">
+                        <span class="text-xl font-bold text-gray-700">×</span>
+                        <input id="ex2-num2" type="number" step="0.01" value="1.64" class="w-24 p-2 text-center rounded-md border-2 border-green-400">
+                    </div>
+                    <div class="text-2xl font-bold text-green-700 mt-4 md:mt-0">= <span id="ex2-result"></span></div>
+                </div>
+                <div class="mt-4 text-gray-700 text-right">
+                    <p><strong>الخطوات:</strong></p>
+                    <ul class="list-disc list-inside text-right">
+                        <li>نحدد إشارة الناتج: <span id="ex2-sign"></span></li>
+                        <li>نضرب العددين دون فواصل: <span id="ex2-int-mult"></span></li>
+                        <li>نضع الفاصلة العشرية في الناتج: <span id="ex2-final"></span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- مثال 3: ضرب عدد عشري في عدد كسري -->
+            <div class="section" style="border-left-color: #8e44ad;">
+                <h2 class="text-right">مثال 3: ضرب عدد عشري في عدد كسري</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                    <div class="input-group">
+                        <input id="ex3-num1" type="number" step="0.1" value="-4.2" class="w-24 p-2 text-center rounded-md border-2 border-purple-400">
+                        <span class="text-xl font-bold text-gray-700">×</span>
+                        <input id="ex3-num2-whole" type="number" value="1" class="w-12 p-2 text-center rounded-md border-2 border-purple-400">
+                        <div class="fraction-input">
+                            <input id="ex3-num2-num" type="number" value="1" class="w-12 p-1 text-center rounded-md border-2 border-purple-400">
+                            <div class="fraction-line bg-purple-400"></div>
+                            <input id="ex3-num2-den" type="number" value="2" class="w-12 p-1 text-center rounded-md border-2 border-purple-400">
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-purple-700 mt-4 md:mt-0">= <span id="ex3-result"></span></div>
+                </div>
+                <div class="mt-4 text-gray-700 text-right">
+                    <p><strong>طريقة 1 (عشرية):</strong></p>
+                    <ul class="list-disc list-inside text-right">
+                        <li>نحول العدد الكسري إلى عشري: <span id="ex3-decimal-conv"></span></li>
+                        <li>نضرب الأعداد العشرية: <span id="ex3-decimal-mult"></span></li>
+                        <li>الناتج: <span id="ex3-decimal-result"></span></li>
+                    </ul>
+                    <p class="mt-4"><strong>طريقة 2 (كسرية):</strong></p>
+                    <ul class="list-disc list-inside text-right">
+                        <li>نحول العددين إلى كسور عادية: <span id="ex3-fraction-conv"></span></li>
+                        <li>نضرب الكسور: <span id="ex3-fraction-mult"></span></li>
+                        <li>الناتج في أبسط صورة: <span id="ex3-fraction-result"></span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- قسم أتحقق من فهمي -->
+            <div class="exercise">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800 text-center"><i class="fas fa-tasks"></i> أتحقق من فهمي</h2>
+                <div class="question-grid">
+                    <!-- سؤال 4 -->
+                    <div class="question-item" style="border-left-color: #e74c3c;">
+                        <h3 class="text-lg font-semibold mb-2 text-red-800 text-left">−4.6 × 5</h3>
+                        <div class="input-group">
+                            <input id="q4-answer" type="number" step="0.1" placeholder="أدخل الإجابة" class="w-28 p-2 text-center rounded-md border-2 border-red-400">
+                            <button onclick="checkAnswer('q4', -23.0)" class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition">تحقق</button>
+                        </div>
+                        <div id="q4-feedback" class="mt-2 text-sm font-semibold"></div>
+                    </div>
+                    <!-- سؤال 5 -->
+                    <div class="question-item" style="border-left-color: #f1c40f;">
+                        <h3 class="text-lg font-semibold mb-2 text-yellow-800 text-left">−2.4 × −0.66</h3>
+                        <div class="input-group">
+                            <input id="q5-answer" type="number" step="0.001" placeholder="أدخل الإجابة" class="w-28 p-2 text-center rounded-md border-2 border-yellow-400">
+                            <button onclick="checkAnswer('q5', 1.584)" class="bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600 transition">تحقق</button>
+                        </div>
+                        <div id="q5-feedback" class="mt-2 text-sm font-semibold"></div>
+                    </div>
+                    <!-- سؤال 6 -->
+                    <div class="question-item" style="border-left-color: #1abc9c;">
+                        <h3 class="text-lg font-semibold mb-2 text-teal-800 flex items-center justify-center gap-1">
+                            <div class="flex items-center">
+                                <span class="pr-1">6.4 × −2</span>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-sm">1</span>
+                                    <div class="w-4 h-px bg-current"></div>
+                                    <span class="text-sm">5</span>
+                                </div>
+                            </div>
+                        </h3>
+                        <div class="input-group">
+                            <input id="q6-answer" type="number" step="0.01" placeholder="أدخل الإجابة" class="w-28 p-2 text-center rounded-md border-2 border-teal-400">
+                            <button onclick="checkAnswer('q6', -14.08)" class="bg-teal-500 text-white p-2 rounded-md hover:bg-teal-600 transition">تحقق</button>
+                        </div>
+                        <div id="q6-feedback" class="mt-2 text-sm font-semibold"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- أزرار التنقل -->
+            <div class="navigation-buttons">
+                <a href="#" class="nav-button">السابق</a>
+                <a href="#" class="nav-button">التالي</a>
+            </div>
+            
+            <div class="page-number">الصفحة 3</div>
+        </div>
+        
+        <div class="footer-note">
+            <h3>ملاحظة مهمة</h3>
+            <p>يمكنك التلاعب بالمدخلات في الأمثلة التوضيحية أعلاه لفهم الخطوات بشكل أفضل. تذكر أن ممارسة التمارين هي أفضل طريقة لتعلم الرياضيات!</p>
+        </div>
+    </div>
+    
+    <script>
+        // دالة مساعدة لحساب المنازل العشرية
+        function countDecimals(num) {
+            if (Math.floor(num) === num) return 0;
+            const s = num.toString();
+            if (s.indexOf('e-') !== -1) {
+                const parts = s.split('e-');
+                return parseInt(parts[1], 10);
+            }
+            return s.split('.')[1]?.length || 0;
+        }
+
+        // دالة لتحديث المثال الأول (ضرب الأعداد العشرية)
+        function updateExample1() {
+            const num1 = parseFloat(document.getElementById('ex1-num1').value);
+            const num2 = parseFloat(document.getElementById('ex1-num2').value);
+
+            if (isNaN(num1) || isNaN(num2)) {
+                document.getElementById('ex1-result').innerHTML = 'خطأ';
+                return;
+            }
+
+            const result = num1 * num2;
+            const intMult = Math.abs(num1 * Math.pow(10, countDecimals(num1))) * Math.abs(num2 * Math.pow(10, countDecimals(num2)));
+            const totalDecimals = countDecimals(num1) + countDecimals(num2);
+
+            document.getElementById('ex1-sign').innerHTML = (num1 * num2 >= 0) ? 'موجب لأن الإشارتين متشابهتان' : 'سالب لأن الإشارتين مختلفتان';
+            document.getElementById('ex1-int-mult').innerHTML = `${Math.abs(num1 * Math.pow(10, countDecimals(num1)))} × ${Math.abs(num2 * Math.pow(10, countDecimals(num2)))} = ${intMult}`;
+            document.getElementById('ex1-final').innerHTML = `الناتج النهائي هو ${result}`;
+            document.getElementById('ex1-result').innerHTML = result;
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // دالة لتحديث المثال الثاني (ضرب الأعداد العشرية)
+        function updateExample2() {
+            const num1 = parseFloat(document.getElementById('ex2-num1').value);
+            const num2 = parseFloat(document.getElementById('ex2-num2').value);
+            
+            if (isNaN(num1) || isNaN(num2)) {
+                document.getElementById('ex2-result').innerHTML = 'خطأ';
+                return;
+            }
+
+            const result = num1 * num2;
+            const intMult = Math.abs(num1 * 100) * Math.abs(num2 * 100);
+            const totalDecimals = countDecimals(num1) + countDecimals(num2);
+
+            document.getElementById('ex2-sign').innerHTML = (num1 * num2 >= 0) ? 'موجب' : 'سالب';
+            document.getElementById('ex2-int-mult').innerHTML = `${Math.abs(num1 * 100)} × ${Math.abs(num2 * 100)} = ${intMult}`;
+            document.getElementById('ex2-final').innerHTML = `الناتج هو ${result} (نضع الفاصلة بعد ${totalDecimals} خانات)`;
+            document.getElementById('ex2-result').innerHTML = result;
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // دالة لتحديث المثال الثالث (ضرب عشري في كسري)
+        function updateExample3() {
+            const decimalNum = parseFloat(document.getElementById('ex3-num1').value);
+            const wholeNum = parseFloat(document.getElementById('ex3-num2-whole').value);
+            const numerator = parseFloat(document.getElementById('ex3-num2-num').value);
+            const denominator = parseFloat(document.getElementById('ex3-num2-den').value);
+
+            if (isNaN(decimalNum) || isNaN(wholeNum) || isNaN(numerator) || isNaN(denominator) || denominator === 0) {
+                document.getElementById('ex3-result').innerHTML = 'خطأ';
+                return;
+            }
+
+            // الطريقة الأولى: العشرية
+            const mixedDecimal = wholeNum + (numerator / denominator);
+            const resultDecimal = decimalNum * mixedDecimal;
+            document.getElementById('ex3-decimal-conv').innerHTML = `\\(${wholeNum} \\frac{${numerator}}{${denominator}} = ${mixedDecimal}\\)`;
+            document.getElementById('ex3-decimal-mult').innerHTML = `${decimalNum} × ${mixedDecimal} = ${resultDecimal.toFixed(2)}`;
+            document.getElementById('ex3-decimal-result').innerHTML = `${resultDecimal.toFixed(2)}`;
+
+            // الطريقة الثانية: الكسرية
+            const fracNum1 = decimalNum * Math.pow(10, countDecimals(decimalNum));
+            const fracDen1 = Math.pow(10, countDecimals(decimalNum));
+            const fracNum2 = (wholeNum * denominator) + numerator;
+            const fracDen2 = denominator;
+            
+            const finalFracNum = fracNum1 * fracNum2;
+            const finalFracDen = fracDen1 * fracDen2;
+            
+            const sign = (decimalNum * (wholeNum + numerator/denominator)) >= 0 ? '' : '-';
+            const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+            const commonDivisor = gcd(Math.abs(finalFracNum), Math.abs(finalFracDen));
+            const simpleNum = Math.abs(finalFracNum) / commonDivisor;
+            const simpleDen = Math.abs(finalFracDen) / commonDivisor;
+
+            const resultFraction = finalFracNum / finalFracDen;
+
+            document.getElementById('ex3-fraction-conv').innerHTML = `\\(${decimalNum} = \\frac{${fracNum1}}{${fracDen1}} \\text{ و } ${wholeNum} \\frac{${numerator}}{${denominator}} = \\frac{${fracNum2}}{${fracDen2}}\\)` ;
+            document.getElementById('ex3-fraction-mult').innerHTML = `(\\frac{${fracNum1}}{${fracDen1}}) × (\\frac{${fracNum2}}{${fracDen2}}) = \\frac{${finalFracNum}}{${finalFracDen}}` ;
+            document.getElementById('ex3-fraction-result').innerHTML = `\\(${sign}\\frac{${simpleNum}}{${simpleDen}} = ${resultFraction.toFixed(2)}\\)`;
+            document.getElementById('ex3-result').innerHTML = resultFraction.toFixed(2);
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+        
+        // دالة للتحقق من إجابات قسم "أتحقق من فهمي"
+        function checkAnswer(id, correctValue) {
+            const input = document.getElementById(`${id}-answer`);
+            const feedback = document.getElementById(`${id}-feedback`);
+            const value = parseFloat(input.value);
+
+            // التحقق من صحة الإجابة مع السماح ببعض التفاوت
+            if (Math.abs(value - correctValue) < 0.001) {
+                feedback.textContent = 'إجابة صحيحة! أحسنت.';
+                feedback.className = 'mt-2 text-sm font-semibold correct';
+            } else {
+                feedback.textContent = 'إجابة خاطئة. حاول مرة أخرى.';
+                feedback.className = 'mt-2 text-sm font-semibold incorrect';
+            }
+        }
+
+        // عند تحميل الصفحة، يتم تشغيل الدوال لتحديث الأمثلة
+        document.addEventListener('DOMContentLoaded', () => {
+             // التحقق من أن MathJax قد تم تحميله بالكامل قبل محاولة استخدامه
+             if (window.MathJax) {
+                 MathJax.startup.promise.then(() => {
+                     // الحصول على جميع عناصر الإدخال للأمثلة
+                     const ex1Num1 = document.getElementById('ex1-num1');
+                     const ex1Num2 = document.getElementById('ex1-num2');
+                     const ex2Num1 = document.getElementById('ex2-num1');
+                     const ex2Num2 = document.getElementById('ex2-num2');
+                     const ex3Num1 = document.getElementById('ex3-num1');
+                     const ex3Num2Whole = document.getElementById('ex3-num2-whole');
+                     const ex3Num2Num = document.getElementById('ex3-num2-num');
+                     const ex3Num2Den = document.getElementById('ex3-num2-den');
+ 
+                     // إضافة مستمعي الأحداث
+                     [ex1Num1, ex1Num2].forEach(input => input.addEventListener('input', updateExample1));
+                     [ex2Num1, ex2Num2].forEach(input => input.addEventListener('input', updateExample2));
+                     [ex3Num1, ex3Num2Whole, ex3Num2Num, ex3Num2Den].forEach(input => input.addEventListener('input', updateExample3));
+ 
+                     // التحديث الأولي
+                     updateExample1();
+                     updateExample2();
+                     updateExample3();
+                 });
+             }
+        });
+    </script>
+</body>
+</html>
