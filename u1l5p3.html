@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ضرب الأعداد النسبية وقسمتها - الصف السابع</title>
+    <title>ضرب الأعداد النسبية وقسمتها</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- استخدام خط Tajawal ليتناسب مع المحتوى العربي -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
@@ -62,25 +62,23 @@
             background-color: var(--royal-blue-2);
             color: white;
             padding: 25px;
-            text-align: right;
+            text-align: center; /* توسيط العنوان */
             border-bottom: 5px solid var(--gold);
             position: relative;
             overflow: hidden;
         }
 
-        /* حجم خط أكبر للعنوان الرئيسي */
+        /* حجم خط أكبر وسميك للعنوان الرئيسي */
         h1 {
             color: white;
-            font-size: 10rem;
+            font-size: 6rem; /* تم تكبير الخط */
             margin-bottom: 10px;
             font-weight: 700;
         }
         
-        /* حجم خط أصغر للعنوان الفرعي */
+        /* إزالة العنوان الفرعي "الصف السابع" */
         .subtitle {
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 400;
+            display: none;
         }
 
         .page {
@@ -95,7 +93,7 @@
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             border-right: 5px solid var(--sky-blue);
-            border-left: none; /* إزالة الحدود اليسرى ليتوافق مع RTL */
+            border-left: none;
             margin: 25px 0;
         }
 
@@ -116,7 +114,7 @@
             content: "•";
             color: var(--gold);
             font-size: 2.8rem;
-            margin-right: 10px; /* تغيير الهامش ليتوافق مع RTL */
+            margin-right: 10px;
         }
         
         .exercise {
@@ -137,7 +135,7 @@
         }
         
         .exercise h2 i {
-            margin-right: 10px; /* تغيير الهامش ليتوافق مع RTL */
+            margin-right: 10px;
             color: var(--gold);
         }
 
@@ -285,8 +283,8 @@
     <div class="container">
         <!-- عنوان الدرس -->
         <header>
-            <h1 class="text-right">ضرب الأعداد النسبية</h1>
-            <div class="subtitle text-right">الصف السابع</div>
+            <h1 class="text-right">ضرب الأعداد النسبية وقسمتها</h1>
+            <div class="subtitle text-right"></div>
         </header>
 
         <!-- محتوى الصفحة الثانية فقط -->
@@ -342,13 +340,15 @@
                     <div class="input-group">
                         <input id="ex3-num1" type="number" step="0.1" value="-4.2" class="w-24 p-2 text-center rounded-md border-2 border-purple-400">
                         <span class="text-xl font-bold text-gray-700">×</span>
-                        <!-- تم عكس ترتيب العناصر هنا لتظهر بشكل صحيح -->
-                        <div class="fraction-input">
-                            <input id="ex3-num2-num" type="number" value="1" class="w-12 p-1 text-center rounded-md border-2 border-purple-400">
-                            <div class="fraction-line bg-purple-400"></div>
-                            <input id="ex3-num2-den" type="number" value="2" class="w-12 p-1 text-center rounded-md border-2 border-purple-400">
+                        <!-- تم تعديل ترتيب العناصر ليظهر العدد الصحيح على اليسار -->
+                        <div class="flex items-center gap-1">
+                           <input id="ex3-num2-whole" type="number" value="1" class="w-12 p-2 text-center rounded-md border-2 border-purple-400">
+                           <div class="fraction-input">
+                               <input id="ex3-num2-num" type="number" value="1" class="w-12 p-1 text-center rounded-md border-2 border-purple-400">
+                               <div class="fraction-line bg-purple-400"></div>
+                               <input id="ex3-num2-den" type="number" value="2" class="w-12 p-1 text-center rounded-md border-2 border-purple-400">
+                           </div>
                         </div>
-                        <input id="ex3-num2-whole" type="number" value="1" class="w-12 p-2 text-center rounded-md border-2 border-purple-400">
                     </div>
                     <!-- إضافة الناتج هنا -->
                     <div class="text-2xl font-bold text-purple-700 mt-4 md:mt-0">= <span id="ex3-result">-6.3</span></div>
@@ -363,7 +363,7 @@
                     <p class="mt-4"><strong>طريقة 2 (كسرية):</strong></p>
                     <ul class="list-disc list-inside text-right">
                         <li>نحول العددين إلى كسور عادية: <span id="ex3-fraction-conv">\(-4.2 = \frac{-42}{10} \text{ و } 1 \frac{1}{2} = \frac{3}{2}\)</span></li>
-                        <li>نضرب الكسور: <span id="ex3-fraction-mult">\((\frac{-42}{10}) \times (\frac{3}{2}) = \frac{-126}{20}\)</span></li>
+                        <li>نضرب الكسور: <span id="ex3-fraction-mult">\(\left(\frac{-42}{10}\right) \times \left(\frac{3}{2}\right) = \frac{-126}{20}\)</span></li>
                         <li>الناتج في أبسط صورة: <span id="ex3-fraction-result">\(\frac{-63}{10} = -6.3\)</span></li>
                     </ul>
                 </div>
@@ -503,7 +503,7 @@
             const mixedDecimal = wholeNum + (numerator / denominator);
             const resultDecimal = decimalNum * mixedDecimal;
             document.getElementById('ex3-decimal-conv').innerHTML = `\\(${wholeNum} \\frac{${numerator}}{${denominator}} = ${mixedDecimal}\\)`;
-            document.getElementById('ex3-decimal-mult').innerHTML = `${decimalNum} × ${mixedDecimal} = ${resultDecimal.toFixed(2)}`;
+            document.getElementById('ex3-decimal-mult').innerHTML = `${decimalNum} \\times ${mixedDecimal} = ${resultDecimal.toFixed(2)}`;
             document.getElementById('ex3-decimal-result').innerHTML = `${resultDecimal.toFixed(2)}`;
 
             // الطريقة الثانية: الكسرية
@@ -524,8 +524,8 @@
             const resultFraction = finalFracNum / finalFracDen;
 
             document.getElementById('ex3-fraction-conv').innerHTML = `\\(${decimalNum} = \\frac{${fracNum1}}{${fracDen1}} \\text{ و } ${wholeNum} \\frac{${numerator}}{${denominator}} = \\frac{${fracNum2}}{${fracDen2}}\\)` ;
-            document.getElementById('ex3-fraction-mult').innerHTML = `(\\frac{${fracNum1}}{${fracDen1}}) × (\\frac{${fracNum2}}{${fracDen2}}) = \\frac{${finalFracNum}}{${finalFracDen}}` ;
-            document.getElementById('ex3-fraction-result').innerHTML = `\\(${sign}\\frac{${simpleNum}}{${simpleDen}} = ${resultFraction.toFixed(2)}\\)`;
+            document.getElementById('ex3-fraction-mult').innerHTML = `\\(\\left(\\frac{${fracNum1}}{${fracDen1}}\\right) \\times \\left(\\frac{${fracNum2}}{${fracDen2}}\\right) = \\frac{${finalFracNum}}{${finalFracDen}}\\)` ;
+            document.getElementById('ex3-fraction-result').innerHTML = `\\(\\frac{${finalFracNum}}{${finalFracDen}} = ${resultFraction.toFixed(2)}\\)`;
             document.getElementById('ex3-result').innerHTML = resultFraction.toFixed(2);
             if (window.MathJax) {
                 MathJax.typesetPromise();
