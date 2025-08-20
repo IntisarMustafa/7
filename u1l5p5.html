@@ -8,127 +8,123 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Changed font to a more modern one */
-            line-height: 1.8; /* Increased line-height for better readability */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
             color: #333;
-            background-color: #eef2f7; /* Lighter, softer background */
+            background-color: #eef2f7;
             margin: 0;
-            padding: 25px; /* Slightly more padding */
+            padding: 0;
         }
         .container {
-            max-width: 850px; /* Slightly wider container */
+            max-width: 850px;
             margin: 0 auto;
             background-color: #ffffff;
-            padding: 35px; /* More internal padding */
-            border-radius: 20px; /* More rounded corners */
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
-         :root {
-            --light-royal-blue: #4169e1; /* لون أزرق ملكي فاتح */
+        :root {
+            --light-royal-blue: #4169e1;
             --gold: #FFD700;
         }
-         header {
-            font-size: 2.5rem;
+        header {
             background-color: var(--light-royal-blue);
             color: white;
-            padding: 25px;
-            text-align: center; /* توسيط العنوان */
+            padding: 30px;
+            text-align: center;
             border-bottom: 5px solid var(--gold);
-            position: relative;
-            overflow: hidden;
-        
+            border-radius: 20px 20px 0 0;
         }
         h1 {
-            color: #1a5276; /* Darker blue for main heading */
+            color: white; /* Changed color to white */
             text-align: center;
-            border-bottom: 3px solid #5d9cec; /* Thicker, more vibrant blue border */
-            padding-bottom: 20px; /* More padding below border */
-            margin-bottom: 35px;
-            font-size: 2.2em; /* Larger main heading */
-            font-weight: 700; /* Bolder */
+            padding-bottom: 20px;
+            margin-bottom: 0;
+            font-size: 2.2em; /* Adjusted font size */
+            font-weight: 700;
         }
         h2 {
-            color: #2e86c1; /* Consistent blue for subheadings */
-            margin-top: 30px; /* More space above subheadings */
-            border-bottom: 1px solid #dcdcdc; /* Lighter border for subheadings */
+            color: #2e86c1;
+            margin-top: 30px;
+            border-bottom: 1px solid #dcdcdc;
             padding-bottom: 10px;
-            font-size: 1.6em; /* Larger subheadings */
-            font-weight: 600; /* Semi-bold */
+            font-size: 1.6em;
+            font-weight: 600;
         }
         .exercise-section {
-            background-color: #f8fcfd; /* Very light blue background */
-            padding: 25px; /* More padding */
-            border-radius: 15px; /* More rounded corners */
+            background-color: #f8fcfd;
+            padding: 25px;
+            border-radius: 15px;
             margin-bottom: 30px;
-            border-left: 5px solid #5d9cec; /* More prominent left border */
+            border-left: 5px solid #5d9cec;
         }
         .exercise {
-            margin: 20px 0; /* More vertical spacing between exercises */
+            margin: 20px 0;
             padding: 20px;
             background-color: #ffffff;
-            border-radius: 12px; /* Nicer rounded corners */
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         }
         .question {
             font-weight: bold;
             margin-bottom: 12px;
-            font-size: 1.15em; /* Slightly increased font size for questions */
-            color: #34495e; /* Darker text for questions */
+            font-size: 1.25em;
+            color: #34495e;
         }
         .exercise p {
-            font-size: 1.1em; /* Increased font size for paragraphs */
-            font-weight: bold; /* All paragraphs are bold now */
-            margin-bottom: 1em; /* Add some space below paragraphs */
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 1em;
         }
         .input-group {
             display: flex;
             align-items: center;
             margin: 15px 0;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            flex-wrap: wrap;
         }
         input[type="text"], input[type="number"] {
-            padding: 12px 15px; /* Larger padding for inputs */
-            border: 1px solid #c0d1e3; /* Softer border color */
-            border-radius: 8px; /* More rounded input fields */
-            width: 150px; /* Slightly wider inputs */
-            margin-left: 15px; /* More space to the left */
+            padding: 14px 18px;
+            border: 1px solid #c0d1e3;
+            border-radius: 8px;
+            width: 180px;
+            margin-left: 15px;
             text-align: center;
-            font-size: 1.05em; /* Larger text in inputs */
-            transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+            font-size: 1.2em;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
         input[type="text"]:focus, input[type="number"]:focus {
             border-color: #5d9cec;
-            box-shadow: 0 0 0 3px rgba(93, 156, 236, 0.3); /* Focus glow */
+            box-shadow: 0 0 0 3px rgba(93, 156, 236, 0.3);
             outline: none;
         }
         button {
-            background-color: #5d9cec; /* Professional blue */
+            background-color: #5d9cec;
             color: white;
             border: none;
-            padding: 12px 20px; /* Larger buttons */
-            border-radius: 8px; /* More rounded buttons */
+            padding: 14px 24px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.05em; /* Larger font in buttons */
-            margin: 8px; /* More margin around buttons */
-            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* Smooth transitions */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft button shadow */
+            font-size: 1.2em;
+            margin: 8px;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         button:hover {
-            background-color: #4a8cdb; /* Darker blue on hover */
-            transform: translateY(-2px); /* Slight lift effect */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+            background-color: #4a8cdb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         button:active {
             transform: translateY(0);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .result {
-            margin-top: 15px; /* More space above results */
-            padding: 10px;
+            margin-top: 15px;
+            padding: 12px;
             border-radius: 8px;
             display: none;
-            font-size: 1.05em; /* Larger result text */
-            font-weight: bold; /* Result text is bold */
+            font-size: 1.2em;
+            font-weight: bold;
         }
         .correct {
             background-color: #d4edda;
@@ -141,22 +137,22 @@
             border: 1px solid #f5c6cb;
         }
         .open-question, .writing-section {
-            background-color: #e8f5fe; /* Lighter blue/yellow for these sections */
+            background-color: #e8f5fe;
             padding: 25px;
             border-radius: 15px;
             margin: 25px 0;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
         }
         textarea {
-            width: calc(100% - 20px); /* Adjust width for padding */
-            height: 150px; /* Taller textarea */
-            padding: 15px; /* More padding */
+            width: calc(100% - 20px);
+            height: 150px;
+            padding: 15px;
             border: 1px solid #c0d1e3;
             border-radius: 8px;
             font-family: inherit;
             margin-top: 15px;
-            font-size: 1.05em;
-            resize: vertical; /* Allow vertical resizing */
+            font-size: 1.2em;
+            resize: vertical;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         textarea:focus {
@@ -167,67 +163,64 @@
         .fraction-input {
             display: flex;
             align-items: center;
-            gap: 10px; /* More space between fraction parts */
+            gap: 10px;
             margin-bottom: 15px;
         }
         .fraction-input input {
-            width: 60px; /* Slightly wider inputs for fractions */
-            font-size: 1.1em; /* Larger font in fraction inputs */
+            width: 70px;
+            font-size: 1.2em;
         }
         .fraction-line {
-            border-top: 2px solid #000; /* Thicker fraction line */
-            width: 60px;
+            border-top: 2px solid #000;
+            width: 70px;
         }
         .solution {
-            color: #28a745; /* Green for solution */
+            color: #28a745;
             font-weight: bold;
             margin-top: 5px;
         }
         .highlight {
             background-color: #fffacd;
-            padding: 4px 6px; /* Slightly more padding */
-            border-radius: 5px; /* Rounded highlight */
+            padding: 4px 6px;
+            border-radius: 5px;
         }
-        /* Further increased MathJax fractions size */
         .MathJax .MJX_Assistive_MathML {
-            font-size: 1.25em !important; /* Larger fractions */
+            font-size: 1.35em !important;
         }
         .MathJax_Display {
-            font-size: 1.25em !important; /* Larger fractions in display mode */
+            font-size: 1.35em !important;
         }
         .navigation-buttons {
+            background-color: white; /* Changed background color to white */
+            padding: 25px;
             text-align: center;
-            margin-top: 50px; /* More space above navigation buttons */
-            padding-top: 30px; /* More padding above the border */
-            border-top: 1px solid #e0e0e0;
-            
-            /* التعديلات الجديدة هنا لجعل الأزرار في سطر واحد ومتباعدة */
-            display: flex; /* يجعل الأزرار تتوزع في سطر واحد */
-            justify-content: center; /* يوزع الأزرار في المنتصف */
-            gap: 20px; /* يضيف مسافة 20 بكسل بين الأزرار */
-            flex-wrap: wrap; /* يسمح للأزرار بالانتقال إلى سطر جديد إذا كانت الشاشة صغيرة جدًا */
+            border-top: 5px solid #ccc; /* Adjusted border color for visibility on white */
+            border-radius: 0 0 20px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         .navigation-buttons button {
-            padding: 14px 30px; /* Larger buttons */
-            font-size: 1.15em; /* Larger font */
-            /* margin: 0 15px; /* تم إزالة أو تقليل هذا الهامش لصالح 'gap' */
-            border-radius: 10px; /* More rounded */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Consistent shadow */
+            padding: 16px 32px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         .navigation-buttons button.prev {
-            background-color: #ff9800; /* Orange */
+            background-color: #ff9800;
         }
         .navigation-buttons button.prev:hover {
             background-color: #fb8c00;
         }
         .navigation-buttons button.next {
-            background-color: #2196f3; /* Blue */
+            background-color: #2196f3;
         }
         .navigation-buttons button.next:hover {
             background-color: #1976d2;
         }
         .navigation-buttons button.home {
-            background-color: #607d8b; /* Greyish blue */
+            background-color: #607d8b;
         }
         .navigation-buttons button.home:hover {
             background-color: #455a64;
@@ -235,8 +228,10 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>الوحدة 1: ضرب الأعداد النسبية وقسمتها</h1>
+    </header>
+    <div class="container">
         
         <div class="exercise-section">
             <h2>أجد ناتج الضرب في أبسط صورة:</h2>
@@ -480,7 +475,7 @@
             6: "-81/7",
             7: "1.581",
             8: "-3.876",
-            9: "1026/50",
+            9: "20.52",
             10: "33/2",
             11: "8",
             12: "161/8",
@@ -489,7 +484,7 @@
             15: "38.5",
             16: "87",
             17: "6",
-            18: "14.5"
+            18: "14.625"
         };
         
         // التحقق من إجابة
@@ -506,16 +501,25 @@
             }
             
             let isCorrect = false;
-            if (userAnswer.includes('/') && correctAnswers[questionNum].includes('/')) {
-                const [userNum, userDen] = userAnswer.split('/').map(Number);
+            // Handle fractions
+            if (correctAnswers[questionNum].includes('/')) {
                 const [correctNum, correctDen] = correctAnswers[questionNum].split('/').map(Number);
-                if (userNum / userDen === correctNum / correctDen) {
+                const correctValue = correctNum / correctDen;
+                let userValue;
+                if (userAnswer.includes('/')) {
+                    const [userNum, userDen] = userAnswer.split('/').map(Number);
+                    userValue = userNum / userDen;
+                } else {
+                    userValue = parseFloat(userAnswer);
+                }
+                if (Math.abs(userValue - correctValue) < 0.0001) { // Use a small tolerance for floating point comparisons
                     isCorrect = true;
                 }
-            } else if (parseFloat(userAnswer) == parseFloat(correctAnswers[questionNum])) {
-                isCorrect = true;
-            } else if (userAnswer === correctAnswers[questionNum]) { // Exact string match for non-numeric cases or specific formats
-                isCorrect = true;
+            } else {
+                // Handle decimals and whole numbers
+                if (parseFloat(userAnswer) === parseFloat(correctAnswers[questionNum])) {
+                    isCorrect = true;
+                }
             }
 
             if (isCorrect) {
@@ -600,3 +604,4 @@
     </script>
 </body>
 </html>
+
