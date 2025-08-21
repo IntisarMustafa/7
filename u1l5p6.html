@@ -186,7 +186,7 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(15px);
             width: 95vw;
-            max-width: 900px;
+            max-width: 800px; /* تم تصغيره هنا */
             overflow: auto;
             position: relative;
             display: none;
@@ -234,6 +234,7 @@
             width: 100%;
             height: auto; /* يجعل الارتفاع ديناميكياً */
             aspect-ratio: 1 / 1; /* يحافظ على نسبة العرض إلى الارتفاع 1:1 */
+            max-width: 600px; /* تم تصغيره هنا */
         }
 
         /* الحلوى نفسها بتأثيرات بصرية */
@@ -965,16 +966,25 @@
                 gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + duration); // تلاشي الصوت
                 oscillator.stop(audioContext.currentTime + duration);
             }
+            
+            // وظيفة عشوائية لترتيب المصفوفة
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
 
-            // الأسئلة التعليمية حول ضرب وقسمة الأعداد النسبية
+            // الأسئلة التعليمية حول ضرب وقسمة الأعداد النسبية (تم تنقيحها لإزالة الإجابات المتكافئة)
             const mathQuestions = [
                 {
                     question: "ما هو ناتج ضرب \\( \\frac{-3}{4} \\times \\frac{2}{5} \\)؟",
                     answers: [
                         "\\( \\frac{-3}{10} \\)",
                         "\\( \\frac{3}{10} \\)",
-                        "\\( \\frac{-6}{20} \\)",
-                        "\\( \\frac{6}{20} \\)"
+                        "\\( \\frac{-1}{5} \\)",
+                        "\\( \\frac{1}{5} \\)"
                     ],
                     correct: 0
                 },
@@ -983,7 +993,7 @@
                     answers: [
                         "\\( \\frac{-8}{5} \\)",
                         "\\( \\frac{8}{5} \\)",
-                        "\\( \\frac{-4}{10} \\)",
+                        "\\( -\\frac{4}{10} \\)",
                         "\\( \\frac{4}{10} \\)"
                     ],
                     correct: 0
@@ -993,8 +1003,8 @@
                     answers: [
                         "\\( \\frac{-5}{4} \\)",
                         "\\( \\frac{5}{4} \\)",
-                        "\\( \\frac{-15}{12} \\)",
-                        "\\( \\frac{15}{12} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1003,8 +1013,8 @@
                     answers: [
                         "\\( \\frac{-7}{2} \\)",
                         "\\( \\frac{7}{2} \\)",
-                        "\\( \\frac{-28}{8} \\)",
-                        "\\( \\frac{28}{8} \\)"
+                        "\\( \\frac{-1}{4} \\)",
+                        "\\( \\frac{1}{4} \\)"
                     ],
                     correct: 0
                 },
@@ -1033,8 +1043,8 @@
                     answers: [
                         "\\( \\frac{-2}{3} \\)",
                         "\\( \\frac{2}{3} \\)",
-                        "\\( \\frac{-24}{36} \\)",
-                        "\\( \\frac{24}{36} \\)"
+                        "\\( \\frac{-1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1043,8 +1053,8 @@
                     answers: [
                         "\\( \\frac{-2}{3} \\)",
                         "\\( \\frac{2}{3} \\)",
-                        "\\( \\frac{-4}{6} \\)",
-                        "\\( \\frac{4}{6} \\)"
+                        "\\( \\frac{-1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1093,8 +1103,8 @@
                     answers: [
                         "\\( \\frac{-3}{5} \\)",
                         "\\( \\frac{3}{5} \\)",
-                        "\\( \\frac{-18}{30} \\)",
-                        "\\( \\frac{18}{30} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1103,8 +1113,8 @@
                     answers: [
                         "\\( \\frac{-15}{16} \\)",
                         "\\( \\frac{15}{16} \\)",
-                        "\\( \\frac{-10}{24} \\)",
-                        "\\( \\frac{10}{24} \\)"
+                        "\\( -\\frac{5}{12} \\)",
+                        "\\( \\frac{5}{12} \\)"
                     ],
                     correct: 0
                 },
@@ -1113,8 +1123,8 @@
                     answers: [
                         "\\( \\frac{-3}{5} \\)",
                         "\\( \\frac{3}{5} \\)",
-                        "\\( \\frac{-6}{10} \\)",
-                        "\\( \\frac{6}{10} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1143,8 +1153,8 @@
                     answers: [
                         "\\( \\frac{1}{6} \\)",
                         "\\( \\frac{-1}{6} \\)",
-                        "\\( \\frac{6}{36} \\)",
-                        "\\( \\frac{-6}{36} \\)"
+                        "\\( \\frac{2}{3} \\)",
+                        "\\( \\frac{-2}{3} \\)"
                     ],
                     correct: 0
                 },
@@ -1163,8 +1173,8 @@
                     answers: [
                         "\\( \\frac{-1}{2} \\)",
                         "\\( \\frac{1}{2} \\)",
-                        "\\( \\frac{-30}{60} \\)",
-                        "\\( \\frac{30}{60} \\)"
+                        "\\( -\\frac{5}{12} \\)",
+                        "\\( \\frac{5}{12} \\)"
                     ],
                     correct: 0
                 },
@@ -1173,8 +1183,8 @@
                     answers: [
                         "\\( -1 \\)",
                         "\\( 1 \\)",
-                        "\\( -\\frac{21}{21} \\)",
-                        "\\( \\frac{21}{21} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1193,8 +1203,8 @@
                     answers: [
                         "\\( -4 \\)",
                         "\\( 4 \\)",
-                        "\\( -\\frac{132}{33} \\)",
-                        "\\( \\frac{132}{33} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1213,8 +1223,8 @@
                     answers: [
                         "\\( \\frac{-2}{3} \\)",
                         "\\( \\frac{2}{3} \\)",
-                        "\\( \\frac{-40}{60} \\)",
-                        "\\( \\frac{40}{60} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1223,8 +1233,8 @@
                     answers: [
                         "\\( -1.5 \\)",
                         "\\( 1.5 \\)",
-                        "\\( -\\frac{12}{8} \\)",
-                        "\\( \\frac{12}{8} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1243,8 +1253,8 @@
                     answers: [
                         "\\( \\frac{-1}{4} \\)",
                         "\\( \\frac{1}{4} \\)",
-                        "\\( \\frac{-35}{140} \\)",
-                        "\\( \\frac{35}{140} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1253,8 +1263,8 @@
                     answers: [
                         "\\( \\frac{9}{16} \\)",
                         "\\( \\frac{-9}{16} \\)",
-                        "\\( \\frac{6}{24} \\)",
-                        "\\( \\frac{-6}{24} \\)"
+                        "\\( \\frac{1}{2} \\)",
+                        "\\( \\frac{-1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1273,8 +1283,8 @@
                     answers: [
                         "\\( \\frac{-2}{3} \\)",
                         "\\( \\frac{2}{3} \\)",
-                        "\\( \\frac{-12}{18} \\)",
-                        "\\( \\frac{12}{18} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1283,8 +1293,8 @@
                     answers: [
                         "\\( \\frac{-3}{4} \\)",
                         "\\( \\frac{3}{4} \\)",
-                        "\\( \\frac{-45}{60} \\)",
-                        "\\( \\frac{45}{60} \\)"
+                        "\\( -\\frac{1}{2} \\)",
+                        "\\( \\frac{1}{2} \\)"
                     ],
                     correct: 0
                 },
@@ -1606,18 +1616,28 @@
                                             // للتأكد من أن السؤال يظهر كل 100 نقطة من هذه النقطة
                 const randomIndex = Math.floor(Math.random() * mathQuestions.length);
                 const question = mathQuestions[randomIndex];
+                
+                // نسخ الإجابات وتحديد الإجابة الصحيحة
+                const answers = [...question.answers];
+                const correctAnswer = answers[question.correct];
+                
+                // خلط الإجابات عشوائياً
+                const shuffledAnswers = shuffleArray(answers);
+                
+                // إيجاد الفهرس الجديد للإجابة الصحيحة بعد الخلط
+                const newCorrectIndex = shuffledAnswers.indexOf(correctAnswer);
 
                 questionText.innerHTML = question.question;
                 feedbackElement.textContent = '';
                 feedbackElement.className = 'feedback';
 
                 answersContainer.innerHTML = '';
-                question.answers.forEach((answer, index) => {
+                shuffledAnswers.forEach((answer, index) => {
                     const answerBtn = document.createElement('button');
                     answerBtn.className = 'answer-btn';
                     answerBtn.innerHTML = `<div class="math-container">${answer}</div>`;
                     answerBtn.dataset.index = index;
-                    answerBtn.addEventListener('click', () => checkAnswer(index, question.correct));
+                    answerBtn.addEventListener('click', () => checkAnswer(index, newCorrectIndex));
                     answersContainer.appendChild(answerBtn);
                 });
 
