@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+       <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +6,12 @@
     <title>حل المسألة باستراتيجية الحل العكسي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /*
+        * تغيير الألوان لتناسب المظهر الجديد
+        * تم تغيير ألوان الخلفية والهيدر والفوتر إلى درجات الأزرق
+        * كما تم تعديل ألوان الخطوط والعناصر لزيادة التناغم
+        */
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,8 +20,9 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: #333;
+            /* خلفية زرقاء باردة */
+            background: linear-gradient(135deg, #e0f2ff, #cce8ff);
+            color: #2c3e50; /* لون خط داكن ومناسب للثيم */
             line-height: 1.6;
             padding: 20px;
             min-height: 100vh;
@@ -38,11 +45,12 @@
         }
         
         header {
-            background: linear-gradient(to right, #2c3e50, #4a6491);
+            /* هيدر باللون الأزرق الملكي الفاتح */
+            background: linear-gradient(to right, #4169e1, #6a5acd);
             color: white;
             padding: 25px;
             text-align: center;
-            border-bottom: 5px solid #fdbb2d;
+            border-bottom: 5px solid #e0f2ff; /* لون يتناسب مع الخلفية الجديدة */
         }
         
         h1 {
@@ -57,8 +65,8 @@
         }
 
         .explanation-box {
-            background: linear-gradient(135deg, #e6f7ff, #ccefff);
-            border: 2px solid #99daff;
+            background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+            border: 2px solid #b3d9ff;
             border-radius: 15px;
             padding: 25px;
             margin: 25px;
@@ -78,7 +86,7 @@
             right: -20px;
             width: 80px;
             height: 80px;
-            background: rgba(153, 218, 255, 0.2);
+            background: rgba(179, 217, 255, 0.2);
             border-radius: 50%;
         }
 
@@ -119,7 +127,7 @@
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            border-left: 6px solid #3498db;
+            border-left: 6px solid #4169e1; /* لون يتناسب مع الثيم */
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
@@ -132,7 +140,7 @@
             right: 0;
             width: 80px;
             height: 80px;
-            background: rgba(52, 152, 219, 0.1);
+            background: rgba(65, 105, 225, 0.1); /* لون يتناسب مع الثيم */
             border-radius: 0 0 0 100%;
         }
         
@@ -146,7 +154,7 @@
         }
         
         .problem-card h2 i {
-            color: #e74c3c;
+            color: #ff6347; /* لون مميز للرمز */
             font-size: 1.5em;
         }
         
@@ -163,10 +171,11 @@
 
         .problem-text strong {
             font-size: 1.25rem;
-            color: #d35400;
+            color: #e67e22; /* لون برتقالي واضح */
         }
         
         .interactive-road {
+            /* خلفية زرقاء داكنة للطريق */
             padding: 40px 20px;
             background: linear-gradient(to bottom, #5d8aa8, #3e5f8a);
             position: relative;
@@ -231,7 +240,7 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
             z-index: 12;
             font-size: 1.2rem;
-            border: 2px solid #3498db;
+            border: 2px solid #4169e1; /* لون يتناسب مع الثيم */
         }
         
         .milestone-label {
@@ -248,7 +257,7 @@
             border: 2px solid;
         }
         
-        .milestone:nth-child(1) .milestone-label { background: #3498db; color: white; border-color: #2980b9; }
+        .milestone:nth-child(1) .milestone-label { background: #4169e1; color: white; border-color: #3655b3; }
         .milestone:nth-child(2) .milestone-label { background: #e74c3c; color: white; border-color: #c0392b; }
         .milestone:nth-child(3) .milestone-label { background: #2ecc71; color: white; border-color: #27ae60; }
         .milestone:nth-child(4) .milestone-label { background: #f39c12; color: white; border-color: #d35400; }
@@ -284,11 +293,11 @@
             position: absolute;
             width: 45px;
             height: 35px;
-            background: #3498db;
+            background: #4169e1; /* لون يتناسب مع الثيم */
             top: -35px;
             left: 25px;
             border-radius: 15px 15px 0 0;
-            box-shadow: 0 0 10px rgba(52, 152, 219, 0.6);
+            box-shadow: 0 0 10px rgba(65, 105, 225, 0.6);
         }
         
         .car::after {
@@ -318,7 +327,7 @@
             min-width: 180px;
             text-align: center;
             display: none;
-            border: 2px solid #3498db;
+            border: 2px solid #4169e1; /* لون يتناسب مع الثيم */
             color: #2c3e50;
             z-index: 15;
             animation: bubbleFloat 3s infinite ease-in-out;
@@ -403,7 +412,7 @@
             transform: translateX(-50%);
             width: 120px;
             height: 5px;
-            background: linear-gradient(to right, #3498db, #2ecc71);
+            background: linear-gradient(to right, #4169e1, #2ecc71); /* لون يتناسب مع الثيم */
             border-radius: 3px;
         }
         
@@ -418,7 +427,7 @@
             background: linear-gradient(to right, #f8f9fa, #eef5ff);
             border-radius: 15px;
             padding: 25px;
-            border-left: 6px solid #3498db;
+            border-left: 6px solid #4169e1; /* لون يتناسب مع الثيم */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease;
         }
@@ -436,7 +445,7 @@
         .step-icon {
             width: 45px;
             height: 45px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #4169e1, #3655b3); /* لون يتناسب مع الثيم */
             color: white;
             border-radius: 50%;
             display: flex;
@@ -445,14 +454,14 @@
             margin-left: 20px;
             font-weight: bold;
             font-size: 1.4rem;
-            box-shadow: 0 5px 10px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 5px 10px rgba(65, 105, 225, 0.3);
         }
         
         .step-title {
             font-size: 1.35rem;
             color: #2c3e50;
             font-weight: bold;
-            background: linear-gradient(to right, #3498db, #2c3e50);
+            background: linear-gradient(to right, #4169e1, #2c3e50); /* لون يتناسب مع الثيم */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -479,13 +488,13 @@
             padding: 18px;
             background: linear-gradient(to right, #ffffff, #f0f8ff);
             border-radius: 12px;
-            border-left: 5px solid #3498db;
+            border-left: 5px solid #4169e1; /* لون يتناسب مع الثيم */
             font-size: 1.2rem;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
         .calc-step-number {
-            background: linear-gradient(135deg, #3498db, #2c3e50);
+            background: linear-gradient(135deg, #4169e1, #3655b3); /* لون يتناسب مع الثيم */
             color: white;
             width: 40px;
             height: 40px;
@@ -530,7 +539,8 @@
         }
         
         footer {
-            background: linear-gradient(to right, #1a2a6c, #2c3e50);
+            /* فوتر باللون الأزرق الملكي الفاتح */
+            background: linear-gradient(to right, #4169e1, #6a5acd);
             color: white;
             text-align: center;
             padding: 25px;
@@ -985,3 +995,6 @@
     </script>
 </body>
 </html>
+
+         
+                
