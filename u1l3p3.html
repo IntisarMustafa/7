@@ -323,22 +323,6 @@
             transition: background 0.3s ease-in-out;
         }
 
-        #touchLeft, #touchRight {
-            position: absolute;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            z-index: 5;
-        }
-
-        #touchLeft {
-            left: 0;
-        }
-
-        #touchRight {
-            right: 0;
-        }
-
         .collectible-effect {
             position: absolute;
             width: 40px;
@@ -499,6 +483,56 @@
             color: #f44336;
         }
 
+        /* مؤشرات السحب */
+        .swipe-indicator {
+            position: absolute;
+            bottom: 120px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            z-index: 15;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .swipe-left, .swipe-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .swipe-arrow {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(0); opacity: 0.7; }
+            50% { transform: translateX(10px); opacity: 1; }
+        }
+
+        .swipe-left .swipe-arrow {
+            animation-name: pulse-left;
+        }
+
+        @keyframes pulse-left {
+            0%, 100% { transform: translateX(0); opacity: 0.7; }
+            50% { transform: translateX(-10px); opacity: 1; }
+        }
+
+        .swipe-right .swipe-arrow {
+            animation-name: pulse-right;
+        }
+
+        @keyframes pulse-right {
+            0%, 100% { transform: translateX(0); opacity: 0.7; }
+            50% { transform: translateX(10px); opacity: 1; }
+        }
+
         @media (max-width: 768px) {
             .game-stats {
                 font-size: 0.8rem;
@@ -534,6 +568,14 @@
                 font-size: 1.2rem;
                 min-width: 80px;
             }
+
+            .swipe-indicator {
+                bottom: 100px;
+            }
+            
+            .swipe-arrow {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -541,17 +583,27 @@
     <div id="startScreen">
         <div class="floatingMotorcycle">🏍️</div>
         <h1>🚀 لعبة الدراجة النارية التعليمية لمقارنة الأعداد النسبية</h1>
-      <p>اضغط على يمين الشاشة للتحريك لليمين و على يسار الشاشة للتحريك لليسار واقفز لتجنب العوائق
+      <p>اسحب لليمين لتحريك الدراجة لليمين، واسحب لليسار لتحريكها لليسار. اضغط على زر القفز لتجنب العوائق!
 ! عندما تصطدم بعائق، ستحل سؤالًا تعليميًا. إذا أجبت بشكل صحيح، ستواصل اللعب. إذا أخطأت، تنتهي اللعبة!</p>
         <button id="startGameBtn" class="start-btn">ابدأ اللعب</button>
     </div>
 
     <div class="container">
         <div id="gameContainer">
-            <div id="touchLeft"></div>
-            <div id="touchRight"></div>
             <div class="road"></div>
             <div class="road-lines"></div>
+
+            <!-- مؤشرات السحب -->
+            <div class="swipe-indicator">
+                <div class="swipe-left">
+                    <div class="swipe-arrow">↖</div>
+                    <div>اسحب لليسار</div>
+                </div>
+                <div class="swipe-right">
+                    <div class="swipe-arrow">↗</div>
+                    <div>اسحب لليمين</div>
+                </div>
+            </div>
 
             <div class="game-stats flex-row items-center gap-4">
                 <span id="scoreDisplay">النقاط: 0</span>
@@ -577,7 +629,7 @@
                 <button id="jumpBtn" class="control-btn">القفز</button>
                 <button id="boostBtn" class="control-btn">التسارع</button>
             </div>
-            <div class="instructions">استخدم الجانب الأيسر للتحرك لليسار، الجانب الأيمن للتحرك لليمين</div>
+            <div class="instructions">استخدم السحب لليسار واليمين للتحكم في اتجاه الدراجة</div>
         </div>
     </div>
     
@@ -650,10 +702,9 @@
         const jumpBtn = document.getElementById('jumpBtn');
         const boostBtn = document.getElementById('boostBtn');
         const controlsContainer = document.querySelector('.controls-container');
-        const touchLeft = document.getElementById('touchLeft');
-        const touchRight = document.getElementById('touchRight');
         const collectEffect = document.getElementById('collectEffect');
         const collisionEffect = document.getElementById('collisionEffect');
+        const swipeIndicator = document.querySelector('.swipe-indicator');
         
         // عناصر السؤال التعليمي
         const questionScreen = document.getElementById('questionScreen');
@@ -1300,52 +1351,62 @@
             }
         }
 
-        // تهيئة عناصر التحكم باللمس
+        // تهيئة عناصر التحكم باللمس - تم التعديل لعكس الحركة
         function initTouchControls() {
-            if (touchLeft && touchRight) {
-                touchLeft.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    if (gameActive) {
-                        targetLanePosition = Math.min(1, targetLanePosition + 1);
-                        steeringAngle = Math.max(-maxSteeringAngle, steeringAngle - steeringSpeed);
-                    }
-                });
-                touchRight.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    if (gameActive) {
-                        targetLanePosition = Math.max(-1, targetLanePosition - 1);
-                        steeringAngle = Math.min(maxSteeringAngle, steeringAngle + steeringSpeed);
-                    }
-                });
-                touchLeft.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    if (gameActive) {
-                        steeringAngle = Math.max(-maxSteeringAngle, steeringAngle - steeringSpeed * 0.5);
-                    }
-                });
-                touchRight.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    if (gameActive) {
-                        steeringAngle = Math.min(maxSteeringAngle, steeringAngle + steeringSpeed * 0.5);
-                    }
-                });
-            }
+            let touchStartX = null;
+            let touchStartY = null;
+            const minSwipeDistance = 50; // الحد الأدنى لمسافة السحب بالبكسل
 
             if (gameContainer) {
                 gameContainer.addEventListener('touchstart', (e) => {
                     if (gameActive) {
+                        touchStartX = e.touches[0].clientX;
                         touchStartY = e.touches[0].clientY;
                     }
                 });
+
+                gameContainer.addEventListener('touchmove', (e) => {
+                    if (!gameActive || touchStartX === null) return;
+
+                    const touchEndX = e.touches[0].clientX;
+                    const touchEndY = e.touches[0].clientY;
+
+                    const deltaX = touchEndX - touchStartX;
+                    const deltaY = touchEndY - touchStartY;
+
+                    // إذا كانت الحركة أفقية بشكل أساسي (أكثر أفقية من رأسية)
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        e.preventDefault(); // منع التمرير الأفقي لصفحة المتصفح
+
+                        // إذا تجاوزت الحركة الأفقية الحد الأدنى للسحب
+                        if (Math.abs(deltaX) > minSwipeDistance) {
+                            if (deltaX > 0) {
+                                // سحب لليمين -> تحريك الدراجة لليسار (معكوس)
+                                targetLanePosition = Math.max(-1, targetLanePosition - 1);
+                                steeringAngle = Math.min(maxSteeringAngle, steeringAngle + steeringSpeed);
+                            } else {
+                                // سحب لليسار -> تحريك الدراجة لليمين (معكوس)
+                                targetLanePosition = Math.min(1, targetLanePosition + 1);
+                                steeringAngle = Math.max(-maxSteeringAngle, steeringAngle - steeringSpeed);
+                            }
+                            // إعادة تعيين نقطة البداية لتجنب التكرار
+                            touchStartX = touchEndX;
+                            touchStartY = touchEndY;
+                        }
+                    }
+                });
+
                 gameContainer.addEventListener('touchend', (e) => {
                     if (gameActive && touchStartY !== null) {
                         const touchEndY = e.changedTouches[0].clientY;
                         const deltaY = touchEndY - touchStartY;
+                        // إذا كانت الحركة رأسية إلى أعلى (سحب لأعلى) بمقدار كافٍ
                         if (deltaY < -50) {
                             performJump();
                         }
-                        touchStartY = null;
                     }
+                    touchStartX = null;
+                    touchStartY = null;
                 });
             }
         }
