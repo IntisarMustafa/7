@@ -884,7 +884,7 @@
             <li><i class="fas fa-mouse-pointer"></i> انقر على حلوى لتحديدها (ستظهر بحد أبيض)</li>
             <li><i class="fas fa-exchange-alt"></i> انقر على حلوى مجاورة (أعلى، أسفل، يمين، يسار) للتبديل</li>
             <li><i class="fas fa-fire"></i> إذا شكلت ٣ أو أكثر من نفس اللون في صف أو عمود، ستختفي وتحصل على نقاط</li>
-            <li><i class="fas fa-question-circle"></i> كل ١٠٠ نقطة ستظهر سؤال تعليمي حول ضرب أو قسمة الأعداد النسبية</li>
+            <li><i class="fas fa-question-circle"></i> كل 200 نقطة ستظهر سؤال تعليمي حول ضرب أو قسمة الأعداد النسبية</li>
             <li><i class="fas fa-trophy"></i> حاول الوصول إلى الهدف قبل انتهاء الحركات</li>
             <li><i class="fas fa-puzzle-piece"></i> في المستويات المتقدمة، عليك جمع عدد محدد من كل شكل بالإضافة إلى النقاط!</li>
         </ul>
@@ -975,7 +975,9 @@
             const BOARD_SIZE = 8;
             const COLORS = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
             const SHAPES = ['square', 'triangle', 'star', 'sun', 'flower', 'diamond'];
-            const QUESTION_INTERVAL = 100;
+            
+            // تم تحديث الفاصل الزمني للسؤال من 100 إلى 200 نقطة.
+            const QUESTION_INTERVAL = 200; 
 
             // كائنات SVG لكل شكل
             const SVG_SHAPES = {
@@ -993,16 +995,16 @@
             
             // تعريف المستويات
             const LEVELS = [
-                { level: 1, targetScore: 500, moves: 20, unlocked: true, targetShapes: {} },
-                { level: 2, targetScore: 800, moves: 25, unlocked: false, targetShapes: {} },
-                { level: 3, targetScore: 1200, moves: 30, unlocked: false, targetShapes: { 'star': 5, 'triangle': 5 } },
-                { level: 4, targetScore: 1600, moves: 25, unlocked: false, targetShapes: { 'star': 8, 'sun': 8 } },
-                { level: 5, targetScore: 2000, moves: 20, unlocked: false, targetShapes: { 'flower': 10, 'diamond': 10 } },
-                { level: 6, targetScore: 2500, moves: 25, unlocked: false, targetShapes: { 'star': 12, 'sun': 12, 'flower': 12 } },
-                { level: 7, targetScore: 3000, moves: 30, unlocked: false, targetShapes: { 'triangle': 15, 'diamond': 15 } },
-                { level: 8, targetScore: 3500, moves: 25, unlocked: false, targetShapes: { 'square': 10, 'triangle': 10, 'star': 10, 'sun': 10, 'flower': 10, 'diamond': 10 } },
-                { level: 9, targetScore: 4000, moves: 20, unlocked: false, targetShapes: { 'star': 20, 'sun': 20, 'flower': 20 } },
-                { level: 10, targetScore: 5000, moves: 25, unlocked: false, targetShapes: { 'square': 15, 'triangle': 15, 'star': 15, 'sun': 15, 'flower': 15, 'diamond': 15 } }
+                { level: 1, targetScore: 500, moves: 20, unlocked: true, targetShapes: { 'square': 20, 'triangle': 20 } },
+                { level: 2, targetScore: 800, moves: 25, unlocked: false, targetShapes: { 'star': 25, 'sun': 25 } },
+                { level: 3, targetScore: 1200, moves: 30, unlocked: false, targetShapes: { 'flower': 30, 'diamond': 30 } },
+                { level: 4, targetScore: 1600, moves: 25, unlocked: false, targetShapes: { 'square': 35, 'triangle': 35, 'star': 35 } },
+                { level: 5, targetScore: 2000, moves: 20, unlocked: false, targetShapes: { 'sun': 40, 'flower': 40, 'diamond': 40 } },
+                { level: 6, targetScore: 2500, moves: 25, unlocked: false, targetShapes: { 'square': 45, 'triangle': 45, 'star': 45, 'sun': 45 } },
+                { level: 7, targetScore: 3000, moves: 30, unlocked: false, targetShapes: { 'flower': 50, 'diamond': 50 } },
+                { level: 8, targetScore: 3500, moves: 25, unlocked: false, targetShapes: { 'square': 55, 'triangle': 55, 'star': 55, 'sun': 55, 'flower': 55, 'diamond': 55 } },
+                { level: 9, targetScore: 4000, moves: 20, unlocked: false, targetShapes: { 'star': 60, 'sun': 60, 'flower': 60 } },
+                { level: 10, targetScore: 5000, moves: 25, unlocked: false, targetShapes: { 'square': 70, 'triangle': 70, 'star': 70, 'sun': 70, 'flower': 70, 'diamond': 70 } }
             ];
             
             let currentLevel = 1;
