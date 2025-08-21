@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Waves - لعبة الموجات الفضائية</title>
-    <!-- تم إزالة مكتبة MathJax لأن الأسئلة أصبحت نصية وليست معادلات رياضية -->
+    <title>لعبة الموجات الفضائية</title>
     <style>
         /* أنماط CSS الأساسية للجسم والتنسيق العام */
         * {
@@ -352,6 +351,12 @@
                 lastY: null
             };
 
+            // متغيرات جديدة للتحكم بالفأرة
+            let mouseState = {
+                isDown: false,
+                lastY: null
+            };
+
             // مصفوفة نجوم الخلفية
             let stars = [];
             const numStars = 200;
@@ -470,9 +475,13 @@
                     correctAnswerIndex: 0
                 }
             ];
+            // متغير لتتبع السؤال الحالي
             let currentQuestion = null;
-            // إضافة متغير جديد لحفظ الفهرس الصحيح للخيارات بعد خلطها
-            let shuffledCorrectIndex = -1;
+            // متغير جديد لتخزين فهرس الإجابة الصحيحة بعد خلط الخيارات
+            let currentCorrectIndex = -1;
+            
+            // مصفوفة لجزيئات تأثير الفوز
+            let winParticles = [];
 
             function playSound(frequency, type = 'sine', duration = 0.5, volume = 0.5) {
                 if (!audioContext) {
@@ -497,6 +506,22 @@
 
                 oscillator.start(currentTime);
                 oscillator.stop(currentTime + duration);
+            }
+            
+            // دالة تشغيل صوت لحن فوز جديد
+            function playWinSound() {
+                const notes = [
+                    { freq: 440, duration: 0.1 }, // لا
+                    { freq: 523.25, duration: 0.1 }, // دو
+                    { freq: 659.25, duration: 0.1 }, // مي
+                    { freq: 880, duration: 0.4 } // لا
+                ];
+
+                let delay = 0;
+                notes.forEach(note => {
+                    setTimeout(() => playSound(note.freq, 'sine', note.duration, 0.8), delay);
+                    delay += note.duration * 1000;
+                });
             }
 
             function playNoteOrChord(notes, duration, volume) {
@@ -700,6 +725,49 @@
                 });
             }
 
+            // دالة لتوليد جزيئات تأثير الفوز
+            function generateWinParticles() {
+                const particleCount = 100;
+                winParticles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 5 + 2;
+                    winParticles.push({
+                        x: GAME_WIDTH / 2,
+                        y: GAME_HEIGHT / 2,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        size: Math.random() * 4 + 2,
+                        life: 120,
+                        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+                    });
+                }
+            }
+            
+            // دالة لتحديث جزيئات الفوز
+            function updateWinParticles() {
+                winParticles = winParticles.filter(p => p.life > 0);
+                winParticles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life--;
+                    p.size *= 0.98;
+                    p.vx *= 0.95;
+                    p.vy *= 0.95;
+                });
+            }
+
+            // دالة لرسم جزيئات الفوز
+            function drawWinParticles() {
+                winParticles.forEach(p => {
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+
             function createStars() {
                 stars = [];
                 for (let i = 0; i < numStars; i++) {
@@ -750,18 +818,16 @@
                 return yOffset * amplitude - amplitude / 2;
             }
             
-            // تم تعديل هذه الدالة لحل المشكلة الأساسية.
-            // الآن يتم إنشاء المسار ليغطي الشاشة بأكملها من البداية.
+            // تم تعديل هذه الدالة لحل مشكلة الاصطدام السريع.
+            // الآن يتم إنشاء المسار ليبدأ قبل المركبة بمسافة كافية لضمان عدم الاصطدام.
             function initializePath() {
                 gameState.pathPoints = [];
-                // زيادة عدد النقاط لتحسين سلاسة المسار
                 const segments = 100;
-                // تحديد عرض كل مقطع من المسار بحيث يغطي الشاشة
-                const segmentWidth = GAME_WIDTH / 20; 
+                const segmentWidth = GAME_WIDTH / 10; 
                 const initialYOffset = GAME_HEIGHT / 2;
                 
-                // بدء توليد النقاط من موقع بعيد على يسار الشاشة لضمان أن
-                // المركبة تكون دائمًا على المسار عند البدء.
+                // نبدأ توليد النقاط من موقع أبعد على اليسار لتجنب الاصطدام الفوري.
+                // يتم توليد نقاط المسار الآن من -GAME_WIDTH*2 لضمان وجود مسار آمن.
                 for (let i = -20; i <= segments; i++) {
                     const x = i * segmentWidth;
                     const y = getSawtoothPathY(x, gameState.gameTime) + initialYOffset;
@@ -779,7 +845,7 @@
                     gameState.pathPoints.shift();
                     const lastPoint = gameState.pathPoints[gameState.pathPoints.length - 1];
                     
-                    const newX = lastPoint.x + (GAME_WIDTH / 20); // استخدام نفس عرض المقطع
+                    const newX = lastPoint.x + (GAME_WIDTH / 10);
                     const newY = getSawtoothPathY(newX, gameState.gameTime) + GAME_HEIGHT / 2;
                     gameState.pathPoints.push({ x: newX, y: newY });
                 }
@@ -1009,8 +1075,7 @@
                 const questionIndex = Math.floor(Math.random() * questions.length);
                 currentQuestion = questions[questionIndex];
 
-                // تمرير الفهرس الأصلي للسؤال إلى دالة showQuestion
-                showQuestion(currentQuestion, currentQuestion.correctAnswerIndex);
+                showQuestion(currentQuestion);
             }
 
             // دالة لخلط عناصر مصفوفة
@@ -1023,24 +1088,24 @@
             }
 
             // دالة لإظهار السؤال على الشاشة
-            // تم تعديل الدالة لتستقبل الفهرس الصحيح الأصلي
-            function showQuestion(question, originalCorrectIndex) {
+            function showQuestion(question) {
                 questionTextElement.textContent = question.question;
                 answerOptionsContainer.innerHTML = '';
                 feedbackMessageElement.textContent = '';
                 
-                const correctAnswerText = question.options[originalCorrectIndex];
+                // نحصل على الإجابة الصحيحة قبل الخلط
+                const correctAnswerText = question.options[question.correctAnswerIndex];
+                
                 const shuffledOptions = shuffleArray([...question.options]);
                 
-                // البحث عن الفهرس الصحيح الجديد بعد الخلط
-                const newCorrectAnswerIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
+                // نجد الفهرس الجديد للإجابة الصحيحة ونخزنه في متغير مؤقت
+                currentCorrectIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
                 
                 shuffledOptions.forEach((option, index) => {
                     const button = document.createElement('button');
                     button.classList.add('answer-btn');
                     button.textContent = option;
-                    // تمرير الفهرس الصحيح الجديد إلى دالة handleAnswer
-                    button.addEventListener('click', () => handleAnswer(index, newCorrectAnswerIndex));
+                    button.addEventListener('click', () => handleAnswer(index));
                     answerOptionsContainer.appendChild(button);
                 });
                 
@@ -1048,14 +1113,14 @@
             }
 
             // دالة للتعامل مع الإجابة
-            // تم تعديل الدالة لتستقبل الفهرس الصحيح الجديد
-            function handleAnswer(selectedIndex, correctIndex) {
-                const isCorrect = (selectedIndex === correctIndex);
+            function handleAnswer(selectedIndex) {
+                // نقارن الفهرس المختار بالفهرس الصحيح المؤقت
+                const isCorrect = (selectedIndex === currentCorrectIndex);
                 const buttons = answerOptionsContainer.querySelectorAll('.answer-btn');
                 
                 buttons.forEach((btn, index) => {
                     btn.disabled = true;
-                    if (index === correctIndex) {
+                    if (index === currentCorrectIndex) {
                         btn.classList.add('correct');
                     } else if (index === selectedIndex) {
                         btn.classList.add('incorrect');
@@ -1074,17 +1139,15 @@
                     setTimeout(() => {
                         questionOverlay.classList.add('hidden');
                         gameState.isQuestionActive = false;
-                        gameState.paused = false;
                         
-                        // إعادة سرعة المركبة إلى السرعة البطيئة ثم تزداد تدريجياً
-                        gameState.pathSpeed = 1;
-                        
-                        // إفراغ مصفوفة العوائق
+                        // إعادة تهيئة اللعبة بالكامل بعد الإجابة الصحيحة
+                        initializePath();
                         gameState.obstacles = [];
-                        
-                        // إعادة وضع المركبة في مكان آمن بعد الإجابة الصحيحة
+                        gameState.pathSpeed = 1; // إعادة السرعة إلى نقطة البداية
                         positionShipOnPath();
+                        gameState.paused = false;
                         gameState.lastTime = performance.now(); // إعادة ضبط الوقت عند استئناف اللعبة
+
                         startBackgroundMelody(); // استئناف الموسيقى الخلفية
                         startThrusterSound(); // استئناف صوت الدفع
                     }, 1500);
@@ -1137,18 +1200,31 @@
                 }
             }
 
-            // إضافة معالج أحداث حركة الفأرة لتحريك المركبة
-            canvas.addEventListener('mousemove', (e) => {
-                // التحكم بالماوس متاح فقط إذا لم يكن الجهاز يدعم اللمس
-                if (!('ontouchstart' in window || navigator.maxTouchPoints > 0) && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
-                    // تصحيح: بدلاً من القفز مباشرة إلى موضع الماوس،
-                    // اجعل المركبة تتحرك بسلاسة نحوه.
-                    const targetY = e.clientY;
-                    const easingFactor = 0.1; // عامل التخفيف، قيمة أصغر تعني حركة أبطأ وأكثر سلاسة
-                    ship.y += (targetY - ship.y) * easingFactor;
+            // ===== تحديث: تعديل معالجات أحداث الفأرة لتعمل مثل اللمس =====
+            canvas.addEventListener('mousedown', (e) => {
+                if (gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
+                    mouseState.isDown = true;
+                    mouseState.lastY = e.clientY;
                 }
             });
 
+            canvas.addEventListener('mouseup', () => {
+                mouseState.isDown = false;
+                mouseState.lastY = null;
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                // التحكم بالفأرة يعمل فقط إذا كان زر الفأرة مضغوطاً
+                if (mouseState.isDown && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
+                    const deltaY = e.clientY - mouseState.lastY;
+                    ship.y += deltaY;
+                    mouseState.lastY = e.clientY;
+                    // التأكد من أن المركبة لا تخرج عن حدود الشاشة
+                    ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
+                }
+            });
+            // ===== نهاية التعديل =====
+            
             // معالجات أحداث اللمس
             canvas.addEventListener('touchstart', handleTouchStart);
             canvas.addEventListener('touchmove', handleTouchMove);
@@ -1193,6 +1269,10 @@
                 drawThrusterParticles();
                 
                 ship.draw();
+
+                // رسم جزيئات الفوز إذا كانت موجودة
+                updateWinParticles();
+                drawWinParticles();
             }
             
             // دالة للبدء بالمستوى التالي
@@ -1250,7 +1330,12 @@
                 if (Math.floor(gameState.gameTime) >= 25 && !gameState.isLevelComplete) {
                     gameState.paused = true;
                     gameState.isLevelComplete = true;
+                    
+                    // تشغيل تأثيرات الفوز
                     playLevelUpSound();
+                    playWinSound();
+                    generateWinParticles();
+
                     stopThrusterSound();
                     stopBackgroundMelody();
                     return; // إيقاف تحديث اللعبة
@@ -1272,7 +1357,6 @@
                     dy = speed;
                 }
                 ship.y += dy;
-                // =================================================================
 
                 // التأكد من أن المركبة لا تخرج عن حدود الشاشة
                 ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
@@ -1419,12 +1503,6 @@
                 }
             });
             
-            // إضافة معالج حدث لتغيير حجم النافذة
-            window.addEventListener('resize', () => {
-                resizeCanvas();
-                createStars();
-            });
-            
             resizeCanvas();
             createStars();
             
@@ -1436,3 +1514,4 @@
     </script>
 </body>
 </html>
+
