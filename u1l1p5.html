@@ -270,6 +270,27 @@
             font-size: clamp(1rem, 4vw, 1.3rem);
             font-weight: bold;
         }
+        
+        /* شارة الاحتفال الجديدة */
+        .celebration-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: clamp(2rem, 10vw, 5rem);
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700, 0 0 20px #ffea00;
+            animation: popIn 0.5s forwards, pulse 1.5s infinite 0.5s;
+            z-index: 100;
+            display: none;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            80% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
     </style>
 </head>
 <body>
@@ -292,7 +313,8 @@
         </div>
     </div>
 
-    <div id="levelUpMessage" style="display:none;"></div>
+    <!-- شارة الاحتفال الجديدة -->
+    <div id="celebrationBadge" class="celebration-badge">🎉</div>
 
     <div class="stats">
         <div class="stat-item">المستوى: <span id="level" class="stat-value">1</span></div>
@@ -315,13 +337,15 @@
             const overlayMessage = document.getElementById('overlayMessage');
             const overlayBtn = document.getElementById('overlayBtn');
             const soundToggleBtn = document.getElementById('soundToggle');
-            const levelUpMessageElement = document.getElementById('levelUpMessage');
-
+            
             // عناصر لوحة الأسئلة
             const questionOverlay = document.getElementById('questionOverlay');
             const questionTextElement = document.getElementById('questionText');
             const answerOptionsContainer = document.getElementById('answerOptions');
             const feedbackMessageElement = document.getElementById('feedbackMessage');
+            
+            // شارة الاحتفال الجديدة
+            const celebrationBadge = document.getElementById('celebrationBadge');
             
             let GAME_WIDTH;
             let GAME_HEIGHT;
@@ -489,10 +513,29 @@
                     correctAnswerIndex: 0
                 }
             ];
+            
             // متغير لتتبع السؤال الحالي
             let currentQuestion = null;
             // متغير جديد لتخزين فهرس الإجابة الصحيحة بعد خلط الخيارات
             let currentCorrectIndex = -1;
+            
+            // متغيرات جديدة للتحكم في الأسئلة
+            let questionPool = [];
+            
+            // دالة لخلط عناصر مصفوفة
+            function shuffleArray(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+            
+            // دالة لإعداد مجموعة الأسئلة للمستوى
+            function setupQuestionPool() {
+                questionPool = shuffleArray(questions);
+            }
 
             function playSound(frequency, type = 'sine', duration = 0.5, volume = 0.5) {
                 if (!audioContext) {
@@ -569,10 +612,12 @@
                     isBackgroundMelodyPlaying = false;
                 }
             }
-
+            
+            // تم تعديل صوت نهاية المستوى ليكون أكثر احتفالية
             function playLevelUpSound() {
-                playSound(880, 'sine', 0.1, 0.4);
-                setTimeout(() => playSound(1320, 'sine', 0.1, 0.4), 100);
+                playSound(1000, 'sine', 0.1, 0.4);
+                setTimeout(() => playSound(1200, 'sine', 0.1, 0.4), 100);
+                setTimeout(() => playSound(1500, 'sine', 0.1, 0.4), 200);
             }
 
             function playCollisionSound() {
@@ -640,6 +685,8 @@
             }
             
             let thrusterParticles = [];
+            // متغير جديد لجسيمات الاحتفال
+            let celebrationParticles = [];
 
             const ship = {
                 x: 0,
@@ -712,6 +759,48 @@
                 thrusterParticles.forEach(p => {
                     ctx.fillStyle = p.color;
                     ctx.shadowColor = 'rgba(255, 100, 50, 0.8)';
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+            }
+            
+            // دالة جديدة لتوليد جسيمات الاحتفال
+            function generateCelebrationParticles() {
+                const colors = ['#ffd700', '#ff6b6b', '#ffd166', '#06d6a0', '#118ab2'];
+                const particleCount = 50;
+                for (let i = 0; i < particleCount; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 5 + 2;
+                    celebrationParticles.push({
+                        x: GAME_WIDTH / 2,
+                        y: GAME_HEIGHT / 2,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        size: Math.random() * 5 + 3,
+                        life: 120,
+                        color: colors[Math.floor(Math.random() * colors.length)]
+                    });
+                }
+            }
+
+            function updateCelebrationParticles() {
+                celebrationParticles = celebrationParticles.filter(p => p.life > 0);
+                celebrationParticles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life--;
+                    p.size *= 0.98;
+                    p.vy += 0.1; // إضافة جاذبية بسيطة
+                });
+            }
+
+            function drawCelebrationParticles() {
+                celebrationParticles.forEach(p => {
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color;
                     ctx.shadowBlur = 10;
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -1023,20 +1112,14 @@
                 stopThrusterSound();
                 stopBackgroundMelody();
 
-                // اختيار سؤال عشوائي
-                const questionIndex = Math.floor(Math.random() * questions.length);
-                currentQuestion = questions[questionIndex];
+                // ===== التعديل هنا: اختيار السؤال من قائمة السؤال المعدة =====
+                if (questionPool.length === 0) {
+                    setupQuestionPool(); // إعادة تعبئة القائمة إذا كانت فارغة
+                }
+                currentQuestion = questionPool.pop();
+                // =====================================================================
 
                 showQuestion(currentQuestion);
-            }
-
-            // دالة لخلط عناصر مصفوفة
-            function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                return array;
             }
 
             // دالة لإظهار السؤال على الشاشة باستخدام MathJax
@@ -1231,6 +1314,9 @@
                 drawThrusterParticles();
                 
                 ship.draw();
+                
+                // رسم جسيمات الاحتفال
+                drawCelebrationParticles();
             }
             
             // دالة للبدء بالمستوى التالي
@@ -1268,10 +1354,20 @@
                 
                 startThrusterSound();
                 startBackgroundMelody();
+                
+                // إخفاء شارة الاحتفال
+                celebrationBadge.style.display = 'none';
+                
+                // إعادة تعيين مجموعة الأسئلة للمستوى الجديد
+                setupQuestionPool();
             }
 
             function update(timestamp) {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted || gameState.isQuestionActive) return;
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted || gameState.isQuestionActive) {
+                    // تحديث جسيمات الاحتفال حتى بعد إيقاف اللعبة
+                    updateCelebrationParticles();
+                    return;
+                }
                 
                 const deltaTime = timestamp - gameState.lastTime;
                 gameState.lastTime = timestamp;
@@ -1284,13 +1380,15 @@
                     gameState.pathSpeed += 0.01;
                 }
 
-                // التحقق من انتهاء المستوى بعد 25 ثانية
-                if (Math.floor(gameState.gameTime) >= 25 && !gameState.isLevelComplete) {
+                // === التغيير المطلوب: التحقق من انتهاء المستوى بعد 30 ثانية ===
+                if (Math.floor(gameState.gameTime) >= 30 && !gameState.isLevelComplete) {
                     gameState.paused = true;
                     gameState.isLevelComplete = true;
                     playLevelUpSound();
                     stopThrusterSound();
                     stopBackgroundMelody();
+                    generateCelebrationParticles(); // توليد جسيمات الاحتفال
+                    celebrationBadge.style.display = 'block'; // إظهار الشارة
                     return; // إيقاف تحديث اللعبة
                 }
                 
@@ -1323,6 +1421,9 @@
                 
                 // التحقق من الاصطدامات
                 checkCollision();
+
+                // تحديث جسيمات الاحتفال
+                updateCelebrationParticles();
             }
             
             function gameLoop(timestamp) {
@@ -1391,6 +1492,9 @@
                         s: false
                     }
                 };
+                
+                // إعداد مجموعة الأسئلة الجديدة في بداية اللعبة
+                setupQuestionPool();
                 
                 initializePath();
                 positionShipOnPath();
