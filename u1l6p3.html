@@ -1,510 +1,644 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>لعبة سونيك التعليمية - حل المسائل بشكل عكسي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angry Birds - نسخة احترافية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* CSS لصفحة اللعبة */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom, #1a2980, #26d0ce);
-            height: 100vh;
-            overflow: hidden;
+            user-select: none;
+        }
+        
+        /* التعديل: إزالة min-height: 100vh; و padding لتفعيل التمرير الطبيعي */
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d);
+            perspective: 1000px;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            color: white;
-            text-align: center;
-            direction: rtl;
-            padding: 10px;
+            align-items: center;
         }
 
+        /* التعديل: إزالة min-height: 95vh; والسماح بالمحتوى بتحديد الارتفاع */
         .game-container {
-            position: relative;
+            display: flex;
+            flex-direction: column;
             width: 100%;
-            max-width: 500px;
-            height: 70vh;
-            max-height: 600px;
-            background: linear-gradient(to bottom, #87CEEB, #1E90FF);
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            border: 4px solid #2c3e50;
+            max-width: 800px;
+            padding: 10px;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 20px 0; /* إضافة هوامش لتمكين التمرير */
         }
-
-        canvas {
-            background: transparent;
-        }
-
+        
         .header {
-            margin-bottom: 10px;
+            flex-shrink: 0;
+            text-align: center;
+            color: white;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            max-width: 500px;
+            animation: fadeIn 1s ease-in-out;
+            margin-bottom: 5px;
         }
 
         .header h1 {
-            font-size: 32px;
-            color: #f1c40f;
+            font-size: clamp(1.8rem, 5vw, 3rem);
             margin-bottom: 5px;
             letter-spacing: 1px;
+            background: linear-gradient(to right, #FFD700, #FF4500);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            position: relative;
         }
 
-        .header p {
-            font-size: 16px;
-            max-width: 100%;
-            line-height: 1.4;
-        }
-
-        .stats {
+        .header h1::after {
+            content: "";
             position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 15px;
-            border-radius: 10px;
-            font-size: 16px;
-            display: flex;
-            gap: 15px;
-            z-index: 5;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(180px, 70%);
+            height: 2px;
+            background: linear-gradient(to right, #FF4500, #FFD700);
+            border-radius: 2px;
         }
 
-        .stat {
+        .score-board {
+            flex-shrink: 0;
             display: flex;
-            align-items: center;
+            justify-content: space-around;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             gap: 5px;
         }
 
-        .rings {
-            color: #f1c40f;
+        .score-item {
+            color: white;
+            font-size: clamp(0.7rem, 3vw, 1.1rem);
             font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            min-width: 60px;
         }
 
-        .lives {
-            color: #e74c3c;
-            font-weight: bold;
+        .score-item span {
+            font-size: clamp(1rem, 4vw, 1.6rem);
+            color: #FFD700;
+            margin-top: 2px;
         }
 
-        .score {
-            color: #2ecc71;
-            font-weight: bold;
+        /* التعديل: تحديد حجم اللعبة بحيث يمكن أن يتغير مع الصفحة */
+        .game-canvas-container {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: 50vh; /* تحديد ارتفاع نسبي للوحة اللعب */
+            max-width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 4px solid #5a3921;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            touch-action: none; /* إيقاف سلوك التمرير داخل منطقة اللعب فقط */
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
 
-        .game-over, .game-start, .game-win, .question-screen {
+        .controls {
+            flex-shrink: 0;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        button {
+            background: linear-gradient(to bottom, #FF8C00, #FF4500);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: clamp(0.8rem, 3.2vw, 1rem);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
+            min-width: 110px;
+            flex: 1;
+        }
+
+        button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 6px rgba(255, 69, 0, 0.3);
+        }
+        
+        #sound-toggle {
+            background: #4CAF50;
+        }
+        #sound-toggle.off {
+            background: #F44336;
+        }
+
+        .instructions {
+            flex-shrink: 0;
+            margin-top: 8px;
+            color: white;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 10px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            margin: 8px auto 0;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            font-size: clamp(0.65rem, 2.5vw, 0.9rem);
+        }
+
+        .instructions h3 {
+            margin-bottom: 5px;
+            color: #FFD700;
+            font-size: clamp(0.8rem, 3vw, 1.1rem);
+            text-align: center;
+        }
+
+        .instructions p {
+            margin: 3px 0;
+            line-height: 1.3;
+        }
+
+        .bird-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 10px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: clamp(0.75rem, 2.8vw, 0.9rem);
+            z-index: 10;
+            animation: bounce 2s infinite;
+        }
+
+        .bird-icon {
+            width: 22px;
+            height: 22px;
+            background: #FF4500;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .bird-icon::before {
+            content: "";
+            position: absolute;
+            top: 4px;
+            right: -3px;
+            width: 10px;
+            height: 10px;
+            background: #FFD700;
+            border-radius: 50%;
+        }
+
+        .bird-icon::after {
+            content: "";
+            position: absolute;
+            top: 8px;
+            right: -6px;
+            width: 6px;
+            height: 2px;
+            background: #FF6347;
+            border-radius: 2px;
+            transform: rotate(-20deg);
+        }
+
+        .power-bar {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(250px, 75%);
+            height: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .power-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #4CAF50, #FFD700, #FF4500);
+            border-radius: 8px;
+            transition: width 0.1s;
+        }
+
+        .touch-indicator {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 20;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* تأثيرات 3D */
+        .game-canvas-container {
+            transform-style: preserve-3d;
+            transform: rotateX(3deg);
+        }
+
+        .header h1 {
+            animation: colorChange 5s infinite alternate;
+        }
+
+        @keyframes colorChange {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.8); opacity: 0.7; }
+        }
+
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 8px;
+            }
+
+            .header {
+                margin-bottom: 8px;
+            }
+
+            .score-board {
+                padding: 8px;
+                max-width: 100%;
+            }
+
+            .controls {
+                margin: 8px auto;
+                gap: 8px;
+            }
+
+            button {
+                padding: 8px 16px;
+                min-width: 100px;
+            }
+
+            .instructions {
+                padding: 10px;
+                margin-top: 8px;
+                font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .score-board {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .score-item {
+                min-width: 45%;
+                margin-bottom: 5px;
+            }
+
+            .controls {
+                flex-direction: row;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+
+            button {
+                flex-grow: 1;
+            }
+            .instructions p {
+                font-size: clamp(0.6rem, 2.5vw, 0.8rem);
+            }
+        }
+
+        /* رسالة انتهاء اللعبة / إكمال المستوى */
+        .game-over-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 30;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .game-over-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .game-over-content {
+            text-align: center;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid #FFD700;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .game-over-content h2 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: #FFD700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .game-over-content p {
+            font-size: clamp(1rem, 4vw, 2rem);
+            margin: 15px 0;
+        }
+
+        .game-over-content button {
+            margin: 5px;
+        }
+
+        /* رسالة تحميل اللعبة */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            z-index: 50;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            text-align: center;
+            font-size: 2rem;
+        }
+        
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #FFD700;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-top: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* واجهة شاشة السؤال */
+        .question-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out;
             padding: 20px;
         }
-
-        .game-over h2, .game-start h2, .game-win h2, .question-screen h2 {
-            font-size: 36px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        
+        .question-overlay.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .game-start h2 {
-            color: #f1c40f;
-        }
-
-        .game-win {
-            background: rgba(46, 204, 113, 0.85);
-        }
-
-        .game-win h2 {
-            color: #f1c40f;
-        }
-
-        .question-screen h2 {
-            color: #3498db;
-        }
-
-        .final-score {
-            font-size: 24px;
-            margin: 15px 0;
-            color: #2ecc71;
-        }
-
-        .btn {
-            background: #f1c40f;
-            color: #2c3e50;
-            border: none;
-            padding: 12px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 15px;
-            box-shadow: 0 5px 0 #d35400;
-        }
-
-        .btn:hover {
-            background: #f39c12;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 0 #d35400;
-        }
-
-        .btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 3px 0 #d35400;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .sonic-logo {
-            font-size: 50px;
-            margin-bottom: 20px;
-            color: #f1c40f;
-            text-shadow: 0 0 15px rgba(241, 196, 15, 0.8);
-        }
-
-        .instructions {
-            max-width: 100%;
-            margin: 15px 0;
-            line-height: 1.6;
-            font-size: 16px;
-            color: #ecf0f1;
-        }
-
-        .highlight {
-            color: #f1c40f;
-            font-weight: bold;
-        }
-
-        /* شاشة السؤال */
-        .question-container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
+        .question-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
             width: 90%;
-            max-width: 450px;
-            margin: 20px 0;
-            border: 2px solid #3498db;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            max-height: 80vh; 
+            overflow-y: auto;
         }
 
-        .question-text {
-            font-size: 20px;
+        .question-content h2 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: #FF4500;
             margin-bottom: 20px;
-            color: #f1c40f;
-            line-height: 1.6;
-            text-align: right;
+        }
+
+        .question-content p {
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: #333;
         }
 
         .options-container {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 10px;
-            width: 100%;
+            margin-bottom: 20px;
         }
 
         .option-btn {
-            background: #3498db;
-            color: white;
-            border: none;
+            background: #FFD700;
+            color: #1a2a6c;
+            border: 2px solid #b21f1f;
             padding: 12px;
-            font-size: 18px;
-            border-radius: 8px;
+            border-radius: 10px;
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
-            text-align: right;
+            transition: all 0.3s ease;
         }
 
         .option-btn:hover {
-            background: #2980b9;
-            transform: translateY(-3px);
+            background: #FFC107;
         }
 
         .option-btn:active {
-            transform: translateY(1px);
-        }
-
-        .explanation {
-            background: rgba(52, 152, 219, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: right;
-            font-size: 16px;
-            line-height: 1.6;
-            display: none;
-        }
-
-        .explanation-title {
-            color: #f1c40f;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        /* عناصر التحكم للهاتف */
-        .mobile-controls {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 5;
-            touch-action: none;
-            display: none; /* مخفية افتراضيًا */
-        }
-
-        .d-pad {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .d-pad-row {
-            display: flex;
-            gap: 5px;
-        }
-
-        .control-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid white;
-            color: white;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-        }
-
-        .jump-btn {
-            background: rgba(241, 196, 15, 0.8);
-            width: 70px;
-            height: 70px;
-            font-size: 30px;
-        }
-
-        .center-btn {
-            background: rgba(0, 0, 0, 0.7);
-            width: 60px;
-            height: 60px;
-            font-size: 24px;
-        }
-
-        /* زر التحكم بالصوت */
-        .sound-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid white;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 5;
-            cursor: pointer;
+            transform: scale(0.98);
         }
         
-        /* إرشادات لوحة المفاتيح */
-        .keyboard-instructions {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.6);
+        #feedbackText {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+        }
+
+        #explanation {
+            display: none;
+            margin-top: 15px;
             padding: 10px;
             border-radius: 10px;
-            margin: 0 20px;
-            font-size: 14px;
-            z-index: 5;
+            background: #f0f0f0;
+            color: #555;
+            border: 1px dashed #ccc;
         }
 
-        /* الشاشات الصغيرة جداً */
-        @media (max-width: 768px) {
-            .mobile-controls {
-                display: flex;
-            }
-            
-            .keyboard-instructions {
-                display: none;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .control-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-            }
-
-            .jump-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 24px;
-            }
-
-            .stats {
-                font-size: 14px;
-                padding: 5px 10px;
-                gap: 10px;
-            }
-
-            .header h1 {
-                font-size: 28px;
-            }
-
-            .sound-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
-            }
-            
-            .question-text {
-                font-size: 18px;
-            }
-            
-            .option-btn {
-                padding: 10px;
-                font-size: 16px;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>لعبة سونيك التعليمية</h1>
-        <p>❤️❤️❤️تحكم في سونيك، اجمع 30🟡 حلقة ذهبية للفوز🏆. وأجب على الأسئلة لاستعادة أرواحك!</p>
-    </div>
-
     <div class="game-container">
-        <div class="game-start" id="gameStart">
-            <div class="sonic-logo">SONIC</div>
-            <h2>مغامرة تعليمية في حل المسائل</h2>
-            <div class="instructions">
-                <p id="controlsInfo">استخدم <span class="highlight">أزرار الأسهم</span> على الكيبورد للتحرك و <span class="highlight">المسافة</span> للقفز</p>
-                <p>اجمع <span class="highlight">الحلقات الذهبية</span> لتزيد نقاطك</p>
-                <p>تجنب <span class="highlight">الأعداء الحمراء</span> أو ستخسر أرواحك!</p>
-                <p>عند خسارة 3 أرواح، أجب على سؤال في حل المسائل بشكل عكسي لاستعادة أرواحك!</p>
-                <p>الأسئلة من منهاج الصف السابع في الأردن</p>
-            </div>
-            <button class="btn" id="startBtn">ابدأ اللعب</button>
+        <div class="header">
+            <h1>Angry Birds</h1>
         </div>
 
-        <div class="game-over hidden" id="gameOver">
-            <h2>انتهت اللعبة!</h2>
-            <div class="final-score" id="finalScore">النقاط: 0</div>
-            <button class="btn" id="restartBtn">العب مرة أخرى</button>
-        </div>
-
-        <div class="game-win hidden" id="gameWin">
-            <h2>لقد فزت!</h2>
-            <div class="final-score" id="winScore">النقاط: 0</div>
-            <p>أحسنت! لقد جمعت كل الحلقات المطلوبة.</p>
-            <button class="btn" id="playAgainBtn">العب مرة أخرى</button>
-        </div>
-        
-        <!-- شاشة السؤال التعليمية -->
-        <div class="question-screen hidden" id="questionScreen">
-            <h2>استعد أرواحك!</h2>
-            <p>أجب على السؤال التالي لاستعادة 3 أرواح:</p>
-            
-            <div class="question-container">
-                <div class="question-text" id="questionText"></div>
-                <div class="options-container" id="optionsContainer"></div>
-                
-                <div class="explanation" id="explanation">
-                    <div class="explanation-title">شرح الحل:</div>
-                    <div id="explanationText"></div>
-                </div>
+        <div class="score-board">
+            <div class="score-item">
+                النقاط: <span id="score">0</span>
             </div>
-            
-            <p id="feedbackText"></p>
-        </div>
-
-        <div class="sound-btn" id="soundBtn">🔊</div>
-
-        <div class="stats">
-            <div class="stat">
-                <span>الحلقات:</span>
-                <span class="rings" id="ringsCounter">0</span>
+            <div class="score-item">
+                الطيور المتبقية: <span id="birds-left">5</span>
             </div>
-            <div class="stat">
-                <span>الأرواح:</span>
-                <span class="lives" id="livesCounter">3</span>
-            </div>
-            <div class="stat">
-                <span>النقاط:</span>
-                <span class="score" id="scoreCounter">0</span>
+            <div class="score-item">
+                المرحلة: <span id="level">1</span>
             </div>
         </div>
 
-        <div class="mobile-controls">
-            <div class="d-pad">
-                <div class="d-pad-row">
-                    <div class="control-btn" id="upBtn">↑</div>
-                </div>
-                <div class="d-pad-row">
-                    <div class="control-btn" id="rightBtn">→</div>
-                    <div class="control-btn center-btn"></div>
-                    <div class="control-btn" id="leftBtn">←</div>
+        <div class="game-canvas-container">
+            <div class="loading-overlay" id="loadingOverlay">
+                جاري تحميل اللعبة...
+                <div class="spinner"></div>
+            </div>
+            <canvas id="gameCanvas"></canvas>
+            <div class="touch-indicator" id="touchIndicator"></div>
+            <div class="bird-indicator">
+                <i class="fas fa-angry"></i>
+                <span>جاهز للإطلاق!</span>
+            </div>
+            <div class="power-bar">
+                <div class="power-fill" id="power-fill"></div>
+            </div>
+
+            <!-- رسالة انتهاء اللعبة / إكمال المستوى -->
+            <div class="game-over-overlay" id="gameOverOverlay">
+                <div class="game-over-content">
+                    <h2 id="gameOverTitle"></h2>
+                    <p id="gameOverScore"></p>
+                    <button id="restartBtn">إعادة تشغيل</button>
+                    <button id="nextLevelBtn">المستوى التالي</button>
                 </div>
             </div>
 
-            <div class="control-btn jump-btn" id="jumpBtn">↑</div>
-        </div>
-        
-        <div class="keyboard-instructions">
-            استخدم الأسهم للتحرك ومسافة للقفز
+            <!-- شاشة السؤال -->
+            <div class="question-overlay hidden" id="questionScreen">
+                <div class="question-content">
+                    <h2>درس: الحل العكسي</h2>
+                    <p id="questionText"></p>
+                    <div class="options-container" id="optionsContainer"></div>
+                    <p id="feedbackText"></p>
+                    <div id="explanation">
+                        <h4>الشرح:</h4>
+                        <p id="explanationText"></p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <canvas id="gameCanvas"></canvas>
+        <div class="controls">
+            <button id="sound-toggle">تشغيل الصوت</button>
+            <button id="resetBtn">إعادة ضبط</button>
+        </div>
+
+        <div class="instructions">
+            <h3>كيف تلعب:</h3>
+            <p>1. اسحب الطائر للخلف لتحديد قوة وسرعة الإطلاق</p>
+            <p>2. حرر إصبعك لإطلاق الطائر نحو الأهداف</p>
+            <p>3. دمر جميع الأهداف لإنهاء المرحلة</p>
+            <p>4. لديك عدد محدود من الطيور لكل مرحلة</p>
+        </div>
     </div>
+    
+    <!-- محتوى إضافي لتمكين التمرير على الأجهزة الصغيرة -->
+    <div style="height: 50px;"></div>
 
     <script>
-        // تهيئة حجم Canvas لتلائم الشاشة
+        // العناصر من DOM
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
-
-        // عناصر DOM
-        const gameStart = document.getElementById('gameStart');
-        const gameOver = document.getElementById('gameOver');
-        const startBtn = document.getElementById('startBtn');
+        const scoreElement = document.getElementById('score');
+        const birdsLeftElement = document.getElementById('birds-left');
+        const levelElement = document.getElementById('level');
+        const resetBtn = document.getElementById('resetBtn');
+        const soundToggleBtn = document.getElementById('sound-toggle');
+        const powerFill = document.getElementById('power-fill');
+        const touchIndicator = document.getElementById('touchIndicator');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const gameOverTitle = document.getElementById('gameOverTitle');
+        const gameOverScore = document.getElementById('gameOverScore');
         const restartBtn = document.getElementById('restartBtn');
-        const ringsCounter = document.getElementById('ringsCounter');
-        const livesCounter = document.getElementById('livesCounter');
-        const scoreCounter = document.getElementById('scoreCounter');
-        const finalScore = document.getElementById('finalScore');
-        const soundBtn = document.getElementById('soundBtn');
-        const gameWin = document.getElementById('gameWin');
-        const winScore = document.getElementById('winScore');
-        const playAgainBtn = document.getElementById('playAgainBtn');
-        const controlsInfo = document.getElementById('controlsInfo');
-        
-        // عناصر شاشة السؤال
+        const nextLevelBtn = document.getElementById('nextLevelBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // عناصر شاشة الأسئلة الجديدة
         const questionScreen = document.getElementById('questionScreen');
         const questionText = document.getElementById('questionText');
         const optionsContainer = document.getElementById('optionsContainer');
@@ -512,378 +646,90 @@
         const explanation = document.getElementById('explanation');
         const explanationText = document.getElementById('explanationText');
 
-        // عناصر التحكم للهاتف
-        const leftBtn = document.getElementById('leftBtn');
-        const rightBtn = document.getElementById('rightBtn');
-        const jumpBtn = document.getElementById('jumpBtn');
-        const upBtn = document.getElementById('upBtn');
-
         // متغيرات اللعبة
-        let gameRunning = false;
         let score = 0;
-        let rings = 0;
-        let lives = 3;
-        let gameSpeed = 5;
+        let birdsLeft = 0;
+        let currentLevel = 1;
+        let gameRunning = true; // متغير للتحكم في حالة اللعبة (إيقاف مؤقت عند السؤال)
+        let gameObjects = [];
+        let slingshot = { x: 0, y: 0 };
+        let currentBird = null;
+        let releasedBirds = []; // مصفوفة لتتبع الطيور التي تم إطلاقها
+        // متغيرات للتحكم باللمس والماوس
+        let input = { x: 0, y: 0, active: false, power: 0 };
+        let birdLaunchDelay = 1000; // تأخير قبل ظهور الطائر التالي
+
+        // --- إضافة المؤثرات الصوتية ---
         let soundEnabled = true;
-        let winRings = 30; // عدد الحلقات المطلوبة للفوز
-
-        // متغيرات التحكم بالكيبورد
-        let keyLeft = false;
-        let keyRight = false;
-        let keyJump = false;
-        
-        // متغيرات التحكم باللمس
-        let touchJump = false;
-        let touchLeft = false;
-        let touchRight = false;
-
-        // تهيئة نظام الصوت
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-        // دالة لتشغيل الأصوات
+        
+        /**
+         * تشغيل صوت من نوع موجة معينة
+         * @param {number} frequency - تردد الصوت بالهرتز
+         * @param {string} type - نوع الموجة ('sine', 'square', 'sawtooth', 'triangle')
+         * @param {number} duration - مدة الصوت بالثواني
+         * @param {number} volume - مستوى الصوت (0 إلى 1)
+         */
         function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
             if (!soundEnabled) return;
-
+            
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
-
+            
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
-
+            
             oscillator.type = type;
             oscillator.frequency.value = frequency;
-            gainNode.gain.value = volume;
-
-            oscillator.start();
+            
+            // إضافة تأثيرات تلاشي (fade-in و fade-out) للصوت
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + duration);
         }
 
-        // كائن سونيك
-        const sonic = {
-            x: 100,
-            y: canvas.height - 150,
-            width: 40,
-            height: 60,
-            speed: 8,
-            velX: 0,
-            velY: 0,
-            jumping: false,
-            grounded: false,
-            color: '#1E90FF',
-            draw() {
-                // جسم سونيك
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x + 20, this.y + 15, 15, 0, Math.PI * 2);
-                ctx.fill();
-
-                // جسم سونيك
-                ctx.fillRect(this.x, this.y + 20, 40, 40);
-
-                // عيون
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.arc(this.x + 30, this.y + 20, 5, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = 'black';
-                ctx.beginPath();
-                ctx.arc(this.x + 30, this.y + 20, 2, 0, Math.PI * 2);
-                ctx.fill();
-
-                // أحذية
-                ctx.fillStyle = 'red';
-                ctx.fillRect(this.x, this.y + 55, 15, 5);
-                ctx.fillRect(this.x + 25, this.y + 55, 15, 5);
-
-                // أشواك
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.moveTo(this.x + 20, this.y + 10);
-                ctx.lineTo(this.x + 40, this.y + 25);
-                ctx.lineTo(this.x + 20, this.y + 30);
-                ctx.closePath();
-                ctx.fill();
-
-                ctx.beginPath();
-                ctx.moveTo(this.x + 40, this.y + 25);
-                ctx.lineTo(this.x + 50, this.y + 30);
-                ctx.lineTo(this.x + 40, this.y + 40);
-                ctx.closePath();
-                ctx.fill();
+        // تهيئة المستويات
+        const levels = {
+            1: {
+                targets: [{ x: 0.8, y: 0.75 }, { x: 0.87, y: 0.75 }],
+                blocks: [
+                    { x: 0.68, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.72, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.76, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.72, y: 0.55, w: 0.1, h: 0.05, color: '#A52A2A' }
+                ],
+                birds: 5,
             },
-            update() {
-                // الجاذبية
-                this.velY += 0.8;
-
-                // تحديث الموضع
-                this.x += this.velX;
-                this.y += this.velY;
-
-                // حدود الشاشة
-                if (this.x < 0) this.x = 0;
-                if (this.x + this.width > canvas.width) this.x = canvas.width - this.width;
-
-                // الأرض
-                if (this.y > canvas.height - 140) {
-                    this.y = canvas.height - 140;
-                    this.velY = 0;
-                    this.jumping = false;
-                    this.grounded = true;
-                }
+            2: {
+                targets: [{ x: 0.8, y: 0.75 }, { x: 0.87, y: 0.75 }, { x: 0.78, y: 0.55 }],
+                blocks: [
+                    { x: 0.65, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.70, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.75, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.8, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.70, y: 0.55, w: 0.1, h: 0.05, color: '#A52A2A' }
+                ],
+                birds: 4,
+            },
+            3: {
+                targets: [{ x: 0.8, y: 0.75 }, { x: 0.87, y: 0.75 }, { x: 0.78, y: 0.55 }, { x: 0.85, y: 0.55 }],
+                blocks: [
+                    { x: 0.68, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.72, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.76, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.80, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.72, y: 0.55, w: 0.1, h: 0.05, color: '#A52A2A' },
+                    { x: 0.85, y: 0.55, w: 0.05, h: 0.1, color: '#A52A2A' },
+                    { x: 0.78, y: 0.35, w: 0.1, h: 0.05, color: '#A52A2A' }
+                ],
+                birds: 3,
             }
         };
-
-        // الحلقات
-        const ringsList = [];
-        function createRing() {
-            if (Math.random() < 0.02 && ringsList.length < 5) {
-                ringsList.push({
-                    x: canvas.width,
-                    y: Math.random() * (canvas.height - 200) + 100,
-                    width: 20,
-                    height: 20,
-                    collected: false,
-                    draw() {
-                        if (this.collected) return;
-
-                        ctx.fillStyle = '#f1c40f';
-                        ctx.beginPath();
-                        ctx.arc(this.x + 10, this.y + 10, 10, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        ctx.strokeStyle = '#d35400';
-                        ctx.lineWidth = 3;
-                        ctx.beginPath();
-                        ctx.arc(this.x + 10, this.y + 10, 8, 0, Math.PI * 2);
-                        ctx.stroke();
-                    }
-                });
-            }
-        }
-
-        // الأعداء
-        const enemies = [];
-        function createEnemy() {
-            if (Math.random() < 0.01 && enemies.length < 3) {
-                enemies.push({
-                    x: canvas.width,
-                    y: canvas.height - 140,
-                    width: 40,
-                    height: 40,
-                    speed: 3 + Math.random() * 2,
-                    draw() {
-                        // جسم العدو
-                        ctx.fillStyle = '#e74c3c';
-                        ctx.fillRect(this.x, this.y, this.width, this.height);
-
-                        // عيون
-                        ctx.fillStyle = 'white';
-                        ctx.fillRect(this.x + 5, this.y + 10, 8, 8);
-                        ctx.fillRect(this.x + 25, this.y + 10, 8, 8);
-
-                        ctx.fillStyle = 'black';
-                        ctx.fillRect(this.x + 7, this.y + 12, 4, 4);
-                        ctx.fillRect(this.x + 27, this.y + 12, 4, 4);
-
-                        // فم
-                        ctx.fillStyle = '#c0392b';
-                        ctx.fillRect(this.x + 10, this.y + 25, 20, 5);
-                    },
-                    update() {
-                        this.x -= this.speed;
-                        return this.x + this.width < 0; // إرجاع true إذا كان خارج الشاشة
-                    }
-                });
-            }
-        }
-
-        // المنصة
-        function drawPlatform() {
-            // الأرض
-            ctx.fillStyle = '#27ae60';
-            ctx.fillRect(0, canvas.height - 110, canvas.width, 110);
-
-            // العشب
-            ctx.fillStyle = '#2ecc71';
-            ctx.fillRect(0, canvas.height - 110, canvas.width, 10);
-
-            // خلفية الجبال
-            ctx.fillStyle = '#3498db';
-            ctx.beginPath();
-            ctx.moveTo(0, 150);
-            ctx.lineTo(100, 50);
-            ctx.lineTo(200, 100);
-            ctx.lineTo(300, 30);
-            ctx.lineTo(400, 80);
-            ctx.lineTo(500, 40);
-            ctx.lineTo(600, 90);
-            ctx.lineTo(700, 30);
-            ctx.lineTo(canvas.width, 100);
-            ctx.lineTo(canvas.width, canvas.height - 110);
-            ctx.lineTo(0, canvas.height - 110);
-            ctx.closePath();
-            ctx.fill();
-
-            // الشمس
-            ctx.fillStyle = '#f1c40f';
-            ctx.beginPath();
-            ctx.arc(canvas.width - 100, 80, 40, 0, Math.PI * 2);
-            ctx.fill();
-
-            // الغيوم
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-            ctx.beginPath();
-            ctx.arc(200, 100, 25, 0, Math.PI * 2);
-            ctx.arc(230, 90, 30, 0, Math.PI * 2);
-            ctx.arc(260, 100, 25, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(500, 70, 20, 0, Math.PI * 2);
-            ctx.arc(530, 60, 25, 0, Math.PI * 2);
-            ctx.arc(560, 70, 20, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        // الاصطدام
-        function collision(obj1, obj2) {
-            return obj1.x < obj2.x + obj2.width &&
-                   obj1.x + obj1.width > obj2.x &&
-                   obj1.y < obj2.y + obj2.height &&
-                   obj1.y + obj1.height > obj2.y;
-        }
-
-        // تحديث اللعبة
-        function update() {
-            // تحديث سونيك
-            sonic.update();
-
-            // إنشاء الحلقات والأعداء
-            createRing();
-            createEnemy();
-
-            // تحديث الحلقات
-            for (let i = ringsList.length - 1; i >= 0; i--) {
-                const ring = ringsList[i];
-                ring.x -= gameSpeed;
-
-                if (collision(sonic, ring) && !ring.collected) {
-                    ring.collected = true;
-                    rings++;
-                    score += 100;
-                    ringsCounter.textContent = rings;
-                    scoreCounter.textContent = score;
-                    playSound(880, 'triangle', 0.2, 0.4); // صوت جمع حلقة
-                }
-
-                if (ring.x + ring.width < 0) {
-                    ringsList.splice(i, 1);
-                }
-            }
-
-            // تحديث الأعداء
-            for (let i = enemies.length - 1; i >= 0; i--) {
-                if (enemies[i].update()) {
-                    enemies.splice(i, 1);
-                } else if (collision(sonic, enemies[i])) {
-                    lives--;
-                    livesCounter.textContent = lives;
-                    enemies.splice(i, 1);
-                    playSound(220, 'sawtooth', 0.3, 0.5); // صوت اصطدام بعدو
-
-                    // التحقق إذا كانت الأرواح انتهت
-                    if (lives <= 0) {
-                        gameRunning = false;
-                        showQuestion();
-                    }
-                }
-            }
-
-            // التحقق من شرط الفوز
-            if (rings >= winRings && gameRunning) {
-                endGame(true); // استدعاء endGame مع true للإشارة إلى الفوز
-                return; // إيقاف التحديث لمنع أي إجراءات إضافية
-            }
-        }
-
-        // الرسم
-        function draw() {
-            // مسح الشاشة
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // رسم الخلفية والمنصة
-            drawPlatform();
-
-            // رسم الحلقات
-            ringsList.forEach(ring => ring.draw());
-
-            // رسم الأعداء
-            enemies.forEach(enemy => enemy.draw());
-
-            // رسم سونيك
-            sonic.draw();
-        }
-
-        // حلقة اللعبة
-        function gameLoop() {
-            if (!gameRunning) return;
-
-            update();
-            draw();
-
-            requestAnimationFrame(gameLoop);
-        }
-
-        // بدء اللعبة
-        function startGame() {
-            gameRunning = true;
-            gameStart.classList.add('hidden');
-            gameOver.classList.add('hidden');
-            gameWin.classList.add('hidden'); // إخفاء شاشة الفوز عند البدء
-            questionScreen.classList.add('hidden'); // إخفاء شاشة السؤال
-            score = 0;
-            rings = 0;
-            lives = 3;
-
-            ringsCounter.textContent = rings;
-            livesCounter.textContent = lives;
-            scoreCounter.textContent = score;
-
-            ringsList.length = 0;
-            enemies.length = 0;
-
-            // إعادة تعيين موقع سونيك
-            sonic.x = 100;
-            sonic.y = canvas.height - 150;
-            sonic.velX = 0;
-            sonic.velY = 0;
-
-            // تشغيل صوت البداية
-            playSound(523.25, 'sine', 0.1, 0.5);
-            playSound(659.25, 'sine', 0.1, 0.5);
-            playSound(783.99, 'sine', 0.2, 0.5);
-
-            gameLoop();
-        }
-
-        // انتهاء اللعبة (فوز أو خسارة)
-        function endGame(won = false) { // إضافة معلمة 'won' افتراضياً false
-            gameRunning = false;
-            if (won) {
-                winScore.textContent = `النقاط: ${score}`;
-                gameWin.classList.remove('hidden'); // إظهار شاشة الفوز
-                playSound(900, 'sine', 0.5, 0.6); // صوت فوز
-                setTimeout(() => playSound(1200, 'sine', 0.5, 0.6), 100); // صوت فوز إضافي بعد تأخير
-                setTimeout(() => playSound(1500, 'sine', 0.5, 0.6), 200); // صوت فوز إضافي آخر
-            } else {
-                finalScore.textContent = `النقاط: ${score}`;
-                gameOver.classList.remove('hidden'); // إظهار شاشة انتهاء اللعبة
-                playSound(110, 'sine', 1.0, 0.6); // صوت نهاية اللعبة
-            }
-        }
         
-        // الأسئلة التعليمية المحدثة حول حل المسائل بشكل عكسي للصف السابع
+        // الأسئلة الجديدة من المستخدم
         const questions = [
             {
                 question: "استهلَكت السيارة 11.8 لترات من الوقود بعد تزويدها، وتبقى فيها 8.9 لتر عند نهاية الرحلة. كم كان في خزان السيارة بعد التزويد مباشرة؟",
@@ -923,10 +769,13 @@
             }
         ];
         
-        // عرض سؤال عشوائي
+        /**
+         * عرض سؤال عشوائي من مصفوفة الأسئلة
+         */
         function showQuestion() {
+            gameRunning = false; // إيقاف اللعبة مؤقتًا
+            
             feedbackText.textContent = "";
-            feedbackText.style.color = "";
             explanation.style.display = "none";
             
             // اختيار سؤال عشوائي
@@ -948,205 +797,699 @@
             
             // إظهار شاشة السؤال
             questionScreen.classList.remove('hidden');
+            questionScreen.classList.add('visible');
         }
         
-        // التحقق من الإجابة
+        /**
+         * التحقق من إجابة اللاعب على السؤال
+         * @param {number} selectedIndex - فهرس الخيار الذي اختاره اللاعب
+         * @param {number} correctIndex - فهرس الإجابة الصحيحة
+         * @param {string} explanationTextContent - نص الشرح للإجابة
+         */
         function checkAnswer(selectedIndex, correctIndex, explanationTextContent) {
+            // إيقاف إمكانية النقر على الأزرار بعد الاختيار
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach(btn => btn.disabled = true);
+
             if (selectedIndex === correctIndex) {
-                // الإجابة صحيحة: نستعيد الأرواح
-                lives = 3;
-                livesCounter.textContent = lives;
+                // الإجابة صحيحة: نضيف 3 طيور ونستكمل اللعب
+                birdsLeft += 3;
+                updateUI();
                 playSound(523.25, 'sine', 0.2, 0.5); // صوت صحيح
-                feedbackText.textContent = "✓ إجابة صحيحة! لقد استعدت 3 أرواح.";
+                feedbackText.textContent = "✓ إجابة صحيحة! لقد حصلت على 3 طيور إضافية.";
                 feedbackText.style.color = "#2ecc71";
                 
                 // عرض الشرح
                 explanationText.textContent = explanationTextContent;
                 explanation.style.display = "block";
                 
-                // بعد 2 ثانية، نختفي شاشة السؤال ونعود للعبة
+                // بعد 3 ثوانٍ، نخفي شاشة السؤال ونعود للعبة
                 setTimeout(() => {
-                    questionScreen.classList.add('hidden');
+                    questionScreen.classList.remove('visible');
                     gameRunning = true;
-                    
-                    // إعادة تعيين موقع سونيك لمنع المشاكل
-                    sonic.x = 100;
-                    sonic.y = canvas.height - 150;
-                    sonic.velX = 0;
-                    sonic.velY = 0;
-                    
-                    // إعادة تشغيل حلقة اللعبة
-                    gameLoop();
-                }, 2000);
+                    loadNextBird();
+                }, 3000);
             } else {
-                // الإجابة خاطئة
-                playSound(220, 'sawtooth', 0.5, 0.5); // صوت خطأ
-                feedbackText.textContent = "✗ إجابة خاطئة! انتهت اللعبة.";
+                // الإجابة خاطئة: تنتهي اللعبة
+                playSound(200, 'square', 0.5, 0.6); // صوت الخسارة
+                feedbackText.textContent = "❌ إجابة خاطئة! لقد انتهت اللعبة.";
                 feedbackText.style.color = "#e74c3c";
                 
+                // عرض الشرح
+                explanationText.textContent = explanationTextContent;
+                explanation.style.display = "block";
+                
+                // بعد 3 ثوانٍ، نعرض شاشة نهاية اللعبة
                 setTimeout(() => {
-                    endGame(false);
-                }, 2000);
+                    showGameOverMessage('انتهت اللعبة!', `نقاطك النهائية: ${score}`, false, false);
+                    questionScreen.classList.remove('visible');
+                }, 3000);
             }
         }
 
-        // التحكم باللمس للهاتف
-        function setupMobileControls() {
-            // زر القفز
-            jumpBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                touchJump = true;
-                if (sonic.grounded) {
-                    sonic.velY = -15;
-                    sonic.jumping = true;
-                    sonic.grounded = false;
-                    playSound(440, 'sine', 0.2, 0.4); // صوت القفز
+        // تعريف الفئات
+        class Bird {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = Math.min(20, canvas.width * 0.025);
+                this.color = '#DD2E44';
+                this.velocity = { x: 0, y: 0 };
+                this.launched = false;
+                this.trail = [];
+                this.trailMaxLength = 20;
+                this.isStatic = true; // الطائر في وضعية ثابتة قبل الإطلاق
+            }
+
+            draw() {
+                // رسم مسار الطائر
+                for (let i = 0; i < this.trail.length; i++) {
+                    const alpha = i / this.trail.length;
+                    const size = this.radius * alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.trail[i].x, this.trail[i].y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(221, 46, 68, ${0.5 * alpha})`;
+                    ctx.fill();
+                    ctx.closePath();
                 }
-            });
 
-            jumpBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                touchJump = false;
-            });
+                // رسم جسم الطائر
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+                
+                // تفاصيل الطائر (عيون، حواجب، منقار، ريشة)
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.3, 0, Math.PI * 2);
+                ctx.arc(this.x + this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+                ctx.closePath();
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.1, 0, Math.PI * 2);
+                ctx.arc(this.x + this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.1, 0, Math.PI * 2);
+                ctx.fillStyle = 'black';
+                ctx.fill();
+                ctx.closePath();
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = this.radius * 0.15;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.radius * 0.45, this.y - this.radius * 0.5);
+                ctx.lineTo(this.x - this.radius * 0.05, this.y - this.radius * 0.4);
+                ctx.moveTo(this.x + this.radius * 0.45, this.y - this.radius * 0.5);
+                ctx.lineTo(this.x + this.radius * 0.05, this.y - this.radius * 0.4);
+                ctx.stroke();
+                ctx.fillStyle = '#FDD835';
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y + this.radius * 0.2);
+                ctx.lineTo(this.x - this.radius * 0.4, this.y + this.radius * 0.5);
+                ctx.lineTo(this.x + this.radius * 0.4, this.y + this.radius * 0.5);
+                ctx.fill();
+                ctx.closePath();
+                ctx.fillStyle = '#555';
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y - this.radius, this.radius * 0.6, this.radius * 0.2, -Math.PI / 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.closePath();
+            }
 
-            upBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                touchJump = true;
-                if (sonic.grounded) {
-                    sonic.velY = -15;
-                    sonic.jumping = true;
-                    sonic.grounded = false;
-                    playSound(440, 'sine', 0.2, 0.4); // صوت القفز
+            update() {
+                if (this.launched) {
+                    this.isStatic = false;
+                    this.trail.push({ x: this.x, y: this.y });
+                    if (this.trail.length > this.trailMaxLength) {
+                        this.trail.shift();
+                    }
+
+                    // تطبيق الجاذبية
+                    this.velocity.y += canvas.height * 0.001;
+
+                    // تحديث الموضع
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+
+                    // --- التعديل هنا: تحسين كشف التصادم مع الحدود ---
+                    const groundHeight = canvas.height * 0.08;
+
+                    // التصادم مع الجدار الأيسر
+                    if (this.x - this.radius < 0) {
+                        this.velocity.x *= -0.7;
+                        this.x = this.radius; // إعادة ضبط الموضع لضمان عدم خروجه عن الشاشة
+                    }
+                    // التصادم مع الجدار الأيمن
+                    if (this.x + this.radius > canvas.width) {
+                        this.velocity.x *= -0.7;
+                        this.x = canvas.width - this.radius; // إعادة ضبط الموضع
+                    }
+                    // التصادم مع السقف
+                    if (this.y - this.radius < 0) {
+                        this.velocity.y *= -0.5;
+                        this.y = this.radius; // إعادة ضبط الموضع
+                    }
+                    // التصادم مع الأرض
+                    if (this.y + this.radius > canvas.height - groundHeight) {
+                        this.y = canvas.height - groundHeight - this.radius;
+                        this.velocity.y *= -0.5;
+                        this.velocity.x *= 0.7; // تقليل السرعة الأفقية عند الارتداد من الأرض
+                    }
+                    // --- نهاية التعديل ---
                 }
-            });
+            }
+        }
 
-            upBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                touchJump = false;
-            });
+        class TargetBird {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = Math.min(18, canvas.width * 0.022);
+                this.color = '#388E3C';
+                this.health = 100;
+                this.isHit = false;
+            }
 
-            // زر اليسار (الموجود على اليمين في الواجهة)
-            leftBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                touchLeft = true;
-                touchRight = false;
-            });
+            draw() {
+                // رسم الطائر الهدف مع التفاصيل
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#1B5E20';
+                ctx.stroke();
 
-            leftBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                touchLeft = false;
-            });
+                // --- التعديلات هنا: تصحيح العيون والمنقار والحواجب ---
+                // رسم بياض العينين
+                ctx.fillStyle = '#fff';
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.ellipse(this.x - this.radius * 0.4, this.y - this.radius * 0.3, this.radius * 0.3, this.radius * 0.4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.beginPath();
+                // تصحيح إحداثيات العين الثانية
+                ctx.ellipse(this.x + this.radius * 0.4, this.y - this.radius * 0.3, this.radius * 0.3, this.radius * 0.4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
 
-            // زر اليمين (الموجود على اليسار في الواجهة)
-            rightBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                touchRight = true;
-                touchLeft = false;
-            });
+                // رسم حدقة العينين
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.4, this.y - this.radius * 0.3, this.radius * 0.1, 0, Math.PI * 2, false);
+                // تصحيح إحداثيات الحدقة الثانية
+                ctx.arc(this.x + this.radius * 0.4, this.y - this.radius * 0.3, this.radius * 0.1, 0, Math.PI * 2, false);
+                ctx.fill();
 
-            rightBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                touchRight = false;
-            });
+                // رسم المنقار
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y + this.radius * 0.15);
+                ctx.lineTo(this.x - this.radius * 0.4, this.y + this.radius * 0.45);
+                ctx.lineTo(this.x + this.radius * 0.4, this.y + this.radius * 0.45);
+                ctx.closePath();
+                ctx.fillStyle = '#F4D03F';
+                ctx.fill();
+                ctx.strokeStyle = '#B7950B';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // رسم الحاجبين
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.radius * 0.75, this.y - this.radius * 0.75);
+                ctx.lineTo(this.x, this.y - this.radius * 0.55);
+                ctx.moveTo(this.x + this.radius * 0.75, this.y - this.radius * 0.75);
+                ctx.lineTo(this.x, this.y - this.radius * 0.55);
+                ctx.stroke();
+                // --- نهاية التعديلات ---
+            }
+        }
+
+        class Block {
+            constructor(x, y, width, height, color = '#A0522D') {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                this.color = color;
+                this.health = 100;
+                this.isHit = false;
+            }
+
+            draw() {
+                // رسم الكتلة
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+
+                // إضافة تفاصيل الخشب
+                const woodGradient = ctx.createLinearGradient(this.x, this.y, this.x + this.width, this.y + this.height);
+                woodGradient.addColorStop(0, '#A0522D');
+                woodGradient.addColorStop(0.5, '#D2691E');
+                woodGradient.addColorStop(1, '#A0522D');
+                ctx.fillStyle = woodGradient;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+
+                ctx.strokeStyle = '#5D4037';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(this.x, this.y, this.width, this.height);
+
+                ctx.strokeStyle = 'rgba(93, 64, 55, 0.5)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(this.x + this.width / 2, this.y + this.height / 2, this.width / 4, 0, Math.PI * 2);
+                ctx.stroke();
+            }
         }
         
-        // التحكم بالكيبورد للكمبيوتر
-        function setupKeyboardControls() {
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft' || e.key === 'Left') {
-                    keyLeft = true;
-                } else if (e.key === 'ArrowRight' || e.key === 'Right') {
-                    keyRight = true;
-                } else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'Up') {
-                    if (!keyJump && sonic.grounded) {
-                        keyJump = true;
-                        sonic.velY = -15;
-                        sonic.jumping = true;
-                        sonic.grounded = false;
-                        playSound(440, 'sine', 0.2, 0.4); // صوت القفز
+        // تحميل الطائر التالي في المقلاع
+        function loadNextBird() {
+            if (birdsLeft > 0) {
+                birdsLeft--;
+                currentBird = new Bird(slingshot.x, slingshot.y);
+                updateUI();
+            } else {
+                currentBird = null; // لا يوجد طيور متبقية
+            }
+        }
+
+
+        // تهيئة حجم اللوحة
+        function setupCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            slingshot = {
+                x: canvas.width * 0.15,
+                y: canvas.height * 0.75
+            };
+
+            loadLevel(currentLevel);
+        }
+
+        // تحميل مستوى اللعبة
+        function loadLevel(levelNum) {
+            loadingOverlay.style.display = 'flex';
+            setTimeout(() => {
+                const levelData = levels[levelNum];
+                if (!levelData) {
+                    showGameOverMessage('لقد فزت باللعبة!', `نقاطك النهائية: ${score}`, true, true);
+                    loadingOverlay.style.display = 'none';
+                    return;
+                }
+
+                // إعادة تعيين الكائنات للمستوى الجديد
+                gameObjects = [];
+                releasedBirds = [];
+                
+                // إضافة كتلة الأرض
+                const groundHeight = canvas.height * 0.08;
+                gameObjects.push(new Block(0, canvas.height - groundHeight, canvas.width, groundHeight, '#4A752C'));
+
+                // إضافة الأهداف والكتل من بيانات المستوى
+                levelData.targets.forEach(t => {
+                    const radius = Math.min(18, canvas.width * 0.022);
+                    gameObjects.push(new TargetBird(canvas.width * t.x, canvas.height - (canvas.height * (1-t.y)) - radius));
+                });
+                levelData.blocks.forEach(b => {
+                    gameObjects.push(new Block(
+                        canvas.width * b.x,
+                        canvas.height - (canvas.height * (1-b.y)) - (b.h ? canvas.height * b.h : canvas.width * b.w),
+                        canvas.width * b.w,
+                        b.h ? canvas.height * b.h : canvas.width * b.w,
+                        b.color
+                    ));
+                });
+                
+                // إعداد الطائر الجديد وعدد الطيور المتبقية
+                birdsLeft = levelData.birds;
+                loadNextBird();
+                updateUI();
+                loadingOverlay.style.display = 'none';
+            }, 1000); // تأخير وهمي للتحميل
+        }
+
+        // رسم المقلاع
+        function drawSlingshot() {
+            const slingshotWidth = canvas.width * 0.02;
+            const slingshotHeight = canvas.height * 0.1;
+            const baseWidth = slingshotWidth * 2;
+            const baseHeight = slingshotHeight;
+
+            // قاعدة المقلاع
+            ctx.fillStyle = '#5D4037';
+            ctx.fillRect(slingshot.x - slingshotWidth, slingshot.y, slingshotWidth * 2, slingshotHeight);
+
+            // حامل المقلاع
+            ctx.beginPath();
+            ctx.moveTo(slingshot.x - baseWidth, slingshot.y + slingshotHeight * 0.3);
+            ctx.lineTo(slingshot.x, slingshot.y - slingshotHeight * 0.2);
+            ctx.lineTo(slingshot.x + baseWidth, slingshot.y + slingshotHeight * 0.3);
+            ctx.closePath();
+            ctx.fillStyle = '#795548';
+            ctx.fill();
+            ctx.strokeStyle = '#5D4037';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            if (currentBird && !currentBird.launched) {
+                // رسم شريط المطاط
+                ctx.beginPath();
+                ctx.moveTo(slingshot.x - slingshotWidth * 2, slingshot.y - slingshotHeight * 0.1);
+                ctx.lineTo(currentBird.x, currentBird.y);
+                ctx.lineTo(slingshot.x + slingshotWidth * 2, currentBird.y);
+                ctx.strokeStyle = 'rgba(139, 69, 19, 0.7)';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+            }
+        }
+
+        // الانتقال للطائر التالي أو التحقق من إكمال المستوى / انتهاء اللعبة
+        // التعديل: تم إعادة كتابة هذه الوظيفة لتتحقق بشكل صحيح من حالة اللعبة بعد كل رمية.
+        // إذا توقف الطائر ولم تنتهِ الأهداف، وإذا كان هناك طيور متبقية، فسيتم تحميل طائر جديد تلقائياً.
+        function nextBird() {
+            // التحقق مما إذا كانت أي من الطيور التي تم إطلاقها لا تزال تتحرك
+            const isAnyBirdMoving = releasedBirds.some(b => b.launched && (Math.abs(b.velocity.x) > 0.5 || Math.abs(b.velocity.y) > 0.5));
+            if (isAnyBirdMoving) {
+                // إذا كان هناك طائر يتحرك، انتظر 500ms وتحقق مرة أخرى
+                setTimeout(nextBird, 500);
+                return;
+            }
+
+            // بمجرد توقف جميع الطيور، تحقق من حالة اللعبة
+            const targets = gameObjects.filter(obj => obj instanceof TargetBird);
+            
+            if (targets.length === 0) {
+                // إذا تم تدمير كل الأهداف، فز اللاعب
+                playSound(1000, 'triangle', 0.5, 0.6); // صوت الفوز
+                showGameOverMessage('لقد نجحت!', `نقاطك: ${score}`, true, false);
+            } else if (birdsLeft > 0) {
+                // إذا لم تنتهِ الأهداف وكان هناك طيور متبقية، فحمّل الطائر التالي
+                loadNextBird();
+            } else {
+                // إذا لم تنتهِ الأهداف ولم يتبقَ طيور، اعرض السؤال
+                showQuestion();
+            }
+        }
+
+        // الكشف عن التصادمات
+        function detectCollisions() {
+            // التحقق من تصادم جميع الطيور التي تم إطلاقها
+            for (const bird of releasedBirds) {
+                if (!bird || !bird.launched) continue;
+
+                for (let i = 0; i < gameObjects.length; i++) {
+                    const obj = gameObjects[i];
+
+                    if (obj instanceof TargetBird) {
+                        const dx = bird.x - obj.x;
+                        const dy = bird.y - obj.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < bird.radius + obj.radius) {
+                            playSound(300, 'sine', 0.1, 0.5); // صوت اصطدام بالطائر الهدف
+                            obj.health -= 50; // تم تعديل قيمة الضرر هنا
+                            bird.velocity.x = dx * 0.1;
+                            bird.velocity.y = dy * 0.1;
+
+                            if (obj.health <= 0) {
+                                gameObjects.splice(i, 1);
+                                i--;
+                                score += 100;
+                                updateUI();
+                                playSound(800, 'square', 0.2, 0.8); // صوت تدمير الهدف
+                            }
+                        }
+                    }
+
+                    if (obj instanceof Block) {
+                        if (bird.x + bird.radius > obj.x &&
+                            bird.x - bird.radius < obj.x + obj.width &&
+                            bird.y + bird.radius > obj.y &&
+                            bird.y - bird.radius < obj.y + obj.height) {
+                            
+                            playSound(440, 'triangle', 0.1, 0.4); // صوت اصطدام بالكتلة
+                            let dx = (bird.x - (obj.x + obj.width / 2)) / (obj.width / 2);
+                            let dy = (bird.y - (obj.y + obj.height / 2)) / (obj.height / 2);
+
+                            if (Math.abs(dx) > Math.abs(dy)) {
+                                bird.velocity.x *= -0.7;
+                                bird.x += dx > 0 ? 5 : -5;
+                            } else {
+                                bird.velocity.y *= -0.7;
+                                bird.y += dy > 0 ? 5 : -5;
+                            }
+
+                            obj.health -= 50; // تم تعديل قيمة الضرر هنا
+
+                            const r = Math.min(255, Math.floor(160 + (100 - obj.health) * 0.95));
+                            const g = Math.max(0, Math.floor(82 - (100 - obj.health) * 0.82));
+                            const b = Math.max(0, Math.floor(45 - (100 - obj.health) * 0.45));
+                            obj.color = `rgb(${r}, ${g}, ${b})`;
+
+                            score += 10;
+                            updateUI();
+
+                            if (obj.health <= 0) {
+                                gameObjects.splice(i, 1);
+                                i--;
+                                playSound(600, 'sawtooth', 0.2, 0.7); // صوت تدمير الكتلة
+                            }
+                        }
                     }
                 }
-                
-                // منع التمرير عند الضغط على الأسهم
-                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === ' ') {
-                    e.preventDefault();
-                }
-            });
-            
-            document.addEventListener('keyup', (e) => {
-                if (e.key === 'ArrowLeft' || e.key === 'Left') {
-                    keyLeft = false;
-                } else if (e.key === 'ArrowRight' || e.key === 'Right') {
-                    keyRight = false;
-                } else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'Up') {
-                    keyJump = false;
-                }
-            });
-        }
-
-        // تحريك سونيك
-        function handleMovement() {
-            sonic.velX = 0;
-
-            // التحكم باللمس أو الكيبورد لليسار
-            if (touchLeft || keyLeft) {
-                sonic.velX = -sonic.speed; // تحريك لليسار
-            }
-
-            // التحكم باللمس أو الكيبورد لليمين
-            if (touchRight || keyRight) {
-                sonic.velX = sonic.speed; // تحريك لليمين
             }
         }
 
-        // تحديث الحركة
-        function updateMovement() {
-            handleMovement();
-            requestAnimationFrame(updateMovement);
+        // تحديث عناصر واجهة المستخدم
+        function updateUI() {
+            scoreElement.textContent = score;
+            birdsLeftElement.textContent = birdsLeft;
+            levelElement.textContent = currentLevel;
         }
 
-        // التحكم بالصوت
-        soundBtn.addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            soundBtn.textContent = soundEnabled ? '🔊' : '🔇';
+        // إظهار رسالة انتهاء اللعبة / إكمال المستوى
+        function showGameOverMessage(title, finalScore, levelComplete, gameWon = false) {
+            gameOverTitle.textContent = title;
+            gameOverScore.textContent = finalScore;
+            gameOverOverlay.classList.add('visible');
 
-            // تشغيل صوت تغيير حالة الصوت
-            if (soundEnabled) {
-                playSound(523.25, 'sine', 0.1, 0.3);
+            if (gameWon) {
+                nextLevelBtn.style.display = 'none';
+                restartBtn.style.display = 'block';
+                restartBtn.textContent = 'إعادة اللعبة';
+            } else if (levelComplete) {
+                nextLevelBtn.style.display = 'block';
+                restartBtn.style.display = 'none';
             } else {
-                playSound(329.63, 'sine', 0.1, 0.3);
+                nextLevelBtn.style.display = 'none';
+                restartBtn.style.display = 'block';
+                restartBtn.textContent = 'إعادة تشغيل';
             }
-        });
+        }
 
-        // بدء الشاشة الرئيسية
-        gameOver.classList.add('hidden');
-        gameWin.classList.add('hidden'); // تأكد من إخفاء شاشة الفوز عند التحميل الأولي
-        questionScreen.classList.add('hidden'); // إخفاء شاشة السؤال
+        // إعادة تعيين اللعبة
+        function resetGame() {
+            score = 0;
+            currentLevel = 1;
+            gameRunning = true;
+            loadLevel(currentLevel);
+            updateUI();
+            gameOverOverlay.classList.remove('visible');
+        }
+
+        // حلقة اللعبة الرئيسية
+        function gameLoop() {
+            if (!gameRunning) {
+                requestAnimationFrame(gameLoop);
+                return;
+            }
+
+            // مسح اللوحة
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // رسم عناصر الخلفية
+            const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            skyGradient.addColorStop(0, '#87CEEB');
+            skyGradient.addColorStop(1, '#E0F7FA');
+            ctx.fillStyle = skyGradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const sunGradient = ctx.createRadialGradient(
+                canvas.width * 0.9, canvas.height * 0.1, 10,
+                canvas.width * 0.9, canvas.height * 0.1, 80
+            );
+            sunGradient.addColorStop(0, '#FFEB3B');
+            sunGradient.addColorStop(1, 'rgba(255, 235, 59, 0)');
+            ctx.fillStyle = sunGradient;
+            ctx.beginPath();
+            ctx.arc(canvas.width * 0.9, canvas.height * 0.1, 80, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(canvas.width * 0.12, canvas.height * 0.16, canvas.width * 0.05, 0, Math.PI * 2);
+            ctx.arc(canvas.width * 0.19, canvas.height * 0.14, canvas.width * 0.04, 0, Math.PI * 2);
+            ctx.arc(canvas.width * 0.16, canvas.height * 0.2, canvas.width * 0.045, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(canvas.width * 0.75, canvas.height * 0.12, canvas.width * 0.06, 0, Math.PI * 2);
+            ctx.arc(canvas.width * 0.81, canvas.height * 0.1, canvas.width * 0.05, 0, Math.PI * 2);
+            ctx.arc(canvas.width * 0.79, canvas.height * 0.16, canvas.width * 0.055, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#4A752C';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height - canvas.height * 0.08);
+            ctx.lineTo(canvas.width * 0.25, canvas.height - canvas.height * 0.25);
+            ctx.lineTo(canvas.width * 0.5, canvas.height - canvas.height * 0.08);
+            ctx.fill();
+            ctx.fillStyle = '#3E6627';
+            ctx.beginPath();
+            ctx.moveTo(canvas.width * 0.37, canvas.height - canvas.height * 0.08);
+            ctx.lineTo(canvas.width * 0.62, canvas.height - canvas.height * 0.35);
+            ctx.lineTo(canvas.width * 0.87, canvas.height - canvas.height * 0.08);
+            ctx.fill();
+            
+            drawSlingshot();
+
+            // تحديث ورسم جميع الكائنات، بما في ذلك الطيور التي تم إطلاقها
+            for(let i = 0; i < gameObjects.length; i++) {
+                gameObjects[i].draw();
+            }
+
+            for (let i = 0; i < releasedBirds.length; i++) {
+                releasedBirds[i].update();
+                releasedBirds[i].draw();
+            }
+
+            if (currentBird && !currentBird.launched) {
+                currentBird.draw();
+            }
+
+            detectCollisions();
+
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // --- معالجات أحداث الماوس واللمس الموحدة ---
+        // وظيفة مساعدة للحصول على إحداثيات الإدخال
+        function getEventPosition(e) {
+            const rect = canvas.getBoundingClientRect();
+            let x, y;
+            if (e.touches) { // لمس
+                x = e.touches[0].clientX - rect.left;
+                y = e.touches[0].clientY - rect.top;
+            } else { // ماوس
+                x = e.clientX - rect.left;
+                y = e.clientY - rect.top;
+            }
+            return { x, y };
+        }
+
+        function handleInputStart(e) {
+            if (!gameRunning || !currentBird || currentBird.launched) return;
+            const pos = getEventPosition(e);
+            
+            const dxInitial = pos.x - slingshot.x;
+            const dyInitial = pos.y - slingshot.y;
+            const distanceInitial = Math.sqrt(dxInitial * dxInitial + dyInitial * dyInitial);
+
+            if (distanceInitial < currentBird.radius * 2) {
+                input.active = true;
+                e.preventDefault();
+            }
+        }
+
+        function handleInputMove(e) {
+            if (!gameRunning || !input.active || !currentBird || currentBird.launched) return;
+            const pos = getEventPosition(e);
+            
+            const dx = pos.x - slingshot.x;
+            const dy = pos.y - slingshot.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const maxDistance = canvas.width * 0.2;
+
+            if (distance > maxDistance) {
+                const angle = Math.atan2(dy, dx);
+                input.x = slingshot.x + Math.cos(angle) * maxDistance;
+                input.y = slingshot.y + Math.sin(angle) * maxDistance;
+            } else {
+                input.x = pos.x;
+                input.y = pos.y;
+            }
+
+            currentBird.x = input.x;
+            currentBird.y = input.y;
+            input.power = distance / maxDistance;
+            powerFill.style.width = `${input.power * 100}%`;
+            e.preventDefault();
+        }
+
+        function handleInputEnd(e) {
+            if (!gameRunning || !input.active || !currentBird || currentBird.launched) return;
+            input.active = false;
+            const dx = slingshot.x - currentBird.x;
+            const dy = slingshot.y - currentBird.y;
+            const launchFactor = Math.min(canvas.width, canvas.height) * 0.001;
+            currentBird.velocity.x = dx * launchFactor;
+            currentBird.velocity.y = dy * launchFactor;
+            currentBird.launched = true;
+            releasedBirds.push(currentBird); // إضافة الطائر الذي تم إطلاقه إلى المصفوفة
+            currentBird = null; // إزالة الطائر الحالي من المقلاع
+            powerFill.style.width = '0%';
+            
+            // --- تشغيل صوت الإطلاق عند التحرير ---
+            const launchVolume = Math.min(1, Math.sqrt(dx * dx + dy * dy) / (canvas.width * 0.2)) * 0.8;
+            playSound(220 + launchVolume * 150, 'sine', 0.2, launchVolume);
+
+            // تأخير قبل استدعاء nextBird للتحقق من حالة اللعبة
+            setTimeout(() => {
+                nextBird();
+            }, birdLaunchDelay);
+        }
 
         // أحداث الأزرار
-        startBtn.addEventListener('click', startGame);
-        restartBtn.addEventListener('click', startGame);
-        playAgainBtn.addEventListener('click', startGame);
+        resetBtn.addEventListener('click', resetGame);
 
-        // تهيئة التحكم للهاتف والكمبيوتر
-        setupMobileControls();
-        setupKeyboardControls();
+        restartBtn.addEventListener('click', () => {
+            gameOverOverlay.classList.remove('visible');
+            resetGame();
+        });
 
-        // بدء تحديث الحركة
-        updateMovement();
-
-        // تعديل حجم Canvas عند تغيير حجم النافذة
-        window.addEventListener('resize', () => {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+        nextLevelBtn.addEventListener('click', () => {
+            gameOverOverlay.classList.remove('visible');
+            currentLevel++;
+            loadLevel(currentLevel);
         });
         
-        // تحديث رسائل التحكم بناءً على نوع الجهاز
-        if (/Mobi|Android/i.test(navigator.userAgent)) {
-            controlsInfo.innerHTML = "استخدم <span class='highlight'>أزرار التحكم</span> في الأسفل للتحرك والقفز";
-        } else {
-            controlsInfo.innerHTML = "استخدم <span class='highlight'>أزرار الأسهم</span> على الكيبورد للتحرك و <span class='highlight'>المسافة</span> للقفز";
-        }
+        // حدث تبديل الصوت
+        soundToggleBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundToggleBtn.textContent = soundEnabled ? 'إيقاف الصوت' : 'تشغيل الصوت';
+            soundToggleBtn.classList.toggle('off', !soundEnabled);
+        });
+
+        // التهيئة الأولية ومستمعو الأحداث
+        window.addEventListener('load', () => {
+            setupCanvas();
+            gameLoop();
+        });
+
+        window.addEventListener('resize', setupCanvas);
+
+        // إضافة مستمعي أحداث اللمس (للأجهزة المحمولة)
+        canvas.addEventListener('touchstart', handleInputStart, { passive: false });
+        canvas.addEventListener('touchmove', handleInputMove, { passive: false });
+        canvas.addEventListener('touchend', handleInputEnd, { passive: true });
+        canvas.addEventListener('touchcancel', handleInputEnd, { passive: true });
+
+        // إضافة مستمعي أحداث الماوس (للكمبيوتر)
+        canvas.addEventListener('mousedown', handleInputStart);
+        canvas.addEventListener('mousemove', handleInputMove);
+        canvas.addEventListener('mouseup', handleInputEnd);
     </script>
 </body>
 </html>
+
