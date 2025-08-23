@@ -40,7 +40,7 @@
         
         .math-symbol {
             position: absolute;
-            font-size: 4.5rem; /* زيادة حجم الرموز المتحركة */
+            font-size: 4.5rem;
             color: rgba(118, 75, 162, 0.25);
             font-weight: bold;
             opacity: 0.4;
@@ -69,6 +69,7 @@
             overflow: hidden;
             position: relative;
             z-index: 10;
+            display: none; /* سيتم إظهاره بعد النقر على الباب */
         }
         
         .header {
@@ -77,7 +78,7 @@
             padding: 40px 30px;
             text-align: center;
             position: relative;
-            min-height: 320px; /* زيادة الارتفاع لاستيعاب رمز باي الكبير */
+            min-height: 320px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -209,7 +210,6 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
         
-        /* تعديلات الرموز حسب الطلب */
         .dec-1 { 
             top: 15px; 
             left: 30px;
@@ -218,10 +218,10 @@
         }
         
         .dec-2 { 
-            top: 50%; /* وضع في منتصف الهيدر */
-            transform: translateY(-50%) rotate(-15deg); /* تعديل للتمركز العمودي مع الدوران */
+            top: 50%;
+            transform: translateY(-50%) rotate(-15deg);
             right: 20px; 
-            font-size: 7.5rem; /* نفس حجم رمز سيغما */
+            font-size: 7.5rem;
         }
         
         .dec-3 { 
@@ -242,28 +242,71 @@
             box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
         }
         
-        /* زيادة المسافة العمودية بين الرموز في الجانب الأيسر فقط لعرض الكمبيوتر */
-        @media (min-width: 769px) {
-            .dec-1 { 
-                top: 15px;
-            }
-            
-            .dec-3 { 
-                bottom: 5px; 
-            }
-            
-            .dec-2 { 
-                top: 50%; /* بقاء في المنتصف */
-                transform: translateY(-50%) rotate(-15deg); /* التمركز مع الدوران */
-                font-size: 7.5rem; /* نفس حجم سيغما */
-            }
-            
-            .header {
-                min-height: 340px; /* زيادة الارتفاع لاستيعاب رمز باي الكبير */
-            }
+        /* تصميم الباب الترحيبي */
+        .door-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: transform 1.2s ease-in-out;
+            cursor: pointer;
         }
         
-        /* تعديلات للهواتف */
+        .door-content {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            max-width: 800px;
+        }
+        
+        .door-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .door-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .door-instruction {
+            font-size: 1.3rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+            margin-top: 30px;
+        }
+        
+        .math-door-icon {
+            font-size: 8rem;
+            margin: 30px 0;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
             .subtitle { font-size: 1.2rem; }
@@ -282,10 +325,10 @@
             }
             
             .dec-2 { 
-                top: 50%; /* وضع في منتصف الهيدر للهواتف */
+                top: 50%;
                 transform: translateY(-50%) rotate(-15deg); 
                 right: 15px;
-                font-size: 5rem; /* نفس حجم رمز سيغما في الهواتف */
+                font-size: 5rem;
             }
             
             .dec-3 { 
@@ -293,20 +336,42 @@
                 left: 20px;
                 font-size: 5rem;
             }
+            
+            .door-title {
+                font-size: 2.5rem;
+            }
+            
+            .door-subtitle {
+                font-size: 1.4rem;
+            }
+            
+            .math-door-icon {
+                font-size: 5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- خلفية برموز رياضية متحركة - أحجام أكبر -->
+    <!-- الباب الترحيبي -->
+    <div class="door-overlay" id="doorOverlay">
+        <div class="door-content">
+            <div class="math-door-icon">
+                <i class="fas fa-door-open"></i>
+            </div>
+            <h1 class="door-title">أهلا بك في عالم الرياضيات التفاعلي</h1>
+            <p class="door-subtitle">انقر على الباب للدخول إلى رحلة تعلم الرياضيات للصف السابع</p>
+            <p class="door-instruction">انقر هنا للدخول</p>
+        </div>
+    </div>
+    
+    <!-- خلفية برموز رياضية متحركة -->
     <div class="math-bg" id="mathBg"></div>
     
-    <div class="cover-container">
+    <div class="cover-container" id="mainContent">
         <div class="header">
-            <!-- الرموز المعدلة -->
-            <div class="decoration dec-1">∑</div> <!-- سيغما -->
-            <div class="decoration dec-2">π</div> <!-- باي بحجم معدل -->
-            <div class="decoration dec-3">∞</div> <!-- اللانهاية -->
-            <!-- تم حذف التكامل -->
+            <div class="decoration dec-1">∑</div>
+            <div class="decoration dec-2">π</div>
+            <div class="decoration dec-3">∞</div>
             
             <h1>منهج الرياضيات التفاعلي</h1>
             <div class="subtitle">للصف السابع الأساسي - الفصل الأول - المنهاج الأردني</div>
@@ -353,53 +418,66 @@
     </div>
 
     <script>
-        // إنشاء رموز رياضية متحركة في الخلفية - أحجام أكبر
+        // إنشاء رموز رياضية متحركة في الخلفية
         function createMathSymbols() {
             const mathBg = document.getElementById('mathBg');
-            // حذف الرموز غير المرغوبة
             const symbols = ['+', '−', '×', '÷', '=', 'π', '√', '°', '∑', '∫', '∞', '≈', '≠', 'θ', 'α', 'β', 'γ'];
             
-            for (let i = 0; i < 25; i++) { // زيادة عدد الرموز
+            for (let i = 0; i < 25; i++) {
                 const symbol = document.createElement('div');
                 symbol.className = 'math-symbol';
                 symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
                 
-                // وضع عشوائي
                 symbol.style.left = `${Math.random() * 100}%`;
                 symbol.style.top = `${Math.random() * 100}%`;
-                
-                // تأخير عشوائي للحركة
                 symbol.style.animationDelay = `${Math.random() * 5}s`;
                 
-                // حجم أكبر بشكل ملحوظ
-                const size = 3.5 + Math.random() * 6; // بين 3.5 و 9.5 رم
+                const size = 3.5 + Math.random() * 6;
                 symbol.style.fontSize = `${size}rem`;
                 
-                // شفافية متغيرة
                 symbol.style.animation = `float ${10 + Math.random() * 20}s infinite ease-in-out, fadeInOut ${3 + Math.random() * 7}s infinite ease-in-out`;
                 
                 mathBg.appendChild(symbol);
             }
         }
         
-        // تأثيرات تفاعلية للبطاقات عند التحميل
+        // إخفاء الباب وإظهار المحتوى الرئيسي
+        function openDoor() {
+            const door = document.getElementById('doorOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            // تأثير انزلاق الباب للأعلى
+            door.style.transform = 'translateY(-100%)';
+            
+            // بعد انتهاء الحركة، إخفاء الباب نهائياً وإظهار المحتوى
+            setTimeout(() => {
+                door.style.display = 'none';
+                mainContent.style.display = 'block';
+                
+                // تشغيل تأثيرات ظهور البطاقات
+                const cards = document.querySelectorAll('.unit-card');
+                
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(30px)';
+                        card.style.transition = 'all 0.5s ease';
+                        
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 100);
+                    }, 200 * index);
+                });
+            }, 1200);
+        }
+        
+        // إضافة حدث النقر على الباب
         document.addEventListener('DOMContentLoaded', function() {
             createMathSymbols();
             
-            const cards = document.querySelectorAll('.unit-card');
-            
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(30px)';
-                    card.style.transition = 'all 0.5s ease';
-                    
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 100);
-                }, 200 * index);
-            });
+            const door = document.getElementById('doorOverlay');
+            door.addEventListener('click', openDoor);
         });
     </script>
 </body>
