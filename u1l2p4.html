@@ -61,9 +61,9 @@
 
         .question-modal {
             background: linear-gradient(135deg, rgba(29, 53, 87, 0.95), rgba(45, 123, 157, 0.95));
-            z-index: 120; /* Higher than other overlays */
-            display: none; /* Hidden by default */
-            padding: 15px; /* Reduced padding for smaller screens */
+            z-index: 120;
+            display: none;
+            padding: 15px;
         }
         
         .logo {
@@ -543,7 +543,7 @@
         /* New Obstacle: Moving Obstacle */
         .moving-obstacle {
             background: linear-gradient(to bottom, #c0392b, #a02d22);
-            animation: moveUpDown 3s infinite alternate ease-in-out; /* Example animation */
+            animation: moveUpDown 3s infinite alternate ease-in-out;
             width: 40px;
             height: 80px;
             border-radius: 8px;
@@ -554,7 +554,7 @@
 
         @keyframes moveUpDown {
             0% { transform: translateY(0); }
-            100% { transform: translateY(-150px); } /* Moves up by 150px */
+            100% { transform: translateY(-150px); }
         }
 
         /* New Obstacle: Spike */
@@ -570,14 +570,14 @@
 
         /* New Obstacle: Inverted Spike */
         .inverted-spike-obstacle {
-            background: linear-gradient(to top, #e74c3c, #c0392b); /* Inverted gradient */
-            clip-path: polygon(0% 0%, 50% 100%, 100% 0%); /* Inverted triangle */
+            background: linear-gradient(to top, #e74c3c, #c0392b);
+            clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
             width: 30px;
             height: 30px;
             border-radius: 0;
             box-shadow: 0 0 15px rgba(231, 76, 60, 0.9);
             z-index: 15;
-            position: absolute; /* Needs to be absolute for positioning */
+            position: absolute;
         }
 
         /* New Collectible: Coin */
@@ -1143,6 +1143,147 @@
                 padding: 6px 12px;
             }
         }
+
+        /* New Visual Enhancements */
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+            z-index: 1;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        .comet {
+            position: absolute;
+            width: 5px;
+            height: 30px;
+            background: linear-gradient(to right, transparent, rgba(76, 201, 240, 0.8), transparent);
+            border-radius: 50%;
+            transform: rotate(-45deg);
+            animation: cometTrail 2s linear forwards;
+            z-index: 1;
+        }
+        
+        @keyframes cometTrail {
+            0% {
+                transform: translate(0, 0) rotate(-45deg) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-500px, 500px) rotate(-45deg) scale(0.2);
+                opacity: 0;
+            }
+        }
+        
+        .power-up {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            z-index: 18;
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .shield {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px dashed #4cc9f0;
+            z-index: 19;
+            animation: shieldSpin 4s infinite linear;
+            pointer-events: none;
+        }
+        
+        @keyframes shieldSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .achievement-popup {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 10px;
+            border-left: 5px solid #f1c40f;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 200;
+            opacity: 0;
+            animation: achievementSlide 3s forwards;
+        }
+        
+        @keyframes achievementSlide {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+            20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+        }
+        
+        .achievement-popup i {
+            font-size: 2rem;
+            color: #f1c40f;
+        }
+        
+        .achievement-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .achievement-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .achievement-desc {
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+        
+        .combo-counter {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff9e00;
+            text-shadow: 0 0 10px rgba(255, 158, 0, 0.8);
+            z-index: 60;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .combo-active {
+            animation: comboPulse 0.5s forwards;
+        }
+        
+        @keyframes comboPulse {
+            0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -1224,6 +1365,9 @@
             <div class="info-item">
                 النقود: <span id="coins-collected" class="info-value">0</span>
             </div>
+            <div class="info-item">
+                الدرع: <span id="shield-active" class="info-value">✗</span>
+            </div>
         </div>
         
         <div id="warning-overlay" class="warning-overlay">
@@ -1235,6 +1379,8 @@
         <div id="level-up" class="level-up">مستوى جديد!</div>
 
         <div id="game-message" style="display: none;"></div>
+        
+        <div id="combo-counter" class="combo-counter"></div>
 
         <div id="game-area">
             <!-- Dynamic game elements will be appended here -->
@@ -1260,6 +1406,10 @@
                 <div class="stat">
                     <span>النقود</span>
                     <span id="final-coins" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span>الإنجازات</span>
+                    <span id="final-achievements" class="stat-value">0/5</span>
                 </div>
             </div>
             
@@ -1290,6 +1440,24 @@
                 <i class="fas fa-check"></i> إرسال الإجابة
             </button>
             <p id="feedback-message" class="feedback-message"></p>
+        </div>
+    </div>
+
+    <!-- Music Player Container (hidden by default) -->
+    <div id="music-player-container" style="display: none;">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-lg text-center">
+            <!-- Application Title -->
+            <h1 class="text-3xl font-bold mb-8 text-yellow-400">مشغل موسيقى بيانو</h1>
+
+            <!-- Music Control Section -->
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button id="play-music" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform btn-hover-scale btn-active">
+                    تشغيل الموسيقى
+                </button>
+                <button id="stop-music" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform btn-hover-scale btn-active">
+                    إيقاف الموسيقى
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1333,6 +1501,9 @@
             let finalCoinsElement = document.getElementById('final-coins');
             const jumpBtn = document.getElementById('jump-btn');
             const slideBtn = document.getElementById('slide-btn');
+            let shieldActiveElement = document.getElementById('shield-active');
+            let comboCounterElement = document.getElementById('combo-counter');
+            let finalAchievementsElement = document.getElementById('final-achievements');
 
             // Question Modal Elements
             const questionModal = document.getElementById('question-modal');
@@ -1353,6 +1524,7 @@
             let obstacles = [];
             let flyingPlatforms = [];
             let coins = [];
+            let powerUps = [];
             let obstacleSpeed = 4.0; 
             let currentSpeedMultiplier = 1.0;
             let obstacleInterval;
@@ -1360,6 +1532,18 @@
             let backgroundElements = [];
             let playerMode = 'cube';
             let gravityDirection = 1;
+            let hasShield = false;
+            let shieldElement = null;
+            let comboCount = 0;
+            let comboTimeout = null;
+            let achievements = {
+                firstCoin: false,
+                fivePlatforms: false,
+                perfectAnswer: false,
+                speedRunner: false,
+                gravityMaster: false
+            };
+            let achievementsCount = 0;
 
             let isJumping = false;
             let canJump = true;
@@ -1491,6 +1675,162 @@
                 }
             ];
 
+            // Music Player Variables
+            let isMusicPlaying = false;
+            let nextNoteTime = 0.0;
+            let musicScheduleInterval = null;
+            const musicTempo = 120; // Default tempo (beats per minute)
+            const musicWaveType = 'triangle'; // Default wave type for a soft piano sound
+
+            // Define the Web Audio API context for music
+            const musicAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            // Define a simple musical scale (C Major)
+            const cMajorScale = [
+                261.63, // C4
+                293.66, // D4
+                329.63, // E4
+                349.23, // F4
+                392.00, // G4
+                440.00, // A4
+                493.88, // B4
+                523.25  // C5
+            ];
+            
+            // Define musical chords
+            const cMajorChord = [cMajorScale[0], cMajorScale[2], cMajorScale[4]]; // C, E, G
+            const gMajorChord = [cMajorScale[4], cMajorScale[6], cMajorScale[1] * 2]; // G, B, D (D an octave up)
+            const aMinorChord = [cMajorScale[5], cMajorScale[0] * 2, cMajorScale[2] * 2]; // A, C, E
+            const fMajorChord = [cMajorScale[3], cMajorScale[5], cMajorScale[0] * 2]; // F, A, C
+
+            // The chord progression sequence (I-V-vi-IV)
+            const chordProgression = [
+                cMajorChord,
+                gMajorChord,
+                aMinorChord,
+                fMajorChord
+            ];
+
+            /**
+             * Plays a sound with an ADSR envelope.
+             * This gives the sound a smoother, more realistic start and end.
+             * @param {number} frequency - The frequency of the wave in Hertz (Hz).
+             * @param {string} type - The wave type ('sine', 'square', 'sawtooth', 'triangle').
+             * @param {number} startTime - The time to start playing the note.
+             * @param {number} noteDuration - The duration of the note (in seconds).
+             * @param {number} volume - The volume level (0.0 to 1.0).
+             */
+            function playMusicNoteWithADSR(frequency, type, startTime, noteDuration, volume) {
+                if (!frequency) return;
+                const oscillator = musicAudioContext.createOscillator();
+                const gainNode = musicAudioContext.createGain();
+
+                oscillator.type = type;
+                oscillator.frequency.value = frequency;
+
+                oscillator.connect(gainNode);
+                gainNode.connect(musicAudioContext.destination);
+
+                const attackTime = 0.02;
+                const decayTime = 0.1;
+                const sustainLevel = 0.5;
+                const releaseTime = 0.3;
+
+                gainNode.gain.setValueAtTime(0, startTime);
+                gainNode.gain.linearRampToValueAtTime(volume, startTime + attackTime);
+                gainNode.gain.linearRampToValueAtTime(volume * sustainLevel, startTime + attackTime + decayTime);
+
+                oscillator.start(startTime);
+                oscillator.stop(startTime + noteDuration + releaseTime);
+
+                gainNode.gain.setValueAtTime(volume * sustainLevel, startTime + noteDuration);
+                gainNode.gain.linearRampToValueAtTime(0, startTime + noteDuration + releaseTime);
+            }
+            
+            /**
+             * Schedules the next note/chord to be played.
+             * This function is called repeatedly.
+             */
+            let chordIndex = 0;
+            function musicScheduler() {
+                // While there is still time to schedule ahead...
+                while (nextNoteTime < musicAudioContext.currentTime + 0.1) {
+                    // Get the current chord from the progression
+                    const currentChord = chordProgression[chordIndex];
+                    
+                    // Determine note duration based on tempo
+                    const secondsPerBeat = 60.0 / musicTempo;
+                    const noteDuration = secondsPerBeat * 2; // Each chord lasts 2 beats
+
+                    // Play each note in the chord simultaneously
+                    currentChord.forEach(noteFrequency => {
+                        playMusicNoteWithADSR(noteFrequency, musicWaveType, nextNoteTime, noteDuration, 0.2);
+                    });
+
+                    // Schedule a melody note above the current chord
+                    playMusicMelody(currentChord, nextNoteTime, secondsPerBeat);
+
+                    // Advance to the next chord in the progression
+                    chordIndex = (chordIndex + 1) % chordProgression.length;
+
+                    // Calculate the time for the next note
+                    nextNoteTime += noteDuration;
+                }
+            }
+
+            /**
+             * Schedules a melody note to be played over the current chord.
+             * @param {array} chord - The current chord.
+             * @param {number} startTime - The time to start playing the melody.
+             * @param {number} secondsPerBeat - The duration of one beat.
+             */
+            function playMusicMelody(chord, startTime, secondsPerBeat) {
+                // Choose a random note from the chord or scale
+                const melodyNotes = [...chord, ...cMajorScale]; // Combine chord and scale for variety
+                const note1 = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+                const note2 = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+                
+                // Play the melody notes with a slight delay
+                playMusicNoteWithADSR(note1 * 2, musicWaveType, startTime + secondsPerBeat * 0.5, secondsPerBeat * 0.5, 0.1);
+                playMusicNoteWithADSR(note2 * 2, musicWaveType, startTime + secondsPerBeat * 1.5, secondsPerBeat * 0.5, 0.1);
+            }
+
+            /**
+             * Starts the background music.
+             */
+            function startMusic() {
+                if (isMusicPlaying) return;
+                isMusicPlaying = true;
+                
+                // Resume the audio context (necessary for some browsers)
+                if (musicAudioContext.state === 'suspended') {
+                    musicAudioContext.resume();
+                }
+
+                // Reset time and indexes on start
+                nextNoteTime = musicAudioContext.currentTime;
+                chordIndex = 0;
+                
+                // Start the repeating scheduler process
+                musicScheduleInterval = setInterval(musicScheduler, 25);
+                
+                // Update music button icon
+                musicToggleButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+
+            /**
+             * Stops the background music.
+             */
+            function stopMusic() {
+                if (!isMusicPlaying) return;
+                isMusicPlaying = false;
+                clearInterval(musicScheduleInterval);
+                musicScheduleInterval = null;
+                
+                // Update music button icon
+                musicToggleButton.innerHTML = '<i class="fas fa-volume-off"></i>';
+            }
+
             // Function to play sound effects
             function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
                 if (!soundEnabled) return;
@@ -1512,6 +1852,48 @@
                     oscillator.stop(audioContext.currentTime + duration);
                 } catch (e) {
                     console.log("Audio context not supported");
+                }
+            }
+
+            // Create stars for background
+            function createStars() {
+                for (let i = 0; i < 50; i++) {
+                    const star = document.createElement('div');
+                    star.classList.add('star');
+                    
+                    const size = Math.random() * 3 + 1;
+                    const left = Math.random() * gameArea.offsetWidth;
+                    const top = Math.random() * gameArea.offsetHeight;
+                    const duration = Math.random() * 3 + 2;
+                    
+                    star.style.width = `${size}px`;
+                    star.style.height = `${size}px`;
+                    star.style.left = `${left}px`;
+                    star.style.top = `${top}px`;
+                    star.style.animationDuration = `${duration}s`;
+                    star.style.opacity = Math.random();
+                    
+                    gameArea.appendChild(star);
+                }
+            }
+
+            // Create occasional comets
+            function createComet() {
+                if (Math.random() > 0.995) { // Rare chance to create a comet
+                    const comet = document.createElement('div');
+                    comet.classList.add('comet');
+                    
+                    const left = Math.random() * gameArea.offsetWidth / 2 + gameArea.offsetWidth / 2;
+                    const top = Math.random() * 100;
+                    
+                    comet.style.left = `${left}px`;
+                    comet.style.top = `${top}px`;
+                    
+                    gameArea.appendChild(comet);
+                    
+                    setTimeout(() => {
+                        comet.remove();
+                    }, 2000);
                 }
             }
 
@@ -1542,6 +1924,8 @@
                     gameArea.appendChild(element);
                     backgroundElements.push(element);
                 }
+                
+                createStars();
             }
 
             // Create player
@@ -1595,6 +1979,55 @@
                 }, duration);
             }
 
+            // Show achievement popup
+            function showAchievement(title, description) {
+                const popup = document.createElement('div');
+                popup.classList.add('achievement-popup');
+                
+                popup.innerHTML = `
+                    <i class="fas fa-trophy"></i>
+                    <div class="achievement-text">
+                        <div class="achievement-title">${title}</div>
+                        <div class="achievement-desc">${description}</div>
+                    </div>
+                `;
+                
+                document.body.appendChild(popup);
+                
+                setTimeout(() => {
+                    popup.remove();
+                }, 3000);
+                
+                playSound(800, 'sine', 0.2, 0.5);
+            }
+
+            // Update combo counter
+            function updateCombo() {
+                if (comboTimeout) clearTimeout(comboTimeout);
+                
+                comboCount++;
+                comboCounterElement.textContent = `Combo x${comboCount}!`;
+                comboCounterElement.classList.add('combo-active');
+                
+                // Bonus points for combos
+                if (comboCount > 1) {
+                    score += comboCount * 5;
+                    scoreElement.textContent = score;
+                    
+                    createParticles(
+                        player.offsetLeft + player.offsetWidth/2,
+                        player.offsetTop + player.offsetHeight/2,
+                        '#ff9e00',
+                        10
+                    );
+                }
+                
+                comboTimeout = setTimeout(() => {
+                    comboCounterElement.classList.remove('combo-active');
+                    comboCount = 0;
+                }, 3000);
+            }
+
             // Create obstacles
             function createObstacle() {
                 if (!gameRunning || gamePaused) return;
@@ -1607,15 +2040,19 @@
                 const obstacleTypeRandom = Math.random();
                 
                 // Create flying platforms more often
-                // Start from level 1, with a higher chance
-                if (obstacleTypeRandom < 0.4) { // Increased chance to 40%
+                if (obstacleTypeRandom < 0.4) {
                     createFlyingPlatform(); 
                     return;
                 }
 
                 // Create coins
-                if (Math.random() < 0.25) { // 25% chance to create a coin
+                if (Math.random() < 0.25) {
                     createCoin();
+                }
+                
+                // Create power-ups occasionally
+                if (Math.random() < 0.05) {
+                    createPowerUp();
                 }
                 
                 // Existing obstacle generation logic for ground/ceiling obstacles
@@ -1625,46 +2062,46 @@
                 let type = Math.random();
 
                 if (level === 1) {
-                    if (type < 0.6) { // Basic ground obstacle
+                    if (type < 0.6) {
                         const height = Math.random() * 70 + 60;
                         obstacle.style.height = `${height}px`;
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else if (type < 0.9) { // Triangle obstacle
+                    } else if (type < 0.9) {
                         obstacle.classList.add('triangle-obstacle');
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else { // Air pad
+                    } else {
                         obstacle.classList.add('air-pad');
                         obstacle.style.bottom = `${groundLevel}px`;
                     }
                 } else if (level === 2) {
-                    if (type < 0.4) { // Basic ground obstacle
+                    if (type < 0.4) {
                         const height = Math.random() * 70 + 60;
                         obstacle.style.height = `${height}px`;
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else if (type < 0.6) { // Triangle obstacle
+                    } else if (type < 0.6) {
                         obstacle.classList.add('triangle-obstacle');
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else if (type < 0.75) { // Air pad
+                    } else if (type < 0.75) {
                         obstacle.classList.add('air-pad');
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else if (type < 0.9) { // Speed portal
+                    } else if (type < 0.9) {
                         obstacle.classList.add('speed-portal');
                         obstacle.style.bottom = `${groundLevel}px`;
                         const icon = document.createElement('i');
                         icon.classList.add('fas', 'fa-forward');
                         obstacle.appendChild(icon);
-                    } else { // Ceiling obstacle
+                    } else {
                         const height = Math.random() * 45 + 40;
                         obstacle.classList.add('ceiling-obstacle');
                         obstacle.style.height = `${height}px`;
                         obstacle.style.top = '60px';
                     }
                 } else if (level === 3) {
-                    if (type < 0.3) { // Basic ground obstacle
+                    if (type < 0.3) {
                         const height = Math.random() * 70 + 60;
                         obstacle.style.height = `${height}px`;
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else if (type < 0.5) { // Triangle obstacle (maybe inverted)
+                    } else if (type < 0.5) {
                         obstacle.classList.add('triangle-obstacle');
                         if (Math.random() < 0.5) {
                             obstacle.classList.add('inverted');
@@ -1672,10 +2109,10 @@
                         } else {
                             obstacle.style.bottom = `${groundLevel}px`;
                         }
-                    } else if (type < 0.65) { // Air pad
+                    } else if (type < 0.65) {
                         obstacle.classList.add('air-pad');
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else if (type < 0.8) { // Gravity portal
+                    } else if (type < 0.8) {
                         obstacle.classList.add('gravity-portal');
                         obstacle.style.bottom = `${groundLevel}px`;
                         const icon = document.createElement('i');
@@ -1684,30 +2121,28 @@
                         if (gravityDirection === -1) {
                             icon.classList.add('inverted');
                         }
-                    } else { // Moving obstacle
+                    } else {
                         obstacle.classList.add('moving-obstacle');
                         obstacle.style.bottom = `${groundLevel}px`;
-                        // Determine initial vertical position for moving obstacle
-                        const initialY = Math.random() * (gameArea.offsetHeight - 200) + groundLevel + 20; // Ensure it's not too high or low
+                        const initialY = Math.random() * (gameArea.offsetHeight - 200) + groundLevel + 20;
                         obstacle.dataset.initialY = initialY;
-                        // Reduced moveRange and moveSpeed for easier gameplay
-                        obstacle.dataset.moveRange = Math.random() * 50 + 30; // Reduced range from 80+50 to 50+30
-                        obstacle.dataset.moveSpeed = Math.random() * 0.03 + 0.01; // Reduced speed from 0.05+0.02 to 0.03+0.01
-                        obstacle.dataset.moveOffset = Math.random() * Math.PI * 2; // To make movement unique
+                        obstacle.dataset.moveRange = Math.random() * 50 + 30;
+                        obstacle.dataset.moveSpeed = Math.random() * 0.03 + 0.01;
+                        obstacle.dataset.moveOffset = Math.random() * Math.PI * 2;
                     }
                 } else if (level === 4) {
-                    if (type < 0.25) { // Basic ground obstacle
+                    if (type < 0.25) {
                         const height = Math.random() * 70 + 60;
                         obstacle.style.height = `${height}px`;
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else if (type < 0.4) { // Triangle obstacle (inverted)
+                    } else if (type < 0.4) {
                         obstacle.classList.add('triangle-obstacle');
                         obstacle.classList.add('inverted');
                         obstacle.style.top = '60px';
-                    } else if (type < 0.5) { // Spike obstacle
+                    } else if (type < 0.5) {
                         obstacle.classList.add('spike-obstacle');
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else if (type < 0.65) { // Gravity portal
+                    } else if (type < 0.65) {
                         obstacle.classList.add('gravity-portal');
                         obstacle.style.bottom = `${groundLevel}px`;
                         const icon = document.createElement('i');
@@ -1716,40 +2151,38 @@
                         if (gravityDirection === -1) {
                             icon.classList.add('inverted');
                         }
-                    } else if (type < 0.8) { // Speed portal
+                    } else if (type < 0.8) {
                         obstacle.classList.add('speed-portal');
                         obstacle.style.bottom = `${groundLevel}px`;
                         const icon = document.createElement('i');
                         icon.classList.add('fas', 'fa-forward');
                         obstacle.appendChild(icon);
-                    } else { // Moving obstacle
+                    } else {
                         obstacle.classList.add('moving-obstacle');
                         obstacle.style.bottom = `${groundLevel}px`;
                         const initialY = Math.random() * (gameArea.offsetHeight - 200) + groundLevel + 20;
                         obstacle.dataset.initialY = initialY;
-                        // Reduced moveRange and moveSpeed for easier gameplay
-                        obstacle.dataset.moveRange = Math.random() * 50 + 30; // Reduced range
-                        obstacle.dataset.moveSpeed = Math.random() * 0.03 + 0.01; // Reduced speed
+                        obstacle.dataset.moveRange = Math.random() * 50 + 30;
+                        obstacle.dataset.moveSpeed = Math.random() * 0.03 + 0.01;
                         obstacle.dataset.moveOffset = Math.random() * Math.PI * 2;
                     }
-                } else { // Level 5+ (More complex combinations)
-                    if (type < 0.2) { // Spike obstacle
+                } else {
+                    if (type < 0.2) {
                         obstacle.classList.add('spike-obstacle');
                         obstacle.style.bottom = `${groundLevel}px`;
-                    } else if (type < 0.35) { // Inverted triangle
+                    } else if (type < 0.35) {
                         obstacle.classList.add('triangle-obstacle');
                         obstacle.classList.add('inverted');
                         obstacle.style.top = '60px';
-                    } else if (type < 0.5) { // Moving obstacle
+                    } else if (type < 0.5) {
                         obstacle.classList.add('moving-obstacle');
                         obstacle.style.bottom = `${groundLevel}px`;
                         const initialY = Math.random() * (gameArea.offsetHeight - 200) + groundLevel + 20;
                         obstacle.dataset.initialY = initialY;
-                        // Reduced moveRange and moveSpeed for easier gameplay
-                        obstacle.dataset.moveRange = Math.random() * 60 + 40; // Reduced range from 100+60 to 60+40
-                        obstacle.dataset.moveSpeed = Math.random() * 0.04 + 0.02; // Reduced speed from 0.07+0.03 to 0.04+0.02
+                        obstacle.dataset.moveRange = Math.random() * 60 + 40;
+                        obstacle.dataset.moveSpeed = Math.random() * 0.04 + 0.02;
                         obstacle.dataset.moveOffset = Math.random() * Math.PI * 2;
-                    } else if (type < 0.7) { // Gravity portal
+                    } else if (type < 0.7) {
                         obstacle.classList.add('gravity-portal');
                         obstacle.style.bottom = `${groundLevel}px`;
                         const icon = document.createElement('i');
@@ -1758,7 +2191,7 @@
                         if (gravityDirection === -1) {
                             icon.classList.add('inverted');
                         }
-                    } else { // Speed portal
+                    } else {
                         obstacle.classList.add('speed-portal');
                         obstacle.style.bottom = `${groundLevel}px`;
                         const icon = document.createElement('i');
@@ -1787,13 +2220,11 @@
                 const platformHeight = 20;
                 
                 let platformY;
-                const platformRight = -70; // Always start off-screen to the right
+                const platformRight = -70;
 
-                // Define the range for platforms to be "close to the ground"
-                const platformMinY = groundLevel + 20; // Minimum height above ground
-                const platformMaxY = groundLevel + 100; // Maximum height above ground
+                const platformMinY = groundLevel + 20;
+                const platformMaxY = groundLevel + 100;
 
-                // Generate a random Y position within the defined range
                 platformY = Math.random() * (platformMaxY - platformMinY) + platformMinY;
 
                 const platform = document.createElement('div');
@@ -1819,13 +2250,11 @@
                 platform.style.bottom = `${platformY}px`;
                 platform.style.right = `${platformRight}px`;
                 
-                // Add challenge indicator (optional)
                 if (Math.random() > 0.7 && level > 3) {
                     const indicator = document.createElement('div');
                     indicator.classList.add('challenge-indicator');
                     indicator.innerHTML = '<i class="fas fa-exclamation"></i>';
-                    // Position indicator above the platform
-                    indicator.style.bottom = `${platformY + platformHeight + 10}px`; // 10px above platform
+                    indicator.style.bottom = `${platformY + platformHeight + 10}px`;
                     indicator.style.right = `${platformRight + (platformWidth / 2) - 15}px`;
                     gameArea.appendChild(indicator);
                     
@@ -1848,20 +2277,17 @@
                     fading: false
                 });
 
-                // Add inverted spike obstacles below the flying platform (ALWAYS)
-                const spikeWidth = 30; // Width of a single spike
-                const spikeHeight = 30; // Height of a single spike
-                const numSpikes = Math.ceil(platformWidth / spikeWidth); // Number of spikes needed to cover the platform width
+                const spikeWidth = 30;
+                const spikeHeight = 30;
+                const numSpikes = Math.ceil(platformWidth / spikeWidth);
 
                 for (let i = 0; i < numSpikes; i++) {
                     const spike = document.createElement('div');
                     spike.classList.add('inverted-spike-obstacle');
                     spike.style.width = `${spikeWidth}px`;
                     spike.style.height = `${spikeHeight}px`;
-                    // Position directly below the platform: spike's bottom is platform's bottom - spike's height
-                    spike.style.bottom = `${platformY - spikeHeight}px`; 
-                    // Position spikes side by side under the platform
-                    spike.style.right = `${platformRight + (i * spikeWidth)}px`; 
+                    spike.style.bottom = `${platformY - spikeHeight}px`;
+                    spike.style.right = `${platformRight + (i * spikeWidth)}px`;
                     gameArea.appendChild(spike);
                     obstacles.push({
                         element: spike,
@@ -1880,11 +2306,11 @@
             function createCoin() {
                 const coin = document.createElement('div');
                 coin.classList.add('coin');
-                coin.innerHTML = '<i class="fas fa-coins"></i>'; // Font Awesome coin icon
+                coin.innerHTML = '<i class="fas fa-coins"></i>';
 
-                const coinY = Math.random() * (gameArea.offsetHeight - 200) + 100; // Random height
+                const coinY = Math.random() * (gameArea.offsetHeight - 200) + 100;
                 coin.style.bottom = `${coinY}px`;
-                coin.style.right = '-50px'; // Start off-screen
+                coin.style.right = '-50px';
 
                 gameArea.appendChild(coin);
                 coins.push({
@@ -1892,6 +2318,102 @@
                     y: coinY,
                     collected: false
                 });
+            }
+
+            // Create power-ups
+            function createPowerUp() {
+                const powerUp = document.createElement('div');
+                powerUp.classList.add('power-up');
+                
+                const types = ['shield', 'slow-mo', 'points'];
+                const type = types[Math.floor(Math.random() * types.length)];
+                
+                if (type === 'shield') {
+                    powerUp.style.background = 'linear-gradient(45deg, #4cc9f0, #4361ee)';
+                    powerUp.innerHTML = '<i class="fas fa-shield-alt"></i>';
+                } else if (type === 'slow-mo') {
+                    powerUp.style.background = 'linear-gradient(45deg, #2ecc71, #27ae60)';
+                    powerUp.innerHTML = '<i class="fas fa-hourglass-half"></i>';
+                } else {
+                    powerUp.style.background = 'linear-gradient(45deg, #f1c40f, #f39c12)';
+                    powerUp.innerHTML = '<i class="fas fa-star"></i>';
+                }
+                
+                const powerUpY = Math.random() * (gameArea.offsetHeight - 200) + 100;
+                powerUp.style.bottom = `${powerUpY}px`;
+                powerUp.style.right = '-50px';
+                powerUp.dataset.type = type;
+
+                gameArea.appendChild(powerUp);
+                powerUps.push({
+                    element: powerUp,
+                    y: powerUpY,
+                    type: type,
+                    collected: false
+                });
+            }
+
+            // Activate shield
+            function activateShield() {
+                hasShield = true;
+                shieldActiveElement.textContent = '✓';
+                shieldActiveElement.style.color = '#4cc9f0';
+                
+                shieldElement = document.createElement('div');
+                shieldElement.classList.add('shield');
+                player.appendChild(shieldElement);
+                
+                showGameMessage('درع مفعل! لديك حماية إضافية');
+                playSound(600, 'sine', 0.3, 0.4);
+                
+                setTimeout(() => {
+                    if (hasShield) {
+                        deactivateShield();
+                    }
+                }, 10000);
+            }
+            
+            // Deactivate shield
+            function deactivateShield() {
+                hasShield = false;
+                shieldActiveElement.textContent = '✗';
+                shieldActiveElement.style.color = '';
+                
+                if (shieldElement && shieldElement.parentNode) {
+                    shieldElement.remove();
+                }
+                
+                showGameMessage('انتهت مدة الدرع');
+            }
+            
+            // Activate slow motion
+            function activateSlowMo() {
+                const originalSpeed = currentSpeedMultiplier;
+                currentSpeedMultiplier *= 0.5;
+                updatePlayerDisplay();
+                
+                showGameMessage('الحركة البطيئة مفعلة!');
+                playSound(400, 'sine', 0.3, 0.4);
+                
+                setTimeout(() => {
+                    currentSpeedMultiplier = originalSpeed;
+                    updatePlayerDisplay();
+                    showGameMessage('انتهت مدة الحركة البطيئة');
+                }, 5000);
+            }
+            
+            // Activate points multiplier
+            function activatePointsMultiplier() {
+                score += 500;
+                scoreElement.textContent = score;
+                
+                showGameMessage('+500 نقطة!');
+                playSound(800, 'sine', 0.3, 0.4);
+                
+                createSuccessParticles(
+                    player.offsetLeft + player.offsetWidth/2,
+                    player.offsetTop + player.offsetHeight/2
+                );
             }
 
             // Create particles
@@ -1992,6 +2514,7 @@
                 obstacles = [];
                 flyingPlatforms = [];
                 coins = [];
+                powerUps = [];
                 obstacleSpeed = 4.0; 
                 currentSpeedMultiplier = 1.0; 
                 obstacleIntervalTime = 2000; 
@@ -2000,7 +2523,9 @@
                 lastObstaclePassed = 0;
                 gravityDirection = 1;
                 currentPlatform = null;
-                collidedObstacleRef = null; // Reset on game start
+                collidedObstacleRef = null;
+                hasShield = false;
+                comboCount = 0;
 
                 rotationAngle = 0;
                 rotationSpeed = -2.5;
@@ -2011,7 +2536,7 @@
 
                 startScreen.style.display = 'none';
                 endScreen.style.display = 'none';
-                questionModal.style.display = 'none'; // Ensure question modal is hidden
+                questionModal.style.display = 'none';
 
                 gameArea.innerHTML = '';
 
@@ -2034,6 +2559,8 @@
                 scoreElement.textContent = score; 
                 platformsPassedElement.textContent = platformsPassed;
                 coinsCollectedElement.textContent = coinsCollected;
+                shieldActiveElement.textContent = '✗';
+                shieldActiveElement.style.color = '';
                 updatePlayerDisplay(); 
 
                 clearInterval(obstacleInterval);
@@ -2050,22 +2577,21 @@
             function updateGame() {
                 if (!gameRunning || gamePaused) return;
 
+                createComet();
+
                 // Update flying platforms
                 flyingPlatforms.forEach((platform, index) => {
                     const platformEl = platform.element;
                     const currentRight = parseFloat(platformEl.style.right || 0);
                     platformEl.style.right = `${currentRight + (obstacleSpeed * currentSpeedMultiplier)}px`;
                     
-                    // Remove platforms that went off screen
                     if (currentRight > gameArea.offsetWidth + 120) {
                         platformEl.remove();
                         flyingPlatforms.splice(index, 1);
                     }
                     
-                    // Check if platform is passed (for score/feedback, not for landing)
-                    if (!platform.passed && currentRight > gameArea.offsetWidth - player.offsetWidth - 50) { // Adjust threshold
+                    if (!platform.passed && currentRight > gameArea.offsetWidth - player.offsetWidth - 50) {
                         platform.passed = true;
-                        // No score for just passing flying platforms, only for landing
                     }
                 });
 
@@ -2081,6 +2607,18 @@
                     }
                 });
 
+                // Update power-ups
+                powerUps.forEach((powerUp, index) => {
+                    const powerUpEl = powerUp.element;
+                    const currentRight = parseFloat(powerUpEl.style.right || 0);
+                    powerUpEl.style.right = `${currentRight + (obstacleSpeed * currentSpeedMultiplier)}px`;
+
+                    if (currentRight > gameArea.offsetWidth + 50) {
+                        powerUpEl.remove();
+                        powerUps.splice(index, 1);
+                    }
+                });
+
                 // Update player physics
                 let onPlatform = false;
                 flyingPlatforms.forEach(platform => {
@@ -2088,7 +2626,6 @@
                     const playerRect = player.getBoundingClientRect();
                     const gameAreaRect = gameArea.getBoundingClientRect();
                     
-                    // Convert to game area coordinates
                     const platformLeft = platformRect.left - gameAreaRect.left;
                     const platformRight = platformRect.right - gameAreaRect.left;
                     const platformTop = platformRect.top - gameAreaRect.top;
@@ -2096,7 +2633,6 @@
                     const playerRight = playerRect.right - gameAreaRect.left;
                     const playerBottom = playerRect.bottom - gameAreaRect.top;
                     
-                    // Check if player is on top of the platform
                     const isAbove = playerBottom >= platformTop - 10 && playerBottom <= platformTop + 10;
                     const isHorizontallyAligned = playerRight > platformLeft && playerLeft < platformRight;
                     
@@ -2108,18 +2644,15 @@
                         canJump = true;
                         currentPlatform = platform;
                         
-                        // Activate platform if not already activated
                         if (!platform.activated) {
                             platform.activated = true;
                             platformsPassed++;
                             platformsPassedElement.textContent = platformsPassed;
-                            score += 50; // Points for landing on a platform
+                            score += 50;
                             
-                            // Visual feedback
                             platform.element.style.boxShadow = '0 0 40px rgba(76, 201, 240, 1)';
                             playSound(500, 'sine', 0.1, 0.3);
                             
-                            // Create particles
                             createParticles(
                                 player.offsetLeft + player.offsetWidth/2,
                                 player.offsetTop,
@@ -2127,7 +2660,13 @@
                                 15
                             );
 
-                            // Handle disappearing platforms
+                            // Check for 5 platforms achievement
+                            if (platformsPassed === 5 && !achievements.fivePlatforms) {
+                                achievements.fivePlatforms = true;
+                                achievementsCount++;
+                                showAchievement('متسلق المنصات!', 'اجتزت 5 منصات طائرة');
+                            }
+
                             if (platform.isDisappearing && !platform.fading) {
                                 platform.fading = true;
                                 platform.element.classList.add('fading');
@@ -2139,7 +2678,7 @@
                                             flyingPlatforms.splice(platformIndex, 1);
                                         }
                                     }
-                                }, 300); // Match CSS transition duration
+                                }, 300);
                             }
                         }
                     }
@@ -2153,25 +2692,30 @@
                 
                 // Boundaries
                 const maxPlayerY = gameArea.offsetHeight - groundLevel - playerHeight;
-                if (playerY < 0) { // Hitting the ground
+                if (playerY < 0) {
                     playerY = 0;
                     playerVelocity = 0;
                     isJumping = false;
                     canJump = true;
-                    // Reset gravity direction if hitting ground while inverted
                     if (gravityDirection === -1) {
                         gravityDirection = 1;
                         showGameMessage('جاذبية عادية!');
+                        
+                        // Check for gravity master achievement
+                        if (!achievements.gravityMaster) {
+                            achievements.gravityMaster = true;
+                            achievementsCount++;
+                            showAchievement('سيد الجاذبية!', 'عدت للجاذبية الطبيعية بعد المعكوسة');
+                        }
                     }
-                } else if (playerY > maxPlayerY) { // Hitting the ceiling (inverted gravity)
+                } else if (playerY > maxPlayerY) {
                     playerY = maxPlayerY;
                     playerVelocity = 0;
                     isJumping = false;
                     canJump = true;
-                    // Reset gravity direction if hitting ceiling while normal gravity
                     if (gravityDirection === 1) {
                         gravityDirection = -1;
-                        showGameMessage('جاذبية معكوسة!');
+                        showGameMessage('جاذبية معكوسة!'); // Fixed: Added parentheses
                     }
                 }
                 
@@ -2181,7 +2725,6 @@
                     rotationAngle += rotationSpeed * gravityDirection;
                     player.style.transform = `rotate(${rotationAngle}deg)`;
                 } else if (playerMode !== 'ship') {
-                    // Keep the last rotation if not rolling
                     player.style.transform = `rotate(${rotationAngle}deg)`;
                 } else {
                     player.style.transform = `rotate(0deg)`;
@@ -2190,7 +2733,7 @@
                 score += 1;
                 scoreElement.textContent = score;
 
-                const newLevel = Math.floor(score / 1000) + 1; // Increase score needed for level up
+                const newLevel = Math.floor(score / 1000) + 1;
                 if (newLevel > level) {
                     level = newLevel;
                     levelElement.textContent = level;
@@ -2198,10 +2741,16 @@
 
                     obstacleSpeed += 0.2;
                     rotationSpeed -= 0.05;
-                    currentSpeedMultiplier += 0.1; // Increase overall game speed
+                    currentSpeedMultiplier += 0.1;
 
-                    // Adjust obstacle interval based on level, but not below a certain threshold
-                    if (obstacleIntervalTime > 400) { // Minimum interval time
+                    // Check for speed runner achievement
+                    if (level >= 3 && !achievements.speedRunner) {
+                        achievements.speedRunner = true;
+                        achievementsCount++;
+                        showAchievement('عداء سريع!', 'وصلت للمستوى 3');
+                    }
+
+                    if (obstacleIntervalTime > 400) {
                         clearInterval(obstacleInterval);
                         obstacleIntervalTime -= 50;
                         obstacleInterval = setInterval(() => {
@@ -2229,7 +2778,6 @@
                     const currentRight = parseFloat(obstacle.style.right || 0);
                     obstacle.style.right = `${currentRight + (obstacleSpeed * currentSpeedMultiplier)}px`;
 
-                    // Handle vertical movement for moving obstacles
                     if (obs.isMoving) {
                         const time = Date.now() * obs.moveSpeed + obs.moveOffset;
                         const offsetY = Math.sin(time) * obs.moveRange;
@@ -2239,7 +2787,6 @@
                     if (!obs.passed && currentRight > gameArea.offsetWidth - 220) {
                         obs.passed = true;
                         lastObstaclePassed = score;
-                        // Only add obstacle-passed class and particles for non-portal/air-pad/inverted-spike obstacles
                         if (!obstacle.classList.contains('air-pad') && 
                             !obstacle.classList.contains('gravity-portal') && 
                             !obstacle.classList.contains('speed-portal') &&
@@ -2259,12 +2806,8 @@
                         obstacles.splice(index, 1);
                     }
 
-                    // Check for collision with any obstacle type
                     if (detectCollision(player, obstacle, obs)) {
-                        // If detectCollision returns true, it means a harmful collision occurred
-                        // and a question was triggered. Game will pause.
-                        // No need to call endGame() directly here, it's handled by checkAnswer()
-                        return; // Stop further updates until question is answered
+                        return;
                     }
                 });
 
@@ -2274,10 +2817,38 @@
                         coin.collected = true;
                         coinsCollected++;
                         coinsCollectedElement.textContent = coinsCollected;
-                        score += 100; // Points for collecting a coin
-                        playSound(880, 'triangle', 0.05, 0.5); // Coin sound
+                        score += 100;
+                        playSound(880, 'triangle', 0.05, 0.5);
                         coin.element.remove();
                         coins.splice(index, 1);
+                        
+                        // Check for first coin achievement
+                        if (!achievements.firstCoin) {
+                            achievements.firstCoin = true;
+                            achievementsCount++;
+                            showAchievement('أول قطعة نقدية!', 'جمعت أول قطعة نقدية');
+                        }
+                        
+                        updateCombo();
+                    }
+                });
+
+                // Check for power-up collisions
+                powerUps.forEach((powerUp, index) => {
+                    if (!powerUp.collected && detectPowerUpCollision(player, powerUp.element)) {
+                        powerUp.collected = true;
+                        playSound(1000, 'sine', 0.2, 0.5);
+                        
+                        if (powerUp.type === 'shield') {
+                            activateShield();
+                        } else if (powerUp.type === 'slow-mo') {
+                            activateSlowMo();
+                        } else if (powerUp.type === 'points') {
+                            activatePointsMultiplier();
+                        }
+                        
+                        powerUp.element.remove();
+                        powerUps.splice(index, 1);
                     }
                 });
 
@@ -2288,32 +2859,27 @@
             function showQuestion() {
                 gamePaused = true;
                 
-                // Randomly select a question
                 const q = questions[Math.floor(Math.random() * questions.length)];
                 
-                questionTextElement.innerHTML = q.question; // Use innerHTML for LaTeX
+                questionTextElement.innerHTML = q.question;
 
-                // Clear previous state
                 feedbackMessageElement.textContent = '';
                 feedbackMessageElement.classList.remove('correct', 'incorrect');
-                optionsContainer.innerHTML = ''; // Clear old options
-                currentSelectedOptionIndex = -1; // Reset selected option
+                optionsContainer.innerHTML = '';
+                currentSelectedOptionIndex = -1;
 
-                // Always display options container and hide text input
                 optionsContainer.style.display = 'flex';
                 submitAnswerBtn.style.display = 'block'; 
 
                 q.options.forEach((optionText, index) => {
                     const optionBtn = document.createElement('button');
                     optionBtn.classList.add('option-btn');
-                    optionBtn.innerHTML = optionText; // Use innerHTML for LaTeX in options
+                    optionBtn.innerHTML = optionText;
                     optionBtn.dataset.index = index;
                     optionBtn.addEventListener('click', () => {
-                        // Remove 'selected' from all options
                         optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
                             btn.classList.remove('selected');
                         });
-                        // Add 'selected' to the clicked option
                         optionBtn.classList.add('selected');
                         currentSelectedOptionIndex = index;
                     });
@@ -2322,12 +2888,10 @@
                 currentCorrectOptionIndex = q.correctOptionIndex;
                 
                 questionModal.style.display = 'flex';
-                // Focus on the first option button.
                 optionsContainer.querySelector('.option-btn')?.focus();
                 
-                playSound(150, 'square', 0.2, 0.4); // Sound for question appearance
+                playSound(150, 'square', 0.2, 0.4);
 
-                // Render LaTeX after content is set
                 if (typeof MathJax !== 'undefined') {
                     MathJax.typesetPromise([questionTextElement, optionsContainer]);
                 }
@@ -2337,18 +2901,24 @@
             function checkAnswer() {
                 let isCorrect = false;
 
-                // For multiple choice, check if the selected option matches the correct one
                 isCorrect = (currentSelectedOptionIndex === currentCorrectOptionIndex);
 
                 if (isCorrect) {
                     feedbackMessageElement.textContent = 'صحيح! استمر في اللعب.';
                     feedbackMessageElement.classList.add('correct');
-                    playSound(600, 'sine', 0.1, 0.5); // Correct answer sound
+                    playSound(600, 'sine', 0.1, 0.5);
+                    
+                    // Check for perfect answer achievement
+                    if (!achievements.perfectAnswer) {
+                        achievements.perfectAnswer = true;
+                        achievementsCount++;
+                        showAchievement('إجابة مثالية!', 'أجبت على سؤال بشكل صحيح');
+                    }
+                    
                     setTimeout(() => {
                         questionModal.style.display = 'none';
                         gamePaused = false;
 
-                        // Remove the obstacle that caused the question
                         if (collidedObstacleRef) {
                             if (collidedObstacleRef.element && collidedObstacleRef.element.parentNode) {
                                 collidedObstacleRef.element.remove();
@@ -2360,31 +2930,27 @@
                             collidedObstacleRef = null;
                         }
 
-                        // Ensure safe respawn area by clearing nearby obstacles and platforms
-                        const playerSafeX = 50; // Player's left position
+                        const playerSafeX = 50;
                         const playerSafeWidth = player.offsetWidth;
-                        const safeZoneBuffer = 100; // Buffer around the player's safe X to clear obstacles
+                        const safeZoneBuffer = 100;
 
-                        // Filter out obstacles that are too close to the player's respawn point
                         obstacles = obstacles.filter(obs => {
                             const obstacleElement = obs.element;
                             const obstacleRight = parseFloat(obstacleElement.style.right || 0);
-                            const obstacleLeft = gameArea.offsetWidth - obstacleRight - obstacleElement.offsetWidth; // Calculate left position
+                            const obstacleLeft = gameArea.offsetWidth - obstacleRight - obstacleElement.offsetWidth;
 
-                            // Check if obstacle overlaps with player's safe zone
                             const overlaps = (
                                 obstacleLeft < (playerSafeX + playerSafeWidth + safeZoneBuffer) &&
                                 (obstacleLeft + obstacleElement.offsetWidth) > (playerSafeX - safeZoneBuffer)
                             );
 
                             if (overlaps) {
-                                obstacleElement.remove(); // Remove from DOM
-                                return false; // Filter out from array
+                                obstacleElement.remove();
+                                return false;
                             }
-                            return true; // Keep in array
+                            return true;
                         });
 
-                        // Also check flying platforms, as they can be obstacles to jump on/avoid
                         flyingPlatforms = flyingPlatforms.filter(platform => {
                             const platformElement = platform.element;
                             const platformRight = parseFloat(platformElement.style.right || 0);
@@ -2402,7 +2968,6 @@
                             return true;
                         });
 
-                        // Reset player state to a safe spot and default mode
                         player.style.left = '50px';
                         player.style.bottom = `${groundLevel}px`;
                         playerY = 0;
@@ -2419,7 +2984,6 @@
                         requestAnimationFrame(updateGame);
                     }, 1000);
                 } else {
-                    // Find the correct answer text for feedback
                     const q = questions.find(q => q.correctOptionIndex === currentCorrectOptionIndex);
                     let correctAnswerDisplay = '';
                     if (q) {
@@ -2446,7 +3010,6 @@
                 const obstacleX = obstacleRect.left - gameAreaRect.left;
                 let obstacleY_from_top = obstacleRect.top - gameAreaRect.top;
 
-                // Adjust obstacleY_from_top for moving obstacles to get current position
                 if (obsData.isMoving) {
                     const currentBottom = parseFloat(obstacle.style.bottom);
                     obstacleY_from_top = gameAreaRect.height - currentBottom - obstacle.offsetHeight;
@@ -2477,10 +3040,25 @@
                     return false;
                 }
 
-                // If the obstacle is a flying platform, it should NOT end the game.
-                // The landing logic is handled in updateGame.
                 if (obstacle.classList.contains('flying-platform')) {
-                    return false; // No game-ending collision for flying platforms
+                    return false;
+                }
+
+                if (hasShield) {
+                    deactivateShield();
+                    obstacle.remove();
+                    const index = obstacles.indexOf(obsData);
+                    if (index > -1) {
+                        obstacles.splice(index, 1);
+                    }
+                    createParticles(
+                        player.offsetLeft + player.offsetWidth/2,
+                        player.offsetTop + player.offsetHeight/2,
+                        '#4cc9f0',
+                        20
+                    );
+                    showGameMessage('الدرع حماك من هذا العقبة!');
+                    return false;
                 }
 
                 if (obstacle.classList.contains('air-pad')) { 
@@ -2499,15 +3077,14 @@
                         playSound(550, 'sine', 0.05, 0.2);
                         return false;
                     } else {
-                        // Collision with air-pad from side/bottom - triggers question
                         playSound(80, 'sawtooth', 0.2, 0.3);
                         createParticles( 
                             player.offsetLeft + player.offsetWidth/2,
                             player.offsetTop + player.offsetHeight/2,
                             '#e94560', 35, 5, 15, 3, 8
                         );
-                        collidedObstacleRef = obsData; // Store the obstacle that caused the collision
-                        showQuestion(); // Trigger question on harmful collision
+                        collidedObstacleRef = obsData;
+                        showQuestion();
                         return true;
                     }
                 } else if (obstacle.classList.contains('gravity-portal')) {
@@ -2521,13 +3098,12 @@
                         if (icon) {
                             icon.classList.toggle('inverted', gravityDirection === -1);
                         }
-                        // Portals disappear after use
                         setTimeout(() => obstacle.remove(), 500);
                     }
                     return false;
                 } else if (obstacle.classList.contains('speed-portal')) {
                     if (!obsData.used) {
-                        currentSpeedMultiplier = Math.min(3, currentSpeedMultiplier + 0.3); // Increase speed by 0.3
+                        currentSpeedMultiplier = Math.min(3, currentSpeedMultiplier + 0.3);
                         obsData.used = true;
                         obstacle.classList.add('used');
                         playSound(1200, 'square', 0.1, 0.4);
@@ -2539,19 +3115,18 @@
                                 createObstacle();
                             }
                         }, obstacleIntervalTime / currentSpeedMultiplier);
-                        // Portals disappear after use
                         setTimeout(() => obstacle.remove(), 500);
                     }
                     return false;
-                } else { // All other obstacles (regular, triangle, moving, spike, inverted spike) are harmful
+                } else {
                     playSound(80, 'sawtooth', 0.2, 0.3);
                     createParticles( 
                         player.offsetLeft + player.offsetWidth/2,
                         player.offsetTop + player.offsetHeight/2,
                         '#e94560', 35, 5, 15, 3, 8
                         );
-                    collidedObstacleRef = obsData; // Store the obstacle that caused the collision
-                    showQuestion(); // Trigger question on harmful collision
+                    collidedObstacleRef = obsData;
+                    showQuestion();
                     return true;
                 }
             }
@@ -2589,6 +3164,39 @@
                 );
             }
 
+            // Collision detection for power-ups
+            function detectPowerUpCollision(player, powerUp) {
+                const playerRect = player.getBoundingClientRect();
+                const powerUpRect = powerUp.getBoundingClientRect();
+                const gameAreaRect = gameArea.getBoundingClientRect();
+
+                const playerX = playerRect.left - gameAreaRect.left;
+                const playerY_from_top = playerRect.top - gameAreaRect.top;
+                const powerUpX = powerUpRect.left - gameAreaRect.left;
+                const powerUpY_from_top = powerUpRect.top - gameAreaRect.top;
+
+                const playerHitbox = {
+                    x: playerX + player.offsetWidth * 0.15,
+                    y: playerY_from_top + player.offsetHeight * 0.15,
+                    width: player.offsetWidth * 0.7,
+                    height: player.offsetHeight * 0.7
+                };
+
+                const powerUpHitbox = {
+                    x: powerUpX,
+                    y: powerUpY_from_top,
+                    width: powerUp.offsetWidth,
+                    height: powerUp.offsetHeight
+                };
+
+                return (
+                    playerHitbox.x < powerUpHitbox.x + powerUpHitbox.width &&
+                    playerHitbox.x + playerHitbox.width > powerUpHitbox.x &&
+                    playerHitbox.y < powerUpHitbox.y + powerUpHitbox.height &&
+                    playerHitbox.y + powerUpHitbox.height > powerUpHitbox.y
+                );
+            }
+
             // End the game
             function endGame() {
                 gameRunning = false;
@@ -2605,6 +3213,7 @@
                 finalHighScoreElement.textContent = highScore;
                 finalPlatformsElement.textContent = platformsPassed;
                 finalCoinsElement.textContent = coinsCollected;
+                finalAchievementsElement.textContent = `${achievementsCount}/5`;
             }
 
             // Jump/Ascend action
@@ -2619,7 +3228,7 @@
                 playSound(440, 'sine', 0.1, 0.2);
 
                 player.classList.remove('jumping'); 
-                void player.offsetWidth; // Trigger reflow to restart animation
+                void player.offsetWidth;
                 player.classList.add('jumping'); 
 
                 if (playerMode !== 'ship') {
@@ -2637,8 +3246,7 @@
             function slide() {
                 if (!gameRunning || gamePaused) return;
                 
-                // Only allow slide if gravity is normal (player is on the ground or falling normally)
-                if (gravityDirection === 1 && playerY <= 10) { // Close to ground
+                if (gravityDirection === 1 && playerY <= 10) {
                     player.classList.add('sliding'); 
                     player.style.transform = 'rotate(0deg)';
 
@@ -2651,11 +3259,10 @@
                     setTimeout(() => {
                         player.classList.remove('sliding'); 
                     }, 450);
-                } else if (gravityDirection === -1 && playerY >= (gameArea.offsetHeight - groundLevel - playerHeight - 10)) { // Close to ceiling (inverted)
-                    // If inverted, sliding should push you down
+                } else if (gravityDirection === -1 && playerY >= (gameArea.offsetHeight - groundLevel - playerHeight - 10)) {
                     player.classList.add('sliding'); 
                     player.style.transform = 'rotate(0deg)';
-                    playerVelocity = -jumpForce * gravityDirection; // Push down
+                    playerVelocity = -jumpForce * gravityDirection;
 
                     createParticles(
                         player.offsetLeft + player.offsetWidth/2,
@@ -2696,7 +3303,6 @@
                     if (pauseOverlay) {
                         pauseOverlay.remove();
                     }
-                    // If resuming from pause, and not from a question, resume game loop
                     if (!questionModal.style.display || questionModal.style.display === 'none') {
                         requestAnimationFrame(updateGame);
                     }
@@ -2713,17 +3319,23 @@
                 }
             }
 
+            // Toggle music
+            function toggleMusic() {
+                if (isMusicPlaying) {
+                    stopMusic();
+                } else {
+                    startMusic();
+                }
+            }
+
             // Character selection event listeners
             let selectedCharacter = 1;
             characterElements.forEach(character => {
                 character.addEventListener('click', () => {
-                    // Remove active class from all
                     characterElements.forEach(c => c.classList.remove('active'));
-                    // Add active class to clicked
                     character.classList.add('active');
                     selectedCharacter = parseInt(character.dataset.character);
                     
-                    // If the game is running, update the player
                     if (gameRunning) {
                         createPlayer();
                     }
@@ -2736,18 +3348,17 @@
             // Event listeners
             startBtn.addEventListener('click', startGame);
             restartBtn.addEventListener('click', startGame);
-            musicToggleButton.addEventListener('click', toggleSound); 
+            musicToggleButton.addEventListener('click', toggleMusic); 
             submitAnswerBtn.addEventListener('click', checkAnswer);
             jumpBtn.addEventListener('click', jump);
             slideBtn.addEventListener('click', slide);
 
             document.addEventListener('keydown', (e) => {
-                // Prevent game controls if question modal is open
                 if (questionModal.style.display === 'flex') {
-                    if (e.key === 'Enter') { // Allow Enter to submit answer
+                    if (e.key === 'Enter') {
                         checkAnswer();
                     }
-                    e.preventDefault(); // Prevent other key presses from affecting game
+                    e.preventDefault();
                     return;
                 }
 
@@ -2772,7 +3383,6 @@
 
             // Touch support for jump/ascend
             document.addEventListener('touchstart', (e) => {
-                // Prevent touch interaction if question modal is open
                 if (questionModal.style.display === 'flex') {
                     return;
                 }
