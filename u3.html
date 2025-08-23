@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الوحدة الثالثة: المعادلات الخطية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .cover-container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .cover-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #5a67d8 0%, #6a3f9e 100%);
+            color: white;
+            padding: 50px 30px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom right, transparent 49%, white 50%);
+            z-index: 1;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .content {
+            padding: 60px 40px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .index-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin: 0 auto 40px;
+            border: 1px solid #eaeaea;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .unit-title {
+            font-size: 1.8rem;
+            color: #6a3f9e;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-weight: 700;
+        }
+        
+        .unit-title i {
+            background: linear-gradient(135deg, #5a67d8 0%, #6a3f9e 100%);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(90, 103, 216, 0.3);
+        }
+        
+        .index-list {
+            list-style: none;
+            counter-reset: lesson-counter;
+            padding: 0 10px;
+        }
+        
+        .index-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .index-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(106, 63, 158, 0.2);
+            border-color: #d0c0e0;
+        }
+        
+        .index-item::before {
+            counter-increment: lesson-counter;
+            content: counter(lesson-counter);
+            position: absolute;
+            right: 30px;
+            font-size: 3rem;
+            font-weight: 700;
+            color: rgba(106, 63, 158, 0.1);
+            z-index: 1;
+        }
+        
+        .index-content {
+            position: relative;
+            z-index: 2;
+            text-align: right;
+            flex-grow: 1;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .lesson-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5a67d8 0%, #6a3f9e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .index-item:hover .lesson-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        .index-title {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+        
+        .index-item:hover .index-title {
+            color: #6a3f9e;
+        }
+        
+        .index-page {
+            background: linear-gradient(135deg, #5a67d8 0%, #6a3f9e 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-width: 160px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            text-decoration: none;
+            border: none;
+        }
+        
+        .index-page:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
+            background: linear-gradient(135deg, #4a56c8 0%, #5a2f8e 100%);
+        }
+        
+        .index-page i {
+            font-size: 1rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #666;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-top: 3px solid #6a3f9e;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .expert {
+            font-weight: bold;
+            color: #6a3f9e;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            display: block;
+        }
+        
+        .math-symbols-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .math-symbol {
+            position: absolute;
+            opacity: 0.07;
+            font-size: 5.5rem;
+            color: white;
+            font-weight: bold;
+            z-index: 2;
+        }
+        
+        .symbol-1 { 
+            top: 10%; 
+            left: 5%; 
+        }
+        .symbol-2 { 
+            top: 15%; 
+            right: 5%; 
+        }
+        .symbol-3 { 
+            bottom: 15%; 
+            left: 10%; 
+        }
+        
+        .grade-badge {
+            background: linear-gradient(135deg, #5a67d8 0%, #6a3f9e 100%);
+            display: inline-block;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            position: relative;
+            z-index: 2;
+            font-size: 1.2rem;
+        }
+
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 20px;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, #5a67d8 0%, #6a3f9e 100%);
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(90, 103, 216, 0.3);
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(106, 63, 158, 0.3);
+            background: linear-gradient(135deg, #4a56c8 0%, #5a2f8e 100%);
+        }
+
+        .back-button i {
+            font-size: 1.1rem;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .subtitle { font-size: 1.2rem; }
+            .content { padding: 50px 20px 30px; }
+            .math-symbol { font-size: 4.5rem; }
+            
+            .index-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 25px;
+            }
+            
+            .index-content {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .index-page {
+                margin-top: 10px;
+                padding: 12px 20px;
+                width: 100%;
+            }
+            
+            .index-title {
+                font-size: 1.5rem;
+            }
+            
+            .header {
+                padding: 40px 20px 50px;
+            }
+
+            .back-button {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            .header { padding: 30px 15px 40px; }
+            .subtitle { font-size: 1rem; }
+            .content { padding: 40px 15px 20px; }
+            .math-symbol { font-size: 3.5rem; }
+            
+            .index-title {
+                font-size: 1.3rem;
+            }
+            
+            .index-page {
+                padding: 10px 18px;
+                font-size: 1.1rem;
+            }
+            
+            .lesson-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .unit-title {
+                font-size: 1.5rem;
+            }
+            
+            .grade-badge {
+                font-size: 1.1rem;
+                padding: 8px 25px;
+            }
+
+            .back-button {
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cover-container">
+        <div class="header">
+            <h1>فهرس دروس المعادلات الخطية</h1>
+            <div class="subtitle">الوحدة الثالثة - الصف السابع الأساسي - المنهاج الأردني</div>
+            
+            <!-- رموز رياضية بدون تداخل -->
+            <div class="math-symbols-container">
+                <div class="math-symbol symbol-1">Σ</div>
+                <div class="math-symbol symbol-2">α</div>
+                <div class="math-symbol symbol-3">β</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="grade-badge">الصف السابع الأساسي</div>
+            
+            <div class="index-container">
+                <div class="unit-title">
+                    <i class="fas fa-book-open"></i>
+                    دروس الوحدة الثالثة
+                </div>
+                
+                <ul class="index-list">
+                    
+                    <!-- الدرس 1 -->
+                    <li class="index-item">
+                        <div class="index-content">
+                            <div class="lesson-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <h3 class="index-title">الدرس 1: حل المعادلات</h3>
+                        </div>
+                        <a href="u3l1.html" class="index-page">
+                            <i class="fas fa-play-circle"></i> عرض الدرس
+                        </a>
+                    </li>
+                    
+                    <!-- الدرس 2 -->
+                    <li class="index-item">
+                        <div class="index-content">
+                            <div class="lesson-icon">
+                                <i class="fas fa-repeat"></i>
+                            </div>
+                            <h3 class="index-title">الدرس 2: الكسور العشرية الدورية</h3>
+                        </div>
+                        <a href="u3l2.html" class="index-page">
+                            <i class="fas fa-play-circle"></i> عرض الدرس
+                        </a>
+                    </li>
+                    
+                    <!-- الدرس 3 -->
+                    <li class="index-item">
+                        <div class="index-content">
+                            <div class="lesson-icon">
+                                <i class="fas fa-list-ol"></i>
+                            </div>
+                            <h3 class="index-title">الدرس 3: المتتاليات</h3>
+                        </div>
+                        <a href="u3l3.html" class="index-page">
+                            <i class="fas fa-play-circle"></i> عرض الدرس
+                        </a>
+                    </li>
+                    
+                    <!-- الدرس 4 -->
+                    <li class="index-item">
+                        <div class="index-content">
+                            <div class="lesson-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="index-title">الدرس 4: الاقترانات</h3>
+                        </div>
+                        <a href="u3l4.html" class="index-page">
+                            <i class="fas fa-play-circle"></i> عرض الدرس
+                        </a>
+                    </li>
+                    
+                    <!-- الدرس 5 -->
+                    <li class="index-item">
+                        <div class="index-content">
+                            <div class="lesson-icon">
+                                <i class="fas fa-draw-polygon"></i>
+                            </div>
+                            <h3 class="index-title">الدرس 5: تمثيل الاقتران الخطي بيانيًا</h3>
+                        </div>
+                        <a href="u3l5.html" class="index-page">
+                            <i class="fas fa-play-circle"></i> عرض الدرس
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- الزر الجديد للعودة إلى الفهرس الرئيسي -->
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-right"></i>
+                عودة لفهرس الوحدات
+            </a>
+
+            <div class="footer">
+                <p>رحلة تعلم ممتعة وشاملة لمادة الرياضيات للصف السابع</p>
+                <span class="expert">إعداد: الخبيرة التربوية انتصار مصطفى</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.index-item');
+            
+            // Effect for cards
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+                    card.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, 200 * index);
+            });
+        });
+    </script>
+</body>
+</html>
