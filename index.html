@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منهج الرياضيات - الصف السابع الأساسي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- استيراد Tailwind CSS للحصول على الأسلوب الجاهز -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- استيراد خط Tajawal ليناسب التصميم العربي -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* الخط الرئيسي للصفحة */
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;600;700;800;900&display=swap');
         
         * {
@@ -32,7 +29,6 @@
             position: relative;
         }
         
-        /* تأثير الفقاعات في الخلفية */
         .bubbles {
             position: fixed;
             top: 0;
@@ -68,7 +64,6 @@
             }
         }
         
-        /* رموز رياضية متحركة في خلفية المحتوى الرئيسي - أحجام أكبر */
         .math-bg {
             position: fixed;
             top: 0;
@@ -110,20 +105,22 @@
             overflow: hidden;
             position: relative;
             z-index: 10;
-            display: none; /* سيتم إظهاره بعد النقر على الباب */
+            display: none;
         }
         
+        /* تحسينات الهيدر - زيادة حجم الخط وتحسين المظهر */
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 40px 30px;
+            padding: 60px 30px;
             text-align: center;
             position: relative;
-            min-height: 320px;
+            min-height: 380px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
         
         .header::after {
@@ -138,20 +135,52 @@
         
         h1 {
             margin: 0;
-            font-size: 2.8rem;
+            font-size: 3.8rem; /* زيادة حجم الخط من 2.8rem إلى 3.8rem */
             font-weight: 900;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            margin-bottom: 15px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
             padding-top: 30px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
         }
         
         .subtitle {
-            font-size: 1.4rem;
-            opacity: 0.9;
-            max-width: 700px;
+            font-size: 1.8rem; /* زيادة حجم الخط من 1.4rem إلى 1.8rem */
+            opacity: 0.95;
+            max-width: 800px;
             margin: 0 auto;
             line-height: 1.6;
             font-weight: 700;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* تأثير إضافي للهيدر */
+        .header-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: 1;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        
+        .glow-1 {
+            top: -150px;
+            right: -100px;
+        }
+        
+        .glow-2 {
+            bottom: -100px;
+            left: -100px;
+            width: 250px;
+            height: 250px;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
         }
         
         .content {
@@ -439,7 +468,7 @@
             max-width: 220px;
             height: 140px;
             margin: 0 auto;
-            margin-bottom: 60px; /* زيادة المسافة بين الشعار والكتابة */
+            margin-bottom: 60px;
         }
         
         /* حاوية الشعار الجديدة بدون خلفية مستطيلة */
@@ -500,23 +529,22 @@
         }
         
         @media (max-width: 768px) {
-            /* التعديلات على الهيدر لحل مشكلة الخط الصغير */
+            .header {
+                min-height: 320px;
+                padding: 40px 20px;
+            }
+            
             .header h1 {
-                font-size: 2.5rem; /* تم زيادة حجم الخط من 2.5rem إلى 2.5rem */
-                padding-top: 20px; /* تعديل المسافة العلوية */
+                font-size: 2.8rem; /* زيادة حجم الخط على الجوال أيضًا */
+                padding-top: 20px;
             }
             
             .header .subtitle {
-                font-size: 1.2rem; /* تم زيادة حجم الخط من 1.2rem إلى 1.2rem */
+                font-size: 1.5rem; /* زيادة حجم الخط الفرعي على الجوال */
             }
             
             .content { padding: 50px 20px 30px; }
             .units-grid { grid-template-columns: 1fr; }
-            
-            .header {
-                min-height: 260px;
-                padding: 30px 20px;
-            }
             
             .dec-1 { 
                 top: 20px; 
@@ -548,12 +576,29 @@
             .book-wrapper {
                 max-width: 180px;
                 height: 120px;
-                margin-bottom: 40px; /* تكييف المسافة للشاشات الصغيرة */
+                margin-bottom: 40px;
             }
             
             .light-glow {
                 width: 150px;
                 height: 150px;
+            }
+            
+            .header-glow {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .glow-1 {
+                top: -100px;
+                right: -80px;
+            }
+            
+            .glow-2 {
+                bottom: -80px;
+                left: -80px;
+                width: 180px;
+                height: 180px;
             }
         }
     </style>
@@ -604,6 +649,10 @@
     
     <div class="cover-container" id="mainContent">
         <div class="header">
+            <!-- تأثيرات الإضاءة الجديدة -->
+            <div class="header-glow glow-1"></div>
+            <div class="header-glow glow-2"></div>
+            
             <div class="decoration dec-1">∑</div>
             <div class="decoration dec-2">π</div>
             <div class="decoration dec-3">∞</div>
