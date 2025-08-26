@@ -985,7 +985,7 @@
                     { x: 200, y: canvas.height - 390, radius: 12, collected: false, rotation: 0 },
                     { x: 400, y: canvas.height - 490, radius: 12, collected: false, rotation: 0 },
                     { x: 600, y: canvas.height - 290, radius: 12, collected: false, rotation: 0 },
-                    { x: 250, y: canvas.height - 590, radius: 12, collected: false, rotation: 0 }
+                    { x: 250, y: canvas.height - 590, width: 45, height: 45, radius: 12, collected: false, rotation: 0 }
                 ],
                 enemies: [
                     { x: 150, y: canvas.height - 90, width: 45, height: 45, speed: 4, direction: 1, type: 'math' },
@@ -1708,7 +1708,9 @@ function gameOver() {
     gameState.running = false;
     playSound(100, 'sawtooth', 1, 0.5); 
     playSound(75, 'sawtooth', 1, 0.5); // صوت نهاية اللعبة
-    alert(`انتهت اللعبة! النقاط النهائية: ${gameState.score}`);
+    // لا تستخدم alert() في هذا السياق
+    // يجب استبدالها بنافذة مخصصة
+    // alert(`انتهت اللعبة! النقاط النهائية: ${gameState.score}`);
     resetGame();
 }
 
@@ -1725,6 +1727,7 @@ function handleKeyDown(e) {
             break;
         case ' ':
         case 'Spacebar':
+        case 'ArrowUp': // تم إضافة هذا السطر لتمكين القفز بالسهم العلوي
             if (!player.jumping) {
                 player.velocityY = JUMP_FORCE;
                 player.jumping = true;
@@ -1740,6 +1743,7 @@ function handleKeyUp(e) {
     switch(e.key) {
         case 'ArrowLeft':
         case 'ArrowRight':
+        case 'ArrowUp': // تم إضافة هذا السطر لإيقاف الحركة عند رفع اليد عن زر السهم العلوي
             player.velocityX = 0;
             break;
     }
@@ -1779,6 +1783,7 @@ function setupMobileControls() {
         }
     };
     
+    // هذا السطر يربط زر السهم العلوي على الهاتف بوظيفة القفز
     document.querySelector('.up-btn').addEventListener('touchstart', jumpHandler);
     document.querySelector('.jump-btn').addEventListener('touchstart', jumpHandler);
 }
@@ -1876,3 +1881,4 @@ drawGame();
     </script>
 </body>
 </html>
+
