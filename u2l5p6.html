@@ -58,6 +58,9 @@
             touch-action: none;
             width: 100vw;
             height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         /*
@@ -562,10 +565,14 @@
                 canvas.width = GAME_WIDTH;
                 canvas.height = GAME_HEIGHT;
 
+                // إعادة حساب حجم اللاعب بناءً على حجم الشاشة
+                player.width = Math.max(40, GAME_WIDTH / 20);
+                player.height = Math.max(40, GAME_WIDTH / 20);
+
                 // إعادة وضع السفينة بعد تغيير الحجم لتجنب اختفائها
                 if (gameState.gameStarted) {
                     player.x = GAME_WIDTH / 2;
-                    player.y = GAME_HEIGHT - 170;
+                    player.y = GAME_HEIGHT - 100;
                 }
 
                 // إعادة إنشاء النجوم
@@ -1101,7 +1108,7 @@
                 playSound(200, 'sine', 0.1, 0.3);
 
                 player.x = GAME_WIDTH / 2;
-                player.y = GAME_HEIGHT - 170;
+                player.y = GAME_HEIGHT - 100;
                 
                 scoreElement.textContent = '0';
                 livesElement.textContent = '3';
