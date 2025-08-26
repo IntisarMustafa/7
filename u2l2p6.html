@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>مدينة ثلاثية الأبعاد مع متجر خضار - للهاتف</title>
+    <title>مدينة ثلاثية الأبعاد مع متجر خضار </title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         /* Basic reset and font */
@@ -458,7 +458,6 @@
             font-weight: bold;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
-            margin-bottom: 15px;
             width: 100%; /* Full width button */
         }
 
@@ -479,7 +478,7 @@
         #calculatorToggleButton {
             margin-bottom: 15px; /* Space below the toggle button when visible */
         }
-
+        
         /* New style for the main info panel toggle button */
         #infoPanelToggleButton {
             position: absolute; /* Keep absolute positioning relative to body */
@@ -677,19 +676,19 @@
             <div class="controls">
                 <div class="control-item">
                     <span>التجول للأمام</span>
-                    <div class="key">W</div>
+                    <div class="key">W / ↑</div>
                 </div>
                 <div class="control-item">
                     <span>التجول للخلف</span>
-                    <div class="key">S</div>
+                    <div class="key">S / ↓</div>
                 </div>
                 <div class="control-item">
                     <span>التحرك لليسار</span>
-                    <div class="key">A</div>
+                    <div class="key">A / ←</div>
                 </div>
                 <div class="control-item">
                     <span>التحرك لليمين</span>
-                    <div class="key">D</div>
+                    <div class="key">D / →</div>
                 </div>
                 <div class="control-item">
                     <span>النظر حولك</span>
@@ -1145,19 +1144,43 @@
             // Keyboard controls for desktop
             document.addEventListener('keydown', (e) => {
                 switch(e.key.toLowerCase()) {
-                    case 'w': moveState.forward = true; break;
-                    case 's': moveState.backward = true; break;
-                    case 'a': moveState.left = true; break;
-                    case 'd': moveState.right = true; break;
+                    case 'w':
+                    case 'arrowup':
+                        moveState.forward = true;
+                        break;
+                    case 's':
+                    case 'arrowdown':
+                        moveState.backward = true;
+                        break;
+                    case 'a':
+                    case 'arrowleft':
+                        moveState.left = true;
+                        break;
+                    case 'd':
+                    case 'arrowright':
+                        moveState.right = true;
+                        break;
                 }
             });
             
             document.addEventListener('keyup', (e) => {
                 switch(e.key.toLowerCase()) {
-                    case 'w': moveState.forward = false; break;
-                    case 's': moveState.backward = false; break;
-                    case 'a': moveState.left = false; break;
-                    case 'd': moveState.right = false;
+                    case 'w':
+                    case 'arrowup':
+                        moveState.forward = false;
+                        break;
+                    case 's':
+                    case 'arrowdown':
+                        moveState.backward = false;
+                        break;
+                    case 'a':
+                    case 'arrowleft':
+                        moveState.left = false;
+                        break;
+                    case 'd':
+                    case 'arrowright':
+                        moveState.right = false;
+                        break;
                 }
             });
             
