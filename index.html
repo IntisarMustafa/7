@@ -135,7 +135,7 @@
         
         h1 {
             margin: 0;
-            font-size: 3.8rem; /* زيادة حجم الخط من 2.8rem إلى 3.8rem */
+            font-size: 3.8rem; /* حجم الخط الافتراضي للأجهزة الصغيرة */
             font-weight: 900;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
@@ -145,7 +145,7 @@
         }
         
         .subtitle {
-            font-size: 1.8rem; /* زيادة حجم الخط من 1.4rem إلى 1.8rem */
+            font-size: 1.8rem;
             opacity: 0.95;
             max-width: 800px;
             margin: 0 auto;
@@ -535,12 +535,12 @@
             }
             
             .header h1 {
-                font-size: 2.8rem; /* زيادة حجم الخط على الجوال أيضًا */
+                font-size: 2.8rem;
                 padding-top: 20px;
             }
             
             .header .subtitle {
-                font-size: 1.5rem; /* زيادة حجم الخط الفرعي على الجوال */
+                font-size: 1.5rem;
             }
             
             .content { padding: 50px 20px 30px; }
@@ -599,6 +599,20 @@
                 left: -80px;
                 width: 180px;
                 height: 180px;
+            }
+        }
+        
+        /* الحل الجديد:
+            - استخدم selector أكثر تحديداً (.header h1) لضمان أن النمط لا يتم تجاوزه.
+            - قم بزيادة حجم الخط بشكل أكبر لجعل التغيير واضحاً على شاشات سطح المكتب.
+            - أضف تعديلًا للخط الفرعي (.subtitle) ليتناسب مع العنوان الجديد.
+        */
+        @media (min-width: 769px) {
+            .header h1 {
+                font-size: 5.5rem;
+            }
+            .header .subtitle {
+                font-size: 2.2rem;
             }
         }
     </style>
@@ -821,3 +835,4 @@
     </script>
 </body>
 </html>
+
