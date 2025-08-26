@@ -900,7 +900,7 @@
             function showQuestion(enemy, enemyIndex) {
                 const problem = enemy.problem;
                 
-                // استخدام innerHTML لإظهار الرموز الرياضية
+                // استخدام innerHTML لإظبار الرموز الرياضية
                 questionTextElement.innerHTML = problem.problem;
 
                 answersContainer.innerHTML = '';
@@ -1104,11 +1104,15 @@
                     enemySpeed: levelsConfig[0].enemySpeed
                 };
                 
-                // مؤثر صوتي: بدء اللعبة
-                playSound(200, 'sine', 0.1, 0.3);
-
+                // التأكد من أن أبعاد اللوحة محدثة
+                resizeCanvas();
+                
+                // إعادة تعيين موقع اللاعب
                 player.x = GAME_WIDTH / 2;
                 player.y = GAME_HEIGHT - 100;
+                
+                // مؤثر صوتي: بدء اللعبة
+                playSound(200, 'sine', 0.1, 0.3);
                 
                 scoreElement.textContent = '0';
                 livesElement.textContent = '3';
