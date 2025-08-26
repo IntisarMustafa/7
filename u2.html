@@ -201,7 +201,7 @@
             color: #6a3f9e;
         }
         
-        .index-page {
+        .index-page, .back-button {
             background: linear-gradient(135deg, #5a67d8 0%, #6a3f9e 100%);
             color: white;
             padding: 12px 25px;
@@ -224,14 +224,24 @@
             border: none;
         }
         
-        .index-page:hover {
+        .index-page:hover, .back-button:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
             background: linear-gradient(135deg, #4a56c8 0%, #5a2f8e 100%);
         }
         
-        .index-page i {
-            font-size: 1rem;
+        .back-button {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .index-page i, .back-button i {
+            font-size: 1.1rem;
             animation: pulse 2s infinite;
         }
         
@@ -330,7 +340,7 @@
                 margin-bottom: 15px;
             }
             
-            .index-page {
+            .index-page, .back-button {
                 margin-top: 10px;
                 padding: 12px 20px;
                 width: 100%;
@@ -356,7 +366,7 @@
                 font-size: 1.3rem;
             }
             
-            .index-page {
+            .index-page, .back-button {
                 padding: 10px 18px;
                 font-size: 1.1rem;
             }
@@ -475,6 +485,11 @@
                 </ul>
             </div>
             
+            <!-- الزر الجديد -->
+            <a href="#" class="back-button">
+                <i class="fas fa-arrow-right"></i> عودة إلى فهرس الوحدات
+            </a>
+
             <div class="footer">
                 <p>رحلة تعلم ممتعة وشاملة لمادة الرياضيات للصف السابع</p>
                 <span class="expert">إعداد: الخبيرة التربوية انتصار مصطفى</span>
@@ -502,3 +517,4 @@
     </script>
 </body>
 </html>
+
