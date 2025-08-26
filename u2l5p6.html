@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -243,6 +243,26 @@
             background: rgba(38, 208, 206, 0.7);
         }
 
+        /* إضافة تعليمات للتحكم على الكمبيوتر */
+        .controls-info {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+            z-index: 20;
+        }
+
+        @media (min-width: 768px) {
+            .controls-info {
+                display: block;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -272,6 +292,11 @@
         <div class="stat-item">النقاط: <span id="score" class="stat-value">0</span></div>
         <div class="stat-item">الأرواح: <span id="lives" class="stat-value">3</span></div>
         <button id="soundToggle">الصوت: تشغيل</button>
+    </div>
+    
+    <!-- تعليمات التحكم على الكمبيوتر -->
+    <div class="controls-info">
+        استخدم الأسهم للتحرك ومفتاح المسافة لإطلاق النار
     </div>
     
     <script>
@@ -313,6 +338,17 @@
             
             // متغير للتحكم في إطلاق النار التلقائي
             let fireInterval = null;
+            
+            // متغيرات للتحكم باللوحة المفاتيح
+            let keys = {
+                ArrowLeft: false,
+                ArrowRight: false,
+                space: false
+            };
+            
+            // متغيرات للتحكم بالماوس
+            let mouseX = 0;
+            let mouseDown = false;
             
             // أسئلة الجبر للصف السابع (المنهاج الأردني)
             const questions = [
@@ -388,10 +424,21 @@
             let soundEnabled = true;
 
             // إنشاء مؤثرات صوتية
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            let audioContext;
             
+            function initAudio() {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.log("Web Audio API غير مدعومة في هذا المتصفح");
+                    soundEnabled = false;
+                    soundToggleBtn.textContent = "الصوت: غير مدعوم";
+                    soundToggleBtn.disabled = true;
+                }
+            }
+
             function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
-                if (!soundEnabled) return;
+                if (!soundEnabled || !audioContext) return;
                 
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
@@ -422,7 +469,7 @@
                     flameColor.addColorStop(0.5, 'rgba(255, 200, 0, 0.5)');
                     flameColor.addColorStop(1, 'rgba(255, 255, 255, 0)');
                     
-                    if (fireInterval) {
+                    if (fireInterval || mouseDown || keys.space) {
                         ctx.fillStyle = flameColor;
                         ctx.beginPath();
                         ctx.moveTo(this.x - 10, this.y + this.height / 2);
@@ -680,10 +727,75 @@
                 fireInterval = null;
             }
 
+            // أحداث الماوس للكمبيوتر
+            canvas.addEventListener('mousemove', (e) => {
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
+                const rect = canvas.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                player.x = mouseX;
+            });
+
+            canvas.addEventListener('mousedown', () => {
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
+                mouseDown = true;
+                if (!fireInterval) {
+                    fireInterval = setInterval(fireBullet, 100);
+                }
+            });
+
+            canvas.addEventListener('mouseup', () => {
+                mouseDown = false;
+                clearInterval(fireInterval);
+                fireInterval = null;
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                mouseDown = false;
+                clearInterval(fireInterval);
+                fireInterval = null;
+            });
+
+            // أحداث لوحة المفاتيح للكمبيوتر
+            window.addEventListener('keydown', (e) => {
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
+                
+                if (e.key === 'ArrowLeft') keys.ArrowLeft = true;
+                if (e.key === 'ArrowRight') keys.ArrowRight = true;
+                if (e.key === ' ') {
+                    e.preventDefault(); // منع تحريك الصفحة بالمسافة
+                    keys.space = true;
+                    if (!fireInterval) {
+                        fireInterval = setInterval(fireBullet, 100);
+                    }
+                }
+            });
+
+            window.addEventListener('keyup', (e) => {
+                if (e.key === 'ArrowLeft') keys.ArrowLeft = false;
+                if (e.key === 'ArrowRight') keys.ArrowRight = false;
+                if (e.key === ' ') {
+                    keys.space = false;
+                    clearInterval(fireInterval);
+                    fireInterval = null;
+                }
+            });
+
             // تحريك اللاعب
             function movePlayer() {
-                // لا نحتاج إلى تحديث موضع اللاعب هنا لأننا نحدثه مباشرة في أحداث اللمس
-                // فقط نتأكد من أنه لا يخرج عن حدود اللوحة
+                // التحكم باللمس والماوس
+                if (mouseX) {
+                    player.x = mouseX;
+                }
+                
+                // التحكم بلوحة المفاتيح
+                if (keys.ArrowLeft) {
+                    player.x -= player.speed;
+                }
+                if (keys.ArrowRight) {
+                    player.x += player.speed;
+                }
+                
+                // التأكد من أن اللاعب لا يخرج عن حدود اللوحة
                 player.x = Math.max(player.width / 2, Math.min(GAME_WIDTH - player.width / 2, player.x));
             }
 
@@ -1022,6 +1134,7 @@
             
             // يجب أن يتم تغيير حجم اللوحة أولاً
             resizeCanvas();
+            initAudio();
 
             // بدء اللعبة على الفور على الأجهزة التي تدعم اللمس
             if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
@@ -1041,4 +1154,3 @@
     </script>
 </body>
 </html>
-
