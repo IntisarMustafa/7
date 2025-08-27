@@ -775,8 +775,8 @@
             canvas.addEventListener('mousemove', (e) => {
                 if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
                 const rect = canvas.getBoundingClientRect();
-                mouseX = e.clientX - rect.left;
-                player.x = mouseX;
+                // تم تعديل هذا السطر لتحديث موقع اللاعب مباشرة بناءً على الماوس
+                player.x = e.clientX - rect.left;
             });
 
             canvas.addEventListener('mousedown', () => {
@@ -826,12 +826,9 @@
 
             // تحريك اللاعب
             function movePlayer() {
-                // التحكم باللمس والماوس
-                if (mouseX) {
-                    player.x = mouseX;
-                }
-                
-                // التحكم بلوحة المفاتيح
+                // هذا هو الجزء المحدث:
+                // الآن يتم استخدام الأزرار لتغيير موقع اللاعب بشكل تدريجي
+                // حركة الماوس واللمس يتم التعامل معها مباشرة في "mousemove" و "handleTouchMove"
                 if (keys.ArrowLeft) {
                     player.x -= player.speed;
                 }
