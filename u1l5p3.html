@@ -45,7 +45,6 @@
             padding: 20px;
             min-height: 100vh;
             overflow-x: hidden;
-            /* حجم خط أساسي أكبر قليلاً */
             font-size: 1.5rem;
         }
 
@@ -63,21 +62,19 @@
             background-color: var(--royal-blue-2);
             color: white;
             padding: 25px;
-            text-align: center; /* توسيط العنوان */
+            text-align: center;
             border-bottom: 5px solid var(--gold);
             position: relative;
             overflow: hidden;
         }
 
-        /* حجم خط أكبر وسميك للعنوان الرئيسي */
         h1 {
             color: white;
-            font-size: 1.5rem; /* تم تكبير الخط */
+            font-size: 1.5rem;
             margin-bottom: 10px;
             font-weight: 700;
         }
         
-        /* إزالة العنوان الفرعي "الصف السابع" */
         .subtitle {
             display: none;
         }
@@ -98,7 +95,6 @@
             margin: 25px 0;
         }
 
-        /* حجم خط أكبر لعناوين الأقسام */
         .section h2 {
             color: var(--royal-blue-2);
             margin-bottom: 15px;
@@ -123,7 +119,6 @@
             background-color: #f9fbe7;
         }
         
-        /* حجم خط أكبر لعنوان قسم "أتحقق من فهمي" */
         .exercise h2 {
             color: var(--royal-blue-2);
             font-size: 1.5rem;
@@ -161,7 +156,6 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
         
-        /* زيادة حجم خط عناوين الأسئلة */
         .question-item h3 {
             font-size: 1.8rem;
             font-weight: bold;
@@ -284,9 +278,7 @@
     <div class="container">
         <!-- عنوان الدرس -->
         <header>
-         
             <h1>ضرب الأعداد النسبية وقسمتها</h1>
-         
         </header>
 
         <!-- محتوى الصفحة الثانية فقط -->
@@ -301,14 +293,14 @@
                         <input id="ex1-num2" type="number" step="0.1" value="-8" class="w-24 p-2 text-center rounded-md border-2 border-blue-400">
                     </div>
                     <!-- إضافة الناتج هنا -->
-                    <div class="text-2xl font-bold text-blue-700 mt-4 md:mt-0">= <span id="ex1-result">20</span></div>
+                    <div class="text-2xl font-bold text-blue-700 mt-4 md:mt-0">= <span id="ex1-result"></span></div>
                 </div>
                 <div class="mt-4 text-gray-700 text-right">
                     <p><strong>الخطوات:</strong></p>
                     <ul class="list-disc list-inside text-right">
-                        <li>نحدد إشارة الناتج: <span id="ex1-sign">موجب لأن الإشارتين متشابهتان</span></li>
-                        <li>نضرب العددين دون فواصل: <span id="ex1-int-mult">25 × 8 = 200</span></li>
-                        <li>نضع الفاصلة العشرية في الناتج: <span id="ex1-final">الناتج النهائي هو 20.0 (نضع الفاصلة بعد 1 خانة)</span></li>
+                        <li>نحدد إشارة الناتج: <span id="ex1-sign"></span></li>
+                        <li>نضرب العددين دون فواصل: <span id="ex1-int-mult"></span></li>
+                        <li>نضع الفاصلة العشرية في الناتج: <span id="ex1-final"></span></li>
                     </ul>
                 </div>
             </div>
@@ -323,14 +315,14 @@
                         <input id="ex2-num2" type="number" step="0.01" value="1.64" class="w-24 p-2 text-center rounded-md border-2 border-green-400">
                     </div>
                     <!-- إضافة الناتج هنا -->
-                    <div class="text-2xl font-bold text-green-700 mt-4 md:mt-0">= <span id="ex2-result">-2.05</span></div>
+                    <div class="text-2xl font-bold text-green-700 mt-4 md:mt-0">= <span id="ex2-result"></span></div>
                 </div>
                 <div class="mt-4 text-gray-700 text-right">
                     <p><strong>الخطوات:</strong></p>
                     <ul class="list-disc list-inside text-right">
-                        <li>نحدد إشارة الناتج: <span id="ex2-sign">سالب</span></li>
-                        <li>نضرب العددين دون فواصل: <span id="ex2-int-mult">125 × 164 = 20500</span></li>
-                        <li>نضع الفاصلة العشرية في الناتج: <span id="ex2-final">الناتج هو -2.05 (نضع الفاصلة بعد 4 خانات)</span></li>
+                        <li>نحدد إشارة الناتج: <span id="ex2-sign"></span></li>
+                        <li>نضرب العددين دون فواصل: <span id="ex2-int-mult"></span></li>
+                        <li>نضع الفاصلة العشرية في الناتج: <span id="ex2-final"></span></li>
                     </ul>
                 </div>
             </div>
@@ -353,20 +345,20 @@
                         </div>
                     </div>
                     <!-- إضافة الناتج هنا -->
-                    <div class="text-2xl font-bold text-purple-700 mt-4 md:mt-0">= <span id="ex3-result">-6.3</span></div>
+                    <div class="text-2xl font-bold text-purple-700 mt-4 md:mt-0">= <span id="ex3-result"></span></div>
                 </div>
                 <div class="mt-4 text-gray-700 text-right">
                     <p><strong>طريقة 1 (عشرية):</strong></p>
                     <ul class="list-disc list-inside text-right">
-                        <li>نحول العدد الكسري إلى عشري: <span id="ex3-decimal-conv">\(1 \frac{1}{2} = 1.5\)</span></li>
-                        <li>نضرب الأعداد العشرية: <span id="ex3-decimal-mult">\(-4.2 \times 1.5 = -6.3\)</span></li>
-                        <li>الناتج: <span id="ex3-decimal-result">-6.3</span></li>
+                        <li>نحول العدد الكسري إلى عشري: <span id="ex3-decimal-conv"></span></li>
+                        <li>نضرب الأعداد العشرية: <span id="ex3-decimal-mult"></span></li>
+                        <li>الناتج: <span id="ex3-decimal-result"></span></li>
                     </ul>
                     <p class="mt-4"><strong>طريقة 2 (كسرية):</strong></p>
                     <ul class="list-disc list-inside text-right">
-                        <li>نحول العددين إلى كسور عادية: <span id="ex3-fraction-conv">\(-4.2 = \frac{-42}{10} \text{ و } 1 \frac{1}{2} = \frac{3}{2}\)</span></li>
-                        <li>نضرب الكسور: <span id="ex3-fraction-mult">\(\left(\frac{-42}{10}\right) \times \left(\frac{3}{2}\right) = \frac{-126}{20}\)</span></li>
-                        <li>الناتج في أبسط صورة: <span id="ex3-fraction-result">\(\frac{-63}{10} = -6.3\)</span></li>
+                        <li>نحول العددين إلى كسور عادية: <span id="ex3-fraction-conv"></span></li>
+                        <li>نضرب الكسور: <span id="ex3-fraction-mult"></span></li>
+                        <li>الناتج في أبسط صورة: <span id="ex3-fraction-result"></span></li>
                     </ul>
                 </div>
             </div>
@@ -434,13 +426,11 @@
     <script>
         // دالة مساعدة لحساب المنازل العشرية
         function countDecimals(num) {
-            if (Math.floor(num) === num) return 0;
-            const s = num.toString();
-            if (s.indexOf('e-') !== -1) {
-                const parts = s.split('e-');
-                return parseInt(parts[1], 10);
-            }
-            return s.split('.')[1]?.length || 0;
+            const str = num.toString();
+            // التعامل مع الأرقام السالبة والأسية
+            const match = str.match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+            if (!match) return 0;
+            return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
         }
 
         // دالة لتحديث المثال الأول (ضرب الأعداد العشرية)
@@ -454,13 +444,25 @@
             }
 
             const result = num1 * num2;
-            const intMult = Math.abs(num1 * Math.pow(10, countDecimals(num1))) * Math.abs(num2 * Math.pow(10, countDecimals(num2)));
-            const totalDecimals = countDecimals(num1) + countDecimals(num2);
+            
+            // حساب أرقام صحيحة من الأرقام العشرية لتوضيح الخطوات
+            const dec1 = countDecimals(num1);
+            const dec2 = countDecimals(num2);
+            const totalDecimals = dec1 + dec2;
+            const intMult = Math.abs(num1 * Math.pow(10, dec1)) * Math.abs(num2 * Math.pow(10, dec2));
+            const intNum1 = Math.abs(num1 * Math.pow(10, dec1));
+            const intNum2 = Math.abs(num2 * Math.pow(10, dec2));
 
-            document.getElementById('ex1-sign').innerHTML = (num1 * num2 >= 0) ? 'موجب لأن الإشارتين متشابهتان' : 'سالب لأن الإشارتين مختلفتان';
-            document.getElementById('ex1-int-mult').innerHTML = `${Math.abs(num1 * Math.pow(10, countDecimals(num1)))} × ${Math.abs(num2 * Math.pow(10, countDecimals(num2)))} = ${intMult}`;
-            document.getElementById('ex1-final').innerHTML = `الناتج النهائي هو ${result}`;
+            // تحديث محتوى HTML ديناميكياً
+            const sign = (num1 * num2 >= 0) ? 'موجب لأن الإشارتين متشابهتان' : 'سالب لأن الإشارتين مختلفتان';
+            const finalStep = `الناتج النهائي هو ${result}`;
+            const finalDecimalNote = `(نضع الفاصلة بعد ${totalDecimals} خانات)`;
+
+            document.getElementById('ex1-sign').innerHTML = sign;
+            document.getElementById('ex1-int-mult').innerHTML = `${intNum1} × ${intNum2} = ${intMult}`;
+            document.getElementById('ex1-final').innerHTML = `${finalStep} ${totalDecimals > 0 ? finalDecimalNote : ''}`;
             document.getElementById('ex1-result').innerHTML = result;
+
             if (window.MathJax) {
                 MathJax.typesetPromise();
             }
@@ -477,13 +479,25 @@
             }
 
             const result = num1 * num2;
-            const intMult = Math.abs(num1 * 100) * Math.abs(num2 * 100);
-            const totalDecimals = countDecimals(num1) + countDecimals(num2);
+            
+            // حساب أرقام صحيحة من الأرقام العشرية لتوضيح الخطوات
+            const dec1 = countDecimals(num1);
+            const dec2 = countDecimals(num2);
+            const totalDecimals = dec1 + dec2;
+            const intMult = Math.abs(num1 * Math.pow(10, dec1)) * Math.abs(num2 * Math.pow(10, dec2));
+            const intNum1 = Math.abs(num1 * Math.pow(10, dec1));
+            const intNum2 = Math.abs(num2 * Math.pow(10, dec2));
 
-            document.getElementById('ex2-sign').innerHTML = (num1 * num2 >= 0) ? 'موجب' : 'سالب';
-            document.getElementById('ex2-int-mult').innerHTML = `${Math.abs(num1 * 100)} × ${Math.abs(num2 * 100)} = ${intMult}`;
-            document.getElementById('ex2-final').innerHTML = `الناتج هو -2.05 (نضع الفاصلة بعد 4 خانات)`;
+            // تحديث محتوى HTML ديناميكياً
+            const sign = (num1 * num2 >= 0) ? 'موجب' : 'سالب';
+            const finalStep = `الناتج هو ${result}`;
+            const finalDecimalNote = `(نضع الفاصلة بعد ${totalDecimals} خانات)`;
+
+            document.getElementById('ex2-sign').innerHTML = sign;
+            document.getElementById('ex2-int-mult').innerHTML = `${intNum1} × ${intNum2} = ${intMult}`;
+            document.getElementById('ex2-final').innerHTML = `${finalStep} ${totalDecimals > 0 ? finalDecimalNote : ''}`;
             document.getElementById('ex2-result').innerHTML = result;
+
             if (window.MathJax) {
                 MathJax.typesetPromise();
             }
@@ -505,30 +519,32 @@
             const mixedDecimal = wholeNum + (numerator / denominator);
             const resultDecimal = decimalNum * mixedDecimal;
             document.getElementById('ex3-decimal-conv').innerHTML = `\\(${wholeNum} \\frac{${numerator}}{${denominator}} = ${mixedDecimal}\\)`;
-            document.getElementById('ex3-decimal-mult').innerHTML = `${decimalNum} \\times ${mixedDecimal} = ${resultDecimal.toFixed(2)}`;
-            document.getElementById('ex3-decimal-result').innerHTML = `${resultDecimal.toFixed(2)}`;
+            document.getElementById('ex3-decimal-mult').innerHTML = `\\(${decimalNum} \\times ${mixedDecimal} = ${resultDecimal}\\)`;
+            document.getElementById('ex3-decimal-result').innerHTML = `${resultDecimal}`;
 
             // الطريقة الثانية: الكسرية
-            const fracNum1 = decimalNum * Math.pow(10, countDecimals(decimalNum));
-            const fracDen1 = Math.pow(10, countDecimals(decimalNum));
+            const dec1 = countDecimals(decimalNum);
+            const fracNum1 = decimalNum * Math.pow(10, dec1);
+            const fracDen1 = Math.pow(10, dec1);
             const fracNum2 = (wholeNum * denominator) + numerator;
             const fracDen2 = denominator;
             
             const finalFracNum = fracNum1 * fracNum2;
             const finalFracDen = fracDen1 * fracDen2;
             
-            const sign = (decimalNum * (wholeNum + numerator/denominator)) >= 0 ? '' : '-';
+            // دالة لإيجاد القاسم المشترك الأكبر لتبسيط الكسر
             const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
             const commonDivisor = gcd(Math.abs(finalFracNum), Math.abs(finalFracDen));
             const simpleNum = Math.abs(finalFracNum) / commonDivisor;
             const simpleDen = Math.abs(finalFracDen) / commonDivisor;
+            const signPrefix = (decimalNum * (wholeNum + numerator/denominator)) < 0 ? '-' : '';
 
             const resultFraction = finalFracNum / finalFracDen;
 
             document.getElementById('ex3-fraction-conv').innerHTML = `\\(${decimalNum} = \\frac{${fracNum1}}{${fracDen1}} \\text{ و } ${wholeNum} \\frac{${numerator}}{${denominator}} = \\frac{${fracNum2}}{${fracDen2}}\\)` ;
             document.getElementById('ex3-fraction-mult').innerHTML = `\\(\\left(\\frac{${fracNum1}}{${fracDen1}}\\right) \\times \\left(\\frac{${fracNum2}}{${fracDen2}}\\right) = \\frac{${finalFracNum}}{${finalFracDen}}\\)` ;
-            document.getElementById('ex3-fraction-result').innerHTML = `\\(\\frac{${finalFracNum}}{${finalFracDen}} = ${resultFraction.toFixed(2)}\\)`;
-            document.getElementById('ex3-result').innerHTML = resultFraction.toFixed(2);
+            document.getElementById('ex3-fraction-result').innerHTML = `\\(${signPrefix}\\frac{${simpleNum}}{${simpleDen}} = ${resultFraction}\\)`;
+            document.getElementById('ex3-result').innerHTML = resultFraction;
             if (window.MathJax) {
                 MathJax.typesetPromise();
             }
