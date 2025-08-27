@@ -274,7 +274,7 @@
     <!-- شاشة التراكب (تظهر قبل بدء اللعبة وأثناء الإيقاف المؤقت) -->
     <div id="gameOverlay" class="game-overlay">
         <h1 id="overlayTitle">لعبة ضرب المقادير الجبرية</h1>
-        <p id="overlayMessage">انقر لبدء اللعبة</p>
+        <p id="overlayMessage">انقر أو اضغط على الزر للبدء</p>
         <button id="overlayBtn" class="btn">بدء اللعبة</button>
     </div>
     
@@ -440,6 +440,7 @@
                 }
             }
 
+            // دالة لتشغيل نغمة واحدة
             function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
                 if (!soundEnabled || !audioContext) return;
                 
@@ -455,6 +456,32 @@
                 
                 oscillator.start();
                 oscillator.stop(audioContext.currentTime + duration);
+            }
+
+            // دالة جديدة لتشغيل تسلسل من النغمات (ميلودي)
+            function playMelody(notes, tempo = 120, volume = 0.5) {
+                if (!soundEnabled || !audioContext) return;
+                
+                const noteDuration = 60 / tempo; // مدة النوتة بالثانية
+                let time = audioContext.currentTime;
+
+                notes.forEach(note => {
+                    if (note.frequency > 0) {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.type = note.type || 'sine';
+                        oscillator.frequency.value = note.frequency;
+                        gainNode.gain.setValueAtTime(volume, time);
+                        
+                        oscillator.start(time);
+                        oscillator.stop(time + noteDuration * note.duration);
+                    }
+                    time += noteDuration * note.duration;
+                });
             }
 
             // السفينة
@@ -866,8 +893,15 @@
                         if (distance < enemy.width / 2) {
                             // تم الاصطدام!
                             gameState.explosions.push(new Explosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#4fc3f7'));
-                            playSound(150, 'square', 0.1, 0.8);
                             
+                            // تشغيل النغمة الجديدة عند اصطدام الرصاصة بالكويكب
+                            const hitMelody = [
+                                { frequency: 440, duration: 0.1 },
+                                { frequency: 523.25, duration: 0.1 },
+                                { frequency: 659.25, duration: 0.1 }
+                            ];
+                            playMelody(hitMelody, 120, 0.5);
+
                             // التعامل مع الأنواع المختلفة من الأعداء
                             if (enemy.type === 'splitting') {
                                 // إنشاء جزأين صغيرين
@@ -940,7 +974,13 @@
                 });
 
                 if (isCorrect) {
-                    playSound(600, 'sine', 0.2, 0.7);
+                    // تشغيل نغمة أجمل عند الإجابة الصحيحة
+                    const correctMelody = [
+                        { frequency: 523.25, duration: 0.1 },
+                        { frequency: 659.25, duration: 0.1 },
+                        { frequency: 783.99, duration: 0.2 },
+                    ];
+                    playMelody(correctMelody, 180, 0.7);
                     
                     // تأخير قصير قبل استئناف اللعبة
                     setTimeout(() => {
@@ -1069,7 +1109,7 @@
                 
                 levelElement.textContent = gameState.level;
                 
-                if (gameState.gameOver && levelsConfig[gameState.level - 1]) {
+                if (gameState.gameOver) {
                     overlayTitle.textContent = 'انتهت اللعبة!';
                     overlayMessage.textContent = `نقاطك النهائية: ${gameState.score}`;
                     overlayBtn.textContent = 'إعادة التشغيل';
@@ -1078,6 +1118,8 @@
                     overlayTitle.textContent = 'إيقاف مؤقت';
                     overlayMessage.textContent = 'اللعبة في وضع الإيقاف المؤقت';
                     overlayBtn.textContent = 'استمرار';
+                    overlay.classList.remove('hidden');
+                } else if (!gameState.gameStarted) {
                     overlay.classList.remove('hidden');
                 } else {
                     overlay.classList.add('hidden');
@@ -1122,13 +1164,9 @@
             
             // أحداث الأزرار
             overlayBtn.addEventListener('click', () => {
-                if (gameState.gameOver) {
+                if (!gameState.gameStarted || gameState.gameOver || gameState.paused) {
                     startGame();
-                } else if (!gameState.gameStarted) {
-                    startGame();
-                } else if (gameState.paused) {
-                    gameState.paused = false;
-                }
+                } 
             });
 
             soundToggleBtn.addEventListener('click', () => {
@@ -1138,7 +1176,7 @@
             
             // إيقاف اللعبة مؤقتًا عند فقدان التركيز
             window.addEventListener('blur', () => {
-                if (gameState.gameStarted && !gameState.gameOver && !questionOverlay.classList.contains('hidden')) {
+                if (gameState.gameStarted && !gameState.gameOver) {
                     gameState.paused = true;
                 }
             });
@@ -1146,18 +1184,7 @@
             // يجب أن يتم تغيير حجم اللوحة أولاً
             resizeCanvas();
             initAudio();
-
-            // بدء اللعبة على الفور على الأجهزة التي تدعم اللمس
-            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-                startGame();
-            } else {
-                 // إظهار شاشة البداية على الأجهزة غير اللمسية
-                 overlayTitle.textContent = 'لعبة ضرب المقادير الجبرية';
-                 overlayMessage.textContent = 'اضغط لبدء اللعبة';
-                 overlayBtn.textContent = 'بدء اللعبة';
-                 overlay.classList.remove('hidden');
-            }
-
+            
             window.addEventListener('resize', resizeCanvas);
             
             gameLoop();
@@ -1165,3 +1192,4 @@
     </script>
 </body>
 </html>
+
