@@ -176,6 +176,13 @@
             align-items: center;
         }
         
+        /* FIX: Ensure mathematical text is left-to-right */
+        .question-text, .answer-btn {
+            direction: ltr;
+            text-align: left;
+            unicode-bidi: embed;
+        }
+
         .question-text {
             font-size: clamp(1.5rem, 6vw, 3rem);
             color: #fff;
@@ -557,7 +564,7 @@
                     this.life++;
                     this.particles.forEach(p => {
                         p.x += p.speedX;
-                        p.y += p.speedY;
+                        p.y += p.y;
                         p.alpha -= 0.05;
                         p.size -= 0.1;
                     });
@@ -592,14 +599,14 @@
                 canvas.width = GAME_WIDTH;
                 canvas.height = GAME_HEIGHT;
 
-                // إعادة حساب حجم اللاعب بناءً على حجم الشاشة
-                player.width = Math.max(40, GAME_WIDTH / 20);
-                player.height = Math.max(40, GAME_WIDTH / 20);
+                // التعديل: تكييف حجم اللاعب
+                player.width = Math.max(60, GAME_WIDTH / 10);
+                player.height = Math.max(60, GAME_WIDTH / 10);
 
                 // إعادة وضع السفينة بعد تغيير الحجم لتجنب اختفائها
                 if (gameState.gameStarted) {
                     player.x = GAME_WIDTH / 2;
-                    player.y = GAME_HEIGHT - 100;
+                    player.y = GAME_HEIGHT - (GAME_HEIGHT * 0.15); // وضعها في الأسفل
                 }
 
                 // إعادة إنشاء النجوم
@@ -648,10 +655,12 @@
                 
                 // تحديد نوع وحجم ولون العدو بناءً على المعلمات
                 if (type === 'normal') {
-                    enemySize = Math.random() * (GAME_WIDTH / 15) + (GAME_WIDTH / 25);
+                    // التعديل: جعل الكويكبات العادية أصغر ومتكيفة مع حجم الشاشة
+                    enemySize = Math.random() * (GAME_WIDTH / 20) + (GAME_WIDTH / 40);
                     enemyColor = '#8b4513';
                 } else if (type === 'splitting') {
-                    enemySize = Math.random() * (GAME_WIDTH / 10) + (GAME_WIDTH / 18); // أكبر قليلاً
+                    // التعديل: جعل الكويكبات المنقسمة أصغر ومتكيفة مع حجم الشاشة
+                    enemySize = Math.random() * (GAME_WIDTH / 15) + (GAME_WIDTH / 30);
                     enemyColor = '#483D8B'; // لون بنفسجي غامق
                 } else if (type === 'splitPart') {
                     enemySize = size;
@@ -700,8 +709,9 @@
             function fireBullet() {
                 if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
                 
-                const bulletWidth = Math.max(4, GAME_WIDTH / 200);
-                const bulletHeight = Math.max(20, GAME_HEIGHT / 25);
+                // التعديل: تكييف حجم الرصاصة مع حجم الشاشة
+                const bulletWidth = Math.max(4, GAME_WIDTH / 100);
+                const bulletHeight = Math.max(20, GAME_HEIGHT / 20);
                 
                 gameState.bullets.push({
                     x: player.x,
@@ -1151,7 +1161,7 @@
                 
                 // إعادة تعيين موقع اللاعب
                 player.x = GAME_WIDTH / 2;
-                player.y = GAME_HEIGHT - 100;
+                player.y = GAME_HEIGHT - (GAME_HEIGHT * 0.15); // وضعها في الأسفل
                 
                 // مؤثر صوتي: بدء اللعبة
                 playSound(200, 'sine', 0.1, 0.3);
