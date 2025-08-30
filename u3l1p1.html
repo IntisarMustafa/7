@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حل المعادلات</title>
+    <!-- Tailwind CSS for styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math symbols -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" xintegrity="sha384-GvrxHw+z4q/RzL05jQ9N+q+1aVl2Zl9x0+hX2jY5wF+R+b0eR-z-n-q-3X-z-Xl-Q==" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-H4uW3s3eT2B2+xP9O/D4h5N6n7f7p5O9Pq2E0Zl7z2Fw/F0e2+Q==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" xintegrity="sha384-i1HVh8p/B/pQ2Cg3t/r/O/3tP2Cj+xG/2+lCg5b+lC+b+c+a+v+1/u+s/S/g==" crossorigin="anonymous"></script>
+
+    <style>
+        /* Import suitable fonts for Arabic and English text */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #eef2f6;
+        }
+
+        /* Set base styles for the body and the main container */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            flex-grow: 1;
+        }
+
+        /* Main title and lesson idea sections */
+        .section-header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+        }
+        .lesson-idea-box {
+            background-color: #e0f2fe;
+            border-left: 6px solid #084c8f;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .explore-box {
+            background-color: #fefce8; /* Light cool yellow */
+            border-left: 6px solid #084c8f; /* Dark blue shadow on the left */
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Matching box shadow */
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #084c8f;
+            margin-bottom: 0.75rem;
+        }
+        .section-text {
+            font-size: 1.25rem;
+            line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        /* New rules to increase font size in the explore section */
+        .explore-box .problem-list li p {
+            font-size: 1.25rem;
+        }
+        .explore-box .problem-list li .math-expr {
+            font-size: 1.6rem;
+        }
+
+        /* The main steps of the solution with a modern, split layout */
+        .step-row {
+            display: flex;
+            align-items: stretch;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px dashed #e2e8f0;
+            flex-wrap: wrap-reverse;
+        }
+        .step-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .algebra-col, .model-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+        .algebra-col {
+            background-color: #f7fafc;
+        }
+        .model-col {
+            background-color: #f0f4f8;
+            border-left: 3px solid #cbd5e0;
+        }
+
+        /* Typography and layout for math expressions */
+        .equation {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2d3748;
+            text-align: right;
+            line-height: 1.8;
+            margin: 1rem 0; /* Updated: Added vertical margin for spacing */
+        }
+        .explanation {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-bottom: 1rem; /* Updated: Increased margin for separation */
+        }
+        
+        /* New rule to increase font size for the division step */
+        .font-larger .explanation {
+            font-size: 1.25rem; /* Larger font for the text */
+        }
+        .font-larger .equation {
+            font-size: 2rem; /* Larger font for the equation */
+        }
+
+        /* Visual model styling */
+        .model-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .model-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .x-box, .number-box, .result-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.5rem;
+            min-width: 3rem;
+            height: 3rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .x-box {
+            background-color: #4c66e2;
+            min-width: 5rem;
+            height: 2rem;
+        }
+        .number-box { background-color: #f6ad55; }
+        .result-box { background-color: #48bb78; }
+        .subtraction-box {
+            background-color: #e53e3e;
+            color: #fff;
+            position: relative;
+            animation: fade-out 1s forwards;
+        }
+        
+        @keyframes fade-out {
+            to {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+        
+        .divider {
+            width: 100%;
+            height: 2px;
+            background-color: #cbd5e0;
+            margin: 1rem 0;
+        }
+        
+        .equality-line {
+            width: 80%; /* A bit smaller than the container for visual balance */
+            height: 4px; /* A thick line */
+            background-color: #084c8f; /* Dark blue color */
+            margin: 1rem 0;
+            border-radius: 2px;
+        }
+
+        /* Check Understanding section and interactivity */
+        .check-understanding-box {
+            background-color: #fff8eb;
+            border: 1px solid #fed7d7;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .problem-list li {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .problem-list li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
+        .solution-box {
+            border-top: 2px dashed #fed7d7;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            background-color: #fffaf0;
+        }
+        
+        .summary-box {
+            background-color: #d1e7dd;
+            border-left: 6px solid #198754;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .summary-title {
+            color: #198754;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .summary-line {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #212529;
+            direction: rtl; /* Ensure RTL for Arabic text and LTR for math */
+            unicode-bidi: embed;
+        }
+        .math-expr-summary {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2d3748;
+            direction: ltr; /* Ensure LTR for the math expression itself */
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+        
+        /* New rule to increase font size for math expressions in "Check Understanding" section */
+        .check-understanding-box .math-expr {
+            font-size: 1.5rem;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .section-header {
+                font-size: 2rem;
+            }
+            .step-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .algebra-col, .model-col {
+                width: 100%;
+                padding: 1.2rem;
+                border-left: none;
+            }
+            .model-col {
+                order: -1;
+                border-bottom: 3px solid #cbd5e0;
+                border-left: none;
+            }
+            .explanation {
+                text-align: center;
+            }
+            .equation {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content Container -->
+    <main class="container">
+        <!-- Professional Header - Moved inside the container as per user's request -->
+        <header class="bg-blue-800 text-white py-10 sm:py-12 text-center shadow-lg rounded-t-[1.5rem] relative overflow-hidden">
+            <!-- Decorative gold bar at the bottom -->
+            <div class="absolute inset-x-0 bottom-0 h-1 bg-yellow-400"></div>
+            <h1 class="text-4xl sm:text-5xl font-bold">حل المعادلات</h1>
+        </header>
+
+        <!-- Title and Lesson Idea Section - Now occupies full container width -->
+        <div class="lesson-idea-box w-full mt-8">
+            <h2 class="section-title">فكرة الدرس</h2>
+            <p class="section-text">
+                أحل معادلة بمتغير واحد.
+            </p>
+        </div>
+
+        <!-- Explore Section -->
+        <div class="explore-box">
+            <h2 class="section-title">أستكشف</h2>
+            <div class="flex items-center justify-center mb-4">
+                <svg width="100%" height="200" viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Rectangle body with sharp corners -->
+                    <rect x="50" y="25" width="200" height="100" fill="#f0f4f8" stroke="#1e3a8a" stroke-width="2" />
+                    
+                    
+                    <!-- Top dimension with text -->
+                    <text x="150" y="15" text-anchor="middle" dominant-baseline="middle" font-family="Noto Sans Arabic, Inter, sans-serif" font-size="16" fill="#1e3a8a">2(x+4) cm</text>
+                    
+                    <!-- Right dimension with text -->
+                    <text x="260" y="75" text-anchor="middle" dominant-baseline="middle" font-family="Noto Sans Arabic, Inter, sans-serif" font-size="16" fill="#1e3a8a" transform="rotate(90, 260, 75)">3x-7 cm</text>
+                </svg>
+            </div>
+            <p class="section-text mb-4 text-center">
+                أنظر إلى المستطيل المجاور، ثم أجيب:
+            </p>
+            <ul class="problem-list">
+                <li>
+                    <p class="section-text">
+                        1) ما قيمة كل من المقدارَيْنِ الجَبْرِييْنِ: <span class="math-expr" dir="ltr">$2(x+4)$</span> و <span class="math-expr" dir="ltr">$3x-7$</span> عندما <span class="math-expr" dir="ltr">$x=4$</span>؟
+                    </p>
+                </li>
+                <li>
+                    <p class="section-text">
+                        2) هل يمكن إيجاد قيمة للمتغير x يتساوى عندها المقداران؟
+                    </p>
+                </li>
+                <li>
+                    <p class="section-text">
+                        3) كم طول المستطيل بحسب قيمة x التي أوجدتها؟
+                    </p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Example section with the new styling and layout -->
+        <div class="bg-blue-100 text-blue-800 p-6 rounded-lg my-8 flex flex-col items-center shadow-md">
+            <h2 class="section-title text-center text-blue-800">
+                مثال: حل المعادلة
+            </h2>
+            <div class="mt-2 text-center text-3xl font-bold">
+                <span class="math-expr" dir="ltr">$3(3x + 2) = 42$</span>
+            </div>
+        </div>
+        
+        <!-- The main steps of the solution -->
+        <!-- Step 1: Initial Equation -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">المعادلة الأصلية</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$3(3x + 2) = 42$</span></div>
+            </div>
+            <div class="model-col">
+                <div class="model-inner">
+                    <p class="section-text text-center text-sm font-bold">كل صندوق أزرق يمثل المتغير <span class="math-expr" dir="ltr">$x$</span>.</p>
+                    <div class="model-row">
+                        <div class="x-box"></div><div class="x-box"></div><div class="x-box"></div>
+                        <div class="number-box">2</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div><div class="x-box"></div><div class="x-box"></div>
+                        <div class="number-box">2</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div><div class="x-box"></div><div class="x-box"></div>
+                        <div class="number-box">2</div>
+                    </div>
+                    <div class="equality-line"></div>
+                    <div class="result-box">42</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Distributive Property -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">خاصية التوزيع</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$3 \times 3x + 3 \times 2 = 42$</span></div>
+                <div class="explanation">اضرب</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$9x + 6 = 42$</span></div>
+            </div>
+            <div class="model-col">
+                <div class="model-inner">
+                    <div class="model-row">
+                        <div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div>
+                    </div>
+                    <div class="model-row">
+                        <div class="number-box">2</div><div class="number-box">2</div><div class="number-box">2</div>
+                    </div>
+                    <div class="equality-line"></div>
+                    <div class="result-box">42</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Subtract 6 from both sides -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">اطرح 6 من كلا الطرفين</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$9x + 6 - 6 = 42 - 6$</span></div>
+                <div class="divider"></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$9x = 36$</span></div>
+            </div>
+            <div class="model-col">
+                <div class="model-inner">
+                    <div class="model-row">
+                        <div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div><div class="x-box"></div>
+                    </div>
+                    <div class="model-row">
+                        <div class="number-box subtraction-box">2</div>
+                        <div class="number-box subtraction-box">2</div>
+                        <div class="number-box subtraction-box">2</div>
+                    </div>
+                    <div class="equality-line"></div>
+                    <div class="result-box">36</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Divide by 9 -->
+        <div class="step-row font-larger">
+            <div class="algebra-col">
+                <div class="explanation">اقسم كلا الطرفين على 9</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$\frac{9x}{9} = \frac{36}{9}$</span></div>
+                <div class="divider"></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = 4$</span></div>
+            </div>
+            <div class="model-col">
+                <div class="model-inner">
+                    <div class="model-row">
+                        <div class="x-box"></div> = <div class="number-box">4</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div> = <div class="number-box">4</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div> = <div class="number-box">4</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div> = <div class="number-box">4</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div> = <div class="number-box">4</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div> = <div class="number-box">4</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div> = <div class="number-box">4</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div> = <div class="number-box">4</div>
+                    </div>
+                    <div class="model-row">
+                        <div class="x-box"></div> = <div class="number-box">4</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Check the solution -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">أتحقق من صحة الحل:</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$3(3x + 2) = 42$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$3(3(4) + 2) = 42$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$3(12 + 2) = 42$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$3(14) = 42$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$42 = 42$</span></div>
+                <div class="explanation font-bold text-center mt-4 text-green-600">الحل صحيح</div>
+            </div>
+            <div class="model-col">
+                <div class="explanation text-center font-bold text-green-600">الحل صحيح لأن الطرفين متساويان.</div>
+            </div>
+        </div>
+        
+        <!-- New section for the one-line summary - Moved before Check Understanding -->
+        <div class="summary-box">
+            <h2 class="summary-title">ملخص الحل</h2>
+            <div class="summary-line">
+                المعادلة: <span class="math-expr-summary" dir="ltr">$3(3x + 2) = 42$</span>
+            </div>
+            <div class="summary-line">
+                الحل: <span class="math-expr-summary" dir="ltr">$x = 4$</span>
+            </div>
+        </div>
+
+        <!-- Check Understanding Section -->
+        <div class="check-understanding-box">
+            <h2 class="section-title">أتحقق من فهمي</h2>
+            <p class="section-text mb-4">حل المعادلات ثم أدخل قيمة المتغير.</p>
+            <ul class="problem-list">
+                <li>
+                    <p class="section-text">
+                        1) <span class="math-expr" dir="ltr">$3(2x - \frac{2}{3}) = -42$</span>
+                    </p>
+                    <!-- Input field and check button -->
+                    <div class="mt-4 flex items-center gap-4">
+                        <input type="text" id="q1-answer" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="أدخل إجابتك هنا (كسر عشري)">
+                        <button onclick="checkAnswer(1)" class="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">تحقق</button>
+                    </div>
+                    <div id="q1-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                    <div class="solution-box" style="display:none;">
+                        <div class="explanation">المعادلة الأصلية</div>
+                        <div class="equation"><span class="math-expr" dir="ltr">$3(2x - \frac{2}{3}) = -42$</span></div>
+                        <div class="explanation">خاصية التوزيع</div>
+                        <div class="equation"><span class="math-expr" dir="ltr">$6x - 2 = -42$</span></div>
+                        <div class="explanation">أضف 2 إلى كلا الطرفين</div>
+                        <div class="equation"><span class="math-expr" dir="ltr">$6x = -40$</span></div>
+                        <div class="explanation">اقسم كلا الطرفين على 6</div>
+                        <div class="equation"><span class="math-expr" dir="ltr">$x = -\frac{40}{6} = -\frac{20}{3}$</span></div>
+                    </div>
+                </li>
+                <li>
+                    <p class="section-text">
+                        2) <span class="math-expr" dir="ltr">$2(\frac{5}{6}x - 7) = -16$</span>
+                    </p>
+                    <!-- Input field and check button -->
+                    <div class="mt-4 flex items-center gap-4">
+                        <input type="text" id="q2-answer" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="أدخل إجابتك هنا (كسر عشري)">
+                        <button onclick="checkAnswer(2)" class="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">تحقق</button>
+                    </div>
+                    <div id="q2-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                    <div class="solution-box" style="display:none;">
+                        <div class="explanation">المعادلة الأصلية</div>
+                        <div class="equation"><span class="math-expr" dir="ltr">$2(\frac{5}{6}x - 7) = -16$</span></div>
+                        <div class="explanation">خاصية التوزيع</div>
+                        <div class="equation"><span class="math-expr" dir="ltr">$\frac{10}{6}x - 14 = -16$</span></div>
+                        <div class="explanation">أضف 14 إلى كلا الطرفين</div>
+                        <div class="equation"><span class="math-expr" dir="ltr">$\frac{5}{3}x = -2$</span></div>
+                        <div class="explanation">اضرب كلا الطرفين في <span class="math-expr" dir="ltr">$\frac{3}{5}$</span></div>
+                        <div class="equation"><span class="math-expr" dir="ltr">$x = -2 \times \frac{3}{5} = -\frac{6}{5}$</span></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Add Next Button -->
+        <div class="flex justify-center mt-8">
+            <a href="u3l1p2.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 text-lg">
+                التالي
+            </a>
+        </div>
+        
+        <!-- Divider to separate the button and the footer -->
+        <div class="w-full h-1 bg-gray-200 my-8"></div>
+
+        <!-- Professional Footer - Moved inside the container as per user's request -->
+        <footer class="bg-blue-800 text-white p-4 text-center">
+            <p class="text-sm">جميع الحقوق محفوظة © 2025</p>
+        </footer>
+    </main>
+    
+    <!-- JavaScript for interactivity and rendering math -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to render all math expressions on the page
+            function renderAllMath() {
+                document.querySelectorAll('.math-expr').forEach(function(element) {
+                    try {
+                        katex.render(element.textContent.replace(/\$/g, ''), element, {
+                            throwOnError: false
+                        });
+                    } catch(e) {
+                        console.error("KaTeX rendering error:", e);
+                    }
+                });
+            }
+
+            // Function to render math in the new summary section
+            function renderSummaryMath() {
+                document.querySelectorAll('.math-expr-summary').forEach(function(element) {
+                    try {
+                        katex.render(element.textContent.replace(/\$/g, ''), element, {
+                            throwOnError: false
+                        });
+                    } catch(e) {
+                        console.error("KaTeX rendering error:", e);
+                    }
+                });
+            }
+
+            // Initial rendering of all math
+            renderAllMath();
+            renderSummaryMath();
+
+            // Interactivity for "Check Understanding" problems
+            document.querySelectorAll('.check-understanding-box li').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    // Prevent the click from toggling the solution if the target is an input or a button
+                    if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'button') {
+                        return;
+                    }
+
+                    const solutionBox = item.querySelector('.solution-box');
+                    if (solutionBox) {
+                        const isVisible = solutionBox.style.display === 'block';
+                        solutionBox.style.display = isVisible ? 'none' : 'block';
+                        // Re-render math after changing display to ensure correct layout
+                        if (!isVisible) {
+                            renderAllMath();
+                        }
+                    }
+                });
+            });
+
+            // Function to check the user's answer
+            window.checkAnswer = function(questionNumber) {
+                const inputElement = document.getElementById(`q${questionNumber}-answer`);
+                const feedbackElement = document.getElementById(`q${questionNumber}-feedback`);
+                
+                // Get the user's input, normalize it (handle commas, etc.)
+                const userAnswerText = inputElement.value.replace(',', '.');
+                const userAnswer = parseFloat(userAnswerText);
+
+                let correctAnswer;
+                let correctAnswerKaTeX;
+
+                if (questionNumber === 1) {
+                    correctAnswer = -20/3;
+                    correctAnswerKaTeX = "x = -\\frac{20}{3} \\approx -6.67";
+                } else if (questionNumber === 2) {
+                    correctAnswer = -6/5;
+                    correctAnswerKaTeX = "x = -\\frac{6}{5} = -1.2";
+                }
+
+                // Use a small tolerance for floating-point comparison
+                if (!isNaN(userAnswer) && Math.abs(userAnswer - correctAnswer) < 0.0001) {
+                    feedbackElement.textContent = "إجابة صحيحة! 🎉";
+                    feedbackElement.className = "mt-2 text-center font-bold text-green-600";
+                } else {
+                    // Clear previous content
+                    feedbackElement.innerHTML = '';
+                    
+                    // Create a text node for the first part of the message
+                    const textNode1 = document.createTextNode("إجابة خاطئة. الحل الصحيح هو ");
+                    
+                    // Create a span for the KaTeX expression and set its direction to LTR
+                    const katexSpan = document.createElement('span');
+                    katexSpan.setAttribute('dir', 'ltr');
+                    
+                    try {
+                        // Directly render the KaTeX expression into the span
+                        katex.render(correctAnswerKaTeX, katexSpan, { throwOnError: false });
+                    } catch(e) {
+                        console.error("KaTeX rendering error:", e);
+                        katexSpan.textContent = `x = ${correctAnswerKaTeX}`;
+                    }
+                    
+                    // Append the nodes to the feedback element
+                    feedbackElement.appendChild(textNode1);
+                    feedbackElement.appendChild(katexSpan);
+                    feedbackElement.className = "mt-2 text-center font-bold text-red-600";
+                }
+                feedbackElement.style.display = 'block';
+            };
+        });
+    </script>
+</body>
+</html>
