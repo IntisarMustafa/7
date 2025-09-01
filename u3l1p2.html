@@ -86,7 +86,7 @@
             margin-bottom: 2rem;
             padding-bottom: 1.5rem;
             border-bottom: 2px dashed #e2e8f0;
-            flex-wrap: wrap-reverse;
+            flex-wrap: wrap; /* Changed from wrap-reverse to wrap */
         }
         .step-row:last-child {
             border-bottom: none;
@@ -316,50 +316,56 @@
         <!-- The main steps of the solution -->
         <!-- Step 1: Initial Equation -->
         <div class="step-row">
-            <div class="algebra-col">
-                <div class="explanation">المعادلة الأصلية</div>
-                <div class="equation"><span class="math-expr" dir="ltr">$5 - \frac{2}{3}(x+5) = -(5+x)$</span></div>
-            </div>
             <div class="model-col">
                 <div class="explanation text-center font-bold text-gray-700">
                     <div class="text-xl">الخطوة 1: المعادلة الأصلية</div>
                     <p class="mt-2 text-base">هذه هي المعادلة التي سنقوم بحلها. هدفنا هو عزل المتغير <span class="math-expr" dir="ltr">$x$</span>.</p>
                 </div>
             </div>
+            <div class="algebra-col">
+                <div class="explanation">المعادلة الأصلية</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$5 - \frac{2}{3}(x+5) = -(5+x)$</span></div>
+            </div>
         </div>
 
         <!-- Step 2: Multiply both sides by 3 -->
         <div class="step-row">
-            <div class="algebra-col">
-                <div class="explanation">اضرب طرفي المعادلة في 3</div>
-                <div class="equation"><span class="math-expr" dir="ltr">$3(5 - \frac{2}{3}(x+5)) = 3(-(5+x))$</span></div>
-            </div>
             <div class="model-col">
                 <div class="explanation text-center font-bold text-gray-700">
                     <div class="text-xl">الخطوة 2: التخلص من الكسر</div>
                     <p class="mt-2 text-base">للتخلص من الكسر <span class="math-expr" dir="ltr">$\frac{2}{3}$</span>، نضرب كل طرف في 3. هذا يجعل العمليات الحسابية أسهل.</p>
                 </div>
             </div>
+            <div class="algebra-col">
+                <div class="explanation">اضرب طرفي المعادلة في 3</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$3(5 - \frac{2}{3}(x+5)) = 3(-(5+x))$</span></div>
+            </div>
         </div>
 
         <!-- Step 3: Distributive Property -->
         <div class="step-row">
-            <div class="algebra-col">
-                <div class="explanation">خاصية التوزيع</div>
-                <div class="equation"><span class="math-expr" dir="ltr">$15 - 2(x+5) = -15 - 3x$</span></div>
-                <div class="explanation">اضرب</div>
-                <div class="equation"><span class="math-expr" dir="ltr">$15 - 2x - 10 = -15 - 3x$</span></div>
-            </div>
             <div class="model-col">
                 <div class="explanation text-center font-bold text-gray-700">
                     <div class="text-xl">الخطوة 3: تبسيط الأقواس</div>
                     <p class="mt-2 text-base">نستخدم خاصية التوزيع لضرب <span class="math-expr" dir="ltr">$-2$</span> في القوس و <span class="math-expr" dir="ltr">$-3$</span> في القوس، ثم نجمع الأرقام الثابتة لتبسيط المعادلة.</p>
                 </div>
             </div>
+            <div class="algebra-col">
+                <div class="explanation">خاصية التوزيع</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$15 - 2(x+5) = -15 - 3x$</span></div>
+                <div class="explanation">اضرب</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$15 - 2x - 10 = -15 - 3x$</span></div>
+            </div>
         </div>
 
         <!-- Step 4: Add 3x to both sides and simplify -->
         <div class="step-row">
+            <div class="model-col">
+                <div class="explanation text-center font-bold text-gray-700">
+                    <div class="text-xl">الخطوة 4: عزل المتغيرات</div>
+                    <p class="mt-2 text-base">لجمع كل الحدود التي تحتوي على <span class="math-expr" dir="ltr">$x$</span> في طرف واحد، نجمع <span class="math-expr" dir="ltr">$3x$</span> إلى كلا الطرفين. بعد التبسيط، تصبح المعادلة أبسط بكثير.</p>
+                </div>
+            </div>
             <div class="algebra-col">
                 <div class="explanation">اجمع <span class="math-expr" dir="ltr">$3x$</span> لكلا الطرفين</div>
                 <div class="equation"><span class="math-expr" dir="ltr">$15 - 2x - 10 + 3x = -15 - 3x + 3x$</span></div>
@@ -367,32 +373,33 @@
                 <div class="explanation">بسّط</div>
                 <div class="equation"><span class="math-expr" dir="ltr">$x + 5 = -15$</span></div>
             </div>
-            <div class="model-col">
-                <div class="explanation text-center font-bold text-gray-700">
-                    <div class="text-xl">الخطوة 4: عزل المتغيرات</div>
-                    <p class="mt-2 text-base">لجمع كل الحدود التي تحتوي على <span class="math-expr" dir="ltr">$x$</span> في طرف واحد، نجمع <span class="math-expr" dir="ltr">$3x$</span> إلى كلا الطرفين. بعد التبسيط، تصبح المعادلة أبسط بكثير.</p>
-                </div>
-            </div>
         </div>
 
         <!-- Step 5: Subtract 5 from both sides -->
         <div class="step-row font-larger">
-            <div class="algebra-col">
-                <div class="explanation">اطرح 5 من كلا الطرفين</div>
-                <div class="equation"><span class="math-expr" dir="ltr">$x + 5 - 5 = -15 - 5$</span></div>
-                <div class="divider"></div>
-                <div class="equation"><span class="math-expr" dir="ltr">$x = -20$</span></div>
-            </div>
             <div class="model-col">
                 <div class="explanation text-center font-bold text-gray-700">
                     <div class="text-xl">الخطوة 5: عزل <span class="math-expr" dir="ltr">$x$</span></div>
                     <p class="mt-2 text-base">للحصول على قيمة <span class="math-expr" dir="ltr">$x$</span>، نطرح 5 من كلا الطرفين. وبهذا، نجد أن <span class="math-expr" dir="ltr">$x$</span> يساوي <span class="math-expr" dir="ltr">$-20$</span>.</p>
                 </div>
             </div>
+            <div class="algebra-col">
+                <div class="explanation">اطرح 5 من كلا الطرفين</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x + 5 - 5 = -15 - 5$</span></div>
+                <div class="divider"></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = -20$</span></div>
+            </div>
         </div>
 
         <!-- Check the solution -->
         <div class="step-row">
+            <div class="model-col">
+                <div class="explanation text-center font-bold text-gray-700">
+                    <div class="text-xl">الخطوة 6: التحقق من الحل</div>
+                    <p class="mt-2 text-base">للتأكد من أن الحل صحيح، نقوم بتعويض قيمة <span class="math-expr" dir="ltr">$x$</span> التي حصلنا عليها في المعادلة الأصلية. إذا كانت النتيجة متساوية في الطرفين، فالحل صحيح.</p>
+                    <div class="explanation font-bold text-center mt-4 text-green-600">الحل صحيح لأن الطرفين متساويان.</div>
+                </div>
+            </div>
             <div class="algebra-col">
                 <div class="explanation">أتحقق من صحة الحل:</div>
                 <div class="equation"><span class="math-expr" dir="ltr">$5 - \frac{2}{3}(-20+5) = -(5-20)$</span></div>
@@ -400,13 +407,6 @@
                 <div class="equation"><span class="math-expr" dir="ltr">$5 - (-10) = 15$</span></div>
                 <div class="equation"><span class="math-expr" dir="ltr">$15 = 15$</span></div>
                 <div class="explanation font-bold text-center mt-4 text-green-600">الحل صحيح</div>
-            </div>
-            <div class="model-col">
-                <div class="explanation text-center font-bold text-gray-700">
-                    <div class="text-xl">الخطوة 6: التحقق من الحل</div>
-                    <p class="mt-2 text-base">للتأكد من أن الحل صحيح، نقوم بتعويض قيمة <span class="math-expr" dir="ltr">$x$</span> التي حصلنا عليها في المعادلة الأصلية. إذا كانت النتيجة متساوية في الطرفين، فالحل صحيح.</p>
-                    <div class="explanation font-bold text-center mt-4 text-green-600">الحل صحيح لأن الطرفين متساويان.</div>
-                </div>
             </div>
         </div>
         
