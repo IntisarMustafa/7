@@ -111,18 +111,20 @@
         }
 
         /* Typography and layout for math expressions */
+        /* Updated: Set to left alignment as requested */
         .equation {
             font-size: 1.6rem;
             font-weight: bold;
             color: #2d3748;
-            text-align: right;
+            text-align: left; /* Changed from right */
             line-height: 1.8;
-            margin: 1rem 0; /* Updated: Added vertical margin for spacing */
+            margin: 1rem 0;
         }
         .explanation {
             font-size: 0.95rem;
             color: #718096;
-            margin-bottom: 1rem; /* Updated: Increased margin for separation */
+            margin-bottom: 1rem;
+            text-align: left; /* Added for left alignment */
         }
         
         /* New rule to increase font size for the division step */
@@ -284,11 +286,12 @@
                 border-bottom: 3px solid #cbd5e0;
                 border-left: none;
             }
+            /* Updated: For small screens, align left as well */
             .explanation {
-                text-align: center;
+                text-align: left;
             }
             .equation {
-                text-align: center;
+                text-align: left;
             }
         }
     </style>
