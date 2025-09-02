@@ -20,7 +20,7 @@
             font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            min-height: 10vh;
             background-color: #eef2f6;
         }
 
@@ -330,15 +330,6 @@
             .pen-animation-container {
                 height: 280px; /* Adjusted height to fit on smaller screens */
             }
-            .pen {
-                height: 80px; /* Reduced pen size */
-                width: 20px;
-                bottom: 100px; /* Adjusted bottom */
-            }
-            .pen-box {
-                width: 100px; /* Reduced box size */
-                height: 60px;
-            }
         }
         
         /* Styles for the Pen Animation */
@@ -359,7 +350,7 @@
         
         .pen-box-container {
             position: absolute;
-            bottom: -210px; /* تم تعديل الموضع السفلي لخفضها قليلاً */
+            bottom: -150px; /* تم تعديل الموضع السفلي لرفعها */
             width: 100%;
             display: flex;
             justify-content: center;
@@ -369,15 +360,15 @@
         }
 
         .pen-box-container.enter {
-            bottom: -20px; /* تم تعديل الموضع السفلي لخفضها قليلاً */
+            bottom: 20px; /* تم تعديل الموضع السفلي لرفعها */
         }
 
         .pen {
             position: absolute;
-            width: 25px;
-            height: 120px;
+            width: 20px; /* Reduced width */
+            height: 80px; /* Reduced height */
             border-radius: 5px;
-            bottom: 150px; /* تم تعديل الموضع السفلي لخفضها قليلاً */
+            bottom: 120px; /* Adjusted bottom to raise pens */
             transform-origin: bottom center;
             animation-duration: 2s;
             animation-timing-function: ease-in-out;
@@ -395,14 +386,14 @@
         .pen::before {
             content: '';
             position: absolute;
-            top: -20px;
+            top: -15px; /* Adjusted top */
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 12.5px solid transparent;
-            border-right: 12.5px solid transparent;
-            border-bottom: 20px solid #f5f5dc;
+            border-left: 10px solid transparent; /* Adjusted size */
+            border-right: 10px solid transparent; /* Adjusted size */
+            border-bottom: 15px solid #d2c0b0; /* لون أغمق */
             z-index: 6;
         }
 
@@ -410,14 +401,14 @@
         .pen::after {
             content: '';
             position: absolute;
-            top: -25px;
+            top: -20px; /* Adjusted top */
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-bottom: 10px solid #333333;
+            border-left: 4px solid transparent; /* Adjusted size */
+            border-right: 4px solid transparent; /* Adjusted size */
+            border-bottom: 8px solid #333333; /* Adjusted size */
             z-index: 7;
         }
 
@@ -522,7 +513,7 @@
 
         /* الرسوم المتحركة لدخول العلبة */
         .pen.enter-box {
-            bottom: -15px; /* تم تعديل الموضع السفلي لخفضها قليلاً */
+            bottom: 25px; /* تم تعديل الموضع لرفعها أكثر */
             transform: rotate(0deg) !important;
             animation: none;
             opacity: 0;
@@ -546,6 +537,16 @@
 
         .message-box.show {
             opacity: 1;
+        }
+        
+        /* New styles for the pen boxes to make them visible */
+        .pen-box {
+            width: 100px;
+            height: 60px;
+            background-color: #a0e4fd;
+            border: 3px dashed #00a4d5;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -636,8 +637,22 @@
                 </div>
             </div>
             <div id="messageBox" class="message-box"></div>
-            <!-- Moved sentences -->
-            <p class="mt-2 text-base md:text-xl text-center">ليكن عدد الأقلام في كل علبة هو $x$. إذاً، لدى علي $4x + 2$ قلماً، ولدى خالد $2x + 10$ قلماً. وبما أن لدى كل من علي وخالد العدد نفسه من الأقلام، فإن $4x + 2 = 2x + 10$.</p>
+            <!-- Updated and re-organized sentences -->
+            <div class="mt-2 text-base md:text-xl text-center text-black">
+                <p class="font-bold">ليكن عدد الأقلام في كل علبة هو $x$.</p>
+                <p class="mt-4">
+                    <span class="font-bold">🙋‍♂️ علي:</span>
+                    <span class="math-expr">$4x + 2$</span>
+                </p>
+                <p class="mt-2">
+                    <span class="font-bold">🙋 خالد:</span>
+                    <span class="math-expr">$2x + 10$</span>
+                </p>
+                <p class="mt-4">بما أن لدى كل منهما العدد نفسه من الأقلام، فإن:</p>
+                <p class="mt-2 text-xl md:text-2xl font-bold">
+                    <span class="math-expr">$4x + 2 = 2x + 10$</span>
+                </p>
+            </div>
             <p class="mt-2 text-lg md:text-3xl font-bold text-center">
                 أحل المعادلة لأجد قيمة المتغير الذي يمثل عدد الأقلام في كل علبة.
             </p>
@@ -698,10 +713,21 @@
         <div class="check-understanding-box">
             <h2 class="section-title">أتحقق من فهمي</h2>
             <p class="section-text text-lg mb-4">ناتج ضرب عدد ما في 3 ثم إضافة 5 يساوي ناتج جمعه مع العدد 23. فما العدد؟</p>
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center gap-4">
+                    <label for="answerInput" class="text-lg font-bold">الجواب هو:</label>
+                    <input type="number" id="answerInput" placeholder="أدخل إجابتك هنا" class="p-2 border rounded-md shadow-sm w-32 text-center">
+                    <button onclick="checkAnswer()" class="bg-green-600 text-white font-bold py-2 px-6 rounded-md shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                        تحقق
+                    </button>
+                </div>
+                <div id="feedbackMessage" class="text-center font-bold text-lg"></div>
+            </div>
+            
             <ul class="problem-list">
-                <li onclick="toggleSolution(this)">
+                <li onclick="toggleSolution(this)" class="mt-4">
                     <p class="section-text text-lg">
-                       اكتب المعادلة وحلها.
+                       <span class="font-bold">اظهر الحل الكامل خطوة بخطوة</span>
                     </p>
                     <div class="solution-box" style="display:none;">
                         <div class="explanation">المعادلة:</div>
@@ -723,7 +749,7 @@
             <a href="u3l1p1.html" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-700 transition duration-300 transform hover:scale-105 text-lg">
                 السابق
             </a>
-            <a href="u3l1p3.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 text-lg">
+            <a href="u3l1p4.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 text-lg">
                 التالي
             </a>
         </div>
@@ -940,6 +966,25 @@
                 }
             }
         };
+
+        window.checkAnswer = function() {
+            const answerInput = document.getElementById('answerInput');
+            const feedbackMessage = document.getElementById('feedbackMessage');
+            const userAnswer = parseInt(answerInput.value);
+            const correctAnswer = 9; // The correct answer for the problem
+
+            if (isNaN(userAnswer)) {
+                feedbackMessage.textContent = 'الرجاء إدخال رقم.';
+                feedbackMessage.className = 'text-center font-bold text-lg text-yellow-600';
+            } else if (userAnswer === correctAnswer) {
+                feedbackMessage.textContent = 'إجابة صحيحة! أحسنت!';
+                feedbackMessage.className = 'text-center font-bold text-lg text-green-600';
+            } else {
+                feedbackMessage.textContent = 'إجابة خاطئة، حاول مرة أخرى.';
+                feedbackMessage.className = 'text-center font-bold text-lg text-red-600';
+            }
+        };
     </script>
 </body>
 </html>
+
