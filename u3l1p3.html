@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حل المعادلات التفاعلي</title>
+    <!-- Tailwind CSS for styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math symbols -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        /* Import suitable fonts for Arabic and English text */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #eef2f6;
+        }
+
+        /* Set base styles for the body and the main container */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            flex-grow: 1;
+            /* Adjust padding for smaller screens */
+            @media (max-width: 640px) {
+                padding: 1rem;
+            }
+        }
+
+        /* Main title and lesson idea sections */
+        .section-header {
+            font-size: 3rem; /* Adjusted for larger, more impactful title */
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+        }
+        .lesson-idea-box {
+            background-color: #e0f2fe;
+            border-left: 6px solid #084c8f;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .explore-box {
+            background-color: #fefce8; /* Light cool yellow */
+            border-left: 6px solid #084c8f; /* Dark blue shadow on the left */
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Matching box shadow */
+        }
+        .section-title {
+            font-size: 2rem; /* Adjusted for better hierarchy */
+            font-weight: 700;
+            color: #084c8f;
+            margin-bottom: 0.75rem;
+        }
+        .section-text {
+            font-size: 1.35rem; /* Slightly larger for better readability */
+            line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        /* New rules to increase font size in the explore section */
+        .explore-box .problem-list li p {
+            font-size: 1.25rem;
+        }
+        .explore-box .problem-list li .math-expr {
+            font-size: 1.6rem;
+        }
+
+        /* The main steps of the solution with a modern, split layout */
+        .step-row {
+            display: flex;
+            align-items: stretch;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px dashed #e2e8f0;
+            flex-wrap: wrap;
+        }
+        .step-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .algebra-col, .model-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+        .algebra-col {
+            background-color: #f7fafc;
+        }
+        .model-col {
+            background-color: #f0f4f8;
+            border-left: 3px solid #cbd5e0;
+        }
+
+        /* Typography and layout for math expressions */
+        .equation {
+            font-size: 1.8rem; /* Increased font size for equations */
+            font-weight: bold;
+            color: #2d3748;
+            text-align: left;
+            line-height: 1.8;
+            margin: 1rem 0;
+            direction: ltr; /* Force left-to-right for math */
+        }
+        .explanation {
+            font-size: 1.1rem; /* Increased font size for explanations */
+            color: #718096;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        
+        /* New rule to increase font size for the division step */
+        .font-larger .explanation {
+            font-size: 1.35rem;
+        }
+        .font-larger .equation {
+            font-size: 2.2rem;
+        }
+
+        /* Visual model styling */
+        .model-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .model-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .x-box, .number-box, .result-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.5rem;
+            min-width: 3rem;
+            height: 3rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .x-box {
+            background-color: #4c66e2;
+            min-width: 5rem;
+            height: 2rem;
+        }
+        .number-box { background-color: #f6ad55; }
+        .result-box { background-color: #48bb78; }
+        .subtraction-box {
+            background-color: #e53e3e;
+            color: #fff;
+            position: relative;
+            animation: fade-out 1s forwards;
+        }
+        
+        @keyframes fade-out {
+            to {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+        
+        .divider {
+            width: 100%;
+            height: 2px;
+            background-color: #cbd5e0;
+            margin: 1rem 0;
+            border-radius: 2px;
+        }
+        
+        .equality-line {
+            width: 80%;
+            height: 4px;
+            background-color: #084c8f;
+            margin: 1rem 0;
+            border-radius: 2px;
+        }
+
+        /* Check Understanding section and interactivity */
+        .check-understanding-box {
+            background-color: #fff8eb;
+            border: 1px solid #fed7d7;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .problem-list li {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .problem-list li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
+        .solution-box {
+            border-top: 2px dashed #fed7d7;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            background-color: #fffaf0;
+        }
+        
+        .summary-box {
+            background-color: #d1e7dd;
+            border-left: 6px solid #198754;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .summary-title {
+            color: #198754;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .summary-line {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #212529;
+            direction: rtl;
+            unicode-bidi: embed;
+        }
+        .math-expr-summary {
+            font-size: 1.8rem; /* Increased for better visibility */
+            font-weight: bold;
+            color: #2d3748;
+            direction: ltr;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        .full-solution-box {
+            background-color: #f7f9fc;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .full-solution-box .section-title {
+            color: #084c8f;
+        }
+        .full-solution-box .step {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .full-solution-box .equation {
+            font-size: 1.8rem; /* Increased for better visibility */
+            color: #4a5568;
+            font-weight: normal;
+            direction: ltr; /* Force left-to-right for math */
+        }
+        .full-solution-box .equation .final-answer {
+            font-size: 2.5rem; /* Made the final answer stand out */
+            font-weight: bold;
+            color: #1a56db;
+        }
+        
+        /* New rule to increase font size for math expressions in "Check Understanding" section */
+        .check-understanding-box .math-expr {
+            font-size: 1.8rem; /* Increased for better visibility */
+            direction: ltr; /* Force left-to-right for math */
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .section-header {
+                font-size: 2rem;
+            }
+            .step-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .algebra-col, .model-col {
+                width: 100%;
+                padding: 1.2rem;
+                border-left: none;
+            }
+            .model-col {
+                order: -1;
+                border-bottom: 3px solid #cbd5e0;
+                border-left: none;
+            }
+            .explanation {
+                text-align: left;
+            }
+            .equation {
+                text-align: left;
+            }
+            
+            /* Further reduction for small screens */
+            .pen-animation-container {
+                height: 280px; /* Adjusted height to fit on smaller screens */
+            }
+            .pen {
+                height: 80px; /* Reduced pen size */
+                width: 20px;
+                bottom: 100px; /* Adjusted bottom */
+            }
+            .pen-box {
+                width: 100px; /* Reduced box size */
+                height: 60px;
+            }
+        }
+        
+        /* Styles for the Pen Animation */
+        .pen-animation-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            position: relative;
+            width: 100%;
+            height: 320px;
+            background-color: #f0f4f8;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            z-index: 1;
+            margin-top: 1rem;
+        }
+        
+        .pen-box-container {
+            position: absolute;
+            bottom: -210px; /* تم تعديل الموضع السفلي لخفضها قليلاً */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            transition: bottom 2s ease-in-out;
+            z-index: 2;
+        }
+
+        .pen-box-container.enter {
+            bottom: -20px; /* تم تعديل الموضع السفلي لخفضها قليلاً */
+        }
+
+        .pen {
+            position: absolute;
+            width: 25px;
+            height: 120px;
+            border-radius: 5px;
+            bottom: 150px; /* تم تعديل الموضع السفلي لخفضها قليلاً */
+            transform-origin: bottom center;
+            animation-duration: 2s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            z-index: 3;
+            transition: transform 1s ease-in-out, bottom 1s ease-in-out, box-shadow 0.3s ease, opacity 1s ease-in;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* رأس القلم - الجزء البيج */
+        .pen::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12.5px solid transparent;
+            border-right: 12.5px solid transparent;
+            border-bottom: 20px solid #f5f5dc;
+            z-index: 6;
+        }
+
+        /* رأس القلم - النقطة السوداء */
+        .pen::after {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 10px solid #333333;
+            z-index: 7;
+        }
+
+        .pen:nth-child(1) {
+            background: linear-gradient(to top, #ff7e5f, #feb47b);
+            left: 15%;
+            animation-delay: 0.1s;
+        }
+
+        .pen:nth-child(2) {
+            background: linear-gradient(to top, #6a11cb, #2575fc);
+            left: 30%;
+            animation-delay: 0.3s;
+        }
+
+        .pen:nth-child(3) {
+            background: linear-gradient(to top, #00c6ff, #0072ff);
+            left: 45%;
+            animation-delay: 0.2s;
+        }
+
+        .pen:nth-child(4) {
+            background: linear-gradient(to top, #ff0084, #ff2357);
+            left: 60%;
+            animation-delay: 0.4s;
+            animation-name: dance;
+        }
+
+        .pen:nth-child(5) {
+            background: linear-gradient(to top, #ff416c, #ff4b2b);
+            left: 75%;
+            animation-delay: 0s;
+            animation-name: dance;
+        }
+        
+        .pen:nth-child(6) {
+            background: linear-gradient(to top, #48c6ef, #6a82fb);
+            left: 90%;
+            animation-delay: 0.5s;
+            animation-name: bounce;
+        }
+
+        /* الوجه */
+        .pen-face {
+            position: absolute;
+            top: 10px;
+            width: 80%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .pen-eyes {
+            display: flex;
+            justify-content: space-between;
+            width: 60%;
+            margin-top: 5px;
+        }
+
+        .pen-eye {
+            width: 5px;
+            height: 5px;
+            background-color: #000;
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+
+        .pen-mouth {
+            width: 10px;
+            height: 3px;
+            background-color: #000;
+            border-radius: 0 0 50% 50%;
+            margin-top: 5px;
+        }
+        
+        /* حركات الرقص */
+        @keyframes dance {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+            75% { transform: rotate(15deg); }
+        }
+        
+        @keyframes sway {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(15px); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* الرسوم المتحركة للوجه */
+        @keyframes blink {
+            0%, 100% { transform: scaleY(1); }
+            5% { transform: scaleY(0.1); }
+            8% { transform: scaleY(1); }
+        }
+
+        /* الرسوم المتحركة لدخول العلبة */
+        .pen.enter-box {
+            bottom: -15px; /* تم تعديل الموضع السفلي لخفضها قليلاً */
+            transform: rotate(0deg) !important;
+            animation: none;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .message-box {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 10;
+        }
+
+        .message-box.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content Container -->
+    <main class="container">
+        <!-- Professional Header -->
+        <header class="bg-blue-800 text-white py-10 sm:py-12 text-center shadow-lg rounded-t-[1.5rem] relative overflow-hidden">
+            <div class="absolute inset-x-0 bottom-0 h-1 bg-yellow-400"></div>
+            <!-- Increased font size for the main title -->
+            <h1 class="text-5xl sm:text-6xl font-bold">حل المعادلات</h1>
+        </header>
+
+        <!-- Example section based on the image -->
+        <div class="bg-blue-100 text-blue-800 p-6 rounded-lg my-8 flex flex-col items-center shadow-md">
+            <!-- Increased font size for the section title -->
+            <h2 class="section-title text-center text-orange-500 text-2xl sm:text-3xl">
+                مثال: من الحياة
+            </h2>
+            <div class="mt-2 text-center text-xl font-bold">
+                <!-- Increased font size for the introductory text -->
+                <p class="text-lg sm:text-xl">لدى علي 4 علب مليئة بالأقلام، وقلمان إضافيان، ولدى خالد علبتان مليئتان بالأقلام و 10 أقلام إضافية. كم قلما في العلبة الواحدة إذا كان لدى كل منهما العدد نفسه من الأقلام؟</p>
+            </div>
+            
+            <!-- Merged Pen Animation -->
+            <div id="penAnimationContainer" class="pen-animation-container">
+                <!-- مجموعة الأقلام -->
+                <div class="pen" style="animation-name: dance;">
+                    <div class="pen-face">
+                        <div class="pen-eyes">
+                            <div class="pen-eye"></div>
+                            <div class="pen-eye"></div>
+                        </div>
+                        <div class="pen-mouth"></div>
+                    </div>
+                </div>
+                <div class="pen" style="animation-name: sway;">
+                    <div class="pen-face">
+                        <div class="pen-eyes">
+                            <div class="pen-eye"></div>
+                            <div class="pen-eye"></div>
+                        </div>
+                        <div class="pen-mouth"></div>
+                    </div>
+                </div>
+                <div class="pen" style="animation-name: bounce;">
+                    <div class="pen-face">
+                        <div class="pen-eyes">
+                            <div class="pen-eye"></div>
+                            <div class="pen-eye"></div>
+                        </div>
+                        <div class="pen-mouth"></div>
+                    </div>
+                </div>
+                <div class="pen" style="animation-name: dance;">
+                    <div class="pen-face">
+                        <div class="pen-eyes">
+                            <div class="pen-eye"></div>
+                            <div class="pen-eye"></div>
+                        </div>
+                        <div class="pen-mouth"></div>
+                    </div>
+                </div>
+                <div class="pen" style="animation-name: dance;">
+                    <div class="pen-face">
+                        <div class="pen-eyes">
+                            <div class="pen-eye"></div>
+                            <div class="pen-eye"></div>
+                        </div>
+                        <div class="pen-mouth"></div>
+                    </div>
+                </div>
+                <div class="pen" style="animation-name: bounce;">
+                    <div class="pen-face">
+                        <div class="pen-eyes">
+                            <div class="pen-eye"></div>
+                            <div class="pen-eye"></div>
+                        </div>
+                        <div class="pen-mouth"></div>
+                    </div>
+                </div>
+                
+                <!-- العلب -->
+                <div class="pen-box-container">
+                    <div class="pen-box"></div>
+                    <div class="pen-box"></div>
+                    <div class="pen-box"></div>
+                </div>
+            </div>
+            <div id="messageBox" class="message-box"></div>
+            <!-- Moved sentences -->
+            <p class="mt-2 text-base md:text-xl text-center">ليكن عدد الأقلام في كل علبة هو $x$. إذاً، لدى علي $4x + 2$ قلماً، ولدى خالد $2x + 10$ قلماً. وبما أن لدى كل من علي وخالد العدد نفسه من الأقلام، فإن $4x + 2 = 2x + 10$.</p>
+            <p class="mt-2 text-lg md:text-3xl font-bold text-center">
+                أحل المعادلة لأجد قيمة المتغير الذي يمثل عدد الأقلام في كل علبة.
+            </p>
+        </div>
+        
+        <!-- The main steps of the solution with a modern, split layout -->
+        <div class="step-row">
+            <div class="model-col">
+                <div id="explanation-step" class="explanation text-center font-bold text-gray-700"></div>
+                <!-- Interactive model container -->
+                <div id="model-container" class="model-inner mt-4"></div>
+                <div class="flex justify-center gap-4 mt-4">
+                    <button onclick="prevStep()" class="bg-gray-400 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:bg-gray-500 transition duration-300 transform hover:scale-105">
+                       الخطوة السابقة
+                    </button>
+                    <button onclick="nextStep()" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                        الخطوة التالية
+                    </button>
+                </div>
+            </div>
+            <div class="algebra-col">
+                <div class="explanation">المعادلة:</div>
+                <div id="algebra-step" class="equation"></div>
+            </div>
+        </div>
+
+        <!-- Full Written Solution Section -->
+        <div class="full-solution-box">
+            <h2 class="section-title">الحل المكتوب الكامل</h2>
+            <p class="step text-lg">
+                <span class="font-bold">الخطوة 1:</span> المعادلة الأصلية هي <span class="math-expr-summary">$4x + 2 = 2x + 10$</span>.
+            </p>
+            <p class="step text-lg">
+                <span class="font-bold">الخطوة 2:</span> نطرح <span class="math-expr-summary">$2x$</span> من كلا الطرفين لعزل المتغيرات.
+                <br> <span class="math-expr-summary">$4x - 2x + 2 = 2x - 2x + 10$</span>
+                <br> <span class="math-expr-summary">$2x + 2 = 10$</span>
+            </p>
+            <p class="step text-lg">
+                <span class="font-bold">الخطوة 3:</span> نطرح <span class="math-expr-summary">2</span> من كلا الطرفين لعزل الحد الذي يحتوي على <span class="math-expr-summary">$x$</span>.
+                <br> <span class="math-expr-summary">$2x + 2 - 2 = 10 - 2$</span>
+                <br> <span class="math-expr-summary">$2x = 8$</span>
+            </p>
+            <p class="step text-lg">
+                <span class="font-bold">الخطوة 4:</span> نقسم كلا الطرفين على <span class="math-expr-summary">2</span> لإيجاد قيمة <span class="math-expr-summary">$x$</span>.
+                <br> <span class="math-expr-summary">$\frac{2x}{2} = \frac{8}{2}$</span>
+                <br> <span class="math-expr-summary">$x = 4$</span>
+            </p>
+            <p class="step text-lg">
+                <span class="font-bold">الخطوة 5:</span> للتحقق من الحل، نعوض قيمة <span class="math-expr-summary">$x$</span> في المعادلة الأصلية.
+                <br> <span class="math-expr-summary">$4(4) + 2 = 2(4) + 10$</span>
+                <br> <span class="math-expr-summary">$16 + 2 = 8 + 10$</span>
+                <br> <span class="math-expr-summary">$18 = 18$</span>
+                <br> <span class="text-green-600 font-bold">الحل صحيح.</span>
+            </p>
+        </div>
+
+        <!-- Check Understanding Section -->
+        <div class="check-understanding-box">
+            <h2 class="section-title">أتحقق من فهمي</h2>
+            <p class="section-text text-lg mb-4">ناتج ضرب عدد ما في 3 ثم إضافة 5 يساوي ناتج جمعه مع العدد 23. فما العدد؟</p>
+            <ul class="problem-list">
+                <li onclick="toggleSolution(this)">
+                    <p class="section-text text-lg">
+                       اكتب المعادلة وحلها.
+                    </p>
+                    <div class="solution-box" style="display:none;">
+                        <div class="explanation">المعادلة:</div>
+                        <div class="equation">$3x + 5 = x + 23$</div>
+                        <div class="explanation">اطرح $x$ من كلا الطرفين</div>
+                        <div class="equation">$3x - x + 5 = x - x + 23$</div>
+                        <div class="equation">$2x + 5 = 23$</div>
+                        <div class="explanation">اطرح 5 من كلا الطرفين</div>
+                        <div class="equation">$2x = 18$</div>
+                        <div class="explanation">اقسم على 2</div>
+                        <div class="equation">$x = 9$</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Add Navigation Buttons -->
+        <div class="flex justify-center mt-8 gap-4">
+            <a href="u3l1p1.html" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-700 transition duration-300 transform hover:scale-105 text-lg">
+                السابق
+            </a>
+            <a href="u3l1p3.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 text-lg">
+                التالي
+            </a>
+        </div>
+        
+        <!-- Divider to separate the button and the footer -->
+        <div class="w-full h-1 bg-gray-200 my-8"></div>
+
+        <!-- Professional Footer -->
+        <footer class="bg-blue-800 text-white p-4 text-center">
+            <p class="text-sm">جميع الحقوق محفوظة © 2025</p>
+        </footer>
+    </main>
+    
+    <!-- JavaScript for interactivity and rendering math -->
+    <script>
+        // تأكد من تحميل مكتبة KaTeX أولاً
+        function ensureKaTeXLoaded(callback) {
+            if (typeof renderMathInElement !== 'undefined') {
+                callback();
+            } else {
+                // إذا لم تكن المكتبة محملة بعد، انتظر قليلاً ثم حاول مرة أخرى
+                setTimeout(() => ensureKaTeXLoaded(callback), 100);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            ensureKaTeXLoaded(function() {
+                // Initial render of all static math expressions on the page
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$', right: '$', display: false},
+                        {left: '$$', right: '$$', display: true}
+                    ],
+                    throwOnError: false
+                });
+                updateDisplay();
+
+                // Logic for the pen animation
+                const pens = document.querySelectorAll('.pen');
+                const penBoxContainer = document.querySelector('.pen-box-container');
+                const messageBox = document.getElementById('messageBox');
+
+                function showMessage(msg) {
+                    messageBox.textContent = msg;
+                    messageBox.classList.add('show');
+                    setTimeout(() => {
+                        messageBox.classList.remove('show');
+                    }, 3000);
+                }
+
+                // After 4 seconds, the pens start entering the boxes
+                setTimeout(() => {
+                    penBoxContainer.classList.add('enter');
+
+                    pens.forEach((pen, index) => {
+                        if (index < 4) { // Only the first 4 pens enter
+                            setTimeout(() => {
+                                pen.classList.add('enter-box');
+                            }, 500 * index);
+                        } else {
+                            // Remove animations for the remaining pens
+                            pen.style.animationName = 'none';
+                            pen.style.animationIterationCount = '1';
+                            pen.style.transform = 'translateY(-15px)';
+                        }
+                    });
+                }, 4000);
+            });
+        });
+
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        const modelContainer = document.getElementById('model-container');
+        const algebraStep = document.getElementById('algebra-step');
+        const explanationStep = document.getElementById('explanation-step');
+
+        const stepsData = [
+            // Step 1: Initial Equation
+            {
+                algebra: '$4x + 2 = 2x + 10$',
+                explanation: 'المعادلة الأصلية',
+                model: `
+                    <div class="model-row">
+                        <div class="x-box">x</div><div class="x-box">x</div><div class="x-box">x</div><div class="x-box">x</div>
+                        <div class="number-box">2</div>
+                    </div>
+                    <div class="equality-line"></div>
+                    <div class="model-row">
+                        <div class="x-box">x</div><div class="x-box">x</div>
+                        <div class="number-box">10</div>
+                    </div>
+                `
+            },
+            // Step 2: Subtract 2x from both sides
+            {
+                algebra: '$2x + 2 = 10$',
+                explanation: 'نطرح $2x$ من كلا الطرفين',
+                model: `
+                    <div class="model-row">
+                        <div class="x-box">x</div><div class="x-box">x</div>
+                        <div class="number-box">2</div>
+                    </div>
+                    <div class="equality-line"></div>
+                    <div class="model-row">
+                        <div class="number-box">10</div>
+                    </div>
+                `
+            },
+            // Step 3: Subtract 2 from both sides
+            {
+                algebra: '$2x = 8$',
+                explanation: 'نطرح 2 من كلا الطرفين',
+                model: `
+                    <div class="model-row">
+                        <div class="x-box">x</div><div class="x-box">x</div>
+                    </div>
+                    <div class="equality-line"></div>
+                    <div class="model-row">
+                        <div class="number-box">8</div>
+                    </div>
+                `
+            },
+            // Step 4: Divide both sides by 2 to find x
+            {
+                algebra: '$x = 4$',
+                explanation: 'نقسم على 2 لإيجاد قيمة $x$',
+                model: `
+                    <div class="model-row">
+                        <div class="x-box">x</div>
+                    </div>
+                    <div class="equality-line"></div>
+                    <div class="model-row">
+                        <div class="number-box">4</div>
+                    </div>
+                `
+            },
+            // Step 5: Check Solution
+            {
+                algebra: '$18 = 18$',
+                explanation: 'نتحقق من الحل',
+                model: `
+                    <div class="model-row">
+                        <div class="number-box">18</div>
+                    </div>
+                    <div class="equality-line"></div>
+                    <div class="model-row">
+                        <div class="number-box">18</div>
+                    </div>
+                `
+            }
+        ];
+
+        function updateDisplay() {
+            const stepIndex = currentStep - 1;
+            explanationStep.textContent = stepsData[stepIndex].explanation;
+            modelContainer.innerHTML = stepsData[stepIndex].model;
+            algebraStep.innerHTML = stepsData[stepIndex].algebra;
+            
+            // استخدام setTimeout لضمان معالجة العناصر بعد تحديث DOM
+            setTimeout(() => {
+                ensureKaTeXLoaded(function() {
+                    // Re-render math after updating content
+                    renderMathInElement(modelContainer, {
+                        delimiters: [
+                            {left: '$', right: '$', display: false},
+                            {left: '$$', right: '$$', display: true}
+                        ],
+                        throwOnError: false
+                    });
+                    renderMathInElement(algebraStep, {
+                        delimiters: [
+                            {left: '$', right: '$', display: false},
+                            {left: '$$', right: '$$', display: true}
+                        ],
+                        throwOnError: false
+                    });
+                });
+            }, 0);
+        }
+
+        window.nextStep = function() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateDisplay();
+            }
+        };
+
+        window.prevStep = function() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateDisplay();
+            }
+        };
+
+        window.toggleSolution = function(element) {
+            const solutionBox = element.querySelector('.solution-box');
+            if (solutionBox) {
+                solutionBox.style.display = solutionBox.style.display === 'none' ? 'block' : 'none';
+                
+                // Re-render math when the solution box is shown
+                if (solutionBox.style.display === 'block') {
+                    setTimeout(() => {
+                        ensureKaTeXLoaded(function() {
+                            renderMathInElement(solutionBox, {
+                                delimiters: [
+                                    {left: '$', right: '$', display: false},
+                                    {left: '$$', right: '$$', display: true}
+                                ],
+                                throwOnError: false
+                            });
+                        });
+                    }, 0);
+                }
+            }
+        };
+    </script>
+</body>
+</html>
