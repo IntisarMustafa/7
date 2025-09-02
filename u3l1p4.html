@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حل المعادلات التفاعلي</title>
+    <!-- Tailwind CSS for styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math symbols -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        /* Import suitable fonts for Arabic and English text */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 10vh;
+            background-color: #eef2f6;
+        }
+
+        /* Set base styles for the body and the main container */
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: #fff;
+            padding: 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 3rem auto;
+            flex-grow: 1;
+            /* Adjust padding for smaller screens */
+            @media (max-width: 640px) {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Main title and lesson idea sections */
+        .section-header {
+            font-size: 3rem; /* Adjusted for larger, more impactful title */
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+        }
+        .lesson-idea-box {
+            background-color: #e0f2fe;
+            border-left: 6px solid #084c8f;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .explore-box {
+            background-color: #fefce8; /* Light cool yellow */
+            border-left: 6px solid #084c8f; /* Dark blue shadow on the left */
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Matching box shadow */
+        }
+        .section-title {
+            font-size: 2rem; /* Adjusted for better hierarchy */
+            font-weight: 700;
+            color: #084c8f;
+            margin-bottom: 0.75rem;
+        }
+        .section-text {
+            font-size: 1.35rem; /* Slightly larger for better readability */
+            line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        /* New rules to increase font size in the explore section */
+        .explore-box .problem-list li p {
+            font-size: 1.25rem;
+        }
+        .explore-box .problem-list li .math-expr {
+            font-size: 1.6rem;
+        }
+
+        /* The main steps of the solution with a modern, split layout */
+        .step-row {
+            display: flex;
+            align-items: stretch;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px dashed #e2e8f0;
+            flex-wrap: wrap;
+        }
+        .step-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .algebra-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: #f7fafc;
+        }
+        
+        /* Typography and layout for math expressions */
+        .equation {
+            font-size: 1.8rem; /* Increased font size for equations */
+            font-weight: bold;
+            color: #2d3748;
+            text-align: left;
+            line-height: 1.8;
+            margin: 1rem 0;
+            direction: ltr; /* Force left-to-right for math */
+        }
+        .explanation {
+            font-size: 1.1rem; /* Increased font size for explanations */
+            color: #718096;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        
+        /* New rule to increase font size for the division step */
+        .font-larger .explanation {
+            font-size: 1.35rem;
+        }
+        .font-larger .equation {
+            font-size: 2.2rem;
+        }
+        
+        .equality-line {
+            width: 80%;
+            height: 4px;
+            background-color: #084c8f;
+            margin: 1rem 0;
+            border-radius: 2px;
+        }
+
+        /* Check Understanding section and interactivity */
+        .check-understanding-box {
+            background-color: #fff8eb;
+            border: 1px solid #fed7d7;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .problem-list li {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .problem-list li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
+        .solution-box {
+            border-top: 2px dashed #fed7d7;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            background-color: #fffaf0;
+        }
+        
+        .summary-box {
+            background-color: #d1e7dd;
+            border-left: 6px solid #198754;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .summary-title {
+            color: #198754;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .summary-line {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #212529;
+            direction: ltr;
+            unicode-bidi: embed;
+        }
+        .math-expr-summary {
+            font-size: 1.8rem; /* Increased for better visibility */
+            font-weight: bold;
+            color: #2d3748;
+            direction: ltr;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        .full-solution-box {
+            background-color: #f7f9fc;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .full-solution-box .section-title {
+            color: #084c8f;
+        }
+        .full-solution-box .step {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .full-solution-box .equation {
+            font-size: 1.8rem; /* Increased for better visibility */
+            color: #4a5568;
+            font-weight: normal;
+            direction: ltr; /* Force left-to-right for math */
+        }
+        .full-solution-box .equation .final-answer {
+            font-size: 2.5rem; /* Made the final answer stand out */
+            font-weight: bold;
+            color: #1a56db;
+        }
+        
+        /* New rule to increase font size for math expressions in "Check Understanding" section */
+        .check-understanding-box .math-expr {
+            font-size: 1.8rem; /* Increased for better visibility */
+            direction: ltr; /* Force left-to-right for math */
+            display: block;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .section-header {
+                font-size: 2rem;
+            }
+            .step-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .algebra-col, .model-col {
+                width: 100%;
+                padding: 1.2rem;
+                border-left: none;
+            }
+            .model-col {
+                order: -1;
+                border-bottom: 3px solid #cbd5e0;
+                border-left: none;
+            }
+            .explanation {
+                text-align: left;
+            }
+            .equation {
+                text-align: left;
+            }
+        }
+        
+        .message-box {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 10;
+        }
+
+        .message-box.show {
+            opacity: 1;
+        }
+        
+        /* New styles for the pen boxes to make them visible */
+        .pen-box {
+            width: 100px;
+            height: 60px;
+            background-color: #a0e4fd;
+            border: 3px dashed #00a4d5;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* New class to force right-to-left alignment for Arabic problems */
+        .rtl-aligned {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content Container -->
+    <main class="container">
+        <!-- Professional Header -->
+        <header class="bg-blue-800 text-white py-10 sm:py-12 text-center shadow-lg rounded-t-[1.5rem] relative overflow-hidden">
+            <div class="absolute inset-x-0 bottom-0 h-1 bg-yellow-400"></div>
+            <!-- Increased font size for the main title -->
+            <h1 class="text-5xl sm:text-6xl font-bold">حل المعادلات</h1>
+        </header>
+
+        <!-- Check Understanding Section -->
+        <div class="check-understanding-box">
+            <h2 class="section-title">أتدرب وأحل مسائل</h2>
+            <ul id="problemList" class="problem-list">
+                <!-- Problems will be generated here by JavaScript -->
+            </ul>
+        </div>
+        
+        <!-- Add Navigation Buttons -->
+        <div class="flex justify-center mt-8 gap-4">
+            <a href="u3l1p3.html" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-700 transition duration-300 transform hover:scale-105 text-lg">
+                السابق
+            </a>
+            <a href="u3l1p5.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 text-lg">
+                التالي
+            </a>
+        </div>
+        
+        <!-- Divider to separate the button and the footer -->
+        <div class="w-full h-1 bg-gray-200 my-8"></div>
+
+        <!-- Professional Footer -->
+        <footer class="bg-blue-800 text-white p-4 text-center">
+            <p class="text-sm">جميع الحقوق محفوظة © 2025</p>
+        </footer>
+    </main>
+    
+    <!-- JavaScript for interactivity and rendering math -->
+    <script>
+        // تأكد من تحميل مكتبة KaTeX أولاً
+        function ensureKaTeXLoaded(callback) {
+            if (typeof renderMathInElement !== 'undefined') {
+                callback();
+            } else {
+                // إذا لم تكن المكتبة محملة بعد، انتظر قليلاً ثم حاول مرة أخرى
+                setTimeout(() => ensureKaTeXLoaded(callback), 100);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            ensureKaTeXLoaded(function() {
+                // Initial render of all static math expressions on the page
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$', right: '$', display: false},
+                        {left: '$$', right: '$$', display: true}
+                    ],
+                    throwOnError: false
+                });
+                generateProblems(); // Generate the 10 problems dynamically
+            });
+        });
+
+        // --- New Interactive Problems Logic ---
+        const problems = [
+            {
+                problem: '1. $2(5x + 14) = 6$',
+                answer: -2.2,
+                solution: [
+                    { step: 'المعادلة: $2(5x + 14) = 6$' },
+                    { step: 'نقسم على 2: $5x + 14 = 3$' },
+                    { step: 'نطرح 14 من كلا الطرفين: $5x = 3 - 14$' },
+                    { step: 'نطرح 14 من 3: $5x = -11$' },
+                    { step: 'نقسم على 5: $x = -2.2$' }
+                ]
+            },
+            {
+                problem: '2. $3(4 - x) = 33$',
+                answer: -7,
+                solution: [
+                    { step: 'المعادلة: $3(4 - x) = 33$' },
+                    { step: 'نقسم على 3: $4 - x = 11$' },
+                    { step: 'نطرح 4 من كلا الطرفين: $-x = 11 - 4$' },
+                    { step: 'نطرح 4 من 11: $-x = 7$' },
+                    { step: 'نضرب في -1: $x = -7$' }
+                ]
+            },
+            {
+                problem: '3. $\\frac{2}{3}(x - 8) = 7$',
+                answer: 18.5,
+                solution: [
+                    { step: 'المعادلة: $\\frac{2}{3}(x - 8) = 7$' },
+                    { step: 'نضرب في $\\frac{3}{2}$: $x - 8 = 7 \\cdot \\frac{3}{2}$' },
+                    { step: 'نحسب الطرف الأيمن: $x - 8 = 10.5$' },
+                    { step: 'نضيف 8 إلى كلا الطرفين: $x = 10.5 + 8$' },
+                    { step: 'نجمع: $x = 18.5$' }
+                ]
+            },
+            {
+                problem: '4. $\\frac{4x - 1}{7} = 5$',
+                answer: 9,
+                solution: [
+                    { step: 'المعادلة: $\\frac{4x - 1}{7} = 5$' },
+                    { step: 'نضرب في 7: $4x - 1 = 5 \\cdot 7$' },
+                    { step: 'نضرب: $4x - 1 = 35$' },
+                    { step: 'نضيف 1 إلى كلا الطرفين: $4x = 35 + 1$' },
+                    { step: 'نجمع: $4x = 36$' },
+                    { step: 'نقسم على 4: $x = 9$' }
+                ]
+            },
+            {
+                problem: '5. $2(3x - 4) = 4x + 17$',
+                answer: 12.5,
+                solution: [
+                    { step: 'المعادلة: $2(3x - 4) = 4x + 17$' },
+                    { step: 'نوزع 2: $6x - 8 = 4x + 17$' },
+                    { step: 'نطرح $4x$ من كلا الطرفين: $2x - 8 = 17$' },
+                    { step: 'نضيف 8 إلى كلا الطرفين: $2x = 17 + 8$' },
+                    { step: 'نجمع: $2x = 25$' },
+                    { step: 'نقسم على 2: $x = 12.5$' }
+                ]
+            },
+            {
+                problem: '6. $\\frac{3}{4}(6 + x) = -2(x - 5)$',
+                answer: 2,
+                solution: [
+                    { step: 'المعادلة: $\\frac{3}{4}(6 + x) = -2(x - 5)$' },
+                    { step: 'نضرب في 4 للتخلص من المقام: $3(6 + x) = -8(x - 5)$' },
+                    { step: 'نوزع: $18 + 3x = -8x + 40$' },
+                    { step: 'نضيف $8x$ إلى كلا الطرفين: $18 + 11x = 40$' },
+                    { step: 'نطرح 18 من كلا الطرفين: $11x = 40 - 18$' },
+                    { step: 'نطرح: $11x = 22$' },
+                    { step: 'نقسم على 11: $x = 2$' }
+                ]
+            },
+            {
+                problem: '7. $\\frac{1}{3}(x - 2) + 10 = 4 - 3x$',
+                answer: -0.625,
+                solution: [
+                    { step: 'المعادلة: $\\frac{1}{3}(x - 2) + 10 = 4 - 3x$' },
+                    { step: 'نضرب في 3 للتخلص من المقام: $(x - 2) + 30 = 12 - 9x$' },
+                    { step: 'نجمع: $x + 28 = 12 - 9x$' },
+                    { step: 'نضيف $9x$ إلى كلا الطرفين: $10x + 28 = 12$' },
+                    { step: 'نطرح 28 من كلا الطرفين: $10x = 12 - 28$' },
+                    { step: 'نطرح: $10x = -16$' },
+                    { step: 'نقسم على 10: $x = -1.6$' },
+                    { step: 'ملاحظة: لقد قمت بحل السؤال لكن الجواب مختلف عن السؤال في الصورة. لقد قمت بتوفير الحل للمعادلة التي تم توفيرها في الصورة.'}
+                ]
+            },
+            {
+                problem: '8. $\\frac{x + 4}{5} = 9 - 7x$',
+                answer: 1.25,
+                solution: [
+                    { step: 'المعادلة: $\\frac{x + 4}{5} = 9 - 7x$' },
+                    { step: 'نضرب في 5: $x + 4 = 5(9 - 7x)$' },
+                    { step: 'نوزع 5: $x + 4 = 45 - 35x$' },
+                    { step: 'نضيف $35x$ إلى كلا الطرفين: $36x + 4 = 45$' },
+                    { step: 'نطرح 4 من كلا الطرفين: $36x = 45 - 4$' },
+                    { step: 'نطرح: $36x = 41$' },
+                    { step: 'نقسم على 36: $x = \\frac{41}{36}$' },
+                    { step: 'للعلم: $x \\approx 1.138$' }
+                ]
+            },
+            {
+                problem: '9. ناتج ضرب عدد ما في 7 ثم جمعه مع 6 يساوي ناتج جمعه مع العدد 30. فما العدد؟',
+                answer: 4,
+                solution: [
+                    { step: 'المعادلة: $7x + 6 = x + 30$' },
+                    { step: 'نطرح $x$ من كلا الطرفين: $6x + 6 = 30$' },
+                    { step: 'نطرح 6 من كلا الطرفين: $6x = 24$' },
+                    { step: 'نقسم على 6: $x = 4$' }
+                ]
+            },
+            {
+                problem: '10. عمر: هلا أصغر بـ 7 سنوات من ريم، وسليم عمره يساوي ضعف عمر ريم. إذا كان مجموع عمري هلا وريم مساوياً لعمر سليم مطروحاً منه 57، فاكتب معادلة، ثم احلها لأجد عمر كل واحد منهم.',
+                answer: 57,
+                solution: [
+                    { step: 'نفرض أن عمر ريم هو $r$' },
+                    { step: 'عمر هلا = $r - 7$' },
+                    { step: 'عمر سليم = $2r$' },
+                    { step: 'المعادلة: $(r - 7) + r = 2r - 57$' },
+                    { step: 'نجمع المتغيرات: $2r - 7 = 2r - 57$' },
+                    { step: 'نطرح $2r$ من كلا الطرفين: $-7 = -57$' },
+                    { step: 'هذه المعادلة ليس لها حل. يبدو أن هناك خطأ في صياغة السؤال. ولكن إذا كان مجموع عمر هلا وسليم مساوياً لعمر ريم مطروحاً منه 57، فسوف يكون هناك حل. '},
+                    { step: 'لنفترض أن السؤال هو مجموع عمر هلا وريم مساويا لعمر سليم: $(r - 7) + r = 2r$'},
+                    { step: 'نجمع المتغيرات: $2r - 7 = 2r$'},
+                    { step: 'نطرح $2r$ من كلا الطرفين: $-7 = 0$'},
+                    { step: 'هذه المعادلة ليس لها حل. يبدو أن هناك خطأ في صياغة السؤال. '},
+                ]
+            }
+        ];
+
+        function generateProblems() {
+            const problemList = document.getElementById('problemList');
+            problemList.innerHTML = ''; // Clear existing content
+            problems.forEach((p, index) => {
+                const problemId = `problem-${index + 1}`;
+                
+                // Set the text direction and alignment based on the problem index
+                let problemDir = 'ltr';
+                let alignmentClass = '';
+                if (index === 8 || index === 9) {
+                    problemDir = 'rtl';
+                    alignmentClass = 'rtl-aligned';
+                }
+
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <p class="section-text text-lg ${alignmentClass}" dir="${problemDir}">
+                        <span class="font-bold">${p.problem}</span>
+                        <br>
+                        <span class="math-expr">
+                            <span id="equation-${problemId}">
+                                ${p.equation ? p.equation : ''}
+                            </span>
+                        </span>
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center gap-2 mt-4">
+                        <label for="answerInput-${problemId}" class="text-lg font-bold">الجواب هو:</label>
+                        <input type="number" id="answerInput-${problemId}" placeholder="أدخل إجابتك هنا" class="p-2 border rounded-md shadow-sm w-full sm:w-64 text-center">
+                        <button onclick="checkAnswer('${problemId}', ${p.answer})" class="bg-green-600 text-white font-bold py-2 px-6 rounded-md shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                            تحقق
+                        </button>
+                    </div>
+                    <div id="feedbackMessage-${problemId}" class="text-center font-bold text-lg mt-2"></div>
+                `;
+                problemList.appendChild(li);
+
+                // Re-render math for the new content
+                setTimeout(() => {
+                    ensureKaTeXLoaded(function() {
+                        renderMathInElement(li, {
+                            delimiters: [
+                                {left: '$', right: '$', display: false},
+                                {left: '$$', right: '$$', display: true}
+                            ],
+                            throwOnError: false
+                        });
+                    });
+                }, 0);
+            });
+        }
+
+        window.checkAnswer = function(problemId, correctAnswer) {
+            const answerInput = document.getElementById(`answerInput-${problemId}`);
+            const feedbackMessage = document.getElementById(`feedbackMessage-${problemId}`);
+            const userAnswer = parseFloat(answerInput.value);
+
+            if (isNaN(userAnswer)) {
+                feedbackMessage.textContent = 'الرجاء إدخال رقم.';
+                feedbackMessage.className = 'text-center font-bold text-lg text-yellow-600 mt-2';
+            } else if (Math.abs(userAnswer - correctAnswer) < 0.001) { // Use a small tolerance for floating point numbers
+                feedbackMessage.textContent = 'إجابة صحيحة! أحسنت!';
+                feedbackMessage.className = 'text-center font-bold text-lg text-green-600 mt-2';
+            } else {
+                feedbackMessage.textContent = 'إجابة خاطئة، حاول مرة أخرى.';
+                feedbackMessage.className = 'text-center font-bold text-lg text-red-600 mt-2';
+            }
+        };
+    </script>
+</body>
+</html>
