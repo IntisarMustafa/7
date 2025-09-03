@@ -64,13 +64,13 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Matching box shadow */
         }
         .section-title {
-            font-size: 2rem; /* Adjusted for better hierarchy */
+            font-size: 1.8rem; /* Adjusted for better hierarchy */
             font-weight: 700;
             color: #084c8f;
             margin-bottom: 0.75rem;
         }
         .section-text {
-            font-size: 1.35rem; /* Slightly larger for better readability */
+            font-size: 1.25rem; /* Slightly larger for better readability */
             line-height: 1.7;
             color: #4a5568;
         }
@@ -117,7 +117,7 @@
 
         /* Typography and layout for math expressions */
         .equation {
-            font-size: 1.8rem; /* Increased font size for equations */
+            font-size: 1.6rem; /* Increased font size for equations */
             font-weight: bold;
             color: #2d3748;
             text-align: left;
@@ -126,7 +126,7 @@
             direction: ltr; /* Force left-to-right for math */
         }
         .explanation {
-            font-size: 1.1rem; /* Increased font size for explanations */
+            font-size: 1.25rem; /* Increased font size for explanations */
             color: #718096;
             margin-bottom: 1rem;
             text-align: left;
@@ -255,7 +255,7 @@
             unicode-bidi: embed;
         }
         .math-expr-summary {
-            font-size: 1.8rem; /* Increased for better visibility */
+            font-size: 1.6rem; /* Adjusted for better visibility */
             font-weight: bold;
             color: #2d3748;
             direction: ltr;
@@ -275,24 +275,24 @@
             color: #084c8f;
         }
         .full-solution-box .step {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             margin-bottom: 1.5rem;
         }
         .full-solution-box .equation {
-            font-size: 1.8rem; /* Increased for better visibility */
+            font-size: 1.6rem; /* Adjusted for better visibility */
             color: #4a5568;
             font-weight: normal;
             direction: ltr; /* Force left-to-right for math */
         }
         .full-solution-box .equation .final-answer {
-            font-size: 2.5rem; /* Made the final answer stand out */
+            font-size: 2rem; /* Made the final answer stand out */
             font-weight: bold;
             color: #1a56db;
         }
         
         /* New rule to increase font size for math expressions in "Check Understanding" section */
         .check-understanding-box .math-expr {
-            font-size: 1.8rem; /* Increased for better visibility */
+            font-size: 1.6rem; /* Adjusted for better visibility */
             direction: ltr; /* Force left-to-right for math */
         }
 
@@ -325,228 +325,6 @@
             .equation {
                 text-align: left;
             }
-            
-            /* Further reduction for small screens */
-            .pen-animation-container {
-                height: 280px; /* Adjusted height to fit on smaller screens */
-            }
-        }
-        
-        /* Styles for the Pen Animation */
-        .pen-animation-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            position: relative;
-            width: 100%;
-            height: 320px;
-            background-color: #f0f4f8;
-            border-radius: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            z-index: 1;
-            margin-top: 1rem;
-        }
-        
-        .pen-box-container {
-            position: absolute;
-            bottom: -150px; /* تم تعديل الموضع السفلي لرفعها */
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            transition: bottom 2s ease-in-out;
-            z-index: 2;
-        }
-
-        .pen-box-container.enter {
-            bottom: 20px; /* تم تعديل الموضع السفلي لرفعها */
-        }
-
-        .pen {
-            position: absolute;
-            width: 20px; /* Reduced width */
-            height: 80px; /* Reduced height */
-            border-radius: 5px;
-            bottom: 120px; /* Adjusted bottom to raise pens */
-            transform-origin: bottom center;
-            animation-duration: 2s;
-            animation-timing-function: ease-in-out;
-            animation-iteration-count: infinite;
-            z-index: 3;
-            transition: transform 1s ease-in-out, bottom 1s ease-in-out, box-shadow 0.3s ease, opacity 1s ease-in;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* رأس القلم - الجزء البيج */
-        .pen::before {
-            content: '';
-            position: absolute;
-            top: -15px; /* Adjusted top */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent; /* Adjusted size */
-            border-right: 10px solid transparent; /* Adjusted size */
-            border-bottom: 15px solid #d2c0b0; /* لون أغمق */
-            z-index: 6;
-        }
-
-        /* رأس القلم - النقطة السوداء */
-        .pen::after {
-            content: '';
-            position: absolute;
-            top: -20px; /* Adjusted top */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 4px solid transparent; /* Adjusted size */
-            border-right: 4px solid transparent; /* Adjusted size */
-            border-bottom: 8px solid #333333; /* Adjusted size */
-            z-index: 7;
-        }
-
-        .pen:nth-child(1) {
-            background: linear-gradient(to top, #ff7e5f, #feb47b);
-            left: 15%;
-            animation-delay: 0.1s;
-        }
-
-        .pen:nth-child(2) {
-            background: linear-gradient(to top, #6a11cb, #2575fc);
-            left: 30%;
-            animation-delay: 0.3s;
-        }
-
-        .pen:nth-child(3) {
-            background: linear-gradient(to top, #00c6ff, #0072ff);
-            left: 45%;
-            animation-delay: 0.2s;
-        }
-
-        .pen:nth-child(4) {
-            background: linear-gradient(to top, #ff0084, #ff2357);
-            left: 60%;
-            animation-delay: 0.4s;
-            animation-name: dance;
-        }
-
-        .pen:nth-child(5) {
-            background: linear-gradient(to top, #ff416c, #ff4b2b);
-            left: 75%;
-            animation-delay: 0s;
-            animation-name: dance;
-        }
-        
-        .pen:nth-child(6) {
-            background: linear-gradient(to top, #48c6ef, #6a82fb);
-            left: 90%;
-            animation-delay: 0.5s;
-            animation-name: bounce;
-        }
-
-        /* الوجه */
-        .pen-face {
-            position: absolute;
-            top: 10px;
-            width: 80%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 5;
-        }
-
-        .pen-eyes {
-            display: flex;
-            justify-content: space-between;
-            width: 60%;
-            margin-top: 5px;
-        }
-
-        .pen-eye {
-            width: 5px;
-            height: 5px;
-            background-color: #000;
-            border-radius: 50%;
-            animation: blink 4s infinite;
-        }
-
-        .pen-mouth {
-            width: 10px;
-            height: 3px;
-            background-color: #000;
-            border-radius: 0 0 50% 50%;
-            margin-top: 5px;
-        }
-        
-        /* حركات الرقص */
-        @keyframes dance {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(15deg); }
-            50% { transform: rotate(-15deg); }
-            75% { transform: rotate(15deg); }
-        }
-        
-        @keyframes sway {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(15px); }
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        /* الرسوم المتحركة للوجه */
-        @keyframes blink {
-            0%, 100% { transform: scaleY(1); }
-            5% { transform: scaleY(0.1); }
-            8% { transform: scaleY(1); }
-        }
-
-        /* الرسوم المتحركة لدخول العلبة */
-        .pen.enter-box {
-            bottom: 25px; /* تم تعديل الموضع لرفعها أكثر */
-            transform: rotate(0deg) !important;
-            animation: none;
-            opacity: 0;
-            z-index: 1;
-        }
-
-        .message-box {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            z-index: 10;
-        }
-
-        .message-box.show {
-            opacity: 1;
-        }
-        
-        /* New styles for the pen boxes to make them visible */
-        .pen-box {
-            width: 100px;
-            height: 60px;
-            background-color: #a0e4fd;
-            border: 3px dashed #00a4d5;
-            border-radius: 10px;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -571,72 +349,6 @@
                 <p class="text-lg sm:text-xl">لدى علي 4 علب مليئة بالأقلام، وقلمان إضافيان، ولدى خالد علبتان مليئتان بالأقلام و 10 أقلام إضافية. كم قلما في العلبة الواحدة إذا كان لدى كل منهما العدد نفسه من الأقلام؟</p>
             </div>
             
-            <!-- Merged Pen Animation -->
-            <div id="penAnimationContainer" class="pen-animation-container">
-                <!-- مجموعة الأقلام -->
-                <div class="pen" style="animation-name: dance;">
-                    <div class="pen-face">
-                        <div class="pen-eyes">
-                            <div class="pen-eye"></div>
-                            <div class="pen-eye"></div>
-                        </div>
-                        <div class="pen-mouth"></div>
-                    </div>
-                </div>
-                <div class="pen" style="animation-name: sway;">
-                    <div class="pen-face">
-                        <div class="pen-eyes">
-                            <div class="pen-eye"></div>
-                            <div class="pen-eye"></div>
-                        </div>
-                        <div class="pen-mouth"></div>
-                    </div>
-                </div>
-                <div class="pen" style="animation-name: bounce;">
-                    <div class="pen-face">
-                        <div class="pen-eyes">
-                            <div class="pen-eye"></div>
-                            <div class="pen-eye"></div>
-                        </div>
-                        <div class="pen-mouth"></div>
-                    </div>
-                </div>
-                <div class="pen" style="animation-name: dance;">
-                    <div class="pen-face">
-                        <div class="pen-eyes">
-                            <div class="pen-eye"></div>
-                            <div class="pen-eye"></div>
-                        </div>
-                        <div class="pen-mouth"></div>
-                    </div>
-                </div>
-                <div class="pen" style="animation-name: dance;">
-                    <div class="pen-face">
-                        <div class="pen-eyes">
-                            <div class="pen-eye"></div>
-                            <div class="pen-eye"></div>
-                        </div>
-                        <div class="pen-mouth"></div>
-                    </div>
-                </div>
-                <div class="pen" style="animation-name: bounce;">
-                    <div class="pen-face">
-                        <div class="pen-eyes">
-                            <div class="pen-eye"></div>
-                            <div class="pen-eye"></div>
-                        </div>
-                        <div class="pen-mouth"></div>
-                    </div>
-                </div>
-                
-                <!-- العلب -->
-                <div class="pen-box-container">
-                    <div class="pen-box"></div>
-                    <div class="pen-box"></div>
-                    <div class="pen-box"></div>
-                </div>
-            </div>
-            <div id="messageBox" class="message-box"></div>
             <!-- Updated and re-organized sentences -->
             <div class="mt-2 text-base md:text-xl text-center text-black">
                 <p class="font-bold">ليكن عدد الأقلام في كل علبة هو $x$.</p>
@@ -657,28 +369,32 @@
                 أحل المعادلة لأجد قيمة المتغير الذي يمثل عدد الأقلام في كل علبة.
             </p>
         </div>
-        
-        <!-- The main steps of the solution with a modern, split layout -->
-        <div class="step-row">
-            <div class="model-col">
-                <div id="explanation-step" class="explanation text-center font-bold text-gray-700"></div>
-                <!-- Interactive model container -->
-                <div id="model-container" class="model-inner mt-4"></div>
-                <div class="flex justify-center gap-4 mt-4">
-                    <button onclick="prevStep()" class="bg-gray-400 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:bg-gray-500 transition duration-300 transform hover:scale-105">
-                       الخطوة السابقة
-                    </button>
-                    <button onclick="nextStep()" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">
-                        الخطوة التالية
-                    </button>
+
+        <!-- Explanation section with interactive steps -->
+        <div class="my-8">
+            <h2 class="section-title text-center text-orange-500 text-2xl sm:text-3xl">شرح الحل</h2>
+            <p class="text-center mt-2 text-lg sm:text-xl">تتبع الخطوات التالية لفهم كيفية حل المعادلة.</p>
+            <div class="step-row">
+                <div class="model-col">
+                    <div id="explanation-step" class="explanation text-center font-bold text-gray-700"></div>
+                    <!-- Interactive model container -->
+                    <div id="model-container" class="model-inner mt-4"></div>
+                    <div class="flex justify-center gap-4 mt-4">
+                        <button onclick="prevStep()" class="bg-gray-400 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:bg-gray-500 transition duration-300 transform hover:scale-105">
+                           الخطوة السابقة
+                        </button>
+                        <button onclick="nextStep()" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                            الخطوة التالية
+                        </button>
+                    </div>
+                </div>
+                <div class="algebra-col">
+                    <div class="explanation">المعادلة:</div>
+                    <div id="algebra-step" class="equation"></div>
                 </div>
             </div>
-            <div class="algebra-col">
-                <div class="explanation">المعادلة:</div>
-                <div id="algebra-step" class="equation"></div>
-            </div>
         </div>
-
+        
         <!-- Full Written Solution Section -->
         <div class="full-solution-box">
             <h2 class="section-title">الحل المكتوب الكامل</h2>
@@ -786,37 +502,6 @@
                     throwOnError: false
                 });
                 updateDisplay();
-
-                // Logic for the pen animation
-                const pens = document.querySelectorAll('.pen');
-                const penBoxContainer = document.querySelector('.pen-box-container');
-                const messageBox = document.getElementById('messageBox');
-
-                function showMessage(msg) {
-                    messageBox.textContent = msg;
-                    messageBox.classList.add('show');
-                    setTimeout(() => {
-                        messageBox.classList.remove('show');
-                    }, 3000);
-                }
-
-                // After 4 seconds, the pens start entering the boxes
-                setTimeout(() => {
-                    penBoxContainer.classList.add('enter');
-
-                    pens.forEach((pen, index) => {
-                        if (index < 4) { // Only the first 4 pens enter
-                            setTimeout(() => {
-                                pen.classList.add('enter-box');
-                            }, 500 * index);
-                        } else {
-                            // Remove animations for the remaining pens
-                            pen.style.animationName = 'none';
-                            pen.style.animationIterationCount = '1';
-                            pen.style.transform = 'translateY(-15px)';
-                        }
-                    });
-                }, 4000);
             });
         });
 
