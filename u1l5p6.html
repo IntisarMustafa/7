@@ -1012,7 +1012,7 @@
             let score = 0;
             let board = [];
             let selectedCandy = null;
-            let lastQuestionScore = 0; // متغير جديد لتتبع آخر نقطة تم فيها عرض سؤال
+            let questionsAskedCount = 0; // تم تعديل: متغير جديد لتتبع عدد الأسئلة التي تم طرحها
             let isPaused = false;
             let soundEnabled = true;
             let clearedShapes = {}; // لتتبع الأشكال التي تم جمعها في المستويات المتقدمة
@@ -1077,7 +1077,7 @@
                 },
                 {
                     question: "ما هو ناتج قسمة \\( \\frac{-9}{10} \\div \\frac{-3}{5} \\)؟",
-                    answers: ["\\( \\frac{3}{2} \\)", "\\( \\frac{-3}{2} \\)", "\\( \\frac{27}{50} \\)", "\\( \\frac{-27}{50} \\)"],
+                    answers: ["\\( \\frac{3}{2} \\)", "\\( \\frac{-3}{2} \\)", "\\( \\frac{27}{50} \\)", "\\( \\( \\frac{-27}{50} \\)"],
                     correct: 0
                 },
                 {
@@ -1249,7 +1249,7 @@
                 currentLevel = levelNum;
                 moves = level.moves;
                 score = 0;
-                lastQuestionScore = 0; // إعادة تعيين هذا المتغير في بداية كل مستوى جديد
+                questionsAskedCount = 0; // تم تعديل: إعادة تعيين عداد الأسئلة عند بدء مستوى جديد
                 isPaused = false;
                 clearedShapes = {};
                 
@@ -1532,9 +1532,12 @@
                         if (newMatches.length > 0) {
                             processMatches(newMatches);
                         } else {
-                            // تم تعديل هذا الشرط لحل مشكلة عدم ظهور السؤال.
-                            // يتحقق الآن مما إذا كانت النتيجة الحالية قد تجاوزت مضاعفاً جديداً لـ 200.
-                            if (Math.floor(score / QUESTION_INTERVAL) > Math.floor(lastQuestionScore / QUESTION_INTERVAL) && score < LEVELS.find(l => l.level === currentLevel).targetScore) {
+                            // تم تعديل: منطق جديد للتحقق من النقاط التي وصلت إلى عتبة السؤال
+                            const newQuestionCount = Math.floor(score / QUESTION_INTERVAL);
+                            const currentTarget = LEVELS.find(l => l.level === currentLevel).targetScore;
+                            
+                            if (newQuestionCount > questionsAskedCount && score < currentTarget) {
+                                questionsAskedCount = newQuestionCount;
                                 showMathQuestion();
                             } else {
                                 checkGameEnd();
@@ -1582,7 +1585,6 @@
             // عرض سؤال تعليمي
             function showMathQuestion() {
                 isPaused = true;
-                lastQuestionScore = score; // يتم تحديث آخر نتيجة تم فيها عرض السؤال
                 const randomIndex = Math.floor(Math.random() * mathQuestions.length);
                 const question = mathQuestions[randomIndex];
                 
