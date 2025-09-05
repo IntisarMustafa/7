@@ -1532,7 +1532,9 @@
                         if (newMatches.length > 0) {
                             processMatches(newMatches);
                         } else {
-                            if (score >= lastQuestionScore + QUESTION_INTERVAL && score < LEVELS.find(l => l.level === currentLevel).targetScore) {
+                            // تم تعديل هذا الشرط للتحقق مما إذا كانت النقاط قد تجاوزت
+                            // مضاعفًا جديدًا لـ 200 (مثل 200, 400, 600...)
+                            if (Math.floor(score / QUESTION_INTERVAL) > Math.floor(lastQuestionScore / QUESTION_INTERVAL) && score < LEVELS.find(l => l.level === currentLevel).targetScore) {
                                 showMathQuestion();
                             } else {
                                 checkGameEnd();
