@@ -1534,9 +1534,8 @@
                         } else {
                             // تم تعديل: منطق جديد للتحقق من النقاط التي وصلت إلى عتبة السؤال
                             const newQuestionCount = Math.floor(score / QUESTION_INTERVAL);
-                            const currentTarget = LEVELS.find(l => l.level === currentLevel).targetScore;
                             
-                            if (newQuestionCount > questionsAskedCount && score < currentTarget) {
+                            if (newQuestionCount > questionsAskedCount) {
                                 questionsAskedCount = newQuestionCount;
                                 showMathQuestion();
                             } else {
