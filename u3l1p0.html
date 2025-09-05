@@ -319,6 +319,16 @@
             overflow: hidden;
         }
         
+        .option.correct-answer {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .option.incorrect-answer {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
         .option:hover {
             background: #e6edff;
             border-color: #b3c1ff;
@@ -973,7 +983,12 @@
             
             submitBtn.addEventListener('click', function() {
                 let score = 0;
-                let answeredQuestions = 0;
+                let allAnswered = true;
+                
+                // إعادة تعيين الألوان من الجولة السابقة
+                document.querySelectorAll('.option').forEach(option => {
+                    option.classList.remove('correct-answer', 'incorrect-answer');
+                });
                 
                 // التحقق من الإجابات
                 for (let i = 1; i <= 7; i++) {
@@ -981,10 +996,18 @@
                     const selectedOption = document.querySelector(`input[name="${qName}"]:checked`);
                     
                     if (selectedOption) {
-                        answeredQuestions++;
+                        const optionElement = selectedOption.closest('.option');
                         if (selectedOption.value === correctAnswers[qName]) {
                             score++;
+                            optionElement.classList.add('correct-answer');
+                        } else {
+                            optionElement.classList.add('incorrect-answer');
+                            // إيجاد الإجابة الصحيحة ووضع لون عليها
+                            const correctAnswerOption = document.querySelector(`input[name="${qName}"][value="${correctAnswers[qName]}"]`).closest('.option');
+                            correctAnswerOption.classList.add('correct-answer');
                         }
+                    } else {
+                        allAnswered = false;
                     }
                 }
                 
@@ -992,17 +1015,9 @@
                 scoreElement.textContent = `${score}/7`;
                 
                 // تقديم التغذية الراجعة
-                if (answeredQuestions < 7) {
-                    feedbackElement.innerHTML = '<p class="incorrect">يرجى الإجابة على جميع الأسئلة قبل التصحيح.</p>';
-                    resultSection.style.display = 'block';
-                    window.scrollTo({
-                        top: document.body.scrollHeight,
-                        behavior: 'smooth'
-                    });
-                    return;
-                }
-                
-                if (score === 7) {
+                if (!allAnswered) {
+                    feedbackElement.innerHTML = '<p class="incorrect">يرجى الإجابة على جميع الأسئلة قبل الانتقال للدرس.</p>';
+                } else if (score === 7) {
                     feedbackElement.innerHTML = '<p class="correct">ممتاز! أنت جاهز لبدء درس حل المعادلات.</p>';
                 } else if (score >= 4) {
                     feedbackElement.innerHTML = '<p>جيد! لديك أساس جيد لكن ننصح بمراجعة بعض المفاهيم قبل البدء.</p>';
@@ -1034,8 +1049,7 @@
                 
                 // إزالة تأثيرات التحديد
                 document.querySelectorAll('.option').forEach(option => {
-                    option.style.background = '#f0f4ff';
-                    option.style.borderColor = '#d1d9ff';
+                    option.classList.remove('correct-answer', 'incorrect-answer');
                 });
                 
                 // التمرير إلى الأعلى
@@ -1044,10 +1058,10 @@
             
             // زر بدء الدرس - يمكنك تعديل هذا الرابط ليوجه إلى صفحة الدرس الفعلية
             startLessonBtn.addEventListener('click', function() {
-                // بدلاً من التنبيه، سيتم الآن توجيه المستخدم إلى صفحة الدرس.
                 window.location.href = 'u3l1p1.html';
             });
         });
     </script>
 </body>
 </html>
+
