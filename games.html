@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قسم الألعاب</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: float 8s infinite ease-in;
+            opacity: 0.5;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(20px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .math-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .math-symbol {
+            position: absolute;
+            font-size: 4.5rem;
+            color: rgba(118, 75, 162, 0.25);
+            font-weight: bold;
+            opacity: 0.4;
+            animation: float-symbol 15s infinite ease-in-out;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes float-symbol {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, 20px) rotate(10deg); }
+            50% { transform: translate(-25px, -15px) rotate(-10deg); }
+            75% { transform: translate(20px, -25px) rotate(15deg); }
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+        
+        .cover-container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 30px;
+            text-align: center;
+            position: relative;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom right, transparent 49%, white 50%);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            padding-top: 30px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        
+        .subtitle {
+            font-size: 1.8rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 700;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: 1;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        
+        .glow-1 {
+            top: -150px;
+            right: -100px;
+        }
+        
+        .glow-2 {
+            bottom: -100px;
+            left: -100px;
+            width: 250px;
+            height: 250px;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+            100% { transform: scale(0.8); }
+        }
+        
+        .content {
+            padding: 60px 40px 40px;
+            text-align: center;
+        }
+        
+        .units-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .unit-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eaeaea;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        
+        .unit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(118, 75, 162, 0.15);
+        }
+        
+        .unit-icon {
+            font-size: 2.5rem;
+            color: #764ba2;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .unit-card:hover .unit-icon {
+            transform: scale(1.1);
+        }
+        
+        .unit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .unit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
+        }
+        
+        .footer {
+            margin-top: 40px;
+            font-size: 1rem;
+            color: #666;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-top: 3px solid #764ba2;
+        }
+        
+        .expert {
+            font-weight: bold;
+            color: #764ba2;
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+        
+        .decoration {
+            position: absolute;
+            opacity: 0.2;
+            z-index: 0;
+            color: #764ba2;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .dec-1 { 
+            top: 15px; 
+            left: 30px;
+            font-size: 4rem;
+            transform: rotate(15deg); 
+        }
+        
+        .dec-2 { 
+            top: 50%;
+            transform: translateY(-50%) rotate(-15deg);
+            right: 20px; 
+            font-size: 7.5rem;
+        }
+        
+        .dec-3 { 
+            bottom: 5px; 
+            left: 30px; 
+            font-size: 4.5rem;
+            transform: rotate(-10deg); 
+        }
+        
+        .grade-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: inline-block;
+            padding: 8px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .lesson-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #eaeaea;
+        }
+        
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.1);
+        }
+        
+        .lesson-icon {
+            color: #764ba2;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .lesson-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .lesson-btn {
+            background: #764ba2;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .lesson-btn:hover {
+            background: #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .lessons-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                min-height: 250px;
+                padding: 40px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .header .subtitle {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bubbles" id="bubbles"></div>
+    <div class="math-bg" id="mathBg"></div>
+
+    <div class="cover-container">
+        <div class="header">
+            <div class="header-glow glow-1"></div>
+            <div class="header-glow glow-2"></div>
+            
+            <div class="decoration dec-1">📚</div>
+            <div class="decoration dec-2">📝</div>
+            <div class="decoration dec-3">💡</div>
+            
+            <h1>قسم الألعاب</h1>
+            <p class="subtitle">استكشف ألعاب الدروس في المنهج الدراسي</p>
+        </div>
+        
+        <div class="content">
+            <div class="grade-badge">الصف السابع الأساسي</div>
+            
+            <div class="lessons-grid">
+                <!-- دروس الوحدة 1 -->
+                <div class="unit-card flex flex-col items-center">
+                    <h3 class="font-bold text-xl mb-4 text-[#764ba2]">الوحدة 1: الأعداد النسبية</h3>
+                    <div class="w-full grid grid-cols-1 gap-3">
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 1: الأعداد النسبية في السوق</h4>
+                            <button class="lesson-btn" onclick="location.href='u1l1p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 2: القيمة المطلقة</h4>
+                            <button class="lesson-btn" onclick="location.href='u1l2p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 3: كتابة العدد النسبي بالصورة العشرية</h4>
+                            <button class="lesson-btn" onclick="location.href='u1l3p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 4: مقارنة الأعداد النسبية وترتيبها</h4>
+                            <button class="lesson-btn" onclick="location.href='u1l4p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 5: ضرب الأعداد النسبية وقسمتها</h4>
+                            <button class="lesson-btn" onclick="location.href='u1l5p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 6: حفظ حل المسائل: الحل العكسي</h4>
+                            <button class="lesson-btn" onclick="location.href='u1l6p5.html'">العب اللعبة</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- دروس الوحدة 2 -->
+                <div class="unit-card flex flex-col items-center">
+                    <h3 class="font-bold text-xl mb-4 text-[#764ba2]">الوحدة 2: الأسس والمقادير الجبرية</h3>
+                    <div class="w-full grid grid-cols-1 gap-3">
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">مشروع الوحدة: تصميم نموذج ساعة جدار</h4>
+                            <button class="lesson-btn" onclick="location.href='u2project.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 1: قوانين الأسس الصحيحة</h4>
+                            <button class="lesson-btn" onclick="location.href='u2l1p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 2: أولويات العمليات الحسابية</h4>
+                            <button class="lesson-btn" onclick="location.href='u2l2p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 3: الحدود والمقادير الجبرية</h4>
+                            <button class="lesson-btn" onclick="location.href='u2l3p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 4: جمع المقادير الجبرية وطرحها</h4>
+                            <button class="lesson-btn" onclick="location.href='u2l4p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 5: ضرب المقادير الجبرية</h4>
+                            <button class="lesson-btn" onclick="location.href='u2l5p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 6: حفظ حل المسألة: التخمين والتحقق</h4>
+                            <button class="lesson-btn" onclick="location.href='u2l6p5.html'">العب اللعبة</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- دروس الوحدة 3 -->
+                <div class="unit-card flex flex-col items-center">
+                    <h3 class="font-bold text-xl mb-4 text-[#764ba2]">الوحدة 3: المعادلات الخطية</h3>
+                    <div class="w-full grid grid-cols-1 gap-3">
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">مشروع الوحدة: عدم التوصيل</h4>
+                            <button class="lesson-btn" onclick="location.href='u3project.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 1: حل المعادلات</h4>
+                            <button class="lesson-btn" onclick="location.href='u3l1p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 2: الجذور المربعة والذاتية</h4>
+                            <button class="lesson-btn" onclick="location.href='u3l2p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 3: المتتاليات</h4>
+                            <button class="lesson-btn" onclick="location.href='u3l3p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 4: الاقترانات</h4>
+                            <button class="lesson-btn" onclick="location.href='u3l4p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 5: تمثيل الاقتران الخطي بيانياً</h4>
+                            <button class="lesson-btn" onclick="location.href='u3l5p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 6: تمثيل الاقتران الخطي</h4>
+                            <button class="lesson-btn" onclick="location.href='u3l6p5.html'">العب اللعبة</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- دروس الوحدة 4 -->
+                <div class="unit-card flex flex-col items-center">
+                    <h3 class="font-bold text-xl mb-4 text-[#764ba2]">الوحدة 4: الهندسة والتحويلات</h3>
+                    <div class="w-full grid grid-cols-1 gap-3">
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">مشروع الوحدة: الهندسة حولنا</h4>
+                            <button class="lesson-btn" onclick="location.href='u4project.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 1: الزوايا والمضلعات</h4>
+                            <button class="lesson-btn" onclick="location.href='u4l1p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 2: العلاقات بين الزوايا</h4>
+                            <button class="lesson-btn" onclick="location.href='u4l2p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 3: المستقيمات المتوازية والقاطع</h4>
+                            <button class="lesson-btn" onclick="location.href='u4l3p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 4: زوايا المثلث</h4>
+                            <button class="lesson-btn" onclick="location.href='u4l4p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 5: زوايا القطاع</h4>
+                            <button class="lesson-btn" onclick="location.href='u4l5p5.html'">العب اللعبة</button>
+                        </div>
+                        <div class="lesson-card">
+                            <h4 class="lesson-title">الدرس 6: تمثيل برمجية سويجير: الدوران</h4>
+                            <button class="lesson-btn" onclick="location.href='u4l6p5.html'">العب اللعبة</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full mt-8 flex justify-center">
+                <div class="unit-card w-full max-w-sm">
+                    <i class="fas fa-chevron-circle-left unit-icon"></i>
+                    <h3 class="unit-title">العودة إلى الفهرس</h3>
+                    <p>العودة إلى قائمة الوحدات الرئيسية.</p>
+                    <button class="unit-btn" onclick="location.href='index.html'">العودة</button>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>رحلة تعلم ممتعة وشاملة لمادة الرياضيات للصف السابع</p>
+                <p class="expert">إعداد: الخبيرة التربوية انتصار مصطفى</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createMathSymbols() {
+            const mathBg = document.getElementById('mathBg');
+            const symbols = ['÷','  ', '=','π', '∑', '∫', '9', '∞', '≠', 'θ', 'β'];
+            
+            for (let i = 0; i < 25; i++) {
+                const symbol = document.createElement('div');
+                symbol.className = 'math-symbol';
+                symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                
+                symbol.style.left = `${Math.random() * 100}%`;
+                symbol.style.top = `${Math.random() * 100}%`;
+                symbol.style.animationDelay = `${Math.random() * 5}s`;
+                
+                const size = 3.5 + Math.random() * 6;
+                symbol.style.fontSize = `${size}rem`;
+                
+                symbol.style.animation = `float-symbol ${10 + Math.random() * 20}s infinite ease-in-out, fadeInOut ${3 + Math.random() * 7}s infinite ease-in-out`;
+                
+                mathBg.appendChild(symbol);
+            }
+        }
+        
+        function createBubbles() {
+            const bubblesContainer = document.getElementById('bubbles');
+            
+            for (let i = 0; i < 20; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                
+                const size = Math.random() * 60 + 20;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                
+                bubble.style.left = `${Math.random() * 100}%`;
+                
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                
+                bubble.style.animationDuration = `${8 + Math.random() * 5}s`;
+                
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            createMathSymbols();
+            createBubbles();
+        });
+    </script>
+</body>
+</html>
