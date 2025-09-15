@@ -1002,7 +1002,7 @@
             
             <div class="lesson-idea">
                 <h3>فكرة الدرس</h3>
-                <p>أعرف العدد النسبي وأمثلة على خط الأعداد.</p>
+                <p>أعرف العدد النسبي وأمثله على خط الأعداد.</p>
             </div>
             
             <div class="terms-box">
@@ -1109,7 +1109,7 @@
         
         <div class="navigation">
             <a href="u1l1p2.html" class="nav-btn">
-                <i class="fas fa-arrow-right"></i>التالي → تمثيل الأعداد النسبية
+                <i class="fas fa-arrow-right"></i>التالي ← تمثيل الأعداد النسبية
             </a>
         </div>
         
@@ -1124,32 +1124,40 @@
             const numInput = document.getElementById(`ex1-${part}-numerator`);
             const denInput = document.getElementById(`ex1-${part}-denominator`);
             const feedback = document.getElementById(`feedback-ex1-${part}`);
-            const numValue = numInput.value.trim();
-            const denValue = denInput.value.trim();
             
-            let correctNum = '';
-            let correctDen = '';
+            // تحويل القيم إلى أعداد صحيحة
+            const numValue = parseInt(numInput.value.trim());
+            const denValue = parseInt(denInput.value.trim());
+            
+            let correctNum, correctDen;
             
             switch(part) {
                 case 3: // 1 + 2/5 = 7/5
-                    correctNum = '7';
-                    correctDen = '5';
+                    correctNum = 7;
+                    correctDen = 5;
                     break;
                 case 4: // -3.2 = -16/5
-                    correctNum = '-16';
-                    correctDen = '5';
+                    correctNum = -16;
+                    correctDen = 5;
                     break;
                 case 5: // -6 = -6/1
-                    correctNum = '-6';
-                    correctDen = '1';
+                    correctNum = -6;
+                    correctDen = 1;
                     break;
                 case 6: // 85% = 17/20
-                    correctNum = '17';
-                    correctDen = '20';
+                    correctNum = 17;
+                    correctDen = 20;
                     break;
             }
             
-            if (numValue === correctNum && denValue === correctDen) {
+            // التحقق من القيم المطلقة
+            const correctNumAbs = Math.abs(correctNum);
+            const correctDenAbs = Math.abs(correctDen);
+            
+            const isCorrect = (Math.abs(numValue) === correctNumAbs && Math.abs(denValue) === correctDenAbs) &&
+                              ((numValue < 0 && denValue > 0) || (numValue > 0 && denValue < 0) || (numValue === 0 && denValue !== 0) || (numValue > 0 && denValue > 0));
+            
+            if (isCorrect) {
                 feedback.innerHTML = '<div style="color:green; font-weight:bold">' +
                     '<i class="fas fa-check-circle"></i> إجابة صحيحة! أحسنت.' +
                     '</div>';
@@ -1265,3 +1273,4 @@
     </script>
 </body>
 </html>
+
