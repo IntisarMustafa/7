@@ -848,7 +848,13 @@
                     if (Math.random() < 0.25) {
                         gameState.enemies.push(createEnemy('splitting'));
                     } else {
-                        gameState.enemies.push(createEnemy());
+                        // تم التعديل هنا:
+                        // جعل الكويكبات تظهر من أي مكان على طول المحور السيني
+                        let startX = Math.random() * GAME_WIDTH;
+                        let endX = Math.random() * GAME_WIDTH;
+                        // حساب سرعة الأعداء الأفقية بناءً على نقطة النهاية المرغوبة
+                        let speedX = (endX - startX) / (GAME_HEIGHT / (Math.random() * 1 + gameState.enemySpeed));
+                        gameState.enemies.push(createEnemy('normal', null, startX, -50, speedX));
                     }
                     gameState.enemySpawnCounter = 0;
                 }
