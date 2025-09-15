@@ -507,11 +507,11 @@
         function checkAllEx2() {
             const answers = [
                 {id: 'ex2-1', numerator: 25, denominator: 1},
-                {id: 'ex2-2', numerator: 9, denominator: 4}, // 2 + 1/4 = 9/4
+                {id: 'ex2-2', numerator: 9, denominator: 4},
                 {id: 'ex2-3', numerator: 7, denominator: 100},
                 {id: 'ex2-4', numerator: -127, denominator: 1},
-                {id: 'ex2-5', numerator: -5, denominator: 3}, // -1 -2/3 = -5/3
-                {id: 'ex2-6', numerator: 35, denominator: 100} // 35% = 35/100
+                {id: 'ex2-5', numerator: -5, denominator: 3},
+                {id: 'ex2-6', numerator: 35, denominator: 100}
             ];
             
             const feedback = document.getElementById('feedback-ex2');
@@ -521,23 +521,32 @@
             answers.forEach((item, index) => {
                 const numInput = document.getElementById(`${item.id}-numerator`);
                 const denInput = document.getElementById(`${item.id}-denominator`);
-                const numValue = parseInt(numInput.value) || 0;
-                const denValue = parseInt(denInput.value) || 1;
+                const numValue = parseFloat(numInput.value) || 0;
+                const denValue = parseFloat(denInput.value) || 1;
                 
+                let isCorrect = false;
+                
+                if (denValue === 0) {
+                    isCorrect = false;
+                } else {
+                    // التحقق من صحة الكسر باستخدام الضرب التبادلي لتجنب مشاكل الفواصل العشرية
+                    isCorrect = (numValue * item.denominator === denValue * item.numerator);
+                }
+
                 // تلوين الحقول بناءً على الإجابة
-                if (numValue === item.numerator && denValue === item.denominator) {
+                if (isCorrect) {
                     numInput.style.backgroundColor = '#e8f5e9';
                     denInput.style.backgroundColor = '#e8f5e9';
                     resultHtml += `<li style="padding: 10px; border-bottom: 1px dashed #ccc; font-size: 1.1em;">
                         <i class="fas fa-check" style="color:green; margin-left: 10px;"></i>
-                        السؤال ${index+1}: <span style="color:green">✓ صحيح (${item.numerator}/${item.denominator})</span>
+                        السؤال ${index+1}: <span style="color:green">✓ صحيح</span>
                     </li>`;
                 } else {
                     numInput.style.backgroundColor = '#ffebee';
                     denInput.style.backgroundColor = '#ffebee';
                     resultHtml += `<li style="padding: 10px; border-bottom: 1px dashed #ccc; font-size: 1.1em;">
                         <i class="fas fa-times" style="color:red; margin-left: 10px;"></i>
-                        السؤال ${index+1}: <span style="color:red">✗ غير صحيح (الجواب: ${item.numerator}/${item.denominator})</span>
+                        السؤال ${index+1}: <span style="color:red">✗ غير صحيح</span>
                     </li>`;
                     allCorrect = false;
                 }
@@ -552,7 +561,7 @@
                 feedback.className = 'feedback correct';
             } else {
                 feedback.innerHTML = '<div style="color:red; font-weight:bold; font-size: 1.4rem; margin-bottom: 15px;">' +
-                    '<i class="fas fa-lightbulb" style="margin-left: 10px;"></i>بعض الإجابات غير صحيحة. راجع الإجابات وحاول مرة أخرى.' +
+                    '<i class="fas fa-lightbulb" style="margin-left: 10px;"></i>بعض الإجابات غير صحيحة. راجع إجاباتك وحاول مرة أخرى.' +
                     '</div>' + resultHtml;
                 feedback.className = 'feedback incorrect';
             }
@@ -589,3 +598,4 @@
     </script>
 </body>
 </html>
+
