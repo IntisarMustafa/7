@@ -1226,10 +1226,6 @@
             </div>
         </div>
         
-        <div id="warning-overlay" class="warning-overlay">
-            <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        
         <div id="success-effect" class="success-effect"></div>
         
         <div id="level-up" class="level-up">مستوى جديد!</div>
@@ -1237,8 +1233,7 @@
         <div id="game-message" style="display: none;"></div>
 
         <div id="game-area">
-            <!-- Dynamic game elements will be appended here -->
-        </div>
+            </div>
         
         <div id="end-screen" class="end-screen">
             <h1 class="logo">انتهت اللعبة</h1>
@@ -1272,7 +1267,6 @@
             <i class="fas fa-volume-up"></i>
         </button>
 
-        <!-- Mobile Controls -->
         <div class="mobile-controls">
             <div class="mobile-btn" id="jump-btn">
                 <i class="fas fa-arrow-up"></i>
@@ -1282,7 +1276,6 @@
             </div>
         </div>
 
-        <!-- Question Modal -->
         <div id="question-modal" class="question-modal">
             <h2 id="question-text"></h2>
             <div id="options-container" class="options-container"></div>
@@ -1321,7 +1314,7 @@
             let progressBar = document.getElementById('progress-bar'); 
             let playerModeDisplay = document.getElementById('player-mode-display'); 
             let speedDisplay = document.getElementById('speed-display'); 
-            let warningOverlay = document.getElementById('warning-overlay'); 
+            // تم حذف العنصر warningOverlay
             let successEffect = document.getElementById('success-effect'); 
             const characterElements = document.querySelectorAll('.character');
             let levelUpElement = document.getElementById('level-up'); 
@@ -1356,7 +1349,7 @@
             let obstacleSpeed = 4.0; 
             let currentSpeedMultiplier = 1.0;
             let obstacleInterval;
-            let obstacleIntervalTime = 2000;
+            let obstacleIntervalTime = 3500; // تم زيادة الفاصل الزمني من 2000 إلى 3500
             let backgroundElements = [];
             let playerMode = 'cube';
             let gravityDirection = 1;
@@ -1599,10 +1592,10 @@
             function createObstacle() {
                 if (!gameRunning || gamePaused) return;
 
-                // Show warning for difficult obstacles
-                if (level >= 4 && Math.random() > 0.7) {
-                    showWarning();
-                }
+                // تم حذف استدعاء showWarning()
+                // if (level >= 4 && Math.random() > 0.7) {
+                //     showWarning();
+                // }
 
                 const obstacleTypeRandom = Math.random();
                 
@@ -1952,15 +1945,15 @@
                 }
             }
 
-            // Show warning overlay
-            function showWarning() {
-                warningOverlay.style.display = 'flex';
-                playSound(100, 'square', 0.2, 0.4);
-                setTimeout(() => playSound(120, 'square', 0.2, 0.4), 150);
-                setTimeout(() => {
-                    warningOverlay.style.display = 'none';
-                }, 1300);
-            }
+            // تم حذف دالة showWarning()
+            // function showWarning() {
+            //     warningOverlay.style.display = 'flex';
+            //     playSound(100, 'square', 0.2, 0.4);
+            //     setTimeout(() => playSound(120, 'square', 0.2, 0.4), 150);
+            //     setTimeout(() => {
+            //         warningOverlay.style.display = 'none';
+            //     }, 1300);
+            // }
 
             // Show "Level Up!" effect
             function showLevelUp() {
@@ -1994,7 +1987,7 @@
                 coins = [];
                 obstacleSpeed = 4.0; 
                 currentSpeedMultiplier = 1.0; 
-                obstacleIntervalTime = 2000; 
+                obstacleIntervalTime = 3500; // تم زيادة الفاصل الزمني من 2000 إلى 3500
                 isJumping = false;
                 canJump = true;
                 lastObstaclePassed = 0;
@@ -2777,7 +2770,7 @@
                     return;
                 }
 
-                if (e.target.closest('#music-toggle-btn') || e.target.closest('#warning-overlay') || e.target.closest('.btn') || e.target.closest('.pause-overlay')) {
+                if (e.target.closest('#music-toggle-btn') || e.target.closest('.btn') || e.target.closest('.pause-overlay')) {
                     return;
                 }
                 const gameAreaRect = gameArea.getBoundingClientRect();
