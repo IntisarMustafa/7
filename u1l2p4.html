@@ -146,8 +146,12 @@
         .option-btn.selected { background: linear-gradient(45deg, #4361ee, #3a0ca3); border-color: #7209b7; box-shadow: 0 0 20px rgba(67, 97, 238, 0.8); }
         /* Mobile optimization for question modal */
         @media (max-height: 600px) { .question-modal { padding: 10px; } .question-modal h2 { font-size: clamp(1.1rem, 4vw, 1.8rem); margin-bottom: 10px; } .option-btn { padding: 10px 15px; font-size: 1.0rem; } }
-        @media (max-width: 768px) { .game-container { max-height: 90vh; border-radius: 10px; } .logo { font-size: 3.5rem; } .subtitle { font-size: 1.4rem; margin-bottom: 20px; } .character { width: 70px; height: 70px; } .character i { font-size: 2.5rem; } .btn { padding: 14px 30px; font-size: 1.2rem; } .controls-info { gap: 8px; } .control-item { padding: 10px 15px; font-size: 0.9rem; } .stats { gap: 15px; padding: 10px 20px; } .stat-value { font-size: 1.8rem; } #game-message { font-size: 2rem; padding: 15px 30px; } }
-        @media (max-width: 480px) { .logo { font-size: 2.8rem; } .subtitle { font-size: 1.2rem; } .character { width: 60px; height: 60px; } .character i { font-size: 2rem; } .btn { padding: 12px 25px; font-size: 1.1rem; } .stats { gap: 10px; padding: 8px 15px; } .stat-value { font-size: 1.6rem; } .info-item { font-size: 0.9rem; padding: 6px 12px; } }
+        /* Mobile controls */
+        .mobile-controls { position: absolute; bottom: 20px; width: 100%; display: none; }
+        .mobile-btn { width: 70px; height: 70px; border-radius: 50%; background: rgba(76, 201, 240, 0.3); display: flex; justify-content: center; align-items: center; font-size: 2rem; color: white; box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); border: 2px solid rgba(255, 255, 255, 0.2); user-select: none; touch-action: manipulation; }
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) { .game-container { max-height: 90vh; border-radius: 10px; } .logo { font-size: 3.5rem; } .subtitle { font-size: 1.4rem; margin-bottom: 20px; } .character { width: 70px; height: 70px; } .character i { font-size: 2.5rem; } .btn { padding: 14px 30px; font-size: 1.2rem; } .controls-info { gap: 8px; } .control-item { padding: 10px 15px; font-size: 0.9rem; } .stats { gap: 15px; padding: 10px 20px; } .stat-value { font-size: 1.8rem; } .mobile-controls { display: none; } #game-message { font-size: 2rem; padding: 15px 30px; } }
+        @media (max-width: 480px) { .logo { font-size: 2.8rem; } .subtitle { font-size: 1.2rem; } .character { width: 60px; height: 60px; } .character i { font-size: 2rem; } .btn { padding: 12px 25px; font-size: 1.1rem; } .mobile-btn { width: 60px; height: 60px; font-size: 1.8rem; } .stats { gap: 10px; padding: 8px 15px; } .stat-value { font-size: 1.6rem; } .info-item { font-size: 0.9rem; padding: 6px 12px; } }
     </style>
 </head>
 <body>
@@ -261,6 +265,14 @@
         <button id="music-toggle-btn" class="music-toggle-btn">
             <i class="fas fa-volume-up"></i>
         </button>
+        <div class="mobile-controls">
+            <div class="mobile-btn" id="jump-btn">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+            <div class="mobile-btn" id="slide-btn">
+                <i class="fas fa-arrow-down"></i>
+            </div>
+        </div>
         <div id="question-modal" class="question-modal">
             <h2 id="question-text"></h2>
             <div id="options-container" class="options-container"></div>
@@ -1311,4 +1323,256 @@
                     const landingTolerance = 10;
                     const isLanding = playerVelocity < 0 && playerRect.bottom >= obstacleRect.top - landingTolerance && playerRect.bottom <= obstacleRect.top + landingTolerance && playerRect.left < obstacleRect.right && playerRect.right > obstacleRect.left;
                     if (isLanding) {
-                        playerY =
+                        playerY = (gameAreaRect.height - obstacleRect.top - player.offsetHeight) - groundLevel;
+                        playerVelocity = 0;
+                        isJumping = false;
+                        canJump = true;
+                        playSound(550, 'sine', 0.05, 0.2);
+                        return false;
+                    } else {
+                        playSound(80, 'sawtooth', 0.2, 0.3);
+                        createParticles(
+                            player.offsetLeft + player.offsetWidth / 2,
+                            player.offsetTop + player.offsetHeight / 2,
+                            '#e94560', 35, 5, 15, 3, 8
+                        );
+                        collidedObstacleRef = obsData;
+                        showQuestion();
+                        return true;
+                    }
+                } else if (obstacle.classList.contains('gravity-portal')) {
+                    if (!obsData.used) {
+                        gravityDirection *= -1;
+                        obsData.used = true;
+                        obstacle.classList.add('used');
+                        playSound(900, 'triangle', 0.15, 0.4);
+                        showGameMessage(gravityDirection === 1 ? 'جاذبية عادية!' : 'جاذبية معكوسة!');
+                        const icon = obstacle.querySelector('i');
+                        if (icon) {
+                            icon.classList.toggle('inverted', gravityDirection === -1);
+                        }
+                        setTimeout(() => obstacle.remove(), 500);
+                    }
+                    return false;
+                } else if (obstacle.classList.contains('speed-portal')) {
+                    if (!obsData.used) {
+                        currentSpeedMultiplier = Math.min(3, currentSpeedMultiplier + 0.3);
+                        obsData.used = true;
+                        obstacle.classList.add('used');
+                        playSound(1200, 'square', 0.1, 0.4);
+                        showGameMessage(`السرعة: x${currentSpeedMultiplier.toFixed(1)}`);
+                        updatePlayerDisplay();
+                        clearInterval(obstacleInterval);
+                        obstacleInterval = setInterval(() => {
+                            if (!gamePaused) {
+                                createObstacle();
+                            }
+                        }, obstacleIntervalTime / currentSpeedMultiplier);
+                        setTimeout(() => obstacle.remove(), 500);
+                    }
+                    return false;
+                } else {
+                    playSound(80, 'sawtooth', 0.2, 0.3);
+                    createParticles(
+                        player.offsetLeft + player.offsetWidth / 2,
+                        player.offsetTop + player.offsetHeight / 2,
+                        '#e94560', 35, 5, 15, 3, 8
+                    );
+                    collidedObstacleRef = obsData;
+                    showQuestion();
+                    return true;
+                }
+            }
+            // Collision detection for coins
+            function detectCoinCollision(player, coin) {
+                const playerRect = player.getBoundingClientRect();
+                const coinRect = coin.getBoundingClientRect();
+                const gameAreaRect = gameArea.getBoundingClientRect();
+                const playerX = playerRect.left - gameAreaRect.left;
+                const playerY_from_top = playerRect.top - gameAreaRect.top;
+                const coinX = coinRect.left - gameAreaRect.left;
+                const coinY_from_top = coinRect.top - gameAreaRect.top;
+                const playerHitbox = { x: playerX + player.offsetWidth * 0.15, y: playerY_from_top + player.offsetHeight * 0.15, width: player.offsetWidth * 0.7, height: player.offsetHeight * 0.7 };
+                const coinHitbox = { x: coinX, y: coinY_from_top, width: coin.offsetWidth, height: coin.offsetHeight };
+                return (
+                    playerHitbox.x < coinHitbox.x + coinHitbox.width &&
+                    playerHitbox.x + playerHitbox.width > coinHitbox.x &&
+                    playerHitbox.y < coinHitbox.y + coinHitbox.height &&
+                    playerHitbox.y + playerHitbox.height > coinHitbox.y
+                );
+            }
+            // End the game
+            function endGame() {
+                gameRunning = false;
+                clearInterval(obstacleInterval);
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('gdHighScore', highScore);
+                    highScoreElement.textContent = highScore;
+                }
+                endScreen.style.display = 'flex';
+                finalScoreElement.textContent = score;
+                finalHighScoreElement.textContent = highScore;
+                finalPlatformsElement.textContent = platformsPassed;
+                finalCoinsElement.textContent = coinsCollected;
+                stopMusic(); // إيقاف الموسيقى عند انتهاء اللعبة
+            }
+            // Jump/Ascend action
+            function jump() {
+                if (!gameRunning || gamePaused) return;
+                if (!canJump) return;
+                isJumping = true;
+                canJump = false;
+                playerVelocity = jumpForce * gravityDirection;
+                playSound(440, 'sine', 0.1, 0.2);
+                player.classList.remove('jumping');
+                void player.offsetWidth;
+                player.classList.add('jumping');
+                if (playerMode !== 'ship') {
+                    rotationSpeed = -4 * gravityDirection;
+                }
+                createParticles(
+                    player.offsetLeft + player.offsetWidth / 2,
+                    player.offsetTop + (gravityDirection === 1 ? player.offsetHeight : 0),
+                    playerMode === 'ship' ? '#ff9e00' : '#4cc9f0'
+                );
+            }
+            // Slide/Descend action
+            function slide() {
+                if (!gameRunning || gamePaused) return;
+                if (gravityDirection === 1 && playerY <= 10) {
+                    player.classList.add('sliding');
+                    player.style.transform = 'rotate(0deg)';
+                    createParticles(
+                        player.offsetLeft + player.offsetWidth / 2,
+                        player.offsetTop + player.offsetHeight,
+                        playerMode === 'ship' ? '#ff6a00' : '#4361ee'
+                    );
+                    setTimeout(() => {
+                        player.classList.remove('sliding');
+                    }, 450);
+                } else if (gravityDirection === -1 && playerY >= (gameArea.offsetHeight - groundLevel - playerHeight - 10)) {
+                    player.classList.add('sliding');
+                    player.style.transform = 'rotate(0deg)';
+                    playerVelocity = -jumpForce * gravityDirection;
+                    createParticles(
+                        player.offsetLeft + player.offsetWidth / 2,
+                        player.offsetTop,
+                        playerMode === 'ship' ? '#ff6a00' : '#4361ee'
+                    );
+                    setTimeout(() => {
+                        player.classList.remove('sliding');
+                    }, 450);
+                }
+            }
+            // Toggle pause state
+            function togglePause() {
+                if (!gameRunning) return;
+                gamePaused = !gamePaused;
+                if (gamePaused) {
+                    const pauseOverlay = document.createElement('div');
+                    pauseOverlay.classList.add('pause-overlay');
+                    pauseOverlay.id = 'pause-overlay';
+                    const pauseText = document.createElement('div');
+                    pauseText.textContent = 'إيقاف مؤقت';
+                    pauseOverlay.appendChild(pauseText);
+                    const resumeBtn = document.createElement('button');
+                    resumeBtn.classList.add('btn');
+                    resumeBtn.innerHTML = '<i class="fas fa-play"></i> استئناف اللعبة';
+                    resumeBtn.addEventListener('click', togglePause);
+                    pauseOverlay.appendChild(resumeBtn);
+                    gameArea.appendChild(pauseOverlay);
+                } else {
+                    const pauseOverlay = document.getElementById('pause-overlay');
+                    if (pauseOverlay) {
+                        pauseOverlay.remove();
+                    }
+                    if (!questionModal.style.display || questionModal.style.display === 'none') {
+                        requestAnimationFrame(updateGame);
+                    }
+                }
+            }
+            // Toggle all sounds
+            function toggleSound() {
+                soundEnabled = !soundEnabled;
+                if (soundEnabled) {
+                    musicToggleButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    if (gameRunning && !gamePaused) {
+                        startMusic();
+                    }
+                } else {
+                    musicToggleButton.innerHTML = '<i class="fas fa-volume-off"></i>';
+                    stopMusic();
+                }
+            }
+            // Character selection event listeners
+            let selectedCharacter = 1;
+            characterElements.forEach(character => {
+                character.addEventListener('click', () => {
+                    characterElements.forEach(c => c.classList.remove('active'));
+                    character.classList.add('active');
+                    selectedCharacter = parseInt(character.dataset.character);
+                    if (gameRunning) {
+                        createPlayer();
+                    }
+                });
+            });
+            // Initial state of sound button icon
+            musicToggleButton.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-off"></i>';
+            // Event listeners
+            startBtn.addEventListener('click', startGame);
+            restartBtn.addEventListener('click', startGame);
+            musicToggleButton.addEventListener('click', toggleSound);
+            submitAnswerBtn.addEventListener('click', checkAnswer);
+            document.addEventListener('keydown', (e) => {
+                if (questionModal.style.display === 'flex') {
+                    if (e.key === 'Enter') {
+                        checkAnswer();
+                    }
+                    e.preventDefault();
+                    return;
+                }
+                if (e.code === 'Space' || e.key === ' ' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    jump();
+                }
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    slide();
+                }
+                if (e.key === 'p' || e.key === 'P' || e.key === 'ة') {
+                    togglePause();
+                }
+                if (e.key === 'r' || e.key === 'R' || e.key === 'ق') {
+                    startGame();
+                }
+            });
+            // Touch support for jump/ascend
+            document.addEventListener('touchstart', (e) => {
+                if (questionModal.style.display === 'flex') {
+                    return;
+                }
+                if (e.target.closest('#music-toggle-btn') || e.target.closest('.btn') || e.target.closest('.pause-overlay')) {
+                    return;
+                }
+                const gameAreaRect = gameArea.getBoundingClientRect();
+                const touchX = e.touches[0].clientX;
+                const touchY = e.touches[0].clientY;
+                if (touchX >= gameAreaRect.left && touchX <= gameAreaRect.right && touchY >= gameAreaRect.top && touchY <= gameAreaRect.bottom) {
+                    e.preventDefault();
+                    if (gameRunning && !gamePaused) {
+                        jump();
+                    }
+                }
+            });
+            // Scroll indicator animation
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            if (scrollIndicator) {
+                setInterval(() => {
+                    scrollIndicator.style.opacity = scrollIndicator.style.opacity === '0.5' ? '1' : '0.5';
+                }, 800);
+            }
+        });
+    </script>
+</body>
+</html>
