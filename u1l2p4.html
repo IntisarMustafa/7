@@ -144,6 +144,13 @@
         .option-btn { background: rgba(76, 201, 240, 0.2); color: white; border: 2px solid #4cc9f0; padding: 12px 20px; font-size: clamp(1.0rem, 3.5vw, 1.2rem); border-radius: 10px; cursor: pointer; transition: all 0.3s ease; text-align: initial; direction: ltr; unicode-bidi: embed; word-break: break-word; overflow-wrap: break-word; }
         .option-btn:hover { background: rgba(76, 201, 240, 0.4); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(76, 201, 240, 0.5); }
         .option-btn.selected { background: linear-gradient(45deg, #4361ee, #3a0ca3); border-color: #7209b7; box-shadow: 0 0 20px rgba(67, 97, 238, 0.8); }
+        /* New CSS for Correct/Incorrect answer display */
+        .option-btn.correct-answer { background: #2ecc71 !important; border-color: #27ae60 !important; box-shadow: 0 0 20px rgba(46, 204, 113, 0.8) !important; animation: glowCorrect 1s infinite alternate; }
+        @keyframes glowCorrect {
+            from { box-shadow: 0 0 10px rgba(46, 204, 113, 0.8); }
+            to { box-shadow: 0 0 25px rgba(46, 204, 113, 1.2); }
+        }
+        .option-btn.incorrect-answer { background: #e74c3c !important; border-color: #c0392b !important; box-shadow: 0 0 20px rgba(231, 76, 60, 0.8) !important; }
         /* Mobile optimization for question modal */
         @media (max-height: 600px) { .question-modal { padding: 10px; } .question-modal h2 { font-size: clamp(1.1rem, 4vw, 1.8rem); margin-bottom: 10px; } .option-btn { padding: 10px 15px; font-size: 1.0rem; } }
         /* Mobile controls */
@@ -1214,11 +1221,31 @@
             }
             // Check the answer from the user
             function checkAnswer() {
+                // Find all option buttons and the correct answer button
+                const allOptions = optionsContainer.querySelectorAll('.option-btn');
+                const correctAnswerButton = allOptions[currentCorrectOptionIndex];
+                
                 let isCorrect = (currentSelectedOptionIndex === currentCorrectOptionIndex);
+                
+                // Remove previous styles
+                allOptions.forEach(btn => {
+                    btn.classList.remove('selected', 'correct-answer', 'incorrect-answer');
+                });
+            
+                // Highlight the selected option
+                const selectedButton = allOptions[currentSelectedOptionIndex];
+                if (selectedButton) {
+                    selectedButton.classList.add('selected');
+                }
+            
                 if (isCorrect) {
                     feedbackMessageElement.textContent = 'صحيح! استمر في اللعب.';
                     feedbackMessageElement.classList.add('correct');
                     playSound(600, 'sine', 0.1, 0.5);
+                    
+                    // Highlight the correct answer with green glow
+                    correctAnswerButton.classList.add('correct-answer');
+            
                     setTimeout(() => {
                         questionModal.style.display = 'none';
                         gamePaused = false;
@@ -1278,14 +1305,18 @@
                         requestAnimationFrame(updateGame);
                     }, 1000);
                 } else {
-                    const q = questions.find(q => q.correctOptionIndex === currentCorrectOptionIndex);
-                    let correctAnswerDisplay = '';
-                    if (q) {
-                        correctAnswerDisplay = q.options[q.correctOptionIndex];
+                    // If the selected button is not the correct one
+                    if (selectedButton) {
+                        selectedButton.classList.add('incorrect-answer');
                     }
-                    feedbackMessageElement.textContent = `خطأ! الإجابة الصحيحة هي: ${correctAnswerDisplay}`;
+                    
+                    // Show the correct answer in green
+                    correctAnswerButton.classList.add('correct-answer');
+                    
+                    feedbackMessageElement.textContent = `خطأ! الإجابة الصحيحة هي: ${correctAnswerButton.textContent}`;
                     feedbackMessageElement.classList.add('incorrect');
                     playSound(80, 'sawtooth', 0.3, 0.5);
+                    
                     setTimeout(() => {
                         questionModal.style.display = 'none';
                         endGame();
