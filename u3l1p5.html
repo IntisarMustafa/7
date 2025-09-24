@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لعبة البجعة في البحيرة الكبيرة</title>
-    <!-- استدعاء MathJax لعرض المعادلات الرياضية بشكل جميل -->
     <script type="text/javascript" id="MathJax-script" async
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
@@ -405,8 +404,7 @@
                 <p id="math-question-text"></p>
             </div>
             <div id="options-container" class="options-container">
-                <!-- Buttons will be dynamically generated here -->
-            </div>
+                </div>
         </div>
     </div>
 
@@ -503,10 +501,7 @@
             setTimeout(() => playSound(1400, 0.1, 0.5), 50);
         }
         
-        function playLoseSound() {
-            playSound(100, 0.3, 0.5);
-            setTimeout(() => playSound(80, 0.3, 0.5), 200);
-        }
+        // دالة playLoseSound() تم حذفها
         
         function playCorrectSound() {
             playSound(1000, 0.1, 0.5);
@@ -1517,7 +1512,6 @@
                 document.getElementById('game-result-title').textContent = "🏆مبارك!🎉 لقد أكملت اللعبة!";
                 document.getElementById('game-result-message').textContent = "لقد وجدت البجعة جميع الأعشاش في البحيرة الكبيرة!";
             } else {
-                playLoseSound();
                 document.getElementById('game-result-title').textContent = "انتهى الوقت!";
                 document.getElementById('game-result-message').textContent = "لم تتمكن البجعة من العثور على جميع الأعشاش في الوقت المحدد.";
             }
