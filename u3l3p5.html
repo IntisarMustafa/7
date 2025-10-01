@@ -2148,6 +2148,18 @@
         let bombMaxRadius = 80; // تم زيادة المدى من 60 إلى 80 (أوسع بكثير)
         let bombRangeIndicator = null; // مؤشر مدى القنبلة
 
+        // إضافة متغيرات جديدة للتحكم باللوحة المفاتيح
+        const keys = {
+            w: false,
+            a: false,
+            s: false,
+            d: false,
+            arrowup: false,
+            arrowleft: false,
+            arrowdown: false,
+            arrowright: false
+        };
+
         // عناصر واجهة المستخدم
         const startScreen = document.getElementById("startScreen");
         const startGameBtn = document.getElementById("startGameBtn");
@@ -2968,11 +2980,56 @@
             velocity.z = moveVector.z;
         }
 
+        // دالة جديدة لتحديث حركة اللاعب بناءً على لوحة المفاتيح
+        function updatePlayerMovementFromKeyboard() {
+            // الحصول على اتجاه الكاميرا
+            const direction = new THREE.Vector3();
+            camera.getWorldDirection(direction);
+            const forward = new THREE.Vector3()
+                .copy(direction)
+                .setY(0)
+                .normalize();
+            const right = new THREE.Vector3().crossVectors(
+                forward,
+                new THREE.Vector3(0, 1, 0)
+            );
+
+            // حساب متجه الحركة بناءً على إدخال لوحة المفاتيح
+            const moveVector = new THREE.Vector3();
+
+            // التحكم باستخدام WASD أو الأسهم
+            if (keys.w || keys.arrowup) {
+                moveVector.add(forward);
+            }
+            if (keys.s || keys.arrowdown) {
+                moveVector.sub(forward);
+            }
+            if (keys.a || keys.arrowleft) {
+                moveVector.sub(right);
+            }
+            if (keys.d || keys.arrowright) {
+                moveVector.add(right);
+            }
+
+            // تطبيق السرعة إذا كان هناك حركة
+            if (moveVector.length() > 0) {
+                moveVector.normalize();
+                velocity.x = moveVector.x * maxSpeed;
+                velocity.z = moveVector.z * maxSpeed;
+            } else {
+                // إبطاء الحركة إذا لم يكن هناك إدخال
+                velocity.multiplyScalar(deceleration);
+            }
+        }
+
         function movePlayer() {
             if (isRoundTransition) return;
 
             // تحديث الحركة بناءً على عجلة التحكم
             updatePlayerMovementFromJoystick();
+
+            // تحديث الحركة بناءً على لوحة المفاتيح
+            updatePlayerMovementFromKeyboard();
 
             let newPosition = player.position.clone().add(velocity);
             newPosition = checkWorldBounds(newPosition);
@@ -3502,6 +3559,52 @@
             });
         }
 
+        // إعداد أحداث لوحة المفاتيح
+        function setupKeyboardControls() {
+            document.addEventListener("keydown", (e) => {
+                if (!gameStarted || gameOver || isRoundTransition) return;
+
+                const key = e.key.toLowerCase();
+                
+                // تحديث حالة المفاتيح المضغوطة
+                if (keys.hasOwnProperty(key)) {
+                    keys[key] = true;
+                }
+
+                switch (key) {
+                    case " ": // مفتاح المسافة للقفز
+                        jump();
+                        break;
+                    case "f": // مفتاح F للهجوم بالعصا
+                        stickAttack();
+                        break;
+                    case "b": // مفتاح B لتفجير القنبلة
+                        if (e.repeat) return; // منع التكرار التلقائي
+                        startBombCharge();
+                        break;
+                }
+            });
+
+            document.addEventListener("keyup", (e) => {
+                if (!gameStarted || gameOver || isRoundTransition) return;
+
+                const key = e.key.toLowerCase();
+                
+                // تحديث حالة المفاتيح المرفوعة
+                if (keys.hasOwnProperty(key)) {
+                    keys[key] = false;
+                }
+
+                switch (key) {
+                    case "b": // مفتاح B لتفجير القنبلة
+                        if (isChargingBomb) {
+                            explodeBomb();
+                        }
+                        break;
+                }
+            });
+        }
+
         // تعديل أحداث زر القنبلة لدعم الشحن
         bombBtn.addEventListener("mousedown", startBombCharge);
         bombBtn.addEventListener("mouseup", explodeBomb);
@@ -3513,35 +3616,6 @@
 
         attackBtn.addEventListener("mousedown", stickAttack);
         jumpBtn.addEventListener("mousedown", jump);
-
-        document.addEventListener("keydown", (e) => {
-            if (!gameStarted || gameOver || isRoundTransition) return;
-
-            switch (e.key) {
-                case " ": // مفتاح المسافة للقفز
-                    jump();
-                    break;
-                case "f": // مفتاح F للهجوم بالعصا
-                    stickAttack();
-                    break;
-                case "b": // مفتاح B لتفجير القنبلة
-                    if (e.repeat) return; // منع التكرار التلقائي
-                    startBombCharge();
-                    break;
-            }
-        });
-
-        document.addEventListener("keyup", (e) => {
-            if (!gameStarted || gameOver || isRoundTransition) return;
-
-            switch (e.key) {
-                case "b": // مفتاح B لتفجير القنبلة
-                    if (isChargingBomb) {
-                        explodeBomb();
-                    }
-                    break;
-            }
-        });
 
         restartBtn.addEventListener("click", restartGame);
         nextRoundBtn.addEventListener("click", nextRound);
@@ -3568,6 +3642,7 @@
             setupMouseControls();
             setupMultiTouchControls();
             setupJoystickControls(); // تهيئة عجلة التحكم
+            setupKeyboardControls(); // تهيئة تحكم لوحة المفاتيح
         });
 
         // توليد سؤال رياضي حول المتتاليات - تم التعديل لعرض المتتاليات في سطر مستقل
@@ -3809,7 +3884,8 @@
                 updateThirdPersonCamera();
 
                 // تحريك يد الراعي وأرجلها أثناء المشي
-                if (joystickActive && (joystickDirection.x !== 0 || joystickDirection.y !== 0)) {
+                if ((joystickActive && (joystickDirection.x !== 0 || joystickDirection.y !== 0)) || 
+                    (keys.w || keys.a || keys.s || keys.d || keys.arrowup || keys.arrowleft || keys.arrowdown || keys.arrowright)) {
                     animateWalking(playerModel, deltaTime);
                     animateLegs(playerModel, deltaTime);
                 } else {
