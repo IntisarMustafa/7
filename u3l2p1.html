@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الكسور العشرية الدورية</title>
+    <!-- Tailwind CSS for styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math symbols -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" xintegrity="sha384-GvrxHw+z4q/RzL05jQ9N+q+1aVl2Zl9x0+hX2jY5wF+R+b0eR-z-n-q-3X-z-Xl-Q==" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-H4uW3s3eT2B2+xP9O/D4h5N6n7f7p5O9Pq2E0Zl7z2Fw/F0e2+Q==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" xintegrity="sha384-i1HVh8p/B/pQ2Cg3t/r/O/3tP2Cj+xG/2+lCg5b+lC+b+c+a+v+1/u+s/g==" crossorigin="anonymous"></script>
+
+    <style>
+        /* Import suitable fonts for Arabic and English text */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #eef2f6;
+        }
+
+        /* Set base styles for the body and the main container */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            flex-grow: 1;
+        }
+
+        /* Main title and lesson idea sections */
+        .section-header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+        }
+        .lesson-idea-box {
+            background-color: #e0f2fe;
+            border-left: 6px solid #084c8f;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .explore-box {
+            background-color: #fefce8; /* Light cool yellow */
+            border-left: 6px solid #084c8f; /* Dark blue shadow on the left */
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Matching box shadow */
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #084c8f;
+            margin-bottom: 0.75rem;
+        }
+        .section-text {
+            font-size: 1.25rem;
+            line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        /* Typography and layout for math expressions */
+        .equation {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2d3748;
+            text-align: right;
+            line-height: 1.8;
+            margin: 1rem 0;
+        }
+        .explanation {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+
+        /* The main steps of the solution with a modern, split layout */
+        .step-row {
+            display: flex;
+            align-items: stretch;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px dashed #e2e8f0;
+            flex-wrap: wrap-reverse;
+        }
+        .step-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .algebra-col, .model-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+        .algebra-col {
+            background-color: #f7fafc;
+        }
+        .model-col {
+            background-color: #f0f4f8;
+            border-left: 3px solid #cbd5e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Check Understanding section and interactivity */
+        .check-understanding-box {
+            background-color: #fff8eb;
+            border: 1px solid #fed7d7;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .problem-list li {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .problem-list li:hover {
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        .math-expr-summary {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2d3748;
+            direction: ltr; /* Ensure LTR for the math expression itself */
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+        .summary-box {
+            background-color: #d1e7dd;
+            border-left: 6px solid #198754;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Custom styling for fraction input boxes */
+        .fraction-input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+            min-width: 120px;
+        }
+        .fraction-input {
+            width: 100%;
+            text-align: center;
+            font-size: 1.25rem;
+            padding: 0.25rem;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+        }
+        .fraction-line {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+            margin: 0.25rem 0;
+        }
+
+        /* Custom styling for the interactive calculator */
+        .calc-btn {
+            padding: 1rem;
+            border-radius: 9999px; /* Fully rounded buttons */
+            font-size: 1.5rem;
+            font-weight: 700;
+            transition: all 0.1s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+        .calc-btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+        .calc-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        /* Styling for the zero button to span two columns */
+        .col-span-2 {
+            grid-column: span 2 / span 2;
+            border-radius: 40px; /* Slightly rectangular for 0 */
+            text-align: left;
+            padding-left: 2rem;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .step-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .algebra-col, .model-col {
+                width: 100%;
+                padding: 1.2rem;
+                border-left: none;
+            }
+            .model-col {
+                order: -1;
+                border-bottom: 3px solid #cbd5e0;
+                border-left: none;
+            }
+            .equation {
+                text-align: center;
+            }
+            .fraction-input-container {
+                width: 80%;
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content Container -->
+    <main class="container">
+        <!-- Professional Header -->
+        <header class="bg-blue-800 text-white py-10 sm:py-12 text-center shadow-lg rounded-t-[1.5rem] relative overflow-hidden">
+            <!-- Decorative gold bar at the bottom -->
+            <div class="absolute inset-x-0 bottom-0 h-1 bg-yellow-400"></div>
+            <h1 class="text-4xl sm:text-5xl font-bold">الدرس 2: الكسور العشرية الدورية</h1>
+        </header>
+
+        <!-- Title and Lesson Idea Section -->
+        <div class="lesson-idea-box w-full mt-8">
+            <h2 class="section-title">فكرة الدرس</h2>
+            <p class="section-text">
+                أحوّل الكسر العشري الدوري إلى كسر فعلي أو عدد كسري.
+            </p>
+            <h3 class="font-bold text-lg mt-4 text-blue-700">المصطلحات</h3>
+            <ul class="list-disc pr-8 text-lg text-gray-700">
+                <li>كسر عشري دوري</li>
+            </ul>
+        </div>
+
+        <!-- Explore Section -->
+        <div class="explore-box">
+            <h2 class="section-title">أستكشف</h2>
+            <div class="flex items-center justify-center mb-6">
+                <!-- START: Interactive Calculator UI (Replacing Placeholder Image) -->
+                <div id="calculator-app" class="w-full max-w-xs p-4 bg-gray-900 rounded-xl shadow-2xl">
+                    <!-- Display Container (Updated) -->
+                    <div class="bg-gray-800 p-4 mb-4 rounded-xl">
+                        <!-- Expression (Small, top right) -->
+                        <div id="calc-expression" class="text-gray-400 text-base text-right overflow-x-auto whitespace-nowrap" dir="ltr"></div>
+                        <!-- Result/Current Input (Large, bottom right) -->
+                        <div id="calc-display" class="text-white text-4xl font-light text-right overflow-x-auto whitespace-nowrap" dir="ltr">0</div>
+                    </div>
+                    
+                    <!-- Buttons Grid -->
+                    <div class="grid grid-cols-4 gap-3">
+                        <!-- First Row (Clear, Sign Change, Percent, Divide) -->
+                        <button class="calc-btn bg-gray-500 text-white hover:bg-gray-400" data-value="C">C</button>
+                        <button class="calc-btn bg-gray-500 text-white hover:bg-gray-400" data-value="&plusmn;">&plusmn;</button>
+                        <button class="calc-btn bg-gray-500 text-white hover:bg-gray-400" data-value="%">%</button>
+                        <button class="calc-btn op-btn bg-orange-500 text-white hover:bg-orange-400" data-value="/">/</button>
+                        
+                        <!-- Second Row (7, 8, 9, Multiply) -->
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value="7">7</button>
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value="8">8</button>
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value="9">9</button>
+                        <button class="calc-btn op-btn bg-orange-500 text-white hover:bg-orange-400" data-value="*">*</button>
+                        
+                        <!-- Third Row (4, 5, 6, Subtract) -->
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value="4">4</button>
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value="5">5</button>
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value="6">6</button>
+                        <button class="calc-btn op-btn bg-orange-500 text-white hover:bg-orange-400" data-value="-">-</button>
+                        
+                        <!-- Fourth Row (1, 2, 3, Add) -->
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value="1">1</button>
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value="2">2</button>
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value="3">3</button>
+                        <button class="calc-btn op-btn bg-orange-500 text-white hover:bg-orange-400" data-value="+">+</button>
+                        
+                        <!-- Fifth Row (0, Decimal, Equals) -->
+                        <button class="calc-btn col-span-2 bg-gray-700 text-white hover:bg-gray-600" data-value="0">0</button>
+                        <button class="calc-btn bg-gray-700 text-white hover:bg-gray-600" data-value=".">.</button>
+                        <button class="calc-btn bg-orange-600 text-white font-bold hover:bg-orange-500" data-value="=">=</button>
+                    </div>
+                </div>
+                <!-- END: Interactive Calculator UI -->
+            </div>
+            <p class="section-text mb-4 text-center">
+                قَسَّمَ حَسَنٌ بَسْطَ كسر على مقامه باستخدام حاسبة، فكان الناتج <span class="math-expr" dir="ltr">$5.\overline{3}$ (أو $5.333\ldots$)</span>، هل يمكن معرفة هذا الكسر؟ (سنحل هذه المشكلة في نهاية الدرس.)
+            </p>
+        </div>
+
+        <!-- Example section with the new styling and layout -->
+        <div class="bg-blue-100 text-blue-800 p-6 rounded-lg my-8 flex flex-col items-center shadow-md">
+            <h2 class="section-title text-center text-blue-800">
+                مثال 1: كتابة الكسر العشري الدوري على صورة كسر <span class="math-expr" dir="ltr">$\frac{a}{b}$</span>
+            </h2>
+            <div class="mt-2 text-center text-3xl font-bold">
+                <span class="math-expr" dir="ltr">$0.\overline{4}$</span>
+            </div>
+        </div>
+        
+        <!-- The main steps of the solution -->
+        
+        <!-- Step 1: Define x and Multiply by 10 -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">افترض أن الكسر العشري الدوري يمثّل المتغير <span class="math-expr" dir="ltr">$x$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = 0.\overline{4}$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = 0.444\ldots$</span></div>
+                <div class="explanation mt-4">اضرب طرفي المعادلة في <span class="math-expr" dir="ltr">$10$</span>، لأن منزلة واحدة فقط تتكرر</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$10x = 10(0.444\ldots)$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$10x = 4.444\ldots$</span></div>
+            </div>
+            <div class="model-col">
+                <div class="explanation font-bold text-blue-800">الضرب في <span class="math-expr" dir="ltr">$10$</span> يحرك الفاصلة العشرية منزلة واحدة إلى اليمين.</div>
+                <div class="mt-4 p-4 bg-white rounded-lg shadow-inner border border-blue-200">
+                    <span class="math-expr text-lg" dir="ltr">$0.444\ldots \xrightarrow{\times 10} 4.444\ldots$</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Rewrite the equation and Substitute x -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">أجزئ العدد العشري إلى عدد صحيح وكسر عشري دوري</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$4.444\ldots = 4 + 0.444\ldots$</span></div>
+                <div class="explanation mt-4">عوّض بالمتغير <span class="math-expr" dir="ltr">$x$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$10x = 4 + x$</span></div>
+            </div>
+            <div class="model-col">
+                 <div class="explanation font-bold text-blue-800">المعادلة الجديدة تحتوي على المتغير <span class="math-expr" dir="ltr">$x$</span> مرة أخرى.</div>
+                 <div class="mt-4 p-4 bg-white rounded-lg shadow-inner border border-blue-200">
+                    <span class="math-expr text-2xl font-extrabold" dir="ltr">$10x = 4 + x$</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Solve for x -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">اطرح <span class="math-expr" dir="ltr">$x$</span> من كلا الطرفين</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$10x - x = 4 + x - x$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$9x = 4$</span></div>
+                <div class="explanation mt-4">اقسم كلا الطرفين على <span class="math-expr" dir="ltr">$9$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = \frac{4}{9}$</span></div>
+            </div>
+            <div class="model-col">
+                <div class="explanation font-bold text-blue-800">حل المعادلة لإيجاد قيمة <span class="math-expr" dir="ltr">$x$</span> في صورة كسر.</div>
+                <div class="mt-4 p-4 bg-white rounded-lg shadow-inner border border-blue-200">
+                    <span class="math-expr text-2xl font-extrabold" dir="ltr">$x = \frac{4}{9}$</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary section -->
+        <div class="summary-box">
+            <h2 class="summary-title">إذن، يُكتب الكسر العشري الدوري <span class="math-expr" dir="ltr">$\mathbf{0.\overline{4}}$</span> على صورة كسر <span class="math-expr" dir="ltr">$\mathbf{\frac{a}{b}}$</span> كما يلي:</h2>
+            <div class="text-center">
+                <span class="math-expr-summary" dir="ltr">$0.\overline{4} = \frac{4}{9}$</span>
+            </div>
+        </div>
+
+        <!-- Check Understanding Section -->
+        <div class="check-understanding-box">
+            <h2 class="section-title">أتحقق من فهمي</h2>
+            <p class="section-text mb-4">
+                أكتب الكسر العشري الدوري على صورة كسر <span class="math-expr" dir="ltr">$\frac{a}{b}$</span> في ما يأتي:
+            </p>
+            <ul class="problem-list grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Question 1 -->
+                <li>
+                    <p class="section-text">
+                        1) <span class="math-expr" dir="ltr">$0.\overline{1}$</span>
+                    </p>
+                    <div class="mt-4 flex items-center justify-center gap-4">
+                        <div class="fraction-input-container">
+                            <!-- Numerator (البسط) input -->
+                            <input type="text" id="q1-numerator" class="fraction-input border-gray-300 focus:ring-blue-500" placeholder="البسط">
+                            <!-- Fraction line (خط الكسر) -->
+                            <div class="fraction-line"></div>
+                            <!-- Denominator (المقام) input -->
+                            <input type="text" id="q1-denominator" class="fraction-input border-gray-300 focus:ring-blue-500" placeholder="المقام">
+                        </div>
+                        <button onclick="checkAnswer(1)" class="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">تحقق</button>
+                    </div>
+                    <div id="q1-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </li>
+                <!-- Question 2 -->
+                <li>
+                    <p class="section-text">
+                        2) <span class="math-expr" dir="ltr">$0.\overline{2}$</span>
+                    </p>
+                    <div class="mt-4 flex items-center justify-center gap-4">
+                         <div class="fraction-input-container">
+                            <!-- Numerator (البسط) input -->
+                            <input type="text" id="q2-numerator" class="fraction-input border-gray-300 focus:ring-blue-500" placeholder="البسط">
+                            <!-- Fraction line (خط الكسر) -->
+                            <div class="fraction-line"></div>
+                            <!-- Denominator (المقام) input -->
+                            <input type="text" id="q2-denominator" class="fraction-input border-gray-300 focus:ring-blue-500" placeholder="المقام">
+                        </div>
+                        <button onclick="checkAnswer(2)" class="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">تحقق</button>
+                    </div>
+                    <div id="q2-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </li>
+                <!-- Question 3 -->
+                <li>
+                    <p class="section-text">
+                        3) <span class="math-expr" dir="ltr">$0.\overline{5}$</span>
+                    </p>
+                    <div class="mt-4 flex items-center justify-center gap-4">
+                        <div class="fraction-input-container">
+                            <!-- Numerator (البسط) input -->
+                            <input type="text" id="q3-numerator" class="fraction-input border-gray-300 focus:ring-blue-500" placeholder="البسط">
+                            <!-- Fraction line (خط الكسر) -->
+                            <div class="fraction-line"></div>
+                            <!-- Denominator (المقام) input -->
+                            <input type="text" id="q3-denominator" class="fraction-input border-gray-300 focus:ring-blue-500" placeholder="المقام">
+                        </div>
+                        <button onclick="checkAnswer(3)" class="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">تحقق</button>
+                    </div>
+                    <div id="q3-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </li>
+                <!-- Question 4 -->
+                <li>
+                    <p class="section-text">
+                        4) <span class="math-expr" dir="ltr">$0.\overline{8}$</span>
+                    </p>
+                    <div class="mt-4 flex items-center justify-center gap-4">
+                        <div class="fraction-input-container">
+                            <!-- Numerator (البسط) input -->
+                            <input type="text" id="q4-numerator" class="fraction-input border-gray-300 focus:ring-blue-500" placeholder="البسط">
+                            <!-- Fraction line (خط الكسر) -->
+                            <div class="fraction-line"></div>
+                            <!-- Denominator (المقام) input -->
+                            <input type="text" id="q4-denominator" class="fraction-input border-gray-300 focus:ring-blue-500" placeholder="المقام">
+                        </div>
+                        <button onclick="checkAnswer(4)" class="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">تحقق</button>
+                    </div>
+                    <div id="q4-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Add Next Button -->
+        <div class="flex justify-center mt-8">
+            <a href="u3l2p2.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 text-lg">
+                التالي
+            </a>
+        </div>
+        
+        <!-- Divider to separate the button and the footer -->
+        <div class="w-full h-1 bg-gray-200 my-8"></div>
+
+        <!-- Professional Footer -->
+        <footer class="bg-blue-800 text-white p-4 text-center rounded-b-[1.5rem]">
+            <p class="text-sm">جميع الحقوق محفوظة © 2025</p>
+        </footer>
+    </main>
+    
+    <!-- JavaScript for interactivity and rendering math -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to render all math expressions on the page
+            function renderAllMath() {
+                // Render expressions using .math-expr
+                document.querySelectorAll('.math-expr, .math-expr-summary').forEach(function(element) {
+                    try {
+                        // KaTeX expects the expression without the surrounding $
+                        const expression = element.textContent.replace(/\$/g, '');
+                        // Check if the element already has rendered KaTeX content to avoid double rendering
+                        if (element.querySelector('.katex')) return; 
+
+                        katex.render(expression, element, {
+                            throwOnError: false,
+                            displayMode: false // Inline mode
+                        });
+                    } catch(e) {
+                        console.error("KaTeX rendering error:", e);
+                    }
+                });
+            }
+
+            // Initial rendering of all math
+            renderAllMath();
+
+            // --- Calculator Logic ---
+            const expressionDisplay = document.getElementById('calc-expression'); // New: for the full expression
+            const resultDisplay = document.getElementById('calc-display'); // Main display: for the result/current input
+            const buttons = document.querySelectorAll('.calc-btn');
+            
+            let currentInput = '0';
+            let firstOperand = null;
+            let operator = null;
+            let waitingForSecondOperand = false;
+            let expressionString = ''; // Tracks the expression like "3 + 4"
+
+            function updateDisplay() {
+                // Main result display
+                resultDisplay.textContent = currentInput.slice(0, 16); 
+                // Expression history display
+                expressionDisplay.textContent = expressionString;
+            }
+
+            function clearCalculator() {
+                currentInput = '0';
+                firstOperand = null;
+                operator = null;
+                waitingForSecondOperand = false;
+                expressionString = '';
+            }
+
+            function inputDigit(digit) {
+                if (waitingForSecondOperand) {
+                    // Start entering the second number
+                    currentInput = digit;
+                    waitingForSecondOperand = false;
+                    
+                    // Start building the expression string: FirstOperand + Operator + NewDigit
+                    if (operator) {
+                        expressionString = String(firstOperand) + operator + digit;
+                    } else {
+                        // Reset if starting a new calculation after an '='
+                        expressionString = '';
+                    }
+
+                } else {
+                    // Append to the current number
+                    currentInput = currentInput === '0' ? digit : currentInput + digit;
+                    
+                    // Update the expression string if we are building the second operand
+                    if (operator && firstOperand !== null) {
+                        // Rebuild the expression string completely to handle backspaces or complex inputs correctly
+                        expressionString = String(firstOperand) + operator + currentInput;
+                    } else {
+                        // Not in a calculation yet, or reset after equals
+                        expressionString = ''; 
+                    }
+                }
+            }
+
+            function inputDecimal(dot) {
+                if (waitingForSecondOperand) {
+                    currentInput = '0.';
+                    waitingForSecondOperand = false;
+                    // Start the second operand with 0. in the expression
+                    expressionString = (operator ? String(firstOperand) + operator : '') + '0.';
+                    return;
+                }
+                if (!currentInput.includes(dot)) {
+                    currentInput += dot;
+                    // Append decimal to expression string if an operator is set
+                    if (operator && firstOperand !== null) {
+                         expressionString += dot;
+                    }
+                }
+            }
+
+            function handleOperator(nextOperator) {
+                const inputValue = parseFloat(currentInput);
+
+                // Case 1: Just change the pending operator (e.g., 5 + then press -)
+                if (operator && waitingForSecondOperand && nextOperator !== '=') {
+                    operator = nextOperator;
+                    expressionString = String(firstOperand) + operator;
+                    return;
+                }
+
+                if (firstOperand === null) {
+                    // Case 2: Start a new calculation (set the first operand)
+                    firstOperand = inputValue;
+                    
+                    // Display the first operand and the operator
+                    if (nextOperator !== '=') {
+                         expressionString = String(firstOperand) + nextOperator;
+                    }
+                } else if (operator) {
+                    // Case 3: Chaining operation or hitting '=' (perform calculation)
+                    const result = performCalculation[operator](firstOperand, inputValue);
+
+                    // Limit precision for display, especially important for repeating decimals (e.g., 1/3)
+                    currentInput = String(result.toPrecision(10)).replace(/0+$/, ''); 
+                    
+                    if (nextOperator === '=') {
+                        // Full calculation completed, display expression and result
+                        expressionString += inputValue + nextOperator + currentInput; // Shows "5 + 3 = 8"
+                        firstOperand = null; // Reset for a new calculation start
+                    } else {
+                        // Chaining: Result becomes the new first operand
+                        firstOperand = result;
+                        expressionString = firstOperand + nextOperator; // Shows "8 +"
+                    }
+                }
+
+                // Only wait for second operand if an operator is pending (i.e., not after '=')
+                waitingForSecondOperand = (nextOperator !== '='); 
+                operator = (nextOperator === '=') ? null : nextOperator;
+            }
+
+            const performCalculation = {
+                '/': (firstOperand, secondOperand) => {
+                    if (secondOperand === 0) {
+                        currentInput = 'Error';
+                        return 0;
+                    }
+                    return firstOperand / secondOperand;
+                },
+                '*': (firstOperand, secondOperand) => firstOperand * secondOperand,
+                '+': (firstOperand, secondOperand) => firstOperand + secondOperand,
+                '-': (firstOperand, secondOperand) => firstOperand - secondOperand,
+            };
+            
+            function handleSpecial(value) {
+                if (value === 'C') {
+                    clearCalculator();
+                } else if (value === '&plusmn;') {
+                    currentInput = String(-parseFloat(currentInput));
+                    // Do not update expressionString automatically for +/- for simplicity, unless it's a new input.
+                    expressionString = ''; 
+                    firstOperand = null;
+                    operator = null;
+                    waitingForSecondOperand = false;
+                } else if (value === '%') {
+                    currentInput = String(parseFloat(currentInput) / 100);
+                    // Do not update expressionString for % for simplicity
+                    expressionString = '';
+                    firstOperand = null;
+                    operator = null;
+                    waitingForSecondOperand = false;
+                }
+            }
+
+            buttons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const value = event.target.dataset.value || event.target.textContent.trim();
+
+                    if (value === 'C' || value === '&plusmn;' || value === '%') {
+                        handleSpecial(value);
+                    } else if (['/', '*', '-', '+', '='].includes(value)) {
+                        handleOperator(value);
+                    } else if (value === '.') {
+                        inputDecimal(value);
+                    } else {
+                        inputDigit(value);
+                    }
+
+                    updateDisplay();
+                });
+            });
+
+            updateDisplay(); // Initial display setup
+            // --- End Calculator Logic ---
+
+            // Function to check the user's answer (Existing logic)
+            window.checkAnswer = function(questionNumber) {
+                const numeratorInput = document.getElementById(`q${questionNumber}-numerator`);
+                const denominatorInput = document.getElementById(`q${questionNumber}-denominator`);
+                const feedbackElement = document.getElementById(`q${questionNumber}-feedback`);
+                
+                // Get and parse user input
+                const userNumerator = parseFloat(numeratorInput.value.trim());
+                const userDenominator = parseFloat(denominatorInput.value.trim());
+                
+                let correctAnswer;
+                let correctFractionKaTeX;
+                let correctDecimal;
+
+                // Define correct answers (as decimals and KaTeX strings)
+                switch (questionNumber) {
+                    case 1:
+                        correctAnswer = 1/9;
+                        correctFractionKaTeX = "\\frac{1}{9}";
+                        correctDecimal = "0.111\ldots"; // Use \ldots for KaTeX
+                        break;
+                    case 2:
+                        correctAnswer = 2/9;
+                        correctFractionKaTeX = "\\frac{2}{9}";
+                        correctDecimal = "0.222\ldots";
+                        break;
+                    case 3:
+                        correctAnswer = 5/9;
+                        correctFractionKaTeX = "\\frac{5}{9}";
+                        correctDecimal = "0.555\ldots";
+                        break;
+                    case 4:
+                        correctAnswer = 8/9;
+                        correctFractionKaTeX = "\\frac{8}{9}";
+                        correctDecimal = "0.888\ldots";
+                        break;
+                }
+
+                let userValue = NaN;
+
+                // Calculate user's fraction value
+                if (!isNaN(userNumerator) && !isNaN(userDenominator) && userDenominator !== 0) {
+                    userValue = userNumerator / userDenominator;
+                }
+                
+                // Tolerance for floating-point comparison
+                const tolerance = 0.001; 
+
+                if (!isNaN(userValue) && Math.abs(userValue - correctAnswer) < tolerance) {
+                    feedbackElement.textContent = "إجابة صحيحة! 🎉";
+                    feedbackElement.className = "mt-2 text-center font-bold text-green-600";
+                } else if (isNaN(userNumerator) || isNaN(userDenominator) || userDenominator === 0) {
+                    feedbackElement.textContent = "الرجاء إدخال أرقام صحيحة في البسط والمقام.";
+                    feedbackElement.className = "mt-2 text-center font-bold text-orange-600";
+                } 
+                else {
+                    // Clear previous content
+                    feedbackElement.innerHTML = '';
+                    
+                    // Create a text node for the first part of the message
+                    const textNode1 = document.createTextNode("إجابة خاطئة. الحل الصحيح هو ");
+                    
+                    // Create a span for the KaTeX expression (fraction) and set its direction to LTR
+                    const katexSpan = document.createElement('span');
+                    katexSpan.setAttribute('dir', 'ltr');
+                    
+                    try {
+                        // Render the KaTeX expression into the span
+                        katex.render(correctFractionKaTeX, katexSpan, { throwOnError: false });
+                    } catch(e) {
+                        console.error("KaTeX rendering error:", e);
+                        katexSpan.textContent = correctFractionKaTeX;
+                    }
+                    
+                    // Create a text node for the second part of the message (decimal)
+                    const textNode2 = document.createTextNode(` أو ما يعادل ${correctDecimal}`);
+                    
+                    // Append the nodes to the feedback element
+                    feedbackElement.appendChild(textNode1);
+                    feedbackElement.appendChild(katexSpan);
+                    feedbackElement.appendChild(textNode2);
+                    feedbackElement.className = "mt-2 text-center font-bold text-red-600";
+                }
+                feedbackElement.style.display = 'block';
+            };
+        });
+    </script>
+</body>
+</html>
