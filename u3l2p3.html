@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الكسور العشرية الدورية</title>
+    <!-- Tailwind CSS for styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math symbols -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" xintegrity="sha384-GvrxHw+z4q/RzL05jQ9N+q+1aVl2Zl9x0+hX2jY5wF+R+b0eR-z-n-q-3X-z-Xl-Q==" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-H4uW3s3eT2B2+xP9O/D4h5N6n7f7p5O9Pq2E0l7l2lFw/F0e2+Q==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" xintegrity="sha384-i1HVh8p/B/pQ2Cg3t/r/O/3tP2Cj+xG/2+lCg5b+lC+b+c+a+v+1/u+s/g==" crossorigin="anonymous"></script>
+
+    <style>
+        /* Import suitable fonts for Arabic and English text */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #eef2f6;
+        }
+
+        /* Set base styles for the body and the main container */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            flex-grow: 1;
+        }
+
+        /* Main title and lesson idea sections */
+        .lesson-idea-box {
+            background-color: #e0f2fe;
+            border-left: 6px solid #084c8f;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #084c8f;
+            margin-bottom: 0.75rem;
+        }
+        .section-text {
+            font-size: 1.15rem; /* Adjusted for better mobile reading */
+            line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        /* Typography and layout for math expressions */
+        .equation {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2d3748;
+            text-align: right;
+            line-height: 1.8;
+            margin: 1rem 0;
+            direction: ltr; /* Ensure math block is LTR */
+        }
+        /* Add the math-expr class to ensure KaTeX is used for all math in text */
+        .explanation .math-expr {
+            font-weight: bold;
+        }
+
+        .explanation {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+            text-align: right;
+        }
+
+        /* The main steps of the solution with a modern, split layout */
+        .step-row {
+            display: flex;
+            align-items: stretch;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px dashed #e2e8f0;
+            flex-wrap: wrap-reverse;
+        }
+        .step-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .algebra-col, .model-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+        .algebra-col {
+            background-color: #f7fafc;
+        }
+        .model-col {
+            background-color: #f0f4f8;
+            border-left: 3px solid #cbd5e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Check Understanding section and interactivity */
+        .check-understanding-box {
+            background-color: #f0fdf4; /* Light green for practice */
+            border: 1px solid #10b981; /* Green border */
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .problem-input {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1.25rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            text-align: center;
+            direction: ltr;
+        }
+
+        /* Styles for the mixed number input container */
+        .mixed-number-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem; /* Space between whole number and fraction */
+            margin-right: 2rem; /* Give space on the right for the check button on mobile/desktop */
+        }
+        
+        .whole-number-input {
+            width: 50px; /* Specific width for the whole number */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-self: stretch; /* Stretch to align with the fraction height */
+        }
+
+        .fraction-input-group {
+            width: 70px; /* Specific width for the fraction */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fraction-input-group input {
+            padding: 0.4rem;
+            font-size: 1rem;
+        }
+
+        .fraction-divider {
+            height: 2px;
+            width: 100%;
+            background-color: #4a5568;
+            margin: 1px 0;
+        }
+        
+        /* Summary section for the final calculation */
+        .summary-box {
+            background-color: #e0f7fa;
+            border-left: 6px solid #00bcd4;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .math-expr-summary {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00838f;
+            direction: ltr;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .step-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .algebra-col, .model-col {
+                width: 100%;
+                padding: 1.2rem;
+                border-left: none;
+            }
+            .model-col {
+                order: -1;
+                border-bottom: 3px solid #cbd5e0;
+                border-left: none;
+            }
+            .equation {
+                text-align: center;
+            }
+            .problem-set {
+                flex-direction: column;
+                gap: 2rem !important;
+            }
+            .mixed-number-container {
+                 margin-right: 0;
+            }
+            /* Adjust the layout for the input fields on small screens - maintain LTR appearance */
+            .input-group-row {
+                flex-direction: column; /* Stack vertically on small screens */
+                align-items: center;
+            }
+            .mixed-number-container {
+                flex-direction: row; /* Ensure whole and fraction stay side-by-side */
+                margin-bottom: 1rem;
+            }
+            .whole-number-input, .fraction-input-group {
+                width: 40%; /* Make them slightly wider for touch on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content Container -->
+    <main class="container">
+        <!-- Professional Header -->
+        <header class="bg-blue-800 text-white py-12 sm:py-16 text-center shadow-lg rounded-t-[1.5rem] relative overflow-hidden">
+            <!-- Decorative gold bar at the bottom -->
+            <div class="absolute inset-x-0 bottom-0 h-1 bg-yellow-400"></div>
+            <h1 class="text-3xl leading-tight sm:text-4xl font-bold">الكسور العشرية الدورية</h1>
+        </header>
+
+        <!-- Lesson Idea Section -->
+        <div class="lesson-idea-box w-full mt-8">
+            <h2 class="section-title">مثال 3: تحويل كسر عشري دوري غير نقي</h2>
+            <p class="section-text">
+                تُوجَد كسورٌ عشرية دورية يتكرّر فيها رقمٌ واحدٌ أو أكثر، وقد يكون هناك أرقام غير متكررة قبل الجزء الدوري. يمكننا دائماً كتابة هذه الكسور العشرية الدورية على الصورة <span class="math-expr" dir="ltr">$\frac{a}{b}$</span>.
+            </p>
+        </div>
+
+        <!-- Example section with the new styling and layout -->
+        <div class="bg-indigo-100 text-indigo-900 p-6 rounded-lg my-8 flex flex-col items-center shadow-md">
+            <h2 class="section-title text-center text-indigo-900">
+                أكتب العدد العشري الدوري <span class="math-expr" dir="ltr">$4.1\overline{3}$</span> على صورة عدد كسري.
+            </h2>
+        </div>
+        
+        <!-- The main steps of the solution: Converting the repeating decimal -->
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-right">خطوات الحل: تحويل <span class="math-expr" dir="ltr">$4.1\overline{3}$</span></h3>
+
+        <!-- Step 1: Define x and Multiply by 10 (Move non-repeating part) -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">1. عوّض عن الكسر العشري الدوري بمتغير <span class="math-expr" dir="ltr">$x$</span>:</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = 4.1333\ldots \quad (1)$</span></div> 
+                <div class="explanation mt-4">2. اضرب طرفي المعادلة في <span class="math-expr" dir="ltr">$10$</span> لتحريك الفاصلة إلى يمين الرقم غير المتكرر (<span class="math-expr" dir="ltr">$1$</span>):</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$10x = 41.3333\ldots \quad (2)$</span></div> 
+            </div>
+            <div class="model-col">
+                <div class="explanation font-bold text-blue-800">نقوم أولاً بتحريك الفاصلة لتصبح مباشرة أمام الجزء الدوري (<span class="math-expr" dir="ltr">$\overline{3}$</span>)</div>
+                <div class="mt-4 p-4 bg-white rounded-lg shadow-inner border border-blue-200">
+                    <span class="math-expr text-lg" dir="ltr">$4.\mathbf{1}333\ldots \xrightarrow{\times 10} 41.333\ldots$</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Multiply by 100 (Move one full cycle) -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">3. اضرب طرفي المعادلة الأصلية (<span class="math-expr" dir="ltr">$1$</span>) في <span class="math-expr" dir="ltr">$100$</span> لتحريك الفاصلة بعد أول جزء دوري:</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$100x = 413.3333\ldots \quad (3)$</span></div>
+                <div class="explanation mt-4">نقوم بالضرب في <span class="math-expr" dir="ltr">$100$</span> لأن لدينا منزلة غير متكررة ومنزلة متكررة واحدة: <span class="math-expr" dir="ltr">$10 \times 10 = 100$</span>.</div>
+            </div>
+            <div class="model-col">
+                 <div class="explanation font-bold text-blue-800">الآن أصبح الجزء الدوري في نفس الموضع بعد الفاصلة في المعادلتين (<span class="math-expr" dir="ltr">$2$</span>) و (<span class="math-expr" dir="ltr">$3$</span>).</div>
+                 <div class="mt-4 p-4 bg-white rounded-lg shadow-inner border border-blue-200">
+                    <span class="math-expr text-2xl font-extrabold" dir="ltr">$\begin{cases} 10x = 41.333\ldots \\ 100x = 413.333\ldots \end{cases}$</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Subtract and Solve for x -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">4. اطرح المعادلة (<span class="math-expr" dir="ltr">$2$</span>) من المعادلة (<span class="math-expr" dir="ltr">$3$</span>) للتخلص من الجزء الدوري:</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$100x - 10x = 413.333\ldots - 41.333\ldots$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$90x = 372$</span></div>
+                <div class="explanation mt-4">5. اقسم كلا الطرفين على <span class="math-expr" dir="ltr">$90$</span>:</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = \frac{372}{90}$</span></div>
+            </div>
+            <div class="model-col">
+                <div class="explanation font-bold text-blue-800">العدد <span class="math-expr" dir="ltr">$372$</span> هو الفرق بين <span class="math-expr" dir="ltr">$413$</span> و <span class="math-expr" dir="ltr">$41$</span> (بعد إهمال الجزء الدوري).</div>
+                <div class="mt-4 p-4 bg-white rounded-lg shadow-inner border border-blue-200">
+                    <span class="math-expr text-2xl font-extrabold" dir="ltr">$413 - 41 = 372$</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Application Summary -->
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 mt-10 text-right">الناتج النهائي</h3>
+
+        <div class="summary-box">
+            <p class="section-text">
+                نقوم بتبسيط الكسر <span class="math-expr" dir="ltr">$\frac{372}{90}$</span> للحصول على عدد كسري في أبسط صورة:
+            </p>
+            <div class="text-center mt-4">
+                <span class="math-expr-summary" dir="ltr">$\frac{372 \div 6}{90 \div 6} = \frac{62}{15}$</span>
+            </div>
+            <div class="text-center mt-4">
+                <span class="math-expr-summary" dir="ltr">$\frac{62}{15} = 4\frac{2}{15}$</span>
+            </div>
+            <p class="section-text font-bold text-teal-800 mt-4 text-center">
+                إذَنْ، العدد العشري الدوري <span class="math-expr" dir="ltr">$4.1\overline{3}$</span> يساوي العدد الكسري <span class="math-expr" dir="ltr">$4\frac{2}{15}$</span>.
+            </p>
+        </div>
+
+        <!-- Check Understanding Section -->
+        <div class="check-understanding-box">
+            <h2 class="section-title text-green-700">أتحقق من فهمي: اكتب العدد العشري الدوري على صورة عدد كسري</h2>
+            
+            <!-- Interactive Problem Area for 1.16 bar -->
+            <div class="bg-white p-6 rounded-lg shadow-inner border border-gray-200 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">1. <span class="math-expr" dir="ltr">$1.\overline{16}$</span></h3>
+                <!-- MODIFIED: Changed layout to place the whole number input next to the fraction input fields (on the left) -->
+                <div class="flex items-center justify-center gap-6 mb-6 input-group-row">
+                    
+                    <!-- Mixed Number Input Group -->
+                    <div class="mixed-number-container">
+                        <!-- Fractional Part (Right side in Arabic display) -->
+                        <div class="fraction-input-group">
+                            <input type="text" id="q1-numerator" class="problem-input border-gray-300 focus:ring-blue-500" placeholder="البسط">
+                            <div class="fraction-divider"></div>
+                            <input type="text" id="q1-denominator" class="problem-input border-gray-300 focus:ring-blue-500" placeholder="المقام">
+                        </div>
+                        
+                        <!-- Whole Number Part (Left side in Arabic display) -->
+                        <div class="whole-number-input">
+                            <input type="text" id="q1-whole" class="problem-input border-gray-300 focus:ring-blue-500" placeholder="عدد صحيح">
+                        </div>
+                    </div>
+
+                    <!-- Button -->
+                    <button onclick="checkProblem('q1', 115, 99, 1, 16, 99)" class="bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300 transform hover:scale-105 self-end">تحقق</button>
+                </div>
+                <div id="q1-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+            </div>
+            
+            <!-- Interactive Problem Area for 3.27 bar -->
+            <div class="bg-white p-6 rounded-lg shadow-inner border border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">2. <span class="math-expr" dir="ltr">$3.\overline{27}$</span></h3>
+                <!-- MODIFIED: Changed layout to place the whole number input next to the fraction input fields (on the left) -->
+                <div class="flex items-center justify-center gap-6 mb-6 input-group-row">
+                    
+                    <!-- Mixed Number Input Group -->
+                    <div class="mixed-number-container">
+                        <!-- Fractional Part (Right side in Arabic display) -->
+                        <div class="fraction-input-group">
+                            <input type="text" id="q2-numerator" class="problem-input border-gray-300 focus:ring-blue-500" placeholder="البسط">
+                            <div class="fraction-divider"></div>
+                            <input type="text" id="q2-denominator" class="problem-input border-gray-300 focus:ring-blue-500" placeholder="المقام">
+                        </div>
+                        
+                        <!-- Whole Number Part (Left side in Arabic display) -->
+                        <div class="whole-number-input">
+                            <input type="text" id="q2-whole" class="problem-input border-gray-300 focus:ring-blue-500" placeholder="عدد صحيح">
+                        </div>
+                    </div>
+                    
+                    <!-- Button -->
+                    <button onclick="checkProblem('q2', 36, 11, 3, 3, 11)" class="bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300 transform hover:scale-105 self-end">تحقق</button>
+                </div>
+                <div id="q2-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+            </div>
+
+        </div>
+        
+        <!-- Updated Navigation Buttons -->
+        <div class="flex justify-between mt-8">
+            <!-- Previous Button - Updated href -->
+            <a href="u3l2p2.html" class="bg-gray-400 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-500 transition duration-300 transform hover:scale-105 text-lg">
+                السابق
+            </a>
+            <!-- Next Button - Updated href -->
+            <a href="u3l2p4.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 text-lg">
+                التالي
+            </a>
+        </div>
+        
+        <!-- Divider to separate the button and the footer -->
+        <div class="w-full h-1 bg-gray-200 my-8"></div>
+
+        <!-- Professional Footer -->
+        <footer class="bg-blue-800 text-white p-4 text-center rounded-b-[1.5rem]">
+            <p class="text-sm">جميع الحقوق محفوظة © 2025</p>
+        </footer>
+    </main>
+    
+    <!-- JavaScript for interactivity and rendering math -->
+    <script>
+        // Helper function to calculate GCD (القاسم المشترك الأكبر)
+        function gcd(a, b) {
+            return b ? gcd(b, a % b) : a;
+        }
+
+        // Helper function to simplify a fraction
+        function simplifyFraction(numerator, denominator) {
+            if (denominator === 0) return { num: 0, den: 0 };
+            const common = gcd(Math.abs(numerator), Math.abs(denominator));
+            return {
+                num: numerator / common,
+                den: denominator / common
+            };
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to render all math expressions on the page
+            function renderAllMath() {
+                // Render expressions using .math-expr
+                document.querySelectorAll('.math-expr, .math-expr-summary').forEach(function(element) {
+                    try {
+                        // KaTeX uses a different structure when rendered, so we extract the original content
+                        let expression = element.textContent.trim();
+                        
+                        // If the element already contains KaTeX, skip to prevent errors/double rendering
+                        if (element.querySelector('.katex')) return; 
+
+                        // Strip leading/trailing $ signs if they exist, but only if we haven't rendered yet
+                        expression = expression.replace(/^\$/, '').replace(/\$$/, '');
+                        
+                        // Render KaTeX in the element
+                        katex.render(expression, element, {
+                            throwOnError: false,
+                            displayMode: false // Inline mode
+                        });
+                    } catch(e) {
+                        console.error("KaTeX rendering error:", e);
+                    }
+                });
+            }
+
+            // Initial rendering of all math
+            renderAllMath();
+
+            const tolerance = 0.0000001; 
+
+            /**
+             * Checks the user's input for a mixed number against the correct answer.
+             * @param {string} idPrefix - The prefix for input IDs (e.g., 'q1', 'q2').
+             * @param {number} correctNum - The correct simplified improper fraction numerator.
+             * @param {number} correctDen - The correct simplified improper fraction denominator.
+             * @param {number} mixedWhole - The correct whole part of the mixed number.
+             * @param {number} mixedNum - The correct fractional numerator of the mixed number.
+             * @param {number} mixedDen - The correct fractional denominator of the mixed number.
+             */
+            window.checkProblem = function(idPrefix, correctNum, correctDen, mixedWhole, mixedNum, mixedDen) {
+                const wholeInput = document.getElementById(`${idPrefix}-whole`);
+                const numInput = document.getElementById(`${idPrefix}-numerator`);
+                const denInput = document.getElementById(`${idPrefix}-denominator`);
+                const feedbackElement = document.getElementById(`${idPrefix}-feedback`);
+
+                // Use the placeholder text as a hint if the user didn't enter anything
+                const userWhole = parseInt(wholeInput.value.trim()) || 0;
+                const userNum = parseInt(numInput.value.trim()) || 0;
+                const userDen = parseInt(denInput.value.trim()) || 0;
+
+                feedbackElement.style.display = 'block';
+
+                if (isNaN(userWhole) || isNaN(userNum) || isNaN(userDen) || userDen === 0) {
+                    feedbackElement.textContent = "الرجاء إدخال أرقام صحيحة في جميع الحقول.";
+                    feedbackElement.className = "mt-2 text-center font-bold text-orange-600";
+                    return;
+                }
+                
+                // 1. Calculate the user's improper fraction value
+                const userImproperNum = (userWhole * userDen) + userNum;
+                // Avoid division by zero, though checked above
+                const userValue = userDen !== 0 ? userImproperNum / userDen : 0; 
+
+                // 2. Calculate the correct value
+                const correctValue = correctNum / correctDen;
+                
+                // Correct simplified mixed number (KaTeX for display)
+                const correctMixedKaTeX = `\\mathbf{${mixedWhole} \\frac{${mixedNum}}{${mixedDen}}}`;
+                
+                if (Math.abs(userValue - correctValue) < tolerance) {
+                    // Check if it's in the simplified mixed form
+                    
+                    // Simplify the user's input fraction part (num/den)
+                    const simplified = simplifyFraction(userNum, userDen);
+                    
+                    // Check if the fractional part is simplified correctly AND the whole part matches
+                    if (simplified.num === mixedNum && simplified.den === mixedDen && userWhole === mixedWhole) {
+                        feedbackElement.textContent = "إجابة صحيحة ومبسّطة! 🎉";
+                        feedbackElement.className = "mt-2 text-center font-bold text-green-600";
+                    } else {
+                        // Correct value but not simplified
+                        const textNode1 = document.createTextNode("إجابة صحيحة القيمة، لكنها ليست في أبسط صورة. أبسط صورة هي ");
+                        const katexSpan = document.createElement('span');
+                        katexSpan.setAttribute('dir', 'ltr');
+                        try {
+                            katex.render(correctMixedKaTeX, katexSpan, { throwOnError: false });
+                        } catch(e) {
+                            katexSpan.textContent = `${mixedWhole} ${mixedNum}/${mixedDen}`;
+                        }
+                        feedbackElement.innerHTML = '';
+                        feedbackElement.appendChild(textNode1);
+                        feedbackElement.appendChild(katexSpan);
+                        feedbackElement.className = "mt-2 text-center font-bold text-blue-600";
+                    }
+
+                } else {
+                    // Incorrect value
+                    feedbackElement.innerHTML = 'إجابة خاطئة. العدد الكسري الصحيح في أبسط صورة هو ';
+
+                    const katexSpan = document.createElement('span');
+                    katexSpan.setAttribute('dir', 'ltr');
+                    try {
+                        katex.render(correctMixedKaTeX, katexSpan, { throwOnError: false });
+                    } catch(e) {
+                        katexSpan.textContent = `${mixedWhole} ${mixedNum}/${mixedDen}`; 
+                    }
+                    
+                    feedbackElement.appendChild(katexSpan);
+                    feedbackElement.className = "mt-2 text-center font-bold text-red-600";
+                }
+            };
+        });
+    </script>
+</body>
+</html>
