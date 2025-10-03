@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- KaTeX for beautiful math symbols -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" xintegrity="sha384-GvrxHw+z4q/RzL05jQ9N+q+1aVl2Zl9x0+hX2jY5wF+R+b0eR-z-n-q-3X-z-Xl-Q==" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-H4uW3s3eT2B2+xP9O/D4h5N6n7f7p5O9Pq2E0Zl7z2Fw/F0e2+Q==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-H4uW3s3eT2B2+xP9O/D4h5N6n7f7p5O9Pq2E0l7l2lFw/F0e2+Q==" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" xintegrity="sha384-i1HVh8p/B/pQ2Cg3t/r/O/3tP2Cj+xG/2+lCg5b+lC+b+c+a+v+1/u+s/g==" crossorigin="anonymous"></script>
 
     <style>
@@ -239,11 +239,12 @@
 <body>
     <!-- Main Content Container -->
     <main class="container">
-        <!-- Professional Header -->
-        <header class="bg-blue-800 text-white py-10 sm:py-12 text-center shadow-lg rounded-t-[1.5rem] relative overflow-hidden">
+        <!-- Professional Header - Updated padding -->
+        <header class="bg-blue-800 text-white py-12 sm:py-16 text-center shadow-lg rounded-t-[1.5rem] relative overflow-hidden">
             <!-- Decorative gold bar at the bottom -->
             <div class="absolute inset-x-0 bottom-0 h-1 bg-yellow-400"></div>
-            <h1 class="text-4xl sm:text-5xl font-bold">الدرس 2: الكسور العشرية الدورية</h1>
+            <!-- Updated h1 with leading-tight for better line spacing on mobile -->
+            <h1 class="text-4xl leading-tight sm:text-5xl font-bold">الدرس 2: الكسور العشرية الدورية</h1>
         </header>
 
         <!-- Title and Lesson Idea Section -->
@@ -266,9 +267,9 @@
                 <div id="calculator-app" class="w-full max-w-xs p-4 bg-gray-900 rounded-xl shadow-2xl">
                     <!-- Display Container (Updated) -->
                     <div class="bg-gray-800 p-4 mb-4 rounded-xl">
-                        <!-- Expression (Small, top right) -->
+                        <!-- Expression (Small, top right - now used for history) -->
                         <div id="calc-expression" class="text-gray-400 text-base text-right overflow-x-auto whitespace-nowrap" dir="ltr"></div>
-                        <!-- Result/Current Input (Large, bottom right) -->
+                        <!-- Result/Current Input (Large, bottom right - now shows expression or result) -->
                         <div id="calc-display" class="text-white text-4xl font-light text-right overflow-x-auto whitespace-nowrap" dir="ltr">0</div>
                     </div>
                     
@@ -506,22 +507,43 @@
             // Initial rendering of all math
             renderAllMath();
 
-            // --- Calculator Logic ---
-            const expressionDisplay = document.getElementById('calc-expression'); // New: for the full expression
-            const resultDisplay = document.getElementById('calc-display'); // Main display: for the result/current input
+            // --- Calculator Logic (Updated for single-line expression view) ---
+            const expressionDisplay = document.getElementById('calc-expression'); // Small line (History)
+            const resultDisplay = document.getElementById('calc-display'); // Main line (Expression or Result)
             const buttons = document.querySelectorAll('.calc-btn');
             
-            let currentInput = '0';
-            let firstOperand = null;
-            let operator = null;
-            let waitingForSecondOperand = false;
-            let expressionString = ''; // Tracks the expression like "3 + 4"
+            let currentInput = '0'; // The number being typed (second operand) or the final result (after '=')
+            let firstOperand = null; // The first operand in the calculation
+            let operator = null; // The pending operator (+, -, *, /)
+            let waitingForSecondOperand = false; // Flag: true after an operator is pressed, expecting new input
+            let history = ''; // String for the small history line
 
+            /**
+             * Updates the calculator's display based on current state.
+             * The main display shows the full expression or the result.
+             * The small display shows the history after a calculation is complete.
+             */
             function updateDisplay() {
-                // Main result display
-                resultDisplay.textContent = currentInput.slice(0, 16); 
-                // Expression history display
-                expressionDisplay.textContent = expressionString;
+                let mainDisplayText;
+
+                if (firstOperand !== null && operator) {
+                    // An operation is pending or in progress
+                    if (waitingForSecondOperand) {
+                        // Case 1: Operator pressed, waiting for second number to start (e.g., "4 * ")
+                        // Show the first operand and the operator, not just currentInput
+                        mainDisplayText = String(firstOperand) + ' ' + operator + ' ';
+                    } else {
+                        // Case 2: Second number is being typed (e.g., "4 * 5")
+                        mainDisplayText = String(firstOperand) + ' ' + operator + ' ' + currentInput;
+                    }
+                } else {
+                    // Case 3: Start of calculation, or after '=' (showing result)
+                    mainDisplayText = currentInput;
+                }
+                
+                // Limit the main display length for responsiveness
+                resultDisplay.textContent = mainDisplayText.slice(0, 20); 
+                expressionDisplay.textContent = history;
             }
 
             function clearCalculator() {
@@ -529,100 +551,112 @@
                 firstOperand = null;
                 operator = null;
                 waitingForSecondOperand = false;
-                expressionString = '';
+                history = ''; // Clear history too
             }
 
             function inputDigit(digit) {
+                // If a result is showing and we press a digit, start a new calculation
+                if (operator === null && firstOperand === null && history !== '') {
+                    clearCalculator();
+                }
+
                 if (waitingForSecondOperand) {
                     // Start entering the second number
                     currentInput = digit;
                     waitingForSecondOperand = false;
-                    
-                    // Start building the expression string: FirstOperand + Operator + NewDigit
-                    if (operator) {
-                        expressionString = String(firstOperand) + operator + digit;
-                    } else {
-                        // Reset if starting a new calculation after an '='
-                        expressionString = '';
-                    }
-
                 } else {
                     // Append to the current number
                     currentInput = currentInput === '0' ? digit : currentInput + digit;
-                    
-                    // Update the expression string if we are building the second operand
-                    if (operator && firstOperand !== null) {
-                        // Rebuild the expression string completely to handle backspaces or complex inputs correctly
-                        expressionString = String(firstOperand) + operator + currentInput;
-                    } else {
-                        // Not in a calculation yet, or reset after equals
-                        expressionString = ''; 
-                    }
                 }
             }
 
             function inputDecimal(dot) {
+                // If a result is showing and we press decimal, start a new calculation
+                if (operator === null && firstOperand === null && history !== '') {
+                    clearCalculator();
+                }
+
                 if (waitingForSecondOperand) {
+                    // Start the second number with '0.'
                     currentInput = '0.';
                     waitingForSecondOperand = false;
-                    // Start the second operand with 0. in the expression
-                    expressionString = (operator ? String(firstOperand) + operator : '') + '0.';
                     return;
                 }
                 if (!currentInput.includes(dot)) {
                     currentInput += dot;
-                    // Append decimal to expression string if an operator is set
-                    if (operator && firstOperand !== null) {
-                         expressionString += dot;
-                    }
                 }
             }
 
             function handleOperator(nextOperator) {
                 const inputValue = parseFloat(currentInput);
 
-                // Case 1: Just change the pending operator (e.g., 5 + then press -)
+                // Ignore consecutive operator presses if waiting for second operand (only update operator)
                 if (operator && waitingForSecondOperand && nextOperator !== '=') {
                     operator = nextOperator;
-                    expressionString = String(firstOperand) + operator;
+                    updateDisplay();
                     return;
                 }
 
+                // If firstOperand is null, this is the start of the calculation
                 if (firstOperand === null) {
-                    // Case 2: Start a new calculation (set the first operand)
                     firstOperand = inputValue;
+                } else if (operator && !waitingForSecondOperand) {
+                    // Chaining operation or hitting '=' (perform calculation)
                     
-                    // Display the first operand and the operator
-                    if (nextOperator !== '=') {
-                         expressionString = String(firstOperand) + nextOperator;
-                    }
-                } else if (operator) {
-                    // Case 3: Chaining operation or hitting '=' (perform calculation)
+                    // Only calculate if we have a second operand (i.e., not waiting)
                     const result = performCalculation[operator](firstOperand, inputValue);
-
-                    // Limit precision for display, especially important for repeating decimals (e.g., 1/3)
-                    currentInput = String(result.toPrecision(10)).replace(/0+$/, ''); 
+                    
+                    // Limit precision for display
+                    let resultString = String(result.toPrecision(10));
+                    
+                    // Logic to remove unnecessary decimal point if the result is an integer
+                    if (Number.isInteger(result)) {
+                        resultString = String(Math.round(result));
+                    } else {
+                        // For non-integers, clean trailing zeros but keep the decimal if needed
+                        resultString = resultString.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
+                    }
                     
                     if (nextOperator === '=') {
-                        // Full calculation completed, display expression and result
-                        expressionString += inputValue + nextOperator + currentInput; // Shows "5 + 3 = 8"
-                        firstOperand = null; // Reset for a new calculation start
+                        // Full calculation completed:
+                        
+                        // 1. Move full equation to history line
+                        history = String(firstOperand) + ' ' + operator + ' ' + currentInput + ' =';
+                        
+                        // 2. Set result to main display input
+                        currentInput = resultString; 
+                        
+                        // 3. Reset state for new calculation start
+                        firstOperand = null; 
+                        operator = null;
+                        waitingForSecondOperand = false;
+
                     } else {
                         // Chaining: Result becomes the new first operand
-                        firstOperand = result;
-                        expressionString = firstOperand + nextOperator; // Shows "8 +"
+                        // history is cleared, and we start waiting for a new operand
+                        firstOperand = parseFloat(resultString); // Ensure the clean result is saved as a number
+                        currentInput = resultString; // Display the intermediate result
+                        history = ''; 
+                        waitingForSecondOperand = true; // Wait for the third operand input
                     }
                 }
-
-                // Only wait for second operand if an operator is pending (i.e., not after '=')
-                waitingForSecondOperand = (nextOperator !== '='); 
-                operator = (nextOperator === '=') ? null : nextOperator;
+                
+                // If the next operation is NOT equals, set it as the new pending operator
+                if (nextOperator !== '=') {
+                    operator = nextOperator;
+                    waitingForSecondOperand = true;
+                }
             }
 
             const performCalculation = {
                 '/': (firstOperand, secondOperand) => {
                     if (secondOperand === 0) {
+                        // Use a custom message instead of alert
                         currentInput = 'Error';
+                        history = '';
+                        firstOperand = null;
+                        operator = null;
+                        waitingForSecondOperand = false;
                         return 0;
                     }
                     return firstOperand / secondOperand;
@@ -633,27 +667,28 @@
             };
             
             function handleSpecial(value) {
+                // Reset calculation state for special functions
+                history = '';
+                firstOperand = null;
+                operator = null;
+                waitingForSecondOperand = false;
+
                 if (value === 'C') {
                     clearCalculator();
                 } else if (value === '&plusmn;') {
-                    currentInput = String(-parseFloat(currentInput));
-                    // Do not update expressionString automatically for +/- for simplicity, unless it's a new input.
-                    expressionString = ''; 
-                    firstOperand = null;
-                    operator = null;
-                    waitingForSecondOperand = false;
+                    let result = -parseFloat(currentInput);
+                    // Apply clean integer display rule
+                    currentInput = Number.isInteger(result) ? String(Math.round(result)) : String(result);
                 } else if (value === '%') {
-                    currentInput = String(parseFloat(currentInput) / 100);
-                    // Do not update expressionString for % for simplicity
-                    expressionString = '';
-                    firstOperand = null;
-                    operator = null;
-                    waitingForSecondOperand = false;
+                    let result = parseFloat(currentInput) / 100;
+                    // Apply clean integer display rule
+                    currentInput = Number.isInteger(result) ? String(Math.round(result)) : String(result);
                 }
             }
 
             buttons.forEach(button => {
                 button.addEventListener('click', (event) => {
+                    // Use textContent.trim() for special characters like ±, otherwise use data-value
                     const value = event.target.dataset.value || event.target.textContent.trim();
 
                     if (value === 'C' || value === '&plusmn;' || value === '%') {
@@ -692,22 +727,22 @@
                     case 1:
                         correctAnswer = 1/9;
                         correctFractionKaTeX = "\\frac{1}{9}";
-                        correctDecimal = "0.111\ldots"; // Use \ldots for KaTeX
+                        correctDecimal = "0.111\\ldots"; // Use \\ldots for KaTeX
                         break;
                     case 2:
                         correctAnswer = 2/9;
                         correctFractionKaTeX = "\\frac{2}{9}";
-                        correctDecimal = "0.222\ldots";
+                        correctDecimal = "0.222\\ldots";
                         break;
                     case 3:
                         correctAnswer = 5/9;
                         correctFractionKaTeX = "\\frac{5}{9}";
-                        correctDecimal = "0.555\ldots";
+                        correctDecimal = "0.555\\ldots";
                         break;
                     case 4:
                         correctAnswer = 8/9;
                         correctFractionKaTeX = "\\frac{8}{9}";
-                        correctDecimal = "0.888\ldots";
+                        correctDecimal = "0.888\\ldots";
                         break;
                 }
 
@@ -762,3 +797,4 @@
     </script>
 </body>
 </html>
+
