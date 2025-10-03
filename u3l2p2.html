@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الكسور العشرية الدورية - مثال من الحياة</title>
+    <!-- Tailwind CSS for styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math symbols -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" xintegrity="sha384-GvrxHw+z4q/RzL05jQ9N+q+1aVl2Zl9x0+hX2jY5wF+R+b0eR-z-n-q-3X-z-Xl-Q==" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-H4uW3s3eT2B2+xP9O/D4h5N6n7f7p5O9Pq2E0l7l2lFw/F0e2+Q==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" xintegrity="sha384-i1HVh8p/B/pQ2Cg3t/r/O/3tP2Cj+xG/2+lCg5b+lC+b+c+a+v+1/u+s/g==" crossorigin="anonymous"></script>
+
+    <style>
+        /* Import suitable fonts for Arabic and English text */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #eef2f6;
+        }
+
+        /* Set base styles for the body and the main container */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            flex-grow: 1;
+        }
+
+        /* Main title and lesson idea sections */
+        .lesson-idea-box {
+            background-color: #e0f2fe;
+            border-left: 6px solid #084c8f;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #084c8f;
+            margin-bottom: 0.75rem;
+        }
+        .section-text {
+            font-size: 1.15rem; /* Adjusted for better mobile reading */
+            line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        /* Typography and layout for math expressions */
+        .equation {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2d3748;
+            text-align: right;
+            line-height: 1.8;
+            margin: 1rem 0;
+            direction: ltr; /* Ensure math block is LTR */
+        }
+        .explanation {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+            text-align: right;
+        }
+
+        /* The main steps of the solution with a modern, split layout */
+        .step-row {
+            display: flex;
+            align-items: stretch;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px dashed #e2e8f0;
+            flex-wrap: wrap-reverse;
+        }
+        .step-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .algebra-col, .model-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+        .algebra-col {
+            background-color: #f7fafc;
+        }
+        .model-col {
+            background-color: #f0f4f8;
+            border-left: 3px solid #cbd5e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Check Understanding section and interactivity */
+        .check-understanding-box {
+            background-color: #fff8eb;
+            border: 1px solid #fcd34d; /* Yellow border */
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .problem-input {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1.25rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        
+        /* Summary section for the final calculation */
+        .summary-box {
+            background-color: #d1e7dd;
+            border-left: 6px solid #198754;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .math-expr-summary {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d3748;
+            direction: ltr;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .step-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .algebra-col, .model-col {
+                width: 100%;
+                padding: 1.2rem;
+                border-left: none;
+            }
+            .model-col {
+                order: -1;
+                border-bottom: 3px solid #cbd5e0;
+                border-left: none;
+            }
+            .equation {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content Container -->
+    <main class="container">
+        <!-- Professional Header -->
+        <header class="bg-blue-800 text-white py-12 sm:py-16 text-center shadow-lg rounded-t-[1.5rem] relative overflow-hidden">
+            <!-- Decorative gold bar at the bottom -->
+            <div class="absolute inset-x-0 bottom-0 h-1 bg-yellow-400"></div>
+            <h1 class="text-4xl leading-tight sm:text-5xl font-bold">الكسور العشرية الدورية - تطبيق عملي</h1>
+        </header>
+
+        <!-- Lesson Idea Section -->
+        <div class="lesson-idea-box w-full mt-8">
+            <h2 class="section-title">مقدمة</h2>
+            <p class="section-text">
+                تُوجَد كسورٌ عشرية دورية يتكرّر فيها رقمان أو أكثر، ويمكننا أيضاً كتابة هذه الكسور العشرية الدورية على الصورة <span class="math-expr" dir="ltr">$\frac{a}{b}$</span>.
+            </p>
+            <h3 class="font-bold text-lg mt-4 text-blue-700">المصطلحات</h3>
+            <ul class="list-disc pr-8 text-lg text-gray-700">
+                <li>كسر عشري دوري</li>
+                <li>صورة كسر <span class="math-expr" dir="ltr">$\frac{a}{b}$</span></li>
+            </ul>
+        </div>
+
+        <!-- Example section with the new styling and layout -->
+        <div class="bg-amber-100 text-amber-900 p-6 rounded-lg my-8 flex flex-col items-center shadow-md">
+            <h2 class="section-title text-center text-amber-900">
+                مثال 2: من الحياة
+            </h2>
+            <p class="section-text text-center mt-2">
+                تقدم <span class="math-expr" dir="ltr">$66$</span> طالبًا إلى امتحان في مادة العلوم، فكان الكسر العشري الدالّ على نسبة النجاح <span class="math-expr" dir="ltr">$0.\overline{81}$</span>. أُجِد عدد الناجحين.
+            </p>
+        </div>
+        
+        <!-- The main steps of the solution: Converting the repeating decimal -->
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-right">أولاً: كتابة الكسر العشري الدوري على صورة كسر <span class="math-expr" dir="ltr">$\frac{a}{b}$</span></h3>
+
+        <!-- Step 1: Define x and Multiply by 100 -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">أعوّض عن الكسر العشري الدوري بمتغير مثل <span class="math-expr" dir="ltr">$x$</span>، ثم أقوم بالعمليات الآتية:</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = 0.\overline{81}$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = 0.8181\ldots$</span></div>
+                <div class="explanation mt-4">اضرب طرفي المعادلة في <span class="math-expr" dir="ltr">$100$</span>، لأن منزلتين تتكرران</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$100x = 100(0.8181\ldots)$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$100x = 81.8181\ldots$</span></div>
+            </div>
+            <div class="model-col">
+                <div class="explanation font-bold text-blue-800">اضرب في <span class="math-expr" dir="ltr">$100$</span>، أحرّك الفاصلة منزلتين إلى اليمين.</div>
+                <div class="mt-4 p-4 bg-white rounded-lg shadow-inner border border-blue-200">
+                    <span class="math-expr text-lg" dir="ltr">$0.8181\ldots \xrightarrow{\times 100} 81.8181\ldots$</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Rewrite the equation and Substitute x -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">أجزّئ العدد العشري إلى عدد صحيح وكسر عشري</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$81.8181\ldots = 81 + 0.8181\ldots$</span></div>
+                <div class="explanation mt-4">عوّض بالمتغير <span class="math-expr" dir="ltr">$x$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$100x = 81 + x$</span></div>
+            </div>
+            <div class="model-col">
+                 <div class="explanation font-bold text-blue-800">عوّض عن <span class="math-expr" dir="ltr">$0.8181\ldots$</span> بالمتغير <span class="math-expr" dir="ltr">$x$</span> مرة أخرى.</div>
+                 <div class="mt-4 p-4 bg-white rounded-lg shadow-inner border border-blue-200">
+                    <span class="math-expr text-2xl font-extrabold" dir="ltr">$100x = 81 + x$</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Solve for x and Simplify -->
+        <div class="step-row">
+            <div class="algebra-col">
+                <div class="explanation">اطرح <span class="math-expr" dir="ltr">$x$</span> من كلا الطرفين</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$100x - x = 81 + x - x$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$99x = 81$</span></div>
+                <div class="explanation mt-4">اقسم كلا الطرفين على <span class="math-expr" dir="ltr">$99$</span></div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = \frac{81}{99}$</span></div>
+                <div class="explanation mt-4">أكتب الناتج في أبسط صورة (بالقسمة على <span class="math-expr" dir="ltr">$9$</span>)</div>
+                <div class="equation"><span class="math-expr" dir="ltr">$x = \frac{9}{11}$</span></div>
+            </div>
+            <div class="model-col">
+                <div class="explanation font-bold text-blue-800">الكسر العشري الدوري <span class="math-expr" dir="ltr">$\mathbf{0.\overline{81}}$</span> يساوي الكسر <span class="math-expr" dir="ltr">$\mathbf{\frac{9}{11}}$</span></div>
+                <div class="mt-4 p-4 bg-white rounded-lg shadow-inner border border-blue-200">
+                    <span class="math-expr text-2xl font-extrabold" dir="ltr">$0.\overline{81} = \frac{9}{11}$</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Application Summary -->
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 mt-10 text-right">ثانياً: إيجاد عدد الطلاب الناجحين</h3>
+
+        <div class="summary-box">
+            <p class="section-text">
+                لإيجاد عدد الطلبة الناجحين، نضرب عدد الطلبة الكلي في الكسر الدال على نسبة النجاح:
+            </p>
+            <div class="text-center mt-4">
+                <span class="math-expr-summary" dir="ltr">$\text{عدد الناجحين} = 66 \times \frac{9}{11}$</span>
+            </div>
+            <div class="text-center mt-4">
+                <span class="math-expr-summary" dir="ltr">$66 \times \frac{9}{11} = 6 \times 9 = 54$</span>
+            </div>
+            <p class="section-text font-bold text-green-800 mt-4 text-center">
+                إذَنْ، عدد الطلبة الناجحين هو <span class="math-expr" dir="ltr">$54$</span> طالباً.
+            </p>
+        </div>
+
+        <!-- Check Understanding Section -->
+        <div class="check-understanding-box">
+            <h2 class="section-title">أتحقق من فهمي</h2>
+            <p class="section-text mb-6">
+                إذا كان عدد الحيوانات جميعها في الحديقة <span class="math-expr" dir="ltr">$88$</span> حيواناً، والكسر الدالّ على الحيوانات المفترسة فيها <span class="math-expr" dir="ltr">$0.\overline{18}$</span>، فأُجِد عدد الحيوانات المفترسة.
+            </p>
+            
+            <!-- Interactive Problem Area -->
+            <div class="bg-white p-6 rounded-lg shadow-inner border border-gray-200">
+                <h3 class="text-lg font-bold text-blue-700 mb-4">خطوة 1: تحويل <span class="math-expr" dir="ltr">$0.\overline{18}$</span> إلى كسر <span class="math-expr" dir="ltr">$\frac{a}{b}$</span></h3>
+                <div class="flex items-center justify-center gap-4 mb-6">
+                    <div class="flex flex-col items-center w-40">
+                        <input type="text" id="q-numerator" class="problem-input border-gray-300 focus:ring-blue-500" placeholder="البسط">
+                        <div class="fraction-line w-full"></div>
+                        <input type="text" id="q-denominator" class="problem-input border-gray-300 focus:ring-blue-500" placeholder="المقام">
+                    </div>
+                    <button onclick="checkFraction()" class="bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300 transform hover:scale-105">تحقق من الكسر</button>
+                </div>
+                <div id="q-fraction-feedback" class="mt-2 text-center font-bold mb-6" style="display:none;"></div>
+                
+                <h3 class="text-lg font-bold text-blue-700 mb-4">خطوة 2: إيجاد عدد الحيوانات المفترسة</h3>
+                <div class="flex items-center justify-center gap-4">
+                    <input type="text" id="q-result" class="problem-input border-gray-300 focus:ring-blue-500 w-40" placeholder="النتيجة النهائية">
+                    <button onclick="checkResult()" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">تحقق من العدد</button>
+                </div>
+                <div id="q-result-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+            </div>
+
+        </div>
+        
+        <!-- Updated Navigation Buttons -->
+        <div class="flex justify-between mt-8">
+            <!-- Previous Button -->
+            <a href="u3l2p2.html" class="bg-gray-400 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-500 transition duration-300 transform hover:scale-105 text-lg">
+                السابق
+            </a>
+            <!-- Next Button -->
+            <a href="u3l2p3.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 text-lg">
+                التالي
+            </a>
+        </div>
+        
+        <!-- Divider to separate the button and the footer -->
+        <div class="w-full h-1 bg-gray-200 my-8"></div>
+
+        <!-- Professional Footer -->
+        <footer class="bg-blue-800 text-white p-4 text-center rounded-b-[1.5rem]">
+            <p class="text-sm">جميع الحقوق محفوظة © 2025</p>
+        </footer>
+    </main>
+    
+    <!-- JavaScript for interactivity and rendering math -->
+    <script>
+        // Helper function to calculate GCD (القاسم المشترك الأكبر)
+        function gcd(a, b) {
+            return b ? gcd(b, a % b) : a;
+        }
+
+        // Helper function to simplify a fraction
+        function simplifyFraction(numerator, denominator) {
+            const common = gcd(Math.abs(numerator), Math.abs(denominator));
+            return {
+                num: numerator / common,
+                den: denominator / common
+            };
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to render all math expressions on the page
+            function renderAllMath() {
+                // Render expressions using .math-expr
+                document.querySelectorAll('.math-expr, .math-expr-summary').forEach(function(element) {
+                    try {
+                        // KaTeX expects the expression without the surrounding $
+                        // We correctly strip the leading and trailing '$'.
+                        const expression = element.textContent.trim().replace(/^\$/, '').replace(/\$$/, '');
+                        
+                        // Check if the element already has rendered KaTeX content to avoid double rendering
+                        if (element.querySelector('.katex')) return; 
+
+                        katex.render(expression, element, {
+                            throwOnError: false,
+                            displayMode: false // Inline mode
+                        });
+                    } catch(e) {
+                        console.error("KaTeX rendering error:", e);
+                    }
+                });
+            }
+
+            // Initial rendering of all math
+            renderAllMath();
+
+            const tolerance = 0.0000001; 
+
+            // --- Check Fraction Logic for Q. 'أتحقق من فهمي' ---
+            window.checkFraction = function() {
+                const numeratorInput = document.getElementById(`q-numerator`);
+                const denominatorInput = document.getElementById(`q-denominator`);
+                const feedbackElement = document.getElementById(`q-fraction-feedback`);
+                
+                const userNumerator = parseInt(numeratorInput.value.trim());
+                const userDenominator = parseInt(denominatorInput.value.trim());
+                
+                // Correct simplified fraction for 0.18 bar (18/99 simplified to 2/11)
+                const correctNum = 2;
+                const correctDen = 11;
+                const correctFractionKaTeX = "\\frac{2}{11}"; 
+                
+                feedbackElement.style.display = 'block';
+
+                if (isNaN(userNumerator) || isNaN(userDenominator) || userDenominator === 0) {
+                    feedbackElement.textContent = "الرجاء إدخال أرقام صحيحة في البسط والمقام.";
+                    feedbackElement.className = "mt-2 text-center font-bold text-orange-600";
+                    return;
+                } 
+                
+                // Check if the fraction value is correct
+                const correctValue = 18 / 99; // 0.181818...
+                const userValue = userNumerator / userDenominator;
+
+                if (Math.abs(userValue - correctValue) < tolerance) {
+                    // Check if it is the simplified form
+                    const simplified = simplifyFraction(userNumerator, userDenominator);
+                    
+                    if (simplified.num === correctNum && simplified.den === correctDen) {
+                        feedbackElement.textContent = "إجابة صحيحة ومبسّطة! 🎉 الكسر هو 2/11.";
+                        feedbackElement.className = "mt-2 text-center font-bold text-green-600";
+                    } else {
+                        // Correct value but not simplified
+                        const textNode1 = document.createTextNode("إجابة صحيحة القيمة، لكنها ليست في أبسط صورة. أبسط صورة هي ");
+                        const katexSpan = document.createElement('span');
+                        katexSpan.setAttribute('dir', 'ltr');
+                        try {
+                            katex.render(correctFractionKaTeX, katexSpan, { throwOnError: false });
+                        } catch(e) {
+                            katexSpan.textContent = "2/11";
+                        }
+                        feedbackElement.innerHTML = '';
+                        feedbackElement.appendChild(textNode1);
+                        feedbackElement.appendChild(katexSpan);
+                        feedbackElement.className = "mt-2 text-center font-bold text-blue-600";
+                    }
+
+                } else {
+                    // Incorrect value
+                    // Clear previous content
+                    feedbackElement.innerHTML = '';
+                    
+                    const textNode1 = document.createTextNode("إجابة خاطئة. الكسر الصحيح في أبسط صورة هو ");
+                    const katexSpan = document.createElement('span');
+                    katexSpan.setAttribute('dir', 'ltr');
+                    try {
+                        katex.render(correctFractionKaTeX, katexSpan, { throwOnError: false });
+                    } catch(e) {
+                        katexSpan.textContent = "2/11";
+                    }
+                    
+                    feedbackElement.appendChild(textNode1);
+                    feedbackElement.appendChild(katexSpan);
+                    feedbackElement.className = "mt-2 text-center font-bold text-red-600";
+                }
+            };
+
+            // --- Check Result Logic for Q. 'أتحقق من فهمي' ---
+            window.checkResult = function() {
+                const resultInput = document.getElementById(`q-result`);
+                const feedbackElement = document.getElementById(`q-result-feedback`);
+                
+                const userResult = parseInt(resultInput.value.trim());
+                
+                // Calculation: 88 * (2/11) = 88 / 11 * 2 = 8 * 2 = 16
+                const correctResult = 16;
+                
+                feedbackElement.style.display = 'block';
+
+                if (isNaN(userResult)) {
+                    feedbackElement.textContent = "الرجاء إدخال عدد صحيح.";
+                    feedbackElement.className = "mt-2 text-center font-bold text-orange-600";
+                } else if (userResult === correctResult) {
+                    feedbackElement.textContent = `إجابة صحيحة! عدد الحيوانات المفترسة هو ${correctResult} حيواناً. 🎉`;
+                    feedbackElement.className = "mt-2 text-center font-bold text-green-600";
+                } else {
+                    // Create a KaTeX representation of the correct answer and the equation
+                    const correctResultKaTeX = `\\mathbf{${correctResult}}\\text{ (${88} \\times \\frac{2}{11})}`;
+                    
+                    feedbackElement.innerHTML = 'إجابة خاطئة. الحل الصحيح هو ';
+
+                    const katexSpan = document.createElement('span');
+                    katexSpan.setAttribute('dir', 'ltr');
+                    try {
+                        // Render the correct result with the calculation note
+                        katex.render(correctResultKaTeX, katexSpan, { throwOnError: false });
+                    } catch(e) {
+                        katexSpan.textContent = `${correctResult}. (88 x 2/11)`; // Fallback text
+                    }
+                    
+                    feedbackElement.appendChild(katexSpan);
+                    feedbackElement.className = "mt-2 text-center font-bold text-red-600";
+                }
+            };
+        });
+    </script>
+</body>
+</html>
