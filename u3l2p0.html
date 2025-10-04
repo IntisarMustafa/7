@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار التعلم السابق للكسور العشرية الدورية</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- MathJax script for LaTeX rendering -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --royal-blue: #0c2461;
+            --light-blue: #1e3799;
+            --sky-blue: #4a69bd;
+            --gold: #f6b93b;
+            --pale-blue: #dff9fb;
+            --shadow-color: rgba(12, 36, 97, 0.2); /* Royal blue with opacity */
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            /* Updated background for a more modern look */
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+            font-size: 1.1rem;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(12, 36, 97, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(12, 36, 97, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 30% 60%, rgba(12, 36, 97, 0.2) 0%, transparent 25%);
+            z-index: -1;
+            animation: waterEffect 15s infinite alternate;
+        }
+        
+        @keyframes waterEffect {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 0; /* Sharp corners */
+            box-shadow: 0 12px 30px var(--shadow-color);
+            overflow: hidden;
+            margin: 20px 0;
+            border: 1px solid rgba(12, 36, 97, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 5px solid var(--gold);
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            color: #fff;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 15px auto 0;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 0; /* Sharp corners */
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+        }
+        
+        .instructions {
+            background: var(--pale-blue);
+            padding: 25px;
+            border-bottom: 1px solid rgba(12, 36, 97, 0.1);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        .instructions h3 {
+            color: var(--royal-blue);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.6;
+        }
+        
+        .instructions li i {
+            margin-left: 12px;
+            color: var(--royal-blue);
+            margin-top: 6px;
+            font-size: 1.2rem;
+        }
+        
+        .question-container {
+            padding: 20px;
+        }
+        
+        .question {
+            background: white;
+            border-radius: 0; /* Sharp corners */
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            border-left: 5px solid var(--sky-blue);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(12, 36, 97, 0.3);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+        
+        .question-number {
+            background: var(--royal-blue);
+            color: var(--gold);
+            width: 40px;
+            height: 40px;
+            border-radius: 0; /* Sharp corners */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-left: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+        
+        .question-title {
+            font-size: 1.35rem;
+            color: var(--royal-blue);
+            font-weight: 700;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 22px;
+            padding: 0 12px;
+            color: #4a5568;
+        }
+        
+        /* Style for MathJax equations */
+        .question-text .math-display {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--light-blue);
+        }
+
+        .options .math-display {
+            font-size: 1.2rem;
+        }
+        
+        .options {
+            margin: 25px 0;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            margin-bottom: 15px;
+            background: #fff;
+            border-radius: 0; /* Sharp corners */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--pale-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option:hover {
+            background: var(--pale-blue);
+            border-color: var(--sky-blue);
+            transform: translateX(5px);
+        }
+        
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--sky-blue);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover::before {
+            opacity: 1;
+        }
+        
+        .option input {
+            margin-left: 12px;
+            transform: scale(1.4);
+            cursor: pointer;
+            accent-color: var(--royal-blue);
+        }
+        
+        .option label {
+            flex: 1;
+            font-size: 1.15rem;
+            cursor: pointer;
+            color: #4a5568;
+            font-weight: 500;
+            /* Ensure MathJax elements align correctly */
+            display: flex;
+            align-items: center;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 16px 36px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 0; /* Sharp corners */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 15px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+        
+        button:hover::before {
+            transform: translateX(100%);
+        }
+        
+        #submit-btn {
+            background: linear-gradient(to right, var(--gold), var(--sky-blue));
+            color: var(--royal-blue);
+        }
+        
+        #submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(246, 185, 59, 0.4);
+        }
+        
+        #reset-btn {
+            background: linear-gradient(to right, var(--royal-blue), var(--light-blue));
+            color: white;
+        }
+        
+        #reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow-color);
+        }
+        
+        .start-btn {
+            background: linear-gradient(to right, var(--gold), var(--sky-blue));
+            color: var(--royal-blue);
+            margin: 25px auto;
+            display: none;
+            padding: 16px 45px;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(246, 185, 59, 0.4);
+        }
+        
+        .result {
+            text-align: center;
+            padding: 35px;
+            background: #fff;
+            border-radius: 0; /* Sharp corners */
+            margin: 25px;
+            display: none;
+            border: 1px solid var(--pale-blue);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        .result h2 {
+            font-size: 2.2rem;
+            color: var(--royal-blue);
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        
+        .score {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--royal-blue), var(--sky-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 25px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .feedback {
+            font-size: 1.4rem;
+            margin: 25px 0;
+            line-height: 1.7;
+            color: var(--royal-blue);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+        
+        .correct-answers {
+            text-align: right;
+            margin-top: 35px;
+            padding: 25px;
+            background: #fff;
+            border-radius: 0; /* Sharp corners */
+            border: 1px solid var(--pale-blue);
+        }
+        
+        .correct-answers h3 {
+            color: var(--royal-blue);
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--sky-blue);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .answer-item {
+            margin-bottom: 22px;
+            padding-bottom: 22px;
+            border-bottom: 2px dashed var(--pale-blue);
+        }
+        
+        .answer-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .answer-item p {
+            margin-bottom: 10px;
+            line-height: 1.7;
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+        
+        .answer-item strong {
+            color: var(--royal-blue);
+            font-weight: 600;
+        }
+        
+        .correct {
+            color: #38a169;
+            font-weight: bold;
+        }
+        
+        .incorrect {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #dff9fb;
+            font-size: 1.1rem;
+            width: 100%;
+            max-width: 800px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: var(--pale-blue);
+            color: var(--royal-blue);
+            padding: 6px 15px;
+            border-radius: 0; /* Sharp corners */
+            font-size: 0.9rem;
+            margin: 8px 5px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question-title {
+                font-size: 1.2rem;
+            }
+            
+            .question-text {
+                font-size: 1.05rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .container {
+                margin: 15px 0;
+            }
+            
+            .question {
+                padding: 20px;
+            }
+            
+            .result h2 {
+                font-size: 1.8rem;
+            }
+            
+            .score {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>اختبار التعلم السابق للكسور العشرية الدورية</h1>
+            <p class="subtitle">لقياس استعدادك لمهارات التحويل بين الكسر العادي والكسر العشري الدوري</p>
+        </header>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> تعليمات الاختبار:</h3>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> يتكون الاختبار من 5 أسئلة تغطي المهارات الأساسية للدرس الجديد.</li>
+                <li><i class="fas fa-check-circle"></i> قم باختيار الإجابة الصحيحة لكل سؤال.</li>
+                <li><i class="fas fa-check-circle"></i> بعد الانتهاء، اضغط على زر "تصحيح الإجابات" لمعرفة نتيجتك.</li>
+            </ul>
+        </div>
+        
+        <div class="question-container">
+            
+            <!-- Question 1: مفهوم الكسر العشري الدوري وكتابته بالطريقة العشرية -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div class="question-title">مفهوم الكسر العشري الدوري</div>
+                </div>
+                <div class="question-text">
+                    الكسر العشري الدوري \( 2.\overline{6} \) يكتب بالطريقة العشرية الموسعة كالتالي:
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1a" value="a">
+                        <label for="q1a">$$2.6$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1b" value="b">
+                        <label for="q1b">$$2.666666...$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1c" value="c">
+                        <label for="q1c">$$2.626262...$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1d" value="d">
+                        <label for="q1d">$$2.606060...$$</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: فهم رمز الكسر العشري الدوري</span>
+                </div>
+            </div>
+            
+            <!-- Question 2: كتابة الكسر العادي بصورة عشرية والناتج دوري -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div class="question-title">تحويل الكسر العادي إلى كسر عشري دوري</div>
+                </div>
+                <div class="question-text">
+                    ما هو التمثيل العشري (الذي يجب أن يكون دورياً) للكسر \( \frac{2}{3} \)؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2a" value="a">
+                        <label for="q2a">$$0.6$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2b" value="b">
+                        <label for="q2b">$$0.66$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2c" value="c">
+                        <label for="q2c">$$0.\overline{6}$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2d" value="d">
+                        <label for="q2d">$$0.\overline{3}$$</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: تحويل الكسر العادي إلى صورة دورية</span>
+                </div>
+            </div>
+            
+            <!-- Question 3: كتابة العدد العشري بصورة دورية (تحديد الجزء المتكرر) -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div class="question-title">تحديد الجزء المتكرر وكتابة العدد بصورة دورية</div>
+                </div>
+                <div class="question-text">
+                    عند تحويل الكسر \( \frac{5}{11} \) إلى صورته العشرية، نحصل على \( 0.454545...\) ما هي الكتابة الصحيحة بصورة دورية؟
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3a" value="a">
+                        <label for="q3a">$$0.4\overline{5}$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3b" value="b">
+                        <label for="q3b">$$0.\overline{4}$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3c" value="c">
+                        <label for="q3c">$$0.\overline{45}$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3d" value="d">
+                        <label for="q3d">$$0.45$$</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: كتابة العدد العشري بصورة دورية</span>
+                </div>
+            </div>
+            
+            <!-- Question 4: حل المعادلات الخطية (خطوة أساسية في عملية التحويل) -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div class="question-title">حل المعادلات الخطية</div>
+                </div>
+                <div class="question-text">
+                    حل المعادلة الخطية التالية لإيجاد قيمة \( x \): $$10x = 26 + x$$
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4a" value="a">
+                        <label for="q4a">$$x = \frac{26}{9}$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4b" value="b">
+                        <label for="q4b">$$x = 26$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4c" value="c">
+                        <label for="q4c">$$x = \frac{26}{11}$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4d" value="d">
+                        <label for="q4d">$$x = 9$$</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: حل المعادلات الخطية</span>
+                </div>
+            </div>
+            
+            <!-- Question 5: جمع وطرح الحدود الجبرية -->
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div class="question-title">جمع الحدود الجبرية (التبسيط)</div>
+                </div>
+                <div class="question-text">
+                    بسّط التعبير الجبري التالي: $$100x - x$$
+                </div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5a" value="a">
+                        <label for="q5a">$$100$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5b" value="b">
+                        <label for="q5b">$$99$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5c" value="c">
+                        <label for="q5c">$$99x$$</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5d" value="d">
+                        <label for="q5d">$$101x$$</label>
+                    </div>
+                </div>
+                <div>
+                    <span class="skill-tag">مهارة: جمع وطرح الحدود المتشابهة</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="submit-btn">
+                <i class="fas fa-check-circle"></i>
+                <span>تصحيح الإجابات</span>
+            </button>
+            <button id="reset-btn">
+                <i class="fas fa-redo-alt"></i>
+                <span>إعادة الاختبار</span>
+            </button>
+        </div>
+        
+        <div class="result" id="result">
+            <h2>نتيجة اختبار الاستعداد</h2>
+            <div class="score" id="score">0/5</div>
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="correct-answers">
+                <h3><i class="fas fa-check-square"></i> التصحيح:</h3>
+                <div class="answer-item">
+                    <p><strong>السؤال 1:</strong> $$2.\overline{6}$$ هو التعبير المختصر لـ <strong>$$2.666666...$$</strong></p>
+                    <p>التفسير: الخط الأفقي فوق الرقم (6) يدل على تكراره بلا نهاية.</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 2:</strong> $$ \frac{2}{3} $$ بالقسمة الطويلة يساوي <strong>$$0.\overline{6}$$</strong></p>
+                    <p>التفسير: عند قسمة 2 على 3، تكون النتيجة 0.666... حيث يتكرر الرقم 6.</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 3:</strong> الكتابة الصحيحة هي <strong>$$0.\overline{45}$$</strong></p>
+                    <p>التفسير: الجزء الذي يتكرر هو (45)، لذا يجب وضع رمز التكرار فوق الرقمين 4 و 5.</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 4:</strong> الحل هو <strong>$$x = \frac{26}{9}$$</strong></p>
+                    <p>التفسير: $$10x - x = 26 \rightarrow 9x = 26 \rightarrow x = \frac{26}{9}$$</p>
+                </div>
+                <div class="answer-item">
+                    <p><strong>السؤال 5:</strong> تبسيط $$100x - x$$ هو <strong>$$99x$$</strong></p>
+                    <p>التفسير: يتم طرح المعاملات (100 - 1) والاحتفاظ بالمتغير \( x \).</p>
+                </div>
+            </div>
+            
+            <button id="start-lesson-btn" class="start-btn">
+                <i class="fas fa-book"></i>
+                <span>بدء الدرس</span>
+            </button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>اختبار التعلم السابق - الكسور العشرية الدورية</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Re-render MathJax after the DOM is ready to ensure correct formatting
+            if (window.MathJax) {
+                MathJax.typeset();
+            }
+
+            const submitBtn = document.getElementById('submit-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const startLessonBtn = document.getElementById('start-lesson-btn');
+            const resultSection = document.getElementById('result');
+            const scoreElement = document.getElementById('score');
+            const feedbackElement = document.getElementById('feedback');
+            
+            // الإجابات الصحيحة الجديدة
+            const correctAnswers = {
+                q1: 'b', // 2.666666...
+                q2: 'c', // 0.6_bar
+                q3: 'c', // 0.45_bar
+                q4: 'a', // x = 26/9
+                q5: 'c'  // 99x
+            };
+            
+            function gradeTest() {
+                let score = 0;
+                const userAnswers = {};
+                const totalQuestions = 5;
+
+                // Loop through all questions
+                for (let i = 1; i <= totalQuestions; i++) {
+                    const qName = `q${i}`;
+                    const qSelected = document.querySelector(`input[name="${qName}"]:checked`);
+                    userAnswers[qName] = qSelected ? qSelected.value : '';
+                    
+                    if (userAnswers[qName] === correctAnswers[qName]) {
+                        score++;
+                    }
+                }
+                
+                // عرض النتيجة
+                scoreElement.textContent = `${score}/${totalQuestions}`;
+                
+                // تقديم التغذية الراجعة
+                if (score === totalQuestions) {
+                    feedbackElement.innerHTML = '<p class="correct">ممتاز! **أنت مستعد تماماً** لدخول درس الكسور العشرية الدورية. مهاراتك قوية في الجبر والتحويل.</p>';
+                } else if (score >= 3) {
+                    feedbackElement.innerHTML = '<p>جيد! لديك أساس جيد، لكن **ننصح بمراجعة أسئلة المعادلات والتبسيط** (4 و 5) لضمان سهولة فهم طريقة تحويل الكسر الدوري إلى عادي.</p>';
+                } else {
+                    feedbackElement.innerHTML = '<p class="incorrect">يحتاج إلى تحسين. يجب **مراجعة المفاهيم الأساسية للكسور العشرية والعمليات الجبرية** قبل بدء درس الكسور العشرية الدورية.</p>';
+                }
+                
+                // إظهار زر بدء الدرس
+                startLessonBtn.style.display = 'flex';
+                
+                resultSection.style.display = 'block';
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+
+                // Re-render MathJax in the results section too
+                if (window.MathJax) {
+                    MathJax.typeset();
+                }
+            }
+
+            submitBtn.addEventListener('click', gradeTest);
+            
+            resetBtn.addEventListener('click', function() {
+                // مسح جميع الإجابات
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // إخفاء النتيجة
+                resultSection.style.display = 'none';
+                
+                // إخفاء زر بدء الدرس
+                startLessonBtn.style.display = 'none';
+                
+                // إزالة تأثيرات التحديد
+                document.querySelectorAll('.option').forEach(option => {
+                    option.style.background = '#fff';
+                    option.style.borderColor = 'var(--pale-blue)';
+                });
+                
+                // التمرير إلى الأعلى
+                window.scrollTo(0, 0);
+            });
+            
+            // تحديث وظيفة زر بدء الدرس للانتقال إلى u3l2p1.html
+            startLessonBtn.addEventListener('click', function() {
+                window.location.href = 'u3l2p1.html'; 
+            });
+            
+            // إضافة تأثير عند اختيار الإجابة
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    // إزالة التحديد من جميع الخيارات في نفس السؤال
+                    this.parentElement.querySelectorAll('.option').forEach(opt => {
+                        opt.style.background = '#fff';
+                        opt.style.borderColor = 'var(--pale-blue)';
+                    });
+                    
+                    // تمييز الخيار المحدد
+                    this.style.background = 'var(--pale-blue)';
+                    this.style.borderColor = 'var(--sky-blue)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
