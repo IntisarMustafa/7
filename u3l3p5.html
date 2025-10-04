@@ -582,6 +582,25 @@
         .hidden {
             display: none;
         }
+        /* رسالة النجاح الجديدة */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            color: white;
+            padding: 40px 60px;
+            border-radius: 20px;
+            font-size: 42px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 300;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+            animation: popIn 0.8s ease-out;
+            border: 5px solid #fff;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
         @media (max-width: 900px) {
             .container {
                 flex-direction: column;
@@ -689,6 +708,10 @@
                 bottom: 250px;
                 right: 10px;
                 width: 70px;
+            }
+            .success-message {
+                font-size: 28px;
+                padding: 25px 40px;
             }
         }
         .answer-message {
@@ -2405,6 +2428,18 @@
             }
         }
 
+        // دالة جديدة لعرض رسالة النجاح
+        function showSuccessMessage() {
+            const successDiv = document.createElement("div");
+            successDiv.className = "success-message";
+            successDiv.textContent = "أحسنت! لقد أنجزت المهمة بنجاح";
+            document.body.appendChild(successDiv);
+
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
         function nextRound() {
             isRoundTransition = true;
             nextRoundBtn.disabled = true;
@@ -2415,6 +2450,10 @@
 
             setTimeout(() => {
                 round++;
+                
+                // التعديل: تجديد صحة اللاعب بعد كل مستوى
+                playerHealth = maxPlayerHealth;
+                
                 sheepCollected = 0; // إعادة تعيين عدد الخراف المجموعة
 
                 wolves.forEach((wolf) => scene.remove(wolf));
@@ -3153,6 +3192,8 @@
                     // التعديل: إزالة استدعاء winGame() واستبداله بتحديث واجهة المستخدم فقط
                     // هذا يسمح باستمرار اللعبة وعرض زر الجولة التالية
                     if (sheepCollected >= 5) {
+                        // التعديل: إضافة عرض رسالة النجاح عند جمع 5 خراف
+                        showSuccessMessage();
                         updateUI(); // هذا سيظهر زر الجولة التالية
                     }
                 }
