@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أتدرب وأحل مسائل</title>
+    <!-- Tailwind CSS for styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math symbols -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" xintegrity="sha384-GvrxHw+z4q/RzL05jQ9N+q+1aVl2l9x0+hX2jY5wF+R+b0eR-z-n-q-3X-z-Xl-Q==" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-H4uW3s3eT2B2+xP9O/D4h5N6n7f7p5O9Pq2E0l7l2lFw/F0e2+Q==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" xintegrity="sha384-i1HVh8p/B/pQ2Cg3t/r/O/3tP2Cj+xG/2+lCg5b+lC+b+c+a+v+1/u+s/g==" crossorigin="anonymous"></script>
+
+    <style>
+        /* Import suitable fonts for Arabic and English text */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f1f5f9; /* Light slate background */
+        }
+
+        /* Set base styles for the body and the main container */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            flex-grow: 1;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #084c8f;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #e0f2fe;
+            padding-bottom: 0.5rem;
+        }
+        
+        /* Check Understanding section and interactivity */
+        .problem-section-box {
+            background-color: #ffffff; 
+            border: 1px solid #d1d5db; 
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .problem-input {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1.25rem;
+            border: 2px solid #ccc;
+            border-radius: 0.5rem;
+            text-align: center;
+            direction: ltr; /* IMPORTANT: Ensure input direction is LTR */
+            transition: border-color 0.3s;
+        }
+        .problem-input:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+
+        /* Styles for the mixed number input container */
+        .mixed-number-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem; /* Space between whole number and fraction */
+            direction: ltr; /* IMPORTANT: This controls the arrangement: Whole | Fraction */
+        }
+        
+        .whole-number-input {
+            width: 50px; 
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-self: stretch;
+        }
+
+        .fraction-input-group {
+            width: 70px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fraction-input-group input {
+            padding: 0.4rem;
+            font-size: 1rem;
+        }
+
+        .fraction-divider {
+            height: 2px;
+            width: 100%;
+            background-color: #4a5568;
+            margin: 1px 0;
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .problem-set-item {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1rem;
+            }
+            .input-group-row {
+                flex-direction: column; /* Stack vertically on small screens */
+                align-items: center;
+            }
+            .mixed-number-container {
+                flex-direction: row; 
+                margin-bottom: 1rem;
+            }
+            .whole-number-input, .fraction-input-group {
+                width: 45%; 
+            }
+            .check-button {
+                width: 100%;
+            }
+        }
+
+        /* Specific style for the header text */
+        .header-title {
+            animation: fadeIn 1s ease-out;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content Container -->
+    <main class="container">
+        <!-- Professional Header -->
+        <header class="bg-blue-800 text-white py-8 sm:py-12 text-center shadow-lg rounded-t-[1.5rem] relative overflow-hidden">
+            <!-- Decorative gold bar at the bottom -->
+            <div class="absolute inset-x-0 bottom-0 h-1 bg-yellow-400"></div>
+            <h1 class="header-title text-3xl leading-tight sm:text-4xl font-bold">أتدرب وأحل المسائل</h1>
+            <p class="text-sm sm:text-lg mt-2 opacity-90">تحويل الكسور والأعداد العشرية الدورية إلى صورة كسر $ \frac{a}{b} $ أو عدد كسري</p>
+        </header>
+
+        <!-- Section 1: Convert to Fraction (a/b) -->
+        <div class="problem-section-box bg-blue-50">
+            <h2 class="section-title text-blue-800">أكتب الكسر العشري الدوري على صورة كسر $ \frac{a}{b} $ في أبسط صورة:</h2>
+            <p class="text-gray-600 mb-6 text-right text-sm">أدخل البسط والمقام فقط (العدد الصحيح هو $ 0 $).</p>
+
+            <!-- Problem Grid (Problems 1-8 from the image) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                
+                <!-- Problem 1: 0.6 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-blue-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">1. $ 0.\overline{6} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        <div class="mixed-number-container">
+                            <div class="fraction-input-group">
+                                <input type="text" id="q1-numerator" class="problem-input border-gray-300" placeholder="البسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q1-denominator" class="problem-input border-gray-300" placeholder="المقام">
+                            </div>
+                        </div>
+                        <button onclick="checkProblem('q1', 2, 3, 0, 2, 3)" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q1-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+                <!-- Problem 2: 0.7 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-blue-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">2. $ 0.\overline{7} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        <div class="mixed-number-container">
+                            <div class="fraction-input-group">
+                                <input type="text" id="q2-numerator" class="problem-input border-gray-300" placeholder="البسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q2-denominator" class="problem-input border-gray-300" placeholder="المقام">
+                            </div>
+                        </div>
+                        <button onclick="checkProblem('q2', 7, 9, 0, 7, 9)" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q2-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+                <!-- Problem 3: 0.3 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-blue-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">3. $ 0.\overline{3} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        <div class="mixed-number-container">
+                            <div class="fraction-input-group">
+                                <input type="text" id="q3-numerator" class="problem-input border-gray-300" placeholder="البسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q3-denominator" class="problem-input border-gray-300" placeholder="المقام">
+                            </div>
+                        </div>
+                        <!-- Correct Answer: 1/3 -->
+                        <button onclick="checkProblem('q3', 1, 3, 0, 1, 3)" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q3-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+                <!-- Problem 4: 0.9 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-blue-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">4. $ 0.\overline{9} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        <div class="mixed-number-container">
+                            <div class="fraction-input-group">
+                                <input type="text" id="q4-numerator" class="problem-input border-gray-300" placeholder="البسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q4-denominator" class="problem-input border-gray-300" placeholder="المقام">
+                            </div>
+                        </div>
+                        <!-- Correct Answer: 1/1 (or 1) -->
+                        <button onclick="checkProblem('q4', 1, 1, 0, 1, 1)" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q4-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+                <!-- Problem 5: 0.13 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-blue-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">5. $ 0.\overline{13} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        <div class="mixed-number-container">
+                            <div class="fraction-input-group">
+                                <input type="text" id="q5-numerator" class="problem-input border-gray-300" placeholder="البسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q5-denominator" class="problem-input border-gray-300" placeholder="المقام">
+                            </div>
+                        </div>
+                        <!-- Correct Answer: 13/99 -->
+                        <button onclick="checkProblem('q5', 13, 99, 0, 13, 99)" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q5-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+                <!-- Problem 6: 0.37 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-blue-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">6. $ 0.\overline{37} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        <div class="mixed-number-container">
+                            <div class="fraction-input-group">
+                                <input type="text" id="q6-numerator" class="problem-input border-gray-300" placeholder="البسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q6-denominator" class="problem-input border-gray-300" placeholder="المقام">
+                            </div>
+                        </div>
+                        <!-- Correct Answer: 37/99 -->
+                        <button onclick="checkProblem('q6', 37, 99, 0, 37, 99)" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q6-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+                <!-- Problem 7: 0.15 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-blue-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">7. $ 0.\overline{15} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        <div class="mixed-number-container">
+                            <div class="fraction-input-group">
+                                <input type="text" id="q7-numerator" class="problem-input border-gray-300" placeholder="البسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q7-denominator" class="problem-input border-gray-300" placeholder="المقام">
+                            </div>
+                        </div>
+                        <!-- Correct Answer: 5/33 (15/99 simplified) -->
+                        <button onclick="checkProblem('q7', 5, 33, 0, 5, 33)" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q7-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+                 <!-- Problem 8: 0.33 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-blue-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">8. $ 0.\overline{33} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        <div class="mixed-number-container">
+                            <div class="fraction-input-group">
+                                <input type="text" id="q8-numerator" class="problem-input border-gray-300" placeholder="البسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q8-denominator" class="problem-input border-gray-300" placeholder="المقام">
+                            </div>
+                        </div>
+                        <!-- Correct Answer: 1/3 (33/99 simplified) -->
+                        <button onclick="checkProblem('q8', 1, 3, 0, 1, 3)" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q8-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Section 2: Convert to Mixed Number -->
+        <div class="problem-section-box bg-green-50">
+            <h2 class="section-title text-green-800">أكتب العدد العشري الدوري على صورة عدد كسري في أبسط صورة:</h2>
+            <p class="text-gray-600 mb-6 text-right text-sm">أدخل العدد الصحيح والبسط والمقام.</p>
+
+            <!-- Problem Grid (Problems 9, 10, 11, 12 from the image) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+                <!-- Problem 9: 1.14 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-green-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">9. $ 1.\overline{14} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        
+                        <!-- Mixed Number Input Group -->
+                        <div class="mixed-number-container">
+                            <div class="whole-number-input">
+                                <input type="text" id="q9-whole" class="problem-input border-gray-300" placeholder="صحيح">
+                            </div>
+                            <div class="fraction-input-group">
+                                <input type="text" id="q9-numerator" class="problem-input border-gray-300" placeholder="بسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q9-denominator" class="problem-input border-gray-300" placeholder="مقام">
+                            </div>
+                        </div>
+
+                        <!-- Correct Answer: 1 14/99 -->
+                        <button onclick="checkProblem('q9', 113, 99, 1, 14, 99)" class="bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q9-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+                <!-- Problem 10: 2.13 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-green-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">10. $ 2.\overline{13} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        
+                        <!-- Mixed Number Input Group -->
+                        <div class="mixed-number-container">
+                            <div class="whole-number-input">
+                                <input type="text" id="q10-whole" class="problem-input border-gray-300" placeholder="صحيح">
+                            </div>
+                            <div class="fraction-input-group">
+                                <input type="text" id="q10-numerator" class="problem-input border-gray-300" placeholder="بسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q10-denominator" class="problem-input border-gray-300" placeholder="مقام">
+                            </div>
+                        </div>
+                        
+                        <!-- Correct Answer: 2 13/99 -->
+                        <button onclick="checkProblem('q10', 211, 99, 2, 13, 99)" class="bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q10-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+                
+                <!-- Problem 11: 5.34 bar -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-green-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">11. $ 5.\overline{34} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        
+                        <!-- Mixed Number Input Group -->
+                        <div class="mixed-number-container">
+                            <div class="whole-number-input">
+                                <input type="text" id="q11-whole" class="problem-input border-gray-300" placeholder="صحيح">
+                            </div>
+                            <div class="fraction-input-group">
+                                <input type="text" id="q11-numerator" class="problem-input border-gray-300" placeholder="بسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q11-denominator" class="problem-input border-gray-300" placeholder="مقام">
+                            </div>
+                        </div>
+                        
+                        <!-- Correct Answer: 5 34/99 -->
+                        <button onclick="checkProblem('q11', 529, 99, 5, 34, 99)" class="bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q11-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+
+                 <!-- Problem 12: 4.25 bar -->
+                 <div class="bg-white p-4 rounded-lg shadow-md border border-green-200 problem-set-item">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center" dir="ltr">12. $ 4.\overline{25} $</h3>
+                    <div class="flex items-center justify-center gap-6 mb-4 input-group-row">
+                        
+                        <!-- Mixed Number Input Group -->
+                        <div class="mixed-number-container">
+                            <div class="whole-number-input">
+                                <input type="text" id="q12-whole" class="problem-input border-gray-300" placeholder="صحيح">
+                            </div>
+                            <div class="fraction-input-group">
+                                <input type="text" id="q12-numerator" class="problem-input border-gray-300" placeholder="بسط">
+                                <div class="fraction-divider"></div>
+                                <input type="text" id="q12-denominator" class="problem-input border-gray-300" placeholder="مقام">
+                            </div>
+                        </div>
+                        
+                        <!-- Correct Answer: 4 25/99 -->
+                        <button onclick="checkProblem('q12', 421, 99, 4, 25, 99)" class="bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300 transform hover:scale-105 check-button">تحقق</button>
+                    </div>
+                    <div id="q12-feedback" class="mt-2 text-center font-bold" style="display:none;"></div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Navigation Buttons (Links updated here) -->
+        <!-- Added 'الصفحة الرئيسية' button linked to u3.html, positioned between Previous and Next -->
+        <div class="flex justify-between mt-8">
+            <a href="u3l2p3.html" class="bg-gray-400 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-gray-500 transition duration-300 transform hover:scale-105 text-lg">
+                السابق
+            </a>
+            <a href="u3.html" class="bg-yellow-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105 text-lg">
+                الصفحة الرئيسية
+            </a>
+            <a href="u3l2p5.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 text-lg">
+                التالي
+            </a>
+        </div>
+        
+        <!-- Divider to separate the button and the footer -->
+        <div class="w-full h-1 bg-gray-200 my-8"></div>
+
+        <!-- Professional Footer -->
+        <footer class="bg-blue-800 text-white p-4 text-center rounded-b-[1.5rem]">
+            <p class="text-sm">جميع الحقوق محفوظة © 2025</p>
+        </footer>
+    </main>
+    
+    <!-- JavaScript for interactivity and rendering math -->
+    <script>
+        // Helper function to calculate GCD (القاسم المشترك الأكبر)
+        function gcd(a, b) {
+            // Handle cases where a or b is zero or non-integer
+            if (b === 0) return a;
+            return gcd(b, a % b);
+        }
+
+        // Helper function to simplify a fraction
+        function simplifyFraction(numerator, denominator) {
+            if (denominator === 0) return { num: 0, den: 0 };
+            const common = gcd(Math.abs(numerator), Math.abs(denominator));
+            // Ensure denominator is positive
+            const sign = Math.sign(numerator * denominator);
+            return {
+                num: (Math.abs(numerator) / common) * sign,
+                den: Math.abs(denominator) / common
+            };
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to render all math expressions on the page
+            function renderAllMath() {
+                // Render expressions using KaTeX
+                document.querySelectorAll('h1, h2, h3, p, span').forEach(function(element) {
+                    // Check if the element contains a KaTeX expression (surrounded by $)
+                    if (element.innerHTML.includes('$')) {
+                        try {
+                            // Use auto-render for simple inline expressions
+                            renderMathInElement(element, {
+                                delimiters: [
+                                    {left: "$$", right: "$$", display: true},
+                                    {left: "$", right: "$", display: false}
+                                ],
+                                throwOnError: false
+                            });
+                        } catch(e) {
+                            console.error("KaTeX rendering error:", e);
+                        }
+                    }
+                });
+            }
+
+            // Initial rendering of all math
+            renderAllMath();
+
+            const tolerance = 0.0000001; 
+
+            /**
+             * Checks the user's input for a mixed number or simple fraction against the correct answer.
+             * @param {string} idPrefix - The prefix for input IDs (e.g., 'q1', 'q2').
+             * @param {number} correctNum - The correct simplified improper fraction numerator.
+             * @param {number} correctDen - The correct simplified improper fraction denominator.
+             * @param {number} mixedWhole - The correct whole part of the mixed number (0 for simple fraction).
+             * @param {number} mixedNum - The correct fractional numerator of the mixed number.
+             * @param {number} mixedDen - The correct fractional denominator of the mixed number.
+             */
+            window.checkProblem = function(idPrefix, correctNum, correctDen, mixedWhole, mixedNum, mixedDen) {
+                // Get inputs. The whole input might be hidden or a hidden field with value 0.
+                const wholeInput = document.getElementById(`${idPrefix}-whole`);
+                const numInput = document.getElementById(`${idPrefix}-numerator`);
+                const denInput = document.getElementById(`${idPrefix}-denominator`);
+                const feedbackElement = document.getElementById(`${idPrefix}-feedback`);
+
+                // Read inputs, defaulting to 0 if not found (for simple fractions) or if empty
+                let userWhole = 0;
+                if (wholeInput) {
+                    userWhole = parseInt(wholeInput.value.trim());
+                    if (isNaN(userWhole)) userWhole = 0;
+                }
+                
+                const userNum = parseInt(numInput.value.trim());
+                const userDen = parseInt(denInput.value.trim());
+
+                feedbackElement.style.display = 'block';
+
+                if (isNaN(userNum) || isNaN(userDen) || userDen <= 0) {
+                    feedbackElement.textContent = "الرجاء إدخال أرقام صحيحة موجبة في المقامات وأرقام صحيحة في جميع الحقول.";
+                    feedbackElement.className = "mt-2 text-center font-bold text-orange-600";
+                    return;
+                }
+                
+                // 1. Calculate the user's improper fraction value
+                const userAbsWhole = Math.abs(userWhole);
+                const userImproperNum = (userAbsWhole * userDen) + userNum;
+                // Preserve the sign of the whole number part
+                const signedUserImproperNum = userWhole < 0 ? -userImproperNum : userImproperNum;
+                
+                const userValue = signedUserImproperNum / userDen; 
+
+                // 2. Calculate the correct value
+                const correctValue = correctNum / correctDen;
+                
+                // Construct the expected simplified display (KaTeX)
+                let correctKaTeX;
+                if (mixedWhole === 0 && mixedDen !== 1) { // Simple fraction
+                    correctKaTeX = `\\frac{${mixedNum}}{${mixedDen}}`;
+                } else if (mixedDen === 1) { // Whole number result (like 0.9 bar = 1)
+                    correctKaTeX = `${mixedWhole + mixedNum}`;
+                } 
+                else { // Mixed number
+                    correctKaTeX = `${mixedWhole} \\frac{${mixedNum}}{${mixedDen}}`;
+                }
+                
+                const correctDisplayKaTeX = `\\mathbf{${correctKaTeX}}`;
+                
+                if (Math.abs(userValue - correctValue) < tolerance) {
+                    // Correct value, now check for correct simplified form
+                    
+                    // Check if the user entered the *expected* simplified mixed/fraction parts
+                    const enteredCorrectParts = 
+                        (userWhole === mixedWhole) && 
+                        (userNum === mixedNum) &&
+                        (userDen === mixedDen);
+
+                    if (enteredCorrectParts) {
+                        feedbackElement.textContent = "إجابة صحيحة ومبسّطة! 🎉";
+                        feedbackElement.className = "mt-2 text-center font-bold text-green-600";
+                    } else {
+                        // Correct value but not in the *expected* simplified form
+                        const textNode1 = document.createTextNode("إجابة صحيحة القيمة، لكنها ليست في أبسط صورة أو شكل. أبسط صورة هي ");
+                        const katexSpan = document.createElement('span');
+                        katexSpan.setAttribute('dir', 'ltr');
+                        try {
+                            katex.render(correctDisplayKaTeX, katexSpan, { throwOnError: false });
+                        } catch(e) {
+                            katexSpan.textContent = `${mixedWhole} ${mixedNum}/${mixedDen}`;
+                        }
+                        feedbackElement.innerHTML = '';
+                        feedbackElement.appendChild(textNode1);
+                        feedbackElement.appendChild(katexSpan);
+                        feedbackElement.className = "mt-2 text-center font-bold text-blue-600";
+                    }
+
+                } else {
+                    // Incorrect value
+                    feedbackElement.innerHTML = 'إجابة خاطئة. الإجابة الصحيحة في أبسط صورة هي ';
+
+                    const katexSpan = document.createElement('span');
+                    katexSpan.setAttribute('dir', 'ltr');
+                    try {
+                        katex.render(correctDisplayKaTeX, katexSpan, { throwOnError: false });
+                    } catch(e) {
+                        katexSpan.textContent = `${mixedWhole} ${mixedNum}/${mixedDen}`; 
+                    }
+                    
+                    feedbackElement.appendChild(katexSpan);
+                    feedbackElement.className = "mt-2 text-center font-bold text-red-600";
+                }
+            };
+        });
+    </script>
+</body>
+</html>
