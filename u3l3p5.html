@@ -7,7 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
-        /* أنماط CSS تبقى كما هي */
         * {
             margin: 0;
             padding: 0;
@@ -297,11 +296,12 @@
             left: 20px;
             z-index: 100;
         }
-        /* عجلة التحكم الجديدة */
+        /* عجلة التحكم الجديدة - تم تحسينها */
         .joystick-container {
             position: relative;
             width: 150px;
             height: 150px;
+            touch-action: none;
         }
         .joystick-base {
             width: 100%;
@@ -311,6 +311,7 @@
             border: 2px solid rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(5px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            touch-action: none;
         }
         .joystick-handle {
             position: absolute;
@@ -323,6 +324,7 @@
             transform: translate(-50%, -50%);
             transition: transform 0.1s ease;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            touch-action: none;
         }
         .joystick-handle.active {
             background: rgba(76, 175, 80, 0.9);
@@ -842,7 +844,7 @@
             <div class="bomb-charge-indicator" id="bombChargeIndicator">
                 <div class="bomb-charge-bar" id="bombChargeBar"></div>
             </div>
-            <!-- عجلة التحكم الجديدة -->
+            <!-- عجلة التحكم الجديدة - تم تحسينها -->
             <div class="movement-controls" id="movementControls">
                 <div class="joystick-container">
                     <div class="joystick-base" id="joystickBase"></div>
@@ -2128,7 +2130,7 @@
         let cameraHeight = 5;
         let cameraAngle = 0;
 
-        // متغيرات عجلة التحكم الجديدة
+        // متغيرات عجلة التحكم الجديدة - تم التعديل
         let joystickActive = false;
         let joystickTouchId = null;
         let joystickCenterX = 0;
@@ -3326,17 +3328,12 @@
             spawnWavesForRound();
         }
 
-        // دالة جديدة لتهيئة عجلة التحكم
+        // دالة جديدة لتهيئة عجلة التحكم - معدلة ومحسنة
         function setupJoystickControls() {
             const joystickContainer = document.querySelector('.joystick-container');
-            const rect = joystickContainer.getBoundingClientRect();
-
-            // تحديد مركز عجلة التحكم
-            joystickCenterX = rect.left + rect.width / 2;
-            joystickCenterY = rect.top + rect.height / 2;
-
+            
             // إعداد أحداث اللمس لعجلة التحكم
-            joystickBase.addEventListener('touchstart', handleJoystickStart, {
+            joystickContainer.addEventListener('touchstart', handleJoystickStart, {
                 passive: false
             });
             window.addEventListener('touchmove', handleJoystickMove, {
@@ -3347,9 +3344,13 @@
             });
 
             // إعداد أحداث الماوس لعجلة التحكم
-            joystickBase.addEventListener('mousedown', handleJoystickStart);
+            joystickContainer.addEventListener('mousedown', handleJoystickStart);
             window.addEventListener('mousemove', handleJoystickMove);
             window.addEventListener('mouseup', handleJoystickEnd);
+            
+            // منع السلوك الافتراضي لمنع التمرير عند استخدام العجلة
+            joystickContainer.addEventListener('touchstart', (e) => e.preventDefault());
+            joystickContainer.addEventListener('touchmove', (e) => e.preventDefault());
         }
 
         function handleJoystickStart(e) {
@@ -3359,12 +3360,22 @@
             joystickActive = true;
             joystickHandle.classList.add('active');
 
-            // تحسين: بدء الحركة من المركز
+            // حساب مركز العجلة عند كل بدء لمس
+            const rect = joystickBase.getBoundingClientRect();
+            joystickCenterX = rect.left + rect.width / 2;
+            joystickCenterY = rect.top + rect.height / 2;
+
+            // بدء الحركة من المركز
             joystickDirection.x = 0;
             joystickDirection.y = 0;
 
             if (e.type === 'touchstart') {
                 joystickTouchId = e.changedTouches[0].identifier;
+                // تحديث موضع المقبض بناءً على نقطة اللمس
+                updateJoystickPosition(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+            } else {
+                // تحديث موضع المقبض بناءً على موقع الماوس
+                updateJoystickPosition(e.clientX, e.clientY);
             }
         }
 
@@ -3384,14 +3395,19 @@
                 clientX = e.clientX;
                 clientY = e.clientY;
             }
+            
+            // تحديث موضع المقبض
+            updateJoystickPosition(clientX, clientY);
+        }
 
+        function updateJoystickPosition(clientX, clientY) {
             // حساب المسافة من مركز عجلة التحكم
             const deltaX = clientX - joystickCenterX;
             const deltaY = clientY - joystickCenterY;
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-            // منطقة ميتة في الوسط - تم حذفها (جعلناها صفر)
-            const deadZone = 0; // تم تغيير هذا السطر
+            // إضافة منطقة ميتة (5% من نصف القطر)
+            const deadZone = joystickRadius * 0.05;
 
             if (distance <= deadZone) {
                 joystickDirection.x = 0;
@@ -3402,8 +3418,12 @@
 
             // تحديد ما إذا كانت النقطة داخل دائرة عجلة التحكم
             if (distance <= joystickRadius) {
-                joystickDirection.x = deltaX / joystickRadius;
-                joystickDirection.y = deltaY / joystickRadius;
+                // تطبيع الإحداثيات بالنسبة لنصف القطر مع استبعاد المنطقة الميتة
+                const effectiveDistance = Math.min(distance, joystickRadius);
+                const normalizedDistance = (effectiveDistance - deadZone) / (joystickRadius - deadZone);
+                
+                joystickDirection.x = (deltaX / distance) * normalizedDistance;
+                joystickDirection.y = (deltaY / distance) * normalizedDistance;
 
                 // تحديث موضع المقبض
                 joystickHandle.style.transform = `translate(calc(-50% + ${deltaX}px), calc(-50% + ${deltaY}px))`;
@@ -3413,8 +3433,11 @@
                 joystickDirection.x = Math.cos(angle);
                 joystickDirection.y = Math.sin(angle);
 
-                // تحديث موضع المقبض
-                joystickHandle.style.transform = `translate(calc(-50% + ${Math.cos(angle) * joystickRadius}px), calc(-50% + ${Math.sin(angle) * joystickRadius}px))`;
+                // حساب موضع المقبض المحدود
+                const limitedX = Math.cos(angle) * joystickRadius;
+                const limitedY = Math.sin(angle) * joystickRadius;
+                
+                joystickHandle.style.transform = `translate(calc(-50% + ${limitedX}px), calc(-50% + ${limitedY}px))`;
             }
         }
 
