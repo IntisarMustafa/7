@@ -850,6 +850,10 @@
                     <div class="stat-value" id="aggressiveCount">0</div>
                     <div class="stat-label">العدوانية</div>
                 </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="beesCount">0</div>
+                    <div class="stat-label">النحل</div>
+                </div>
             </div>
         </div>
         <div class="scene-container">
@@ -2098,6 +2102,162 @@
             return particles;
         }
 
+        // إنشاء نحلة - دالة جديدة
+        function createBee(x, z) {
+            const beeGroup = new THREE.Group();
+
+            // جسم النحلة (كرة صفراء وسوداء)
+            const bodyGeometry = new THREE.SphereGeometry(0.8, 16, 16);
+            const bodyMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffff00,
+                roughness: 0.7,
+                metalness: 0.3
+            });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.castShadow = true;
+            beeGroup.add(body);
+
+            // خطوط سوداء على الجسم
+            const stripeGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1.6, 8);
+            const stripeMaterial = new THREE.MeshStandardMaterial({
+                color: 0x000000
+            });
+            
+            for (let i = 0; i < 3; i++) {
+                const stripe = new THREE.Mesh(stripeGeometry, stripeMaterial);
+                stripe.position.set(0, -0.6 + i * 0.6, 0);
+                stripe.rotation.z = Math.PI / 2;
+                body.add(stripe);
+            }
+
+            // رأس النحلة
+            const headGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+            const headMaterial = new THREE.MeshStandardMaterial({
+                color: 0x000000
+            });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.set(0, 0.8, 0);
+            beeGroup.add(head);
+
+            // عيون النحلة
+            const eyeGeometry = new THREE.SphereGeometry(0.15, 8, 8);
+            const eyeMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff
+            });
+            
+            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            leftEye.position.set(-0.2, 0.9, 0.3);
+            beeGroup.add(leftEye);
+            
+            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            rightEye.position.set(0.2, 0.9, 0.3);
+            beeGroup.add(rightEye);
+
+            // قرون الاستشعار
+            const antennaGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.5, 8);
+            const antennaMaterial = new THREE.MeshStandardMaterial({
+                color: 0x000000
+            });
+            
+            const leftAntenna = new THREE.Mesh(antennaGeometry, antennaMaterial);
+            leftAntenna.position.set(-0.2, 1.1, 0.1);
+            leftAntenna.rotation.z = -Math.PI / 6;
+            beeGroup.add(leftAntenna);
+            
+            const rightAntenna = new THREE.Mesh(antennaGeometry, antennaMaterial);
+            rightAntenna.position.set(0.2, 1.1, 0.1);
+            rightAntenna.rotation.z = Math.PI / 6;
+            beeGroup.add(rightAntenna);
+
+            // أجنحة النحلة
+            const wingGeometry = new THREE.SphereGeometry(0.6, 8, 8);
+            const wingMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            const leftWing = new THREE.Mesh(wingGeometry, wingMaterial);
+            leftWing.position.set(-0.8, 0.5, 0);
+            leftWing.scale.set(0.1, 0.5, 1);
+            beeGroup.add(leftWing);
+            
+            const rightWing = new THREE.Mesh(wingGeometry, wingMaterial);
+            rightWing.position.set(0.8, 0.5, 0);
+            rightWing.scale.set(0.1, 0.5, 1);
+            beeGroup.add(rightWing);
+
+            // إبرة النحلة
+            const stingerGeometry = new THREE.ConeGeometry(0.1, 0.5, 8);
+            const stingerMaterial = new THREE.MeshStandardMaterial({
+                color: 0x000000
+            });
+            const stinger = new THREE.Mesh(stingerGeometry, stingerMaterial);
+            stinger.position.set(0, -0.8, 0);
+            stinger.rotation.x = Math.PI;
+            beeGroup.add(stinger);
+
+            beeGroup.position.set(x, 5, z); // النحل يطير في الهواء
+
+            // خصائص النحلة
+            beeGroup.userData = {
+                type: 'bee',
+                health: 40,
+                speed: 0.08,
+                damage: 8,
+                isChasing: false,
+                detectionRange: 25,
+                attackRange: 2,
+                lastAttackTime: 0,
+                attackCooldown: 1500,
+                collisionDamage: 12,
+                lastCollisionTime: 0,
+                collisionCooldown: 1000,
+                wingFlapSpeed: 15,
+                wingFlapAngle: 0
+            };
+
+            scene.add(beeGroup);
+            return beeGroup;
+        }
+
+        // إنشاء لسعة النحلة - دالة جديدة
+        function createBeeSting(fromPos, toPos) {
+            const stingGroup = new THREE.Group();
+            
+            // إنشاء اللسعة
+            const stingGeometry = new THREE.CylinderGeometry(0.05, 0.02, 1, 8);
+            const stingMaterial = new THREE.MeshBasicMaterial({
+                color: 0x000000
+            });
+            const sting = new THREE.Mesh(stingGeometry, stingMaterial);
+            sting.rotation.x = Math.PI / 2;
+            stingGroup.add(sting);
+            
+            stingGroup.position.copy(fromPos);
+            
+            // اتجاه اللسعة نحو اللاعب
+            const direction = new THREE.Vector3().subVectors(toPos, fromPos).normalize();
+            stingGroup.lookAt(toPos);
+            
+            scene.add(stingGroup);
+            
+            // خصائص اللسعة
+            stingGroup.userData = {
+                type: 'beeSting',
+                direction: direction,
+                speed: 0.3,
+                damage: 8,
+                distanceTraveled: 0,
+                maxDistance: 20
+            };
+            
+            beeStings.push(stingGroup);
+            
+            // صوت اللسعة
+            playSound(800, 'sawtooth', 0.1, 0.2);
+        }
+
         // تهيئة اللعبة
         const sheeps = [];
         const wolves = [];
@@ -2107,6 +2267,8 @@
         const wolfProjectiles = [];
         const platforms = [];
         const bombBoxes = [];
+        const bees = []; // إضافة مصفوفة النحل
+        const beeStings = []; // إضافة مصفوفة لسعات النحل
 
         let score = 0;
         let coinsCollected = 0;
@@ -2197,6 +2359,7 @@
         const wasteCount = document.getElementById("wasteCount");
         const coinsCount = document.getElementById("coinsCount");
         const aggressiveCount = document.getElementById("aggressiveCount");
+        const beesCount = document.getElementById("beesCount");
         const gameOverPanel = document.getElementById("gameOverPanel");
         const finalScore = document.getElementById("finalScore");
         finalScore.textContent = "0";
@@ -2310,6 +2473,16 @@
                 wolves.push(createWolf(wolfX, wolfZ, type));
             }
 
+            // إضافة النحل من الجولة 3 فصاعداً
+            if (round >= 3) {
+                const beeCount = 3 + (round - 3) * 2; // عدد النحل يزداد مع الجولات
+                for (let i = 0; i < beeCount; i++) {
+                    const beeX = Math.random() * 900 - 450;
+                    const beeZ = Math.random() * 900 - 450;
+                    bees.push(createBee(beeX, beeZ));
+                }
+            }
+
             const treasureBoxCount = 5 + round * 2;
             for (let i = 0; i < treasureBoxCount; i++) {
                 const boxX = Math.random() * 800 - 400;
@@ -2401,6 +2574,7 @@
             levelDisplay.textContent = level;
             wasteCount.textContent = wolves.length;
             coinsCount.textContent = coinsCollected;
+            beesCount.textContent = bees.length; // تحديث عدد النحل
 
             const aggressiveWolves = wolves.filter(
                 (w) => w.userData.isAggressive
@@ -2481,6 +2655,12 @@
 
                 platforms.forEach((platform) => scene.remove(platform));
                 platforms.length = 0;
+
+                bees.forEach((bee) => scene.remove(bee));
+                bees.length = 0;
+
+                beeStings.forEach((sting) => scene.remove(sting));
+                beeStings.length = 0;
 
                 spawnPlatforms();
                 spawnNewSheeps();
@@ -2663,6 +2843,132 @@
             });
         }
 
+        // دالة جديدة لتحريك النحل
+        function moveBees() {
+            const playerPos = new THREE.Vector3();
+            player.getWorldPosition(playerPos);
+
+            bees.forEach((bee) => {
+                const beeData = bee.userData;
+                const beePos = new THREE.Vector3();
+                bee.getWorldPosition(beePos);
+
+                // تحريك الأجنحة
+                beeData.wingFlapAngle += beeData.wingFlapSpeed * 0.01;
+                const wingFlap = Math.sin(beeData.wingFlapAngle) * 0.3;
+                
+                bee.children.forEach((child) => {
+                    if (child.position.x !== 0) { // الأجنحة فقط
+                        child.rotation.x = wingFlap;
+                    }
+                });
+
+                // متابعة اللاعب
+                const distanceToPlayer = beePos.distanceTo(playerPos);
+                
+                if (distanceToPlayer < beeData.detectionRange) {
+                    beeData.isChasing = true;
+                    
+                    const direction = new THREE.Vector3().subVectors(playerPos, beePos).normalize();
+                    const newPosition = beePos.clone().add(direction.multiplyScalar(beeData.speed));
+                    
+                    // النحل يطير في الهواء
+                    newPosition.y = 5 + Math.sin(Date.now() * 0.005) * 0.5; // حركة تموجية
+                    
+                    // تجنب الاصطدام بالجبال
+                    let collisionDetected = false;
+                    const beeBoundingSphere = new THREE.Sphere(newPosition, 0.8);
+                    
+                    for (const mountain of mountains) {
+                        mountain.children.forEach((child) => {
+                            const childBox = new THREE.Box3().setFromObject(child);
+                            if (childBox.intersectsSphere(beeBoundingSphere)) {
+                                collisionDetected = true;
+                            }
+                        });
+                        if (collisionDetected) break;
+                    }
+                    
+                    if (!collisionDetected) {
+                        bee.position.x = newPosition.x;
+                        bee.position.y = newPosition.y;
+                        bee.position.z = newPosition.z;
+                    }
+                    
+                    bee.lookAt(
+                        bee.position.x + direction.x,
+                        bee.position.y + direction.y,
+                        bee.position.z + direction.z
+                    );
+                    
+                    // الهجوم على اللاعب
+                    if (distanceToPlayer < beeData.attackRange) {
+                        const currentTime = Date.now();
+                        if (currentTime - beeData.lastAttackTime > beeData.attackCooldown) {
+                            // إطلاق لسعة
+                            createBeeSting(beePos, playerPos);
+                            beeData.lastAttackTime = currentTime;
+                        }
+                    }
+                    
+                    // ضرر التصادم
+                    if (distanceToPlayer < 1.5) {
+                        const currentTime = Date.now();
+                        if (currentTime - beeData.lastCollisionTime > beeData.collisionCooldown) {
+                            playerHealth -= beeData.collisionDamage;
+                            beeData.lastCollisionTime = currentTime;
+                            showPlayerDamageEffect();
+                            playDamageSound();
+                            updateUI();
+                        }
+                    }
+                } else {
+                    beeData.isChasing = false;
+                    
+                    // حركة عشوائية عندما لا تطارد اللاعب
+                    bee.position.x += (Math.random() - 0.5) * 0.05;
+                    bee.position.z += (Math.random() - 0.5) * 0.05;
+                    bee.position.y = 5 + Math.sin(Date.now() * 0.003) * 0.3;
+                }
+            });
+        }
+
+        // دالة جديدة لتحريك لسعات النحل
+        function moveBeeStings() {
+            const playerPos = new THREE.Vector3();
+            player.getWorldPosition(playerPos);
+            
+            for (let i = beeStings.length - 1; i >= 0; i--) {
+                const sting = beeStings[i];
+                const stingData = sting.userData;
+                
+                // تحريك اللسعة
+                sting.position.add(stingData.direction.clone().multiplyScalar(stingData.speed));
+                stingData.distanceTraveled += stingData.speed;
+                
+                // إزالة اللسعة إذا تجاوزت المسافة القصوى
+                if (stingData.distanceTraveled > stingData.maxDistance) {
+                    scene.remove(sting);
+                    beeStings.splice(i, 1);
+                    continue;
+                }
+                
+                // التحقق من الاصطدام باللاعب
+                const stingPos = new THREE.Vector3();
+                sting.getWorldPosition(stingPos);
+                const distanceToPlayer = stingPos.distanceTo(playerPos);
+                
+                if (distanceToPlayer < 1.5) {
+                    playerHealth -= stingData.damage;
+                    scene.remove(sting);
+                    beeStings.splice(i, 1);
+                    showPlayerDamageEffect();
+                    playDamageSound();
+                    updateUI();
+                }
+            }
+        }
+
         // دالة لعرض تأثير الضرر على اللاعب
         function showPlayerDamageEffect() {
             playerDamageEffect.classList.add("active");
@@ -2756,7 +3062,35 @@
                 }
             }
 
-            if (wolvesToDamage.length > 0) {
+            // إضافة تأثير على النحل
+            const beesToDamage = [];
+            for (let i = bees.length - 1; i >= 0; i--) {
+                const bee = bees[i];
+                const beePos = new THREE.Vector3();
+                bee.getWorldPosition(beePos);
+                const distance = beePos.distanceTo(playerPos);
+
+                if (distance < attackRadius) {
+                    beesToDamage.push(bee);
+                }
+            }
+
+            for (const bee of beesToDamage) {
+                bee.userData.health -= damage;
+
+                if (bee.userData.health <= 0) {
+                    scene.remove(bee);
+                    const index = bees.indexOf(bee);
+                    if (index > -1) {
+                        bees.splice(index, 1);
+                    }
+                    coins.push(createCoin(bee.position.x, bee.position.z, 8));
+                    score += 8;
+                    playMonsterExplosionSound();
+                }
+            }
+
+            if (wolvesToDamage.length > 0 || beesToDamage.length > 0) {
                 effects.push({
                     particles: createStickSwingEffect(playerPos),
                     createdAt: now,
@@ -2820,6 +3154,35 @@
                         createCoin(wolf.position.x, wolf.position.z, wolf.userData.value)
                     );
                     score += wolf.userData.isAggressive ? 25 : 10;
+                    playMonsterExplosionSound();
+                }
+            }
+
+            // إضافة تأثير على النحل
+            const beesToDamage = [];
+            for (let i = bees.length - 1; i >= 0; i--) {
+                const bee = bees[i];
+                const beePos = new THREE.Vector3();
+                bee.getWorldPosition(beePos);
+                const distance = beePos.distanceTo(playerPos);
+
+                if (distance < explosionRadius) {
+                    beesToDamage.push(bee);
+                }
+            }
+
+            for (const bee of beesToDamage) {
+                // التعديل: زيادة الضرر بشكل كبير
+                bee.userData.health -= damage;
+
+                if (bee.userData.health <= 0) {
+                    scene.remove(bee);
+                    const index = bees.indexOf(bee);
+                    if (index > -1) {
+                        bees.splice(index, 1);
+                    }
+                    coins.push(createCoin(bee.position.x, bee.position.z, 8));
+                    score += 8;
                     playMonsterExplosionSound();
                 }
             }
@@ -3341,6 +3704,12 @@
 
             mountains.forEach((mountain) => scene.remove(mountain)); // إزالة الجبال
             mountains.length = 0;
+
+            bees.forEach((bee) => scene.remove(bee));
+            bees.length = 0;
+
+            beeStings.forEach((sting) => scene.remove(sting));
+            beeStings.length = 0;
 
             score = 0;
             coinsCollected = 0;
@@ -3926,6 +4295,8 @@
             if (gameStarted && !gameOver) {
                 movePlayer();
                 moveWolves();
+                moveBees(); // تحريك النحل
+                moveBeeStings(); // تحريك لسعات النحل
                 updateWolfProjectiles();
                 rotateCoins();
                 collectCoins();
