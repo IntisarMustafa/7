@@ -726,6 +726,8 @@
             border-radius: 8px;
             font-size: 1.1rem;
             width: 100%;
+            /* لمنع ظهور لوحة المفاتيح الافتراضية على بعض الأجهزة */
+            /* text-transform: uppercase; */
         }
         
         button {
@@ -913,6 +915,86 @@
             border: 2px dashed #3a7bd5;
         }
         
+        /* New styles for Math Keyboard */
+        .math-keyboard {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background-color: #f0f8ff; /* Light blue background */
+            border-top: 2px solid #3a7bd5;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            z-index: 1000;
+            display: none; /* Initially hidden */
+            transition: transform 0.3s ease-out;
+            transform: translateY(100%); /* Start off-screen */
+        }
+
+        .math-keyboard.active {
+            display: block;
+            transform: translateY(0);
+        }
+
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr); /* 6 columns for mobile */
+            gap: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .keypad-button {
+            background: linear-gradient(135deg, #ffffff, #e6e6e6);
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 8px 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none; /* Prevent text selection */
+            min-height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .keypad-button:hover {
+            background: #cce7ff;
+            border-color: #3a7bd5;
+            transform: scale(1.05);
+        }
+
+        .keypad-button.exponent-key {
+            background: linear-gradient(135deg, #fff9c4, #ffd700);
+            color: #333;
+            border-color: #ff9800;
+            font-size: 0.9rem; /* Smaller for better fit */
+        }
+
+        .keypad-button.op-key {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #3a7bd5;
+            border-color: #64b5f6;
+        }
+
+        .keypad-button.variable-key {
+            background: linear-gradient(135deg, #fce4ec, #f48fb1);
+            color: #d81b60;
+            border-color: #ec407a;
+            text-transform: lowercase;
+        }
+
+        .keypad-button.delete-key {
+            background: linear-gradient(135deg, #ffcdd2, #e57373);
+            color: #d32f2f;
+            border-color: #e53935;
+            font-size: 1.2rem;
+        }
+        
         /* تحسينات للهواتف */
         @media (max-width: 768px) {
             header {
@@ -943,38 +1025,9 @@
                 padding: 10px;
             }
             
-            .roman-scene-container {
-                height: 280px;
-            }
-            
-            .roman-column {
-                height: 180px;
-                width: 35px;
-            }
-            
-            .roman-column-shaft {
-                height: 140px;
-                width: 30px;
-            }
-
-            .roman-column-base {
-                width: 45px;
-                height: 20px;
-            }
-
-            .roman-column-capital {
-                width: 45px;
-                height: 20px;
-            }
-
-            .roman-column-ornament {
-                width: 35px;
-                height: 15px;
-            }
-
-            .roman-ornament-top {
-                width: 20px;
-                height: 20px;
+            /* Add padding at the bottom to prevent content from being hidden by the fixed keyboard */
+            .container {
+                padding-bottom: 120px; 
             }
         }
         
@@ -1005,40 +1058,6 @@
             
             th, td {
                 padding: 8px;
-            }
-            
-            .roman-scene-container {
-                height: 220px;
-            }
-            
-            .roman-column {
-                height: 140px;
-                width: 25px;
-            }
-            
-            .roman-column-shaft {
-                height: 110px;
-                width: 18px;
-            }
-
-            .roman-column-base {
-                width: 35px;
-                height: 15px;
-            }
-
-            .roman-column-capital {
-                width: 35px;
-                height: 15px;
-            }
-
-            .roman-column-ornament {
-                width: 25px;
-                height: 10px;
-            }
-
-            .roman-ornament-top {
-                width: 15px;
-                height: 15px;
             }
         }
     </style>
@@ -1356,6 +1375,7 @@
                     <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين 1</h3>
                     <p class="exercise-content">أكتب بالصيغة الأسية: 6 × 6 × 6 × 2 × 2 × 2</p>
                     <div class="exercise-input">
+                        <!-- تم إضافة خاصية type="text" لضمان عمل لوحة المفاتيح الرياضية -->
                         <input type="text" class="answer-input" placeholder="أدخل الإجابة (مثل: 6³ × 2³)">
                         <button class="check-btn">تحقق</button>
                     </div>
@@ -1401,10 +1421,137 @@
         </footer>
     </div>
     
+    <!-- لوحة المفاتيح الرياضية الجديدة -->
+    <div class="math-keyboard" id="math-keyboard">
+        <div class="keypad-grid">
+            <!-- Exponents - نستخدم رموز يونيكود لضمان التوافق مع التحقق -->
+            <button class="keypad-button exponent-key" data-char="²">x²</button>
+            <button class="keypad-button exponent-key" data-char="³">x³</button>
+            <button class="keypad-button exponent-key" data-char="⁴">x⁴</button>
+            
+            <!-- Variables/Numbers -->
+            <button class="keypad-button variable-key" data-char="a">a</button>
+            <button class="keypad-button variable-key" data-char="b">b</button>
+            <button class="keypad-button variable-key" data-char="c">c</button>
+
+            <!-- Operations -->
+            <button class="keypad-button op-key" data-char="×">×</button>
+            <button class="keypad-button op-key" data-char="/">÷</button>
+            <button class="keypad-button op-key" data-char="(">(</button>
+            
+            <!-- More Variables/Numbers -->
+            <button class="keypad-button variable-key" data-char="d">d</button>
+            <button class="keypad-button variable-key" data-char="r">r</button>
+            <button class="keypad-button" data-char="7">7</button>
+            
+            <!-- Numbers/General -->
+            <button class="keypad-button" data-char="2">2</button>
+            <button class="keypad-button" data-char="3">3</button>
+            <button class="keypad-button" data-char="4">4</button>
+
+            <!-- Delete and More Operations -->
+            <button class="keypad-button op-key" data-char=")">)</button>
+            <button class="keypad-button op-key" data-char="+">+</button>
+            <button class="keypad-button op-key" data-char="-">-</button>
+            
+            <!-- Numbers/General -->
+            <button class="keypad-button" data-char="5">5</button>
+            <button class="keypad-button" data-char="6">6</button>
+            <button class="keypad-button" data-char="8">8</button>
+            
+            <!-- Delete -->
+            <button class="keypad-button delete-key" data-char="DEL"><i class="fas fa-backspace"></i></button>
+
+        </div>
+    </div>
+
     <script>
         // تفعيل الأزرار التفاعلية
         document.addEventListener('DOMContentLoaded', function() {
-            // حساب عدد الصور
+            
+            // --- لوحة المفاتيح الرياضية ---
+            const mathKeyboard = document.getElementById('math-keyboard');
+            const answerInputs = document.querySelectorAll('.answer-input');
+            let activeInput = null;
+
+            // دالة لإدخال الحرف في موضع المؤشر
+            function insertAtCursor(input, text) {
+                const start = input.selectionStart;
+                const end = input.selectionEnd;
+                const value = input.value;
+
+                input.value = value.substring(0, start) + text + value.substring(end);
+                
+                // استعادة موضع المؤشر
+                input.selectionStart = input.selectionEnd = start + text.length;
+                input.focus();
+            }
+
+            // إظهار لوحة المفاتيح وتحديد الحقل النشط
+            answerInputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    activeInput = input;
+                    // تأخير بسيط لإعطاء الوقت للنظام لإلغاء إظهار لوحة المفاتيح الافتراضية إذا ظهرت
+                    setTimeout(() => {
+                        mathKeyboard.classList.add('active');
+                    }, 50);
+                });
+            });
+
+            // منطق الضغط على أزرار لوحة المفاتيح
+            document.querySelectorAll('.keypad-button').forEach(button => {
+                // منع فقدان التركيز من حقل الإدخال عند الضغط على الزر
+                button.addEventListener('mousedown', (e) => {
+                    e.preventDefault(); 
+                });
+                
+                button.addEventListener('click', () => {
+                    if (!activeInput) return;
+
+                    const char = button.getAttribute('data-char');
+                    
+                    if (char === 'DEL') {
+                        const start = activeInput.selectionStart;
+                        const end = activeInput.selectionEnd;
+                        const value = activeInput.value;
+
+                        if (start > 0 || start !== end) {
+                            if (start === end) {
+                                // حذف حرف واحد قبل المؤشر
+                                activeInput.value = value.substring(0, start - 1) + value.substring(end);
+                                activeInput.selectionStart = activeInput.selectionEnd = start - 1;
+                            } else {
+                                // حذف التحديد
+                                activeInput.value = value.substring(0, start) + value.substring(end);
+                                activeInput.selectionStart = activeInput.selectionEnd = start;
+                            }
+                        }
+                    } else {
+                        insertAtCursor(activeInput, char);
+                    }
+                    
+                    // إعادة التركيز للحقل لضمان استمرار عمل لوحة المفاتيح
+                    activeInput.focus(); 
+                });
+            });
+
+            // إخفاء لوحة المفاتيح عند الضغط خارجها وخارج حقول الإدخال
+            document.body.addEventListener('click', (e) => {
+                const isInput = e.target.classList.contains('answer-input');
+                const isKeypadButton = e.target.closest('.keypad-button');
+
+                if (!isInput && !isKeypadButton) {
+                    // تأخير بسيط للتأكد من اكتمال النقر على زر لوحة المفاتيح إذا كان النقر مرتبطاً به
+                    setTimeout(() => {
+                        if (!mathKeyboard.contains(document.activeElement)) {
+                            mathKeyboard.classList.remove('active');
+                            activeInput = null;
+                        }
+                    }, 10);
+                }
+            });
+            
+            // --- حساب عدد الصور ---
             const calculateBtn = document.getElementById('calculate-btn');
             const minutesInput = document.getElementById('minutes');
             const resultDiv = document.getElementById('result');
@@ -1432,11 +1579,14 @@
                     // تمرير الصفحة إلى النتيجة
                     resultDiv.scrollIntoView({behavior: 'smooth'});
                 } else {
-                    alert('الرجاء إدخال عدد دقائق بين 1 و 15');
+                    // بديل لـ alert()
+                    const message = 'الرجاء إدخال عدد دقائق بين 1 و 15';
+                    console.error(message);
+                    // يمكنك إضافة عنصر رسالة مؤقت في الواجهة بدلاً من ذلك
                 }
             });
             
-            // عرض حلول الأمثلة
+            // --- عرض حلول الأمثلة ---
             const toggleButtons = document.querySelectorAll('.toggle-btn');
             toggleButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -1451,34 +1601,58 @@
                 });
             });
             
-            // التحقق من التمارين
+            // --- التحقق من التمارين ---
             const checkButtons = document.querySelectorAll('.check-btn');
+            // لاحظ أن الإجابات تستخدم رموز يونيكود للأسس (³، ²، ⁴) لتسهيل الإدخال عبر لوحة المفاتيح
             const answers = {
                 0: '6³ × 2³',
                 1: '8⁴ × 7²',
                 2: 'b⁴ × r²',
-                3: 'c³ × d⁴'
+                3: 'd⁴ × c³' 
             };
             
+            // دالة لتنظيف وتوحيد الإجابة للمقارنة
+            function normalizeAnswer(answer) {
+                return answer.toLowerCase()
+                             .replace(/ /g, '') // إزالة المسافات
+                             .replace(/\*/g, '×') // توحيد رمز الضرب
+                             .replace(/\^3/g, '³')
+                             .replace(/\^2/g, '²')
+                             .replace(/\^4/g, '⁴');
+            }
+
             checkButtons.forEach((button, index) => {
                 button.addEventListener('click', function() {
                     const input = this.parentElement.querySelector('.answer-input');
                     const feedback = this.parentElement.nextElementSibling;
-                    const userAnswer = input.value.trim();
+                    const userAnswer = normalizeAnswer(input.value.trim());
                     
-                    // التنسيقات المقبولة للإجابة
-                    const acceptedAnswers = [
-                        answers[index],
-                        answers[index].replace('³', '3').replace('²', '2').replace('⁴', '4'),
-                        answers[index].replace('³', '^3').replace('²', '^2').replace('⁴', '^4')
-                    ];
+                    // توحيد الإجابات الصحيحة المحتملة للمقارنة
+                    const canonicalAnswer = normalizeAnswer(answers[index]);
                     
-                    if (acceptedAnswers.includes(userAnswer)) {
+                    // التحقق من التبديل (مثل: 6³ × 2³ أو 2³ × 6³)
+                    let isCorrect = (userAnswer === canonicalAnswer);
+                    
+                    if (!isCorrect && index === 0) {
+                         // التحقق من حالة التبديل للتمرين 1: 2³ × 6³
+                         isCorrect = (userAnswer === normalizeAnswer('2³ × 6³'));
+                    } else if (!isCorrect && index === 1) {
+                         // التحقق من حالة التبديل للتمرين 2: 7² × 8⁴
+                         isCorrect = (userAnswer === normalizeAnswer('7² × 8⁴'));
+                    } else if (!isCorrect && index === 2) {
+                         // التحقق من حالة التبديل للتمرين 3: r² × b⁴
+                         isCorrect = (userAnswer === normalizeAnswer('r² × b⁴'));
+                    } else if (!isCorrect && index === 3) {
+                         // التحقق من حالة التبديل للتمرين 4: c³ × d⁴
+                         isCorrect = (userAnswer === normalizeAnswer('c³ × d⁴'));
+                    }
+
+                    if (isCorrect) {
                         feedback.textContent = 'إجابة صحيحة! أحسنت!';
                         feedback.className = 'feedback correct';
                         feedback.style.display = 'block';
                     } else {
-                        feedback.textContent = `الإجابة الصحيحة هي: ${answers[index]}`;
+                        feedback.textContent = `الإجابة الصحيحة هي: ${answers[index]} (أو الصيغة المبدلة)`;
                         feedback.className = 'feedback incorrect';
                         feedback.style.display = 'block';
                     }
@@ -1488,3 +1662,4 @@
     </script>
 </body>
 </html>
+
