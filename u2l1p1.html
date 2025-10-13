@@ -1351,7 +1351,7 @@
                     <div class="solution">
                         <p>الخطوات:</p>
                         <p>3 × 3 × 3 × 3 × 5 × 5 = (3 × 3 × 3 × 3) × (5 × 5) <span class="highlight">(الخاصية التجميعية)</span></p>
-                        <p>= 3<sup>4</sup> × 5<sup>2</sup></p>
+                        <p>= 3<span style="vertical-align: super; font-size: 0.8em;">4</span> × 5<span style="vertical-align: super; font-size: 0.8em;">2</span></p>
                     </div>
                 </div>
                 
@@ -1363,7 +1363,7 @@
                         <p>الخطوات:</p>
                         <p>a × a × c × a × c × c × a × a = a × a × a × a × a × c × c × c <span class="highlight">(الخاصية التبديلية)</span></p>
                         <p>= (a × a × a × a × a) × (c × c × c) <span class="highlight">(الخاصية التجميعية)</span></p>
-                        <p>= a<sup>5</sup> × c<sup>3</sup></p>
+                        <p>= a<span style="vertical-align: super; font-size: 0.8em;">5</span> × c<span style="vertical-align: super; font-size: 0.8em;">3</span></p>
                     </div>
                 </div>
             </div>
@@ -1375,8 +1375,8 @@
                     <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين 1</h3>
                     <p class="exercise-content">أكتب بالصيغة الأسية: 6 × 6 × 6 × 2 × 2 × 2</p>
                     <div class="exercise-input">
-                        <!-- تم إضافة خاصية type="text" لضمان عمل لوحة المفاتيح الرياضية -->
-                        <input type="text" class="answer-input" placeholder="أدخل الإجابة (مثل: 6³ × 2³)">
+                        <!-- تم إضافة inputmode="none" لمنع ظهور لوحة المفاتيح الافتراضية -->
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة (مثل: 6³ × 2³)" inputmode="none">
                         <button class="check-btn">تحقق</button>
                     </div>
                     <div class="feedback"></div>
@@ -1386,7 +1386,8 @@
                     <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين 2</h3>
                     <p class="exercise-content">أكتب بالصيغة الأسية: 8 × 8 × 8 × 8 × 7 × 7</p>
                     <div class="exercise-input">
-                        <input type="text" class="answer-input" placeholder="أدخل الإجابة (مثل: 8⁴ × 7²)">
+                        <!-- تم إضافة inputmode="none" لمنع ظهور لوحة المفاتيح الافتراضية -->
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة (مثل: 8⁴ × 7²)" inputmode="none">
                         <button class="check-btn">تحقق</button>
                     </div>
                     <div class="feedback"></div>
@@ -1396,7 +1397,8 @@
                     <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين 3</h3>
                     <p class="exercise-content">أكتب بالصيغة الأسية: b × b × r × b × r × b</p>
                     <div class="exercise-input">
-                        <input type="text" class="answer-input" placeholder="أدخل الإجابة (مثل: b⁴ × r²)">
+                        <!-- تم إضافة inputmode="none" لمنع ظهور لوحة المفاتيح الافتراضية -->
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة (مثل: b⁴ × r²)" inputmode="none">
                         <button class="check-btn">تحقق</button>
                     </div>
                     <div class="feedback"></div>
@@ -1406,7 +1408,8 @@
                     <h3 class="exercise-title"><i class="fas fa-question-circle"></i> التمرين 4</h3>
                     <p class="exercise-content">أكتب بالصيغة الأسية: d × c × c × d × c × d × d</p>
                     <div class="exercise-input">
-                        <input type="text" class="answer-input" placeholder="أدخل الإجابة (مثل: c³ × d⁴)">
+                        <!-- تم إضافة inputmode="none" لمنع ظهور لوحة المفاتيح الافتراضية -->
+                        <input type="text" class="answer-input" placeholder="أدخل الإجابة (مثل: c³ × d⁴)" inputmode="none">
                         <button class="check-btn">تحقق</button>
                     </div>
                     <div class="feedback"></div>
@@ -1496,6 +1499,17 @@
                         mathKeyboard.classList.add('active');
                     }, 50);
                 });
+                
+                // إضافة معالج لـ blur لإخفاء لوحة المفاتيح
+                input.addEventListener('blur', () => {
+                     // تأخير بسيط للتأكد من أننا لم نقم بالنقر على زر لوحة المفاتيح
+                     setTimeout(() => {
+                        if (document.activeElement.closest('.math-keyboard') === null) {
+                            mathKeyboard.classList.remove('active');
+                            activeInput = null;
+                        }
+                    }, 10);
+                });
             });
 
             // منطق الضغط على أزرار لوحة المفاتيح
@@ -1535,22 +1549,6 @@
                 });
             });
 
-            // إخفاء لوحة المفاتيح عند الضغط خارجها وخارج حقول الإدخال
-            document.body.addEventListener('click', (e) => {
-                const isInput = e.target.classList.contains('answer-input');
-                const isKeypadButton = e.target.closest('.keypad-button');
-
-                if (!isInput && !isKeypadButton) {
-                    // تأخير بسيط للتأكد من اكتمال النقر على زر لوحة المفاتيح إذا كان النقر مرتبطاً به
-                    setTimeout(() => {
-                        if (!mathKeyboard.contains(document.activeElement)) {
-                            mathKeyboard.classList.remove('active');
-                            activeInput = null;
-                        }
-                    }, 10);
-                }
-            });
-            
             // --- حساب عدد الصور ---
             const calculateBtn = document.getElementById('calculate-btn');
             const minutesInput = document.getElementById('minutes');
@@ -1613,12 +1611,20 @@
             
             // دالة لتنظيف وتوحيد الإجابة للمقارنة
             function normalizeAnswer(answer) {
+                // توحيد الرموز الأسية المرتفعة التي قد يدخلها المستخدم يدويًا أو عبر لوحة المفاتيح
                 return answer.toLowerCase()
-                             .replace(/ /g, '') // إزالة المسافات
-                             .replace(/\*/g, '×') // توحيد رمز الضرب
-                             .replace(/\^3/g, '³')
-                             .replace(/\^2/g, '²')
-                             .replace(/\^4/g, '⁴');
+                             .replace(/ /g, '')     // إزالة المسافات
+                             .replace(/\*/g, '×')    // توحيد رمز الضرب
+                             .replace(/a\^2/g, 'a²').replace(/b\^2/g, 'b²').replace(/c\^2/g, 'c²').replace(/d\^2/g, 'd²').replace(/r\^2/g, 'r²') 
+                             .replace(/a\^3/g, 'a³').replace(/b\^3/g, 'b³').replace(/c\^3/g, 'c³').replace(/d\^3/g, 'd³').replace(/r\^3/g, 'r³') 
+                             .replace(/a\^4/g, 'a⁴').replace(/b\^4/g, 'b⁴').replace(/c\^4/g, 'c⁴').replace(/d\^4/g, 'd⁴').replace(/r\^4/g, 'r⁴') 
+                             .replace(/\^2/g, '²') // للأرقام
+                             .replace(/\^3/g, '³') // للأرقام
+                             .replace(/\^4/g, '⁴') // للأرقام
+                             .replace(/6\^3/g, '6³')
+                             .replace(/2\^3/g, '2³')
+                             .replace(/8\^4/g, '8⁴')
+                             .replace(/7\^2/g, '7²');
             }
 
             checkButtons.forEach((button, index) => {
