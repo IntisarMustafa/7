@@ -29,7 +29,9 @@
             color: var(--blue-dark);
             line-height: 1.6;
             padding: 20px;
-            min-height: 100vh;
+            /* Add padding bottom to account for fixed keyboard */
+            padding-bottom: 250px; 
+            min-height: 10vh;
             font-size: 1.1rem; /* Base font size increased */
         }
         
@@ -249,6 +251,8 @@
             font-variant-numeric: tabular-nums; 
             /* Added for virtual keyboard integration */
             cursor: pointer; 
+            /* Prevent native keyboard on mobile */
+            user-select: none;
         }
         
         input:focus {
@@ -412,118 +416,89 @@
             height: auto;
         }
 
-        /* --- Improved Keyboard Styling --- */
-        #math-keyboard {
+        /* --- Virtual Keyboard Styles from Code 2 --- */
+        .virtual-keyboard {
             position: fixed;
             bottom: 0;
-            left: 0;
             right: 0;
+            left: 0;
             background-color: var(--blue-dark);
-            padding: 10px 0; /* Changed horizontal padding to 0 */
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6);
-            display: none; /* Initially hidden, shown on input focus */
-            z-index: 1000;
-            flex-direction: column;
-            gap: 5px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+            padding: 10px;
             border-top-left-radius: 15px;
             border-top-right-radius: 15px;
-            transition: all 0.3s ease;
-
-            /* ADDED FOR SCROLLING */
-            overflow-x: auto; /* Enable horizontal scrolling */
-            -webkit-overflow-scrolling: touch; /* Improved scrolling on iOS */
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            transition: transform 0.3s ease-in-out;
+            transform: translateY(100%);
+            max-width: 100vw;
+            overflow-x: hidden;
         }
 
-        .keyboard-row {
-            display: flex;
-            justify-content: flex-start; /* Align keys to the left */
-            gap: 5px;
-            flex-wrap: nowrap; /* CRITICAL: Prevent keys from wrapping */
-            padding: 0 5px; /* Add horizontal padding to the row itself */
-            min-width: 500px; /* CRITICAL: Force the row to be wide to activate scroll on mobile */
+        .keyboard-visible {
+            display: block;
+            transform: translateY(0);
+        }
+
+        .key-grid {
+            display: grid;
+            gap: 8px;
+            /* Define 10 uniform columns for flexibility */
+            grid-template-columns: repeat(10, 1fr); 
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .key {
-            background: var(--blue-medium);
-            color: white;
+            padding: 10px 0;
+            background-color: var(--blue-medium);
+            color: var(--white-bg);
             border: none;
-            border-radius: 10px; /* Slightly more rounded */
-            padding: 10px;
-            font-size: 1.5rem; /* Larger font */
-            font-weight: bold;
+            border-radius: 8px;
             cursor: pointer;
-            line-height: 1;
-            height: 55px; /* Taller keys */
-            box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.3);
-            user-select: none;
-            
-            /* ADDED FOR SCROLLING */
-            flex-shrink: 0; /* Prevent keys from shrinking too much */
-            flex-basis: 12.5%; /* Base size for 8 keys per row */
-            min-width: 50px; /* Ensure a decent minimum touch target */
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            user-select: none; /* Prevents text selection on mobile */
+            touch-action: manipulation; /* Improves touch responsiveness */
         }
 
         .key:hover {
-            background: var(--blue-light);
-            color: var(--blue-dark);
+            background-color: #5BA8E0;
         }
 
         .key:active {
-            transform: translateY(2px);
-            box-shadow: none;
+            transform: scale(0.95);
         }
 
-        /* Variable Keys */
-        .key.variable {
-            background: #4A90E2; /* Slightly different blue for variables */
-        }
-        .key.variable:hover {
-            background: #7DAEEF;
+        /* Special keys styling */
+        .key.op {
+            background-color: var(--accent-gold);
             color: var(--blue-dark);
         }
 
-        /* Action Keys (Check/Close) */
-        .key.action {
-            background: var(--accent-gold);
+        .key.var {
+            background-color: var(--blue-light);
             color: var(--blue-dark);
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .key.action:hover {
-            background: #f8c04d;
-        }
-
-        /* Exponent Keys (New Style) */
-        .key.exponent {
-            background: #FF6F00; /* Orange/Gold for Exponents */
-            font-size: 1.4rem; /* Adjusted for better layout */
-        }
-        .key.exponent:hover {
-            background: #FF9800;
-            color: var(--blue-dark);
-        }
-
-        /* Delete Key */
-        .key.delete {
-            background: #dc3545; /* Red for delete */
+            font-style: italic;
             font-size: 1.4rem;
         }
-
-        .key.delete:hover {
-            background: #c82333;
-            color: white;
+        
+        .key.wide {
+            grid-column: span 2;
+        }
+        
+        .key.backspace {
+            background-color: #dc3545;
+            font-size: 1.2rem;
         }
 
-        /* Operator/Number Keys */
-        .key.operator {
-            background: #187bcd; /* Medium blue */
-        }
-        .key.operator:hover {
-            background: var(--blue-light);
-            color: var(--blue-dark);
-        }
-
+        /* End Virtual Keyboard Styles */
         
         @media (max-width: 768px) {
             .content {
@@ -555,7 +530,6 @@
                 padding: 12px;
             }
             
-            /* --- START MODIFICATION: Ensure the check button is visible on mobile --- */
             .input-group {
                 gap: 8px; /* Slightly reduce gap on mobile */
             }
@@ -572,8 +546,6 @@
                 padding: 10px 15px;
                 display: block; /* Overrides any hidden state */
             }
-            /* --- END MODIFICATION --- */
-
 
             .navigation {
                 flex-direction: column;
@@ -585,30 +557,15 @@
                 width: 100%;
             }
 
-            /* --- KEYBOARD FIX: Tighter layout for mobile screens and scroll fix --- */
-            #math-keyboard {
-                padding: 5px 0; /* Reduced vertical padding */
+            .key-grid {
+                /* Reduce gap and font size slightly on very small screens if necessary */
+                gap: 5px;
             }
-            .keyboard-row {
-                gap: 2px; /* Reduced gap between keys */
-                padding: 0 5px;
-                min-width: 450px; /* Ensure wide enough for scroll to activate */
-            }
+
             .key {
-                font-size: 1.2rem; /* Slightly smaller font */
-                height: 45px; /* Reduced key height */
-                min-width: 40px; /* Smaller minimum width for crowded keys */
-                border-radius: 6px;
-                padding: 8px 5px;
-                flex-basis: 12.5%;
+                font-size: 1.2rem;
+                height: 45px;
             }
-            .key.action {
-                font-size: 0.9rem; /* Smaller text for action buttons */
-            }
-            .key.exponent {
-                font-size: 1.1rem;
-            }
-            /* --- END KEYBOARD FIX --- */
         }
     </style>
 </head>
@@ -632,7 +589,7 @@
                     </div>
                     <div class="exercise-content">\( 3.5x + 1.5x \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(1)">تحقق</button>
                     </div>
                     <div id="result1" class="result"></div>
@@ -645,7 +602,7 @@
                     </div>
                     <div class="exercise-content">\( 7y + 4y \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(2)">تحقق</button>
                     </div>
                     <div id="result2" class="result"></div>
@@ -658,7 +615,7 @@
                     </div>
                     <div class="exercise-content">\( c^3r - 6c^3r \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise3" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise3" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(3)">تحقق</button>
                     </div>
                     <div id="result3" class="result"></div>
@@ -671,7 +628,7 @@
                     </div>
                     <div class="exercise-content">\( bd - 4bd \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise4" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise4" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(4)">تحقق</button>
                     </div>
                     <div id="result4" class="result"></div>
@@ -691,7 +648,7 @@
                     </div>
                     <div class="exercise-content">\( (3np + 5w) + (w - 10np) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise5" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise5" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(5)">تحقق</button>
                     </div>
                     <div id="result5" class="result"></div>
@@ -704,7 +661,7 @@
                     </div>
                     <div class="exercise-content">\( (-z + 2xy) + (xy + 4z) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise6" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise6" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(6)">تحقق</button>
                     </div>
                     <div id="result6" class="result"></div>
@@ -717,7 +674,7 @@
                     </div>
                     <div class="exercise-content">\( (14x^2-19x) + (-6x^2 + x) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise7" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise7" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(7)">تحقق</button>
                     </div>
                     <div id="result7" class="result"></div>
@@ -730,7 +687,7 @@
                     </div>
                     <div class="exercise-content">\( (10b^2-3b) + (b^2-2b) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise8" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise8" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(8)">تحقق</button>
                     </div>
                     <div id="result8" class="result"></div>
@@ -751,7 +708,7 @@
                     </div>
                     <div class="exercise-content">\( (1.5w - 6.5) - (0.5w + 3.5) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise9" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise9" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(9)">تحقق</button>
                     </div>
                     <div id="result9" class="result"></div>
@@ -764,7 +721,7 @@
                     </div>
                     <div class="exercise-content">\( (x + \frac{4}{7}) - (4x - \frac{2}{7}) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise10" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise10" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(10)">تحقق</button>
                     </div>
                     <div id="result10" class="result"></div>
@@ -777,7 +734,7 @@
                     </div>
                     <div class="exercise-content">\( 8d + 4c^2 - 3(d - 5c^2) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise11" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise11" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(11)">تحقق</button>
                     </div>
                     <div id="result11" class="result"></div>
@@ -790,7 +747,7 @@
                     </div>
                     <div class="exercise-content">\( 6w - 3n^2m - 2(w + n^2m) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise12" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise12" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(12)">تحقق</button>
                     </div>
                     <div id="result12" class="result"></div>
@@ -830,7 +787,7 @@
                         </svg>
                     </div>
                     <div class="input-group">
-                        <input type="text" id="exercise13" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise13" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(13)">تحقق</button>
                     </div>
                     <div id="result13" class="result"></div>
@@ -864,7 +821,7 @@
                         </svg>
                     </div>
                     <div class="input-group">
-                        <input type="text" id="exercise14" placeholder="أدخل الإجابة المبسطة" inputmode="none">
+                        <input type="text" id="exercise14" placeholder="أدخل الإجابة المبسطة" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(14)">تحقق</button>
                     </div>
                     <div id="result14" class="result"></div>
@@ -884,7 +841,7 @@
                     </div>
                     <div class="exercise-content" style="text-align: right; font-size: 1.2rem;">أكتب المقدار الجبري الذي يمثل تكلفة السياج الذي يحيط بالحديقة.</div>
                     <div class="input-group">
-                        <input type="text" id="exercise15" placeholder="أدخل المقدار الجبري" inputmode="none">
+                        <input type="text" id="exercise15" placeholder="أدخل المقدار الجبري" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(15)">تحقق</button>
                     </div>
                     <div id="result15" class="result"></div>
@@ -897,7 +854,7 @@
                     </div>
                     <div class="exercise-content" style="text-align: right; font-size: 1.2rem;">أحسب تكلفة السياج الذي يحيط بالحديقة علماً بأن عرض الحديقة 30 متر.</div>
                     <div class="input-group">
-                        <input type="text" id="exercise16" placeholder="أدخل التكلفة بالدينار" inputmode="none">
+                        <input type="text" id="exercise16" placeholder="أدخل التكلفة بالدينار" readonly onclick="setActiveInput(this)">
                         <button onclick="checkExercise(16)">تحقق</button>
                     </div>
                     <div id="result16" class="result"></div>
@@ -924,57 +881,58 @@
         </footer>
     </div>
 
-    <!-- Virtual Math Keyboard (Updated) -->
-    <div id="math-keyboard">
-        <div class="keyboard-row">
-            <button class="key operator" data-char="1">1</button>
-            <button class="key operator" data-char="2">2</button>
-            <button class="key operator" data-char="3">3</button>
-            <button class="key operator" data-char=".">.</button>
-            <button class="key operator" data-char="+">+</button>
-            <button class="key operator" data-char="-">-</button>
-            <button class="key operator" data-char="(">(</button>
-            <button class="key operator" data-char=")">)</button>
-        </div>
-        <div class="keyboard-row">
-            <button class="key operator" data-char="4">4</button>
-            <button class="key operator" data-char="5">5</button>
-            <button class="key operator" data-char="6">6</button>
-            <button class="key operator" data-char="*">×</button>
-            <button class="key operator" data-char="/">÷</button>
-            <!-- Key for exponent ^2: Inserts Unicode '²' -->
-            <button class="key exponent" data-char="²" title="الأس 2">x²</button> 
-            <!-- Key for exponent ^3: Inserts Unicode '³' -->
-            <button class="key exponent" data-char="³" title="الأس 3">x³</button> 
-            <button class="key delete">⌫</button>
-        </div>
-        <div class="keyboard-row">
-            <button class="key operator" data-char="7">7</button>
-            <button class="key operator" data-char="8">8</button>
-            <button class="key operator" data-char="9">9</button>
-            <button class="key operator" data-char="0">0</button>
-            <button class="key variable" data-char="x">x</button>
-            <button class="key variable" data-char="y">y</button>
-            <button class="key variable" data-char="z">z</button>
-            <button class="key variable" data-char="w">w</button>
-        </div>
-        <div class="keyboard-row">
-            <button class="key variable" data-char="a">a</button>
-            <button class="key variable" data-char="b">b</button>
-            <button class="key variable" data-char="c">c</button>
-            <button class="key variable" data-char="d">d</button>
-            <button class="key variable" data-char="r">r</button>
-            <button class="key variable" data-char="n">n</button>
-            <button class="key variable" data-char="p">p</button>
-            <!-- General Exponent Key (Inserts '^') -->
-            <button class="key exponent" data-char="^" title="الأس العام">□^n</button> 
-        </div>
-        <div class="keyboard-row">
-             <!-- Action Row with the check button below the input -->
-            <button class="key action" style="flex-grow: 1.5;" onclick="hideKeyboard()">إغلاق لوحة المفاتيح</button>
-            <button class="key action check-key" style="flex-grow: 1.5;" onclick="checkExercise(activeInput.id.replace('exercise', ''))">تحقق من الإجابة</button>
+    <!-- Virtual Math Keyboard from Code 2 -->
+    <div id="mathKeyboard" class="virtual-keyboard">
+        <div class="key-grid">
+            <!-- Row 1: Numbers & Operations -->
+            <div class="key" onclick="keyClick('7')">7</div>
+            <div class="key" onclick="keyClick('8')">8</div>
+            <div class="key" onclick="keyClick('9')">9</div>
+            <!-- Key for Exponent (^) - The code handles the superscript display -->
+            <div class="key op" onclick="keyClick('^')">\( x^y \)</div> 
+            <div class="key op" onclick="keyClick('/')">/</div>
+            <div class="key op" onclick="keyClick('*')">×</div>
+            <div class="key op" onclick="keyClick('(')">(</div>
+            <div class="key op" onclick="keyClick(')')">)</div>
+            <div class="key backspace wide" onclick="keyClick('backspace')">حذف ⌫</div>
+            
+            <!-- Row 2: Numbers & Operations -->
+            <div class="key" onclick="keyClick('4')">4</div>
+            <div class="key" onclick="keyClick('5')">5</div>
+            <div class="key" onclick="keyClick('6')">6</div>
+            <div class="key op" onclick="keyClick('+')">+</div>
+            <div class="key op" onclick="keyClick('-')">-</div>
+            <div class="key" onclick="keyClick('.')">.</div>
+            <div class="key var" onclick="keyClick('x')">x</div>
+            <div class="key var" onclick="keyClick('y')">y</div>
+            <div class="key wide op" onclick="keyClick('clear')">مسح الكل</div>
+            
+            <!-- Row 3: Numbers & Variables -->
+            <div class="key" onclick="keyClick('1')">1</div>
+            <div class="key" onclick="keyClick('2')">2</div>
+            <div class="key" onclick="keyClick('3')">3</div>
+            <div class="key var" onclick="keyClick('c')">c</div>
+            <div class="key var" onclick="keyClick('t')">t</div>
+            <div class="key var" onclick="keyClick('s')">s</div>
+            <div class="key var" onclick="keyClick('d')">d</div>
+            <div class="key var" onclick="keyClick('p')">p</div>
+            <div class="key var" onclick="keyClick('n')">n</div>
+            <div class="key var" onclick="keyClick('q')">q</div>
+
+            <!-- Row 4: Zero and More Variables (for complex expressions) -->
+            <div class="key wide" onclick="keyClick('0')">0</div>
+            <div class="key var" onclick="keyClick('r')">r</div>
+            <div class="key var" onclick="keyClick('v')">v</div>
+            <div class="key var" onclick="keyClick('h')">h</div>
+            <div class="key var" onclick="keyClick('z')">z</div>
+            <div class="key var" onclick="keyClick('w')">w</div>
+            <div class="key var" onclick="keyClick('a')">a</div>
+            <div class="key var" onclick="keyClick('b')">b</div>
+            <div class="key op wide" onclick="keyClick(' ')">مسافة</div>
+            <div class="key wide backspace" onclick="hideKeyboard()">إخفاء اللوحة ▼</div>
         </div>
     </div>
+    <!-- End Virtual Math Keyboard -->
 
     <script>
         // Solutions store all accepted variations for robustness (e.g., commutative property)
@@ -999,89 +957,183 @@
             16: ["1680"] // Cost C = 56w. C = 56 * 30 = 1680.
         };
         
+        // المتغير لتتبع حقل الإدخال النشط
         let activeInput = null;
-        const keyboard = document.getElementById('math-keyboard');
+        const keyboard = document.getElementById('mathKeyboard');
+        
+        // خرائط يونيكود للأسس
+        const superscriptMap = {
+            '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', 
+            '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹'
+        };
+        const inverseSuperscriptMapForClean = {
+            '⁰': '^0', '¹': '^1', '²': '^2', '³': '^3', '⁴': '^4', 
+            '⁵': '^5', '⁶': '^6', '⁷': '^7', '⁸': '^8', '⁹': '^9'
+        };
 
-        /**
-         * Hides the virtual keyboard.
-         */
-        function hideKeyboard() {
-             keyboard.style.display = 'none';
-             activeInput = null;
-        }
-
-        /**
-         * Inserts a symbol or character into the currently active input field.
-         * @param {string} symbol - The character or action ('DELETE', '^2', etc.) to insert.
-         */
-        function insertSymbol(symbol) {
-            if (!activeInput) return;
-
-            const start = activeInput.selectionStart;
-            const end = activeInput.selectionEnd;
-            const value = activeInput.value;
-
-            if (symbol === 'DELETE') {
-                if (start > 0) {
-                    activeInput.value = value.substring(0, start - 1) + value.substring(end);
-                    activeInput.selectionStart = activeInput.selectionEnd = start - 1;
-                }
-            } else {
-                // If it's a regular character or a special insert string 
-                activeInput.value = value.substring(0, start) + symbol + value.substring(end);
-                activeInput.selectionStart = activeInput.selectionEnd = start + symbol.length;
+        // دالة لضبط حقل الإدخال النشط وإظهار لوحة المفاتيح
+        function setActiveInput(input) {
+            if (activeInput) {
+                activeInput.classList.remove('input-active');
             }
             
-            // Re-focus to keep the cursor active
-            activeInput.focus();
+            activeInput = input;
+            activeInput.classList.add('input-active');
+            
+            input.focus();
+            showKeyboard();
         }
 
-        /**
-         * Checks the user's answer against the correct solutions.
-         * @param {number} exerciseNum - The number of the exercise to check.
-         */
+        // دالة لإظهار لوحة المفاتيح
+        function showKeyboard() {
+            keyboard.classList.add('keyboard-visible');
+        }
+
+        // دالة لإخفاء لوحة المفاتيح
+        function hideKeyboard() {
+            keyboard.classList.remove('keyboard-visible');
+            if (activeInput) {
+                activeInput.classList.remove('input-active');
+                activeInput.blur(); // إزالة التركيز من الحقل
+                activeInput = null;
+            }
+        }
+
+        // دالة لإدخال الحرف في الحقل النشط
+        function keyClick(key) {
+            if (!activeInput) return;
+
+            let visualValue = activeInput.value;
+            const start = activeInput.selectionStart;
+            const end = activeInput.selectionEnd;
+            const isNumber = !isNaN(parseInt(key)) && isFinite(key);
+            
+            let newValue = visualValue;
+            let newCursorPos = start;
+
+            if (key === 'backspace') {
+                if (start > 0) {
+                    // حذف حرف واحد بصريًا
+                    newValue = visualValue.substring(0, start - 1) + visualValue.substring(end);
+                    newCursorPos = start - 1;
+                }
+            } else if (key === 'clear') {
+                newValue = '';
+                newCursorPos = 0;
+            } else {
+                const previousChar = visualValue.substring(start - 1, start);
+
+                if (isNumber && previousChar === '^') {
+                    // الحالة 1: تم الضغط على رقم (N) بعد رمز الأس المؤقت (^)
+                    const superscriptChar = superscriptMap[key];
+                    
+                    // 1. حذف الرمز المؤقت '^' من القيمة البصرية
+                    const valueWithoutCaret = visualValue.substring(0, start - 1) + visualValue.substring(end);
+                    
+                    // 2. إدخال حرف الأس (يونيكود) مكانه
+                    newValue = valueWithoutCaret.substring(0, start - 1) + superscriptChar + valueWithoutCaret.substring(start - 1);
+                    
+                    newCursorPos = start; // المؤشر يعود إلى مكانه قبل الإدخال (حرف واحد بدلاً من حرفين مؤقتين)
+                    
+                } else if (key === '^') {
+                    // الحالة 2: إدخال رمز الأس
+                    // ندرج الرمز '^' كحرف مؤقت لإعلام الخطوة التالية بأننا ننتظر رقماً
+                    newValue = visualValue.substring(0, start) + key + visualValue.substring(end);
+                    newCursorPos = start + key.length;
+                
+                } else {
+                    // الحالة 3: إدخال حرف عادي (متغير، رقم، عملية)
+                    newValue = visualValue.substring(0, start) + key + visualValue.substring(end);
+                    newCursorPos = start + key.length;
+                }
+            }
+
+            // تطبيق التغييرات وتحديث المؤشر
+            activeInput.value = newValue;
+            activeInput.selectionStart = activeInput.selectionEnd = newCursorPos;
+
+            activeInput.focus();
+            document.getElementById(`result${activeInput.id.replace('exercise', '')}`).style.display = 'none';
+        }
+
+        // دالة تحويل الإدخال البصري (مع رموز الأس) إلى الصيغة القابلة للمقارنة (^2)
+        function cleanInputForCheck(visualAnswer) {
+            let cleaned = visualAnswer;
+            
+            // استبدال رموز الأس اليونيكود بصيغة ^<رقم>
+            // مثال: x²y تصبح x^2y
+            for (const unicode in inverseSuperscriptMapForClean) {
+                // نستخدم split().join() للاستبدال الآمن لجميع الحالات
+                cleaned = cleaned.split(unicode).join(inverseSuperscriptMapForClean[unicode]);
+            }
+            
+            return cleaned;
+        }
+
+        // دالة مساعدة لاستخراج وترتيب الحدود بشكل مستقل للتحقق من خاصية التبديل (Commutativity)
+        function normalizeExpressionForComparison(expression) {
+            // 1. إضافة علامة + في البداية إذا لم تكن هناك علامة + أو -
+            if (expression.length > 0 && expression[0] !== '-' && expression[0] !== '+') {
+                expression = '+' + expression;
+            }
+            // 2. تقسيم التعبير إلى حدود موقعة (Signed Terms)
+            // (مثال: "+3x^2y" و "+4t")
+            const terms = expression.match(/(\+|\-)[^+-]*/g) || [];
+            
+            // 3. ترتيب الحدود أبجدياً لمعادلة الترتيب التبادلي (Commutative Property)
+            // الترتيب الأبجدي يضمن أن "+3x^2y" و "+4t" مرتبة بنفس الطريقة دائمًا بغض النظر عن ترتيبها الأصلي.
+            terms.sort();
+            
+            // 4. إعادة تجميعها
+            return terms.join('');
+        }
+        
+        // دالة للتحقق من الإجابات
         function checkExercise(exerciseNum) {
             const inputElement = document.getElementById(`exercise${exerciseNum}`);
             const resultElement = document.getElementById(`result${exerciseNum}`);
-            const userAnswer = inputElement.value.trim();
-            
+            // القيمة البصرية التي قد تحتوي على رموز الأس اليونيكود
+            const userAnswerVisual = inputElement.value.trim(); 
             // Display the canonical answer for error messaging
             const canonicalAnswer = solutions[exerciseNum][0];
             
-            // Hide previous results
+            hideKeyboard();
+
             resultElement.style.display = "none";
             
-            if (userAnswer === "") {
+            if (userAnswerVisual === "") {
                 resultElement.textContent = "الرجاء إدخال الإجابة أولاً.";
                 resultElement.className = "result incorrect";
                 resultElement.style.display = "block";
                 return;
             }
             
-            // Normalization: replace spaces, common symbols, lowercase
-            let normalizedUserAnswer = userAnswer.replace(/\s+/g, '').replace('×', '*').replace('÷', '/').toLowerCase();
-            
-            // *** NEW: Convert Unicode Superscripts to Caret Notation for robust comparison ***
-            normalizedUserAnswer = normalizedUserAnswer
-                .replace(/²/g, '^2')
-                .replace(/³/g, '^3')
-                .replace(/⁴/g, '^4')
-                .replace(/⁵/g, '^5')
-                .replace(/⁶/g, '^6')
-                .replace(/⁷/g, '^7')
-                .replace(/⁸/g, '^8')
-                .replace(/⁹/g, '^9')
-                .replace(/¹/g, '^1')
-                .replace(/⁰/g, '^0');
-            // *** END NEW ***
+            // 1. تحويل الإدخال البصري إلى صيغة المقارنة الداخلية (^2)
+            const rawUserAnswerCleaned = cleanInputForCheck(userAnswerVisual);
+
+            // 2. دالة التنظيف النهائية (إزالة المسافات والأحرف الصغيرة)
+            const cleanAnswer = (answer) => answer.replace(/\s+/g, '').toLowerCase();
 
             let isCorrect = false;
 
             // --- General Algebraic Check (allowing common variations) ---
             isCorrect = solutions[exerciseNum].some(correctForm => {
-                let normalizedCorrectForm = correctForm.replace(/\s+/g, '').replace('×', '*').replace('÷', '/').toLowerCase();
+                let normalizedCorrectForm = cleanAnswer(correctForm);
+                let normalizedUserAnswer = cleanAnswer(rawUserAnswerCleaned);
                 return normalizedUserAnswer === normalizedCorrectForm;
             });
+
+            // --- التحقق المعزز للتبادل (Commutativity Check) ---
+            if (!isCorrect) {
+                // إذا لم تتطابق الإجابة المباشرة، نقوم بالتحقق من الترتيب التبادلي
+                const sortedCorrect = normalizeExpressionForComparison(cleanAnswer(canonicalAnswer));
+                const sortedUser = normalizeExpressionForComparison(cleanAnswer(rawUserAnswerCleaned));
+
+                if (sortedUser === sortedCorrect) {
+                    isCorrect = true;
+                }
+            }
+            // --- نهاية التحقق المعزز للتبادل ---
 
             if (isCorrect) {
                 resultElement.textContent = "✓ إجابة صحيحة! أحسنت!";
@@ -1105,51 +1157,46 @@
             resultElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
-        /**
-         * Initializes input event listeners and keyboard button listeners.
-         */
-        function initializeKeyboard() {
-            const inputs = document.querySelectorAll('.exercise input[type="text"]');
-            
-            inputs.forEach(input => {
-                // Prevent the native soft keyboard from appearing on mobile, forcing use of the virtual keyboard
-                input.readOnly = true; 
-                
-                input.addEventListener('focus', function() {
-                    activeInput = this;
-                    keyboard.style.display = 'flex'; // Show keyboard when an input is focused
-                    
-                    // Scroll the input field into view
-                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                });
-                
-                // Keep the input active for cursor position
-                input.addEventListener('blur', function() {
-                    // This prevents hiding the keyboard immediately on blur, allowing button clicks to register.
-                    // The keyboard is explicitly hidden via the 'إغلاق' button.
-                });
+        // ربط جميع حقول الإدخال بوظيفة التحكم في لوحة المفاتيح عند النقر
+        document.querySelectorAll('input[readonly]').forEach(input => {
+            input.addEventListener('click', function() {
+                setActiveInput(this);
             });
+            input.addEventListener('focus', function(e) {
+                // منع ظهور لوحة المفاتيح الأصلية بشكل قسري
+                this.blur(); 
+                e.preventDefault(); 
+                setActiveInput(this);
+            });
+        });
 
-            // Add event listeners to keyboard buttons
-            document.querySelectorAll('#math-keyboard .key').forEach(key => {
-                key.addEventListener('click', function(e) {
-                    e.preventDefault(); 
-                    e.stopPropagation(); 
-                    
-                    if (this.classList.contains('delete')) {
-                        insertSymbol('DELETE');
-                    } else if (this.hasAttribute('data-char')) {
-                        const char = this.getAttribute('data-char');
-                        insertSymbol(char);
-                    }
-                });
-            });
-        }
-        
-        // Run initialization when the document is ready
-        window.onload = initializeKeyboard;
+        // ربط زر الإخفاء بفحص الإجابة قبل الإخفاء
+        document.querySelector('.key[onclick="hideKeyboard()"]').addEventListener('click', function() {
+            if (activeInput) {
+                const exerciseNum = activeInput.id.replace('exercise', '');
+                // فحص الإجابة
+                checkExercise(exerciseNum);
+            }
+        });
+
+        // إخفاء لوحة المفاتيح عند النقر خارج حقل الإدخال أو اللوحة
+        document.addEventListener('click', function(event) {
+            const isInput = event.target.tagName === 'INPUT';
+            const isKey = event.target.closest('.virtual-keyboard');
+            const isCheckButton = event.target.closest('button[onclick^="checkExercise"]');
+            
+            if (!isInput && !isKey && !isCheckButton) {
+                hideKeyboard();
+            }
+        });
+
+        // تهيئة MathJax عند تحميل الصفحة
+        window.onload = function() {
+            if (window.MathJax) {
+                window.MathJax.typeset();
+            }
+        };
 
     </script>
 </body>
 </html>
-
