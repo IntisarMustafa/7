@@ -574,26 +574,27 @@
                 width: 100%;
             }
 
+            /* --- KEYBOARD FIX: Tighter layout for mobile screens --- */
             #math-keyboard {
-                padding: 8px 3px;
+                padding: 5px 2px; /* Aggressively reduced padding */
+            }
+            .keyboard-row {
+                gap: 2px; /* Reduced gap between keys */
             }
             .key {
-                font-size: 1.3rem;
-                height: 50px;
-                min-width: 40px;
-                border-radius: 8px;
+                font-size: 1.2rem; /* Slightly smaller font */
+                height: 45px; /* Reduced key height */
+                min-width: 35px; /* Ensure keys can shrink */
+                border-radius: 6px;
+                padding: 8px 5px;
             }
             .key.action {
+                font-size: 0.9rem; /* Smaller text for action buttons */
+            }
+            .key.exponent {
                 font-size: 1.1rem;
             }
-            /* Adjust spacing for new key layout */
-            .keyboard-row {
-                gap: 3px;
-            }
-            /* Ensure superscript keys look good on mobile */
-            .key.exponent {
-                font-size: 1.2rem;
-            }
+            /* --- END KEYBOARD FIX --- */
         }
     </style>
 </head>
