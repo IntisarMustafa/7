@@ -247,6 +247,8 @@
             caret-color: var(--accent-gold); /* Custom cursor color */
             /* Ensure the input can display superscripts correctly */
             font-variant-numeric: tabular-nums; 
+            /* Added for virtual keyboard integration */
+            cursor: pointer; 
         }
         
         input:focus {
@@ -1059,7 +1061,7 @@
             // Normalization: replace spaces, common symbols, lowercase
             let normalizedUserAnswer = userAnswer.replace(/\s+/g, '').replace('×', '*').replace('÷', '/').toLowerCase();
             
-            // *** NEW: Convert Unicode Superscripts to Caret Notation for comparison ***
+            // *** NEW: Convert Unicode Superscripts to Caret Notation for robust comparison ***
             normalizedUserAnswer = normalizedUserAnswer
                 .replace(/²/g, '^2')
                 .replace(/³/g, '^3')
@@ -1085,14 +1087,16 @@
                 resultElement.textContent = "✓ إجابة صحيحة! أحسنت!";
                 resultElement.className = "result correct";
             } else {
-                resultElement.textContent = `✗ إجابة غير صحيحة. الإجابة الصحيحة هي: ${canonicalAnswer.replace(/\^(\d+)/g, (match, p1) => {
-                    // Convert canonical caret notation back to superscript for clearer display in the hint
+                // Convert canonical caret notation back to superscript for clearer display in the hint
+                const formattedAnswer = canonicalAnswer.replace(/\^(\d+)/g, (match, p1) => {
                     const superscripts = {
                         '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', 
                         '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹'
                     };
                     return p1.split('').map(digit => superscripts[digit] || '^' + digit).join('');
-                })}`;
+                });
+                
+                resultElement.textContent = `✗ إجابة غير صحيحة. الإجابة الصحيحة هي: ${formattedAnswer}`;
                 resultElement.className = "result incorrect";
             }
             
@@ -1108,7 +1112,7 @@
             const inputs = document.querySelectorAll('.exercise input[type="text"]');
             
             inputs.forEach(input => {
-                // Prevent the native soft keyboard from appearing on mobile
+                // Prevent the native soft keyboard from appearing on mobile, forcing use of the virtual keyboard
                 input.readOnly = true; 
                 
                 input.addEventListener('focus', function() {
@@ -1119,7 +1123,11 @@
                     this.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 });
                 
-                // We rely on the 'إغلاق' button click to hide the keyboard
+                // Keep the input active for cursor position
+                input.addEventListener('blur', function() {
+                    // This prevents hiding the keyboard immediately on blur, allowing button clicks to register.
+                    // The keyboard is explicitly hidden via the 'إغلاق' button.
+                });
             });
 
             // Add event listeners to keyboard buttons
