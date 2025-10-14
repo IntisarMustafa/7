@@ -244,6 +244,7 @@
             font-size: 1.3rem; /* Increased font size */
             flex: 1;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            caret-color: var(--accent-gold); /* Custom cursor color */
         }
         
         input:focus {
@@ -406,6 +407,75 @@
             max-width: 300px;
             height: auto;
         }
+
+        /* --- New Keyboard Styling --- */
+        #math-keyboard {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--blue-dark);
+            padding: 10px 5px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.4);
+            display: none; /* Initially hidden, shown on input focus */
+            z-index: 1000;
+            flex-direction: column;
+            gap: 5px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .key {
+            background: var(--blue-medium);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            flex-grow: 1;
+            min-width: 40px;
+            transition: background 0.2s, transform 0.1s;
+            user-select: none;
+            line-height: 1;
+            height: 50px; /* Uniform height */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .key:hover {
+            background: var(--blue-light);
+            color: var(--blue-dark);
+        }
+
+        .key:active {
+            transform: scale(0.95);
+        }
+
+        .key.action {
+            background: var(--accent-gold);
+            color: var(--blue-dark);
+        }
+
+        .key.action:hover {
+            background: #f8c04d;
+        }
+
+        .key.delete {
+            background: #dc3545; /* Red for delete */
+            font-size: 1.2rem;
+        }
+
+        .key.delete:hover {
+            background: #c82333;
+            color: white;
+        }
         
         @media (max-width: 768px) {
             .content {
@@ -432,9 +502,14 @@
                 font-size: 1.4rem;
             }
             
-            input, button {
-                font-size: 1.1rem;
+            input {
+                font-size: 1.2rem;
                 padding: 12px;
+            }
+            
+            /* Hide the main check button when the keyboard is active to maximize screen space */
+            .input-group button {
+                display: none;
             }
 
             .navigation {
@@ -444,6 +519,14 @@
 
             .nav-button {
                 width: 100%;
+            }
+
+            #math-keyboard {
+                padding: 10px 5px;
+            }
+            .key {
+                font-size: 1.2rem;
+                height: 45px;
             }
         }
     </style>
@@ -468,7 +551,8 @@
                     </div>
                     <div class="exercise-content">\( 3.5x + 1.5x \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة">
+                        <!-- Added inputmode="none" and will set readonly in JS -->
+                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(1)">تحقق</button>
                     </div>
                     <div id="result1" class="result"></div>
@@ -481,7 +565,7 @@
                     </div>
                     <div class="exercise-content">\( 7y + 4y \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(2)">تحقق</button>
                     </div>
                     <div id="result2" class="result"></div>
@@ -494,7 +578,7 @@
                     </div>
                     <div class="exercise-content">\( c^3r - 6c^3r \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise3" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise3" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(3)">تحقق</button>
                     </div>
                     <div id="result3" class="result"></div>
@@ -507,7 +591,7 @@
                     </div>
                     <div class="exercise-content">\( bd - 4bd \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise4" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise4" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(4)">تحقق</button>
                     </div>
                     <div id="result4" class="result"></div>
@@ -527,7 +611,7 @@
                     </div>
                     <div class="exercise-content">\( (3np + 5w) + (w - 10np) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise5" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise5" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(5)">تحقق</button>
                     </div>
                     <div id="result5" class="result"></div>
@@ -540,7 +624,7 @@
                     </div>
                     <div class="exercise-content">\( (-z + 2xy) + (xy + 4z) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise6" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise6" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(6)">تحقق</button>
                     </div>
                     <div id="result6" class="result"></div>
@@ -553,7 +637,7 @@
                     </div>
                     <div class="exercise-content">\( (14x^2-19x) + (-6x^2 + x) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise7" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise7" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(7)">تحقق</button>
                     </div>
                     <div id="result7" class="result"></div>
@@ -566,7 +650,7 @@
                     </div>
                     <div class="exercise-content">\( (10b^2-3b) + (b^2-2b) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise8" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise8" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(8)">تحقق</button>
                     </div>
                     <div id="result8" class="result"></div>
@@ -587,7 +671,7 @@
                     </div>
                     <div class="exercise-content">\( (1.5w - 6.5) - (0.5w + 3.5) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise9" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise9" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(9)">تحقق</button>
                     </div>
                     <div id="result9" class="result"></div>
@@ -600,7 +684,7 @@
                     </div>
                     <div class="exercise-content">\( (x + \frac{4}{7}) - (4x - \frac{2}{7}) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise10" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise10" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(10)">تحقق</button>
                     </div>
                     <div id="result10" class="result"></div>
@@ -613,7 +697,7 @@
                     </div>
                     <div class="exercise-content">\( 8d + 4c^2 - 3(d - 5c^2) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise11" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise11" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(11)">تحقق</button>
                     </div>
                     <div id="result11" class="result"></div>
@@ -626,7 +710,7 @@
                     </div>
                     <div class="exercise-content">\( 6w - 3n^2m - 2(w + n^2m) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise12" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise12" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(12)">تحقق</button>
                     </div>
                     <div id="result12" class="result"></div>
@@ -666,7 +750,7 @@
                         </svg>
                     </div>
                     <div class="input-group">
-                        <input type="text" id="exercise13" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise13" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(13)">تحقق</button>
                     </div>
                     <div id="result13" class="result"></div>
@@ -700,7 +784,7 @@
                         </svg>
                     </div>
                     <div class="input-group">
-                        <input type="text" id="exercise14" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise14" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkExercise(14)">تحقق</button>
                     </div>
                     <div id="result14" class="result"></div>
@@ -720,7 +804,7 @@
                     </div>
                     <div class="exercise-content" style="text-align: right; font-size: 1.2rem;">أكتب المقدار الجبري الذي يمثل تكلفة السياج الذي يحيط بالحديقة.</div>
                     <div class="input-group">
-                        <input type="text" id="exercise15" placeholder="أدخل المقدار الجبري">
+                        <input type="text" id="exercise15" placeholder="أدخل المقدار الجبري" inputmode="none">
                         <button onclick="checkExercise(15)">تحقق</button>
                     </div>
                     <div id="result15" class="result"></div>
@@ -733,7 +817,7 @@
                     </div>
                     <div class="exercise-content" style="text-align: right; font-size: 1.2rem;">أحسب تكلفة السياج الذي يحيط بالحديقة علماً بأن عرض الحديقة 30 متر.</div>
                     <div class="input-group">
-                        <input type="text" id="exercise16" placeholder="أدخل التكلفة بالدينار">
+                        <input type="text" id="exercise16" placeholder="أدخل التكلفة بالدينار" inputmode="none">
                         <button onclick="checkExercise(16)">تحقق</button>
                     </div>
                     <div id="result16" class="result"></div>
@@ -760,6 +844,46 @@
         </footer>
     </div>
 
+    <!-- Virtual Math Keyboard -->
+    <div id="math-keyboard">
+        <div class="keyboard-row">
+            <button class="key" data-char="1">1</button>
+            <button class="key" data-char="2">2</button>
+            <button class="key" data-char="3">3</button>
+            <button class="key action" data-char="+">+</button>
+            <button class="key action" data-char="-">-</button>
+            <button class="key action" data-char="(">(</button>
+            <button class="key action" data-char=")">)</button>
+        </div>
+        <div class="keyboard-row">
+            <button class="key" data-char="4">4</button>
+            <button class="key" data-char="5">5</button>
+            <button class="key" data-char="6">6</button>
+            <button class="key action" data-char="*">×</button>
+            <button class="key action" data-char="/">÷</button>
+            <button class="key action" data-char=".">.</button>
+            <button class="key delete">⌫</button>
+        </div>
+        <div class="keyboard-row">
+            <button class="key" data-char="7">7</button>
+            <button class="key" data-char="8">8</button>
+            <button class="key" data-char="9">9</button>
+            <button class="key action" data-char="^">^</button>
+            <button class="key" data-char="x">x</button>
+            <button class="key" data-char="y">y</button>
+            <button class="key" data-char="z">z</button>
+        </div>
+        <div class="keyboard-row">
+            <button class="key" data-char="0">0</button>
+            <button class="key" data-char="a">a</button>
+            <button class="key" data-char="b">b</button>
+            <button class="key" data-char="c">c</button>
+            <button class="key" data-char="d">d</button>
+            <button class="key" data-char="w">w</button>
+            <button class="key action" onclick="checkExercise(activeInput.id.replace('exercise', ''))">تحقق</button>
+        </div>
+    </div>
+
     <script>
         // Solutions for exercises based on the image provided
         const solutions = {
@@ -781,6 +905,38 @@
             16: "1680" // Cost of the fence: (Perimeter) * (cost per meter) = (8 * 30) * 7
         };
         
+        let activeInput = null;
+        const keyboard = document.getElementById('math-keyboard');
+
+        // Function to insert symbol/character into the active input field
+        function insertSymbol(symbol) {
+            if (!activeInput) return;
+
+            // Preserve the current cursor position
+            const start = activeInput.selectionStart;
+            const end = activeInput.selectionEnd;
+            const value = activeInput.value;
+
+            if (symbol === 'DELETE') {
+                // Delete the character before the cursor
+                if (start > 0) {
+                    activeInput.value = value.substring(0, start - 1) + value.substring(end);
+                    activeInput.selectionStart = activeInput.selectionEnd = start - 1;
+                }
+            } else {
+                // Insert the new symbol
+                activeInput.value = value.substring(0, start) + symbol + value.substring(end);
+                // Place the cursor after the inserted symbol
+                activeInput.selectionStart = activeInput.selectionEnd = start + symbol.length;
+            }
+            
+            // Manually trigger an input event
+            activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+            
+            // Refocus on the input field to keep the cursor active
+            activeInput.focus();
+        }
+
         // Function to check the answers
         function checkExercise(exerciseNum) {
             const inputElement = document.getElementById(`exercise${exerciseNum}`);
@@ -792,26 +948,43 @@
             resultElement.style.display = "none";
             
             if (userAnswer === "") {
+                // Do not use alert()
                 console.warn("Please enter an answer before checking.");
-                // You can add a custom modal here for user feedback
                 return;
             }
             
-            let normalizedUserAnswer = userAnswer.replace(/\s+/g, '').toLowerCase();
-            let normalizedCorrectAnswer = correctAnswer.replace(/\s+/g, '').toLowerCase();
+            let normalizedUserAnswer = userAnswer.replace(/\s+/g, '').replace('×', '*').replace('÷', '/').toLowerCase();
+            let normalizedCorrectAnswer = correctAnswer.replace(/\s+/g, '').replace('×', '*').replace('÷', '/').toLowerCase();
             
-            // Handle some common variations for algebraic expressions
-            // For example, 3a+b is the same as b+3a
+            // Handle common variations for algebraic expressions (like order of terms)
             const correctVariants = [normalizedCorrectAnswer];
-            if (correctAnswer.includes(' ')) {
-                const parts = correctAnswer.split(' ');
-                if (parts.length === 3 && (parts[1] === '+' || parts[1] === '-')) {
-                    const swappedAnswer = `${parts[2]} ${parts[1] === '+' ? '+' : ''} ${parts[0]}`;
-                    correctVariants.push(swappedAnswer.replace(/\s+/g, '').toLowerCase());
+            
+            // Simple logic for checking commutative property (e.g., 3x+b is same as b+3x)
+            if (normalizedCorrectAnswer.includes('+')) {
+                const parts = normalizedCorrectAnswer.split('+');
+                if (parts.length === 2) {
+                    const swappedAnswer = `${parts[1]}+${parts[0]}`;
+                    correctVariants.push(swappedAnswer);
                 }
             }
+            if (normalizedCorrectAnswer.includes('-') && !normalizedCorrectAnswer.startsWith('-')) {
+                // This is more complex and involves handling negative signs correctly, 
+                // so we stick to the primary normalized form for subtraction for safety.
+            }
 
-            if (correctVariants.includes(normalizedUserAnswer)) {
+            let isCorrect = correctVariants.includes(normalizedUserAnswer);
+
+            // Special handling for exercise 16 (cost calculation)
+            if (exerciseNum == 16) {
+                const width = 30;
+                const costPerMeter = 7;
+                const perimeterValue = 8 * width;
+                const finalCost = perimeterValue * costPerMeter;
+                
+                isCorrect = (userAnswer == finalCost.toString());
+            }
+
+            if (isCorrect) {
                 resultElement.textContent = "✓ إجابة صحيحة! أحسنت!";
                 resultElement.className = "result correct";
             } else {
@@ -820,47 +993,63 @@
             }
             
             resultElement.style.display = "block";
+            // Scroll to the result
+            resultElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
-        // Enable pressing Enter to check the answer
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const exerciseNum = this.id.replace('exercise', '');
-                    checkExercise(exerciseNum);
-                }
+        // Function to initialize the keyboard listeners
+        function initializeKeyboard() {
+            const inputs = document.querySelectorAll('.exercise input[type="text"]');
+            
+            inputs.forEach(input => {
+                // Set all inputs to be readonly to prevent the native soft keyboard from appearing on mobile
+                input.readOnly = true; 
+                
+                input.addEventListener('focus', function() {
+                    activeInput = this;
+                    keyboard.style.display = 'flex'; // Show keyboard when an input is focused
+                    
+                    // Scroll the input field into view
+                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+                
+                // Hide keyboard when clicking outside inputs (or when blurring the input)
+                input.addEventListener('blur', function() {
+                    // Use a timeout to ensure the keyboard button click event is registered first
+                    setTimeout(() => {
+                        if (!document.activeElement || !document.activeElement.closest('#math-keyboard')) {
+                            keyboard.style.display = 'none';
+                            activeInput = null;
+                        }
+                    }, 150);
+                });
             });
-        });
 
-        // Special handling for exercise 16 to calculate the cost based on the width
-        // and handle both perimeter and final cost inputs
-        document.getElementById('exercise16').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const width = 30;
-                const costPerMeter = 7;
-                const perimeterExpression = "8w";
-                const perimeterValue = 8 * width;
-                const finalCost = perimeterValue * costPerMeter;
+            // Add event listeners to keyboard buttons
+            document.querySelectorAll('#math-keyboard .key').forEach(key => {
+                key.addEventListener('click', function(e) {
+                    // Prevent default action (like form submission or input blur)
+                    e.preventDefault(); 
+                    e.stopPropagation(); // Stop propagation to prevent accidental blurring
+                    
+                    if (this.classList.contains('delete')) {
+                        insertSymbol('DELETE');
+                    } else if (this.hasAttribute('data-char')) {
+                        const char = this.getAttribute('data-char');
+                        insertSymbol(char);
+                    } else if (this.hasAttribute('onclick')) {
+                        // Handle the 'تحقق' button on the keyboard
+                        const funcCall = this.getAttribute('onclick');
+                        eval(funcCall); // Use eval carefully, here it's safe for simple checkExercise call
+                    }
+                });
+            });
+        }
+        
+        // Run initialization when the document is ready
+        window.onload = initializeKeyboard;
 
-                const userAnswer = this.value.trim();
-                const resultElement = document.getElementById('result16');
-                resultElement.style.display = "none";
-
-                if (userAnswer === "") {
-                    console.warn("Please enter an answer before checking.");
-                    return;
-                }
-
-                if (userAnswer == finalCost.toString()) {
-                    resultElement.textContent = "✓ إجابة صحيحة! أحسنت!";
-                    resultElement.className = "result correct";
-                } else {
-                    resultElement.textContent = `✗ إجابة غير صحيحة. الإجابة الصحيحة هي: ${finalCost}`;
-                    resultElement.className = "result incorrect";
-                }
-                resultElement.style.display = "block";
-            }
-        });
     </script>
 </body>
 </html>
+
