@@ -417,7 +417,7 @@
             left: 0;
             right: 0;
             background-color: var(--blue-dark);
-            padding: 10px 5px;
+            padding: 10px 0; /* Changed horizontal padding to 0 */
             box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6);
             display: none; /* Initially hidden, shown on input focus */
             z-index: 1000;
@@ -426,12 +426,19 @@
             border-top-left-radius: 15px;
             border-top-right-radius: 15px;
             transition: all 0.3s ease;
+
+            /* ADDED FOR SCROLLING */
+            overflow-x: auto; /* Enable horizontal scrolling */
+            -webkit-overflow-scrolling: touch; /* Improved scrolling on iOS */
         }
 
         .keyboard-row {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start; /* Align keys to the left */
             gap: 5px;
+            flex-wrap: nowrap; /* CRITICAL: Prevent keys from wrapping */
+            padding: 0 5px; /* Add horizontal padding to the row itself */
+            min-width: 500px; /* CRITICAL: Force the row to be wide to activate scroll on mobile */
         }
 
         .key {
@@ -443,13 +450,15 @@
             font-size: 1.5rem; /* Larger font */
             font-weight: bold;
             cursor: pointer;
-            flex-grow: 1;
-            min-width: 45px;
-            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-            user-select: none;
             line-height: 1;
             height: 55px; /* Taller keys */
             box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.3);
+            user-select: none;
+            
+            /* ADDED FOR SCROLLING */
+            flex-shrink: 0; /* Prevent keys from shrinking too much */
+            flex-basis: 12.5%; /* Base size for 8 keys per row */
+            min-width: 50px; /* Ensure a decent minimum touch target */
         }
 
         .key:hover {
@@ -574,19 +583,22 @@
                 width: 100%;
             }
 
-            /* --- KEYBOARD FIX: Tighter layout for mobile screens --- */
+            /* --- KEYBOARD FIX: Tighter layout for mobile screens and scroll fix --- */
             #math-keyboard {
-                padding: 5px 2px; /* Aggressively reduced padding */
+                padding: 5px 0; /* Reduced vertical padding */
             }
             .keyboard-row {
                 gap: 2px; /* Reduced gap between keys */
+                padding: 0 5px;
+                min-width: 450px; /* Ensure wide enough for scroll to activate */
             }
             .key {
                 font-size: 1.2rem; /* Slightly smaller font */
                 height: 45px; /* Reduced key height */
-                min-width: 35px; /* Ensure keys can shrink */
+                min-width: 40px; /* Smaller minimum width for crowded keys */
                 border-radius: 6px;
                 padding: 8px 5px;
+                flex-basis: 12.5%;
             }
             .key.action {
                 font-size: 0.9rem; /* Smaller text for action buttons */
