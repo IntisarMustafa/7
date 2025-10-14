@@ -638,7 +638,7 @@
                     </div>
                     <div class="point">
                         <div class="point-icon">3</div>
-                        <div>يمكن كتابة الإجابة **بأي ترتيب** للحدود (خاصية التبديل)</div>
+                        <div>يمكن كتابة الإجابة **بأي ترتيب** للمتغيرات داخل الحد الواحد</div>
                     </div>
                     <div class="point">
                         <div class="point-icon">4</div>
@@ -817,35 +817,94 @@
             document.getElementById(`result${activeInput.id.replace('exercise', '')}`).style.display = 'none';
         }
 
-        // دالة تحويل الإدخال البصري (مع رموز الأس) إلى الصيغة القابلة للمقارنة (^2)
+        /**
+         * دالة تحويل الإدخال البصري (مع رموز الأس) إلى الصيغة القابلة للمقارنة (^2)
+         * @param {string} visualAnswer الإجابة البصرية من حقل الإدخال
+         * @returns {string} الإجابة منظفة، بدون مسافات، حروف صغيرة، مع أسس كأرقام لاصقة (مثلاً: '6yu5')
+         */
         function cleanInputForCheck(visualAnswer) {
             let cleaned = visualAnswer;
             
-            // استبدال رموز الأس اليونيكود بصيغة ^<رقم>
+            // استبدال رموز الأس اليونيكود بصيغة ^<رقم> (لتسهيل المعالجة الداخلية)
             for (const unicode in inverseSuperscriptMapForClean) {
+                // نستخدم هنا replace All لتغطية جميع الرموز
                 cleaned = cleaned.split(unicode).join(inverseSuperscriptMapForClean[unicode]);
             }
             
             // إزالة رمز الأس المؤقت الذي قد يتركه المستخدم
             cleaned = cleaned.replace(/\^/g, ''); 
+            
+            // التنظيف النهائي (مسافات، حروف صغيرة)
+            cleaned = cleaned.replace(/\s+/g, '').toLowerCase();
 
             return cleaned;
         }
 
-        // دالة مساعدة لاستخراج وترتيب الحدود بشكل مستقل للتحقق من خاصية التبديل (Commutativity)
-        function normalizeExpressionForComparison(expression) {
-            // 1. إضافة علامة + في البداية إذا لم تكن هناك علامة + أو -
-            if (expression.length > 0 && expression[0] !== '-' && expression[0] !== '+') {
-                expression = '+' + expression;
+        /**
+         * دالة جديدة لتطبيع (Normalization) حد جبري واحد (Single Term)
+         * بحيث يكون بالصيغة القياسية: [المعامل] [المتغيرات المرتبة أبجدياً مع أسسها]
+         * @param {string} term - الحد الجبري النظيف (مثلاً: '2gf' أو '6yu5')
+         * @returns {string} الحد الجبري القياسي (مثلاً: '2fg' أو '6u5y')
+         */
+        function normalizeTerm(term) {
+            if (!term) return "";
+            
+            let coefficient = '';
+            let variables = term;
+            let leadingSign = term.startsWith('-') ? '-' : '';
+            
+            // 1. تحديد المعامل والجزء المتغير (بواسطة البحث عن الأرقام في البداية)
+            let splitIndex = leadingSign.length;
+            while (splitIndex < term.length && (term[splitIndex] === '.' || (term[splitIndex] >= '0' && term[splitIndex] <= '9'))) {
+                splitIndex++;
             }
-            // 2. تقسيم التعبير إلى حدود موقعة (Signed Terms)
-            const terms = expression.match(/(\+|\-)[^+-]*/g) || [];
             
-            // 3. ترتيب الحدود أبجدياً
-            terms.sort();
+            if (splitIndex === term.length) {
+                // الحد عبارة عن رقم خالص
+                coefficient = term;
+                variables = '';
+            } else if (splitIndex > 0) {
+                // الحد يحتوي على معامل عددي في البداية
+                coefficient = term.substring(0, splitIndex);
+                variables = term.substring(splitIndex);
+            } else {
+                // لا يوجد معامل صريح (مثل 'x' أو '-x' أو 'gf')
+                coefficient = leadingSign === '-' ? '-' : ''; // نتركها فارغة للـ +1
+                variables = term.replace(/^-/, '');
+            }
             
-            // 4. إعادة تجميعها
-            return terms.join('');
+            // إذا كان المعامل هو '1' أو '-1' ويوجد متغيرات، نحذف الـ '1' للتطبيع (ليكون ضمنياً)
+            if (variables.length > 0 && coefficient.endsWith('1')) {
+                // إذا كان '1' أو '-1'، نجعل المعامل فارغاً أو '-' فقط
+                if (coefficient === '1') coefficient = '';
+                if (coefficient === '-1') coefficient = '-';
+            }
+            
+            // 2. فصل المتغيرات ووحدات الأسس.
+            const varUnits = [];
+            let currentUnit = '';
+            
+            for (const char of variables) {
+                if (/[a-z]/.test(char)) {
+                    // بداية متغير جديد
+                    if (currentUnit !== '') {
+                        varUnits.push(currentUnit);
+                    }
+                    currentUnit = char;
+                } else if (/\d|\./.test(char)) { // الأسس
+                    currentUnit += char;
+                }
+            }
+            if (currentUnit !== '') {
+                varUnits.push(currentUnit);
+            }
+            
+            // 3. ترتيب وحدات المتغيرات أبجدياً (بناءً على الحرف الأول من كل وحدة)
+            varUnits.sort((a, b) => a[0].localeCompare(b[0]));
+            const sortedVariables = varUnits.join('');
+
+            // 4. إعادة التجميع: [المعامل] + [المتغيرات المرتبة]
+            return coefficient + sortedVariables;
         }
         
         // دالة للتحقق من الإجابات
@@ -864,36 +923,26 @@
                 return;
             }
             
-            // 1. تحويل الإدخال البصري إلى صيغة المقارنة الداخلية (^2)
+            // 1. تنظيف الإدخال البصري ثم التطبيع
             const rawUserAnswerCleaned = cleanInputForCheck(userAnswerVisual);
+            const normalizedUserAnswer = normalizeTerm(rawUserAnswerCleaned);
+            
+            // 2. تطبيع الإجابة الصحيحة المخزنة
+            const normalizedCorrectAnswer = normalizeTerm(cleanInputForCheck(correctAnswer));
 
-            // 2. دالة التنظيف النهائية (إزالة المسافات والأحرف الصغيرة)
-            const cleanAnswer = (answer) => answer.replace(/\s+/g, '').toLowerCase();
-
-            const normalizedUserAnswer = cleanAnswer(rawUserAnswerCleaned);
-            const normalizedCorrectAnswer = cleanAnswer(correctAnswer);
-
-            let isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
-
-            // --- التحقق المعزز للتبادل (Commutativity Check) ---
-            if (!isCorrect) {
-                // إذا لم تتطابق الإجابة المباشرة، نقوم بالتحقق من الترتيب التبادلي
-                const sortedCorrect = normalizeExpressionForComparison(normalizedCorrectAnswer);
-                const sortedUser = normalizeExpressionForComparison(normalizedUserAnswer);
-
-                if (sortedUser === sortedCorrect) {
-                    isCorrect = true;
-                }
-            }
-            // --- نهاية التحقق المعزز للتبادل ---
-
+            const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
 
             if (isCorrect) {
                 resultElement.textContent = "✓ إجابة صحيحة! أحسنت!";
                 resultElement.className = "result correct";
             } else {
-                // لإظهار الحل باليونيكود إذا كان يحتوي على أسس
-                let hintAnswer = correctAnswer.includes('^') ? correctAnswer.replace(/\^5/g, '⁵') : correctAnswer;
+                // لعرض الحل باليونيكود إذا كان يحتوي على أسس
+                let hintAnswer = correctAnswer;
+                // استبدال داخلي لرموز الأس المعرفة بالصيغة ^<رقم>
+                for (const num in superscriptMap) {
+                    hintAnswer = hintAnswer.replace(`^${num}`, superscriptMap[num]);
+                }
+
                 resultElement.textContent = `✗ إجابة غير صحيحة. الإجابة الصحيحة هي: ${hintAnswer}`;
                 resultElement.className = "result incorrect";
             }
