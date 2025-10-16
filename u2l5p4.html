@@ -28,15 +28,17 @@
             color: #333;
             line-height: 1.8;
             padding: 20px;
-            min-height: 10vh;
+            min-height: 100vh; /* Set min-height to ensure space */
             font-size: 1.1rem;
+            /* Added padding-bottom to account for the fixed keyboard */
+            padding-bottom: 250px; 
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
@@ -68,7 +70,7 @@
             margin-bottom: 30px;
             padding: 20px;
             background: white;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             border-left: 5px solid var(--sky-blue);
         }
@@ -92,7 +94,7 @@
         .example {
             background: #f9fbe7;
             padding: 20px;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             margin: 20px 0;
             border-left: 4px solid var(--gold);
         }
@@ -109,7 +111,7 @@
             margin: 15px 0;
             padding: 10px;
             background: white;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -127,7 +129,7 @@
         .explanation {
             background: #e3f2fd;
             padding: 15px;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             margin: 15px 0;
             border-left: 3px solid var(--sky-blue);
         }
@@ -135,7 +137,7 @@
         .note {
             background: #fff8e1;
             padding: 15px;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             margin: 15px 0;
             border-left: 3px solid var(--gold);
         }
@@ -182,7 +184,7 @@
         .exercise {
             background: rgba(255, 255, 255, 0.9);
             padding: 25px;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
             border: 2px solid var(--gold);
             color: #333;
@@ -212,10 +214,15 @@
             flex: 1;
             padding: 14px;
             border: 2px solid var(--sky-blue);
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             font-size: 1.2rem;
             font-family: 'Cairo', sans-serif;
             text-align: right;
+            /* Disable native keyboard and allow only virtual input */
+            touch-action: none; 
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: pointer;
         }
         
         .input-group button {
@@ -226,7 +233,7 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 1.2rem;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             transition: all 0.3s;
         }
         
@@ -240,7 +247,7 @@
             font-weight: bold;
             text-align: center;
             padding: 12px;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             margin-top: 15px;
             font-size: 1.2rem;
         }
@@ -261,7 +268,7 @@
             background: linear-gradient(to right, #4caf50, #2e7d32);
             color: white;
             padding: 15px;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             margin: 20px 0;
             font-weight: bold;
             font-size: 1.3rem;
@@ -284,7 +291,7 @@
             padding: 15px 30px;
             font-size: 1.6rem;
             font-weight: bold;
-            border-radius: 0; /* Updated to sharp corners */
+            border-radius: 0; 
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -325,6 +332,78 @@
             font-weight: bold;
             fill: var(--royal-blue);
         }
+        
+        /* --- VIRTUAL KEYBOARD STYLES --- */
+        #virtual-keyboard {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--royal-blue);
+            border-top: 4px solid var(--gold);
+            padding: 10px 5px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #virtual-keyboard.visible {
+            transform: translateY(0);
+        }
+
+        .keyboard-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .key-button {
+            background: var(--light-blue);
+            color: white;
+            border: none;
+            padding: 15px 5px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 0; /* Sharp corners */
+            cursor: pointer;
+            transition: background-color 0.1s, transform 0.1s;
+            box-shadow: 0 3px 0 var(--royal-blue);
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .key-button:active {
+            box-shadow: 0 0 0 var(--royal-blue);
+            transform: translateY(3px);
+            background: var(--sky-blue);
+        }
+        
+        .key-button.function-key {
+            background: var(--gold);
+            color: var(--royal-blue);
+            font-size: 1.2rem;
+            font-weight: 800;
+            box-shadow: 0 3px 0 #cc942e;
+        }
+
+        .key-button.function-key:active {
+            background: #ffd166;
+            box-shadow: 0 0 0 #cc942e;
+        }
+        
+        .key-button.variable-key {
+            background: #4CAF50; /* Green for variables */
+            box-shadow: 0 3px 0 #38703a;
+        }
+
+        .key-button.variable-key:active {
+            background: #66BB6A;
+            box-shadow: 0 0 0 #38703a;
+        }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -357,6 +436,7 @@
             }
             body {
                 font-size: 1rem;
+                padding-bottom: 250px; /* Adjust body padding for fixed keyboard */
             }
             .section-title {
                 font-size: 1.5rem;
@@ -384,6 +464,19 @@
             }
             .svg-text-label {
                 font-size: 14px;
+            }
+            #virtual-keyboard {
+                padding: 8px 3px;
+            }
+            .keyboard-grid {
+                gap: 5px;
+            }
+            .key-button {
+                padding: 12px 0px;
+                font-size: 1.4rem;
+            }
+            .key-button.function-key {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -432,7 +525,8 @@
                         <p>\( = 5x(3x + 2) + 4(3x + 2) \)</p>
                         <p>أستخدم خاصية التوزيع:</p>
                         <p>\( = (5x \times 3x) + (5x \times 2) + (4 \times 3x) + (4 \times 2) \)</p>
-                        <p>\( = 15x^2 + 10x + 12x + 8 \)</p>
+                        <!-- Updated to use superscript '²' for display consistency -->
+                        <p>\( = 15x^2 + 10x + 12x + 8 \)</p> 
                         <p>أجمع الحدود المتشابهة:</p>
                         <p>\( = 15x^2 + (10x + 12x) + 8 \)</p>
                         <p>أكتب المقدار في أبسط صورة:</p>
@@ -470,16 +564,16 @@
                             
                             <!-- Dotted lines indicating dimensions -->
                             <line x1="50" y1="130" x2="250" y2="130" stroke="#0c2461" stroke-width="2" stroke-dasharray="4" />
-                            <line x1="255" y1="25" x2="255" y2="125" stroke="#0c2461" stroke-width="2" stroke-dasharray="4" />
+                            <line x1="255" y1="25" x2="255" y1="125" stroke="#0c2461" stroke-width="2" stroke-dasharray="4" />
                             
                             <!-- Labels for dimensions -->
-                            <text x="150" y="145" text-anchor="middle" class="svg-text-label">الطول: \( m(x+6) \)</text>
-                            <text x="270" y="75" text-anchor="start" class="svg-text-label" transform="rotate(90 270,75)">العرض: \( m(x+3) \)</text>
+                            <text x="150" y="145" text-anchor="middle" class="svg-text-label">الطول: \( (x+6) \)</text>
+                            <text x="270" y="75" text-anchor="start" class="svg-text-label" transform="rotate(90 270,75)">العرض: \( (x+3) \)</text>
                         </svg>
                     </div>
-                    <div class="problem">سجادة مستطيلة الشكل، طولها \( m(x+6) \) وعرضها \( m(x+3) \). أوجد مساحتها بدلالة \( x \).</div>
+                    <div class="problem">سجادة مستطيلة الشكل، طولها \( (x+6) \) وعرضها \( (x+3) \). أوجد مساحتها بدلالة \( x \).</div>
                     <div class="input-group">
-                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة" inputmode="none" readonly>
                         <button onclick="checkAnswer(1)">تحقق</button>
                     </div>
                     <div id="feedback1" class="feedback"></div>
@@ -490,7 +584,7 @@
                     <h3>التمرين 2</h3>
                     <div class="problem">إذا كان سعر المتر المربع الواحد هو 6 JD، أوجد ثمن السجادة بدلالة \( x \).</div>
                     <div class="input-group">
-                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة" inputmode="none" readonly>
                         <button onclick="checkAnswer(2)">تحقق</button>
                     </div>
                     <div id="feedback2" class="feedback"></div>
@@ -510,20 +604,56 @@
         </footer>
     </div>
 
+    <!-- VIRTUAL KEYBOARD HTML -->
+    <div id="virtual-keyboard">
+        <div class="keyboard-grid">
+            <!-- Row 1 -->
+            <button class="key-button" data-key="7">7</button>
+            <button class="key-button" data-key="8">8</button>
+            <button class="key-button" data-key="9">9</button>
+            <button class="key-button variable-key" data-key="x">x</button>
+            <button class="key-button variable-key" data-key="m">m</button> <!-- Added variable 'm' for potential use -->
+            
+            <!-- Row 2 -->
+            <button class="key-button" data-key="4">4</button>
+            <button class="key-button" data-key="5">5</button>
+            <button class="key-button" data-key="6">6</button>
+            <button class="key-button" data-key="+">+</button>
+            <button class="key-button" data-key="-">-</button>
+
+            <!-- Row 3 -->
+            <button class="key-button" data-key="1">1</button>
+            <button class="key-button" data-key="2">2</button>
+            <button class="key-button" data-key="3">3</button>
+            <button class="key-button" data-key="(">(</button>
+            <button class="key-button" data-key=")">)</button>
+
+            <!-- Row 4 -->
+            <button class="key-button" data-key="0">0</button>
+            <button class="key-button" data-key="²">²</button> <!-- Superscript square as requested -->
+            <button class="key-button" data-key="*">×</button> <!-- Multiplication sign for clarity -->
+            <button class="key-button function-key" data-key="DEL">مسح</button>
+            <button class="key-button function-key" data-key="CLS">إلغاء</button>
+        </div>
+    </div>
+    <!-- END VIRTUAL KEYBOARD HTML -->
+
     <script>
         // Define the correct simplified algebraic expressions for the exercises.
+        // NOTE: The answers use '^2' for the normalization function to process them correctly.
         const correctAnswers = {
             1: "x^2 + 9x + 18",
             2: "6x^2 + 54x + 108"
         };
         
-        // Counter for the number of correctly solved exercises.
         let solvedCount = 0;
+        let activeInput = null; // To track the currently focused input field
 
+        // --- CORE ALGEBRAIC NORMALIZATION FUNCTIONS (Unchanged from previous versions) ---
+        
         /**
          * Parses a single algebraic term from a string.
          * @param {string} termString - The string representation of a term (e.g., "+x^2", "-7x", "10").
-         * @returns {object} An object containing the parsed components: { sign, coefficient, variable, exponent }.
          */
         function parseTerm(termString) {
             let sign = '+';
@@ -538,24 +668,30 @@
             let variable = '';
             let exponent = 0;
 
-            const parts = termString.match(/^(\d*)?([a-z])?(\^(\d+))?$/);
-            if (parts) {
-                if (parts[1]) { // Has a coefficient number
-                    coefficient = parseInt(parts[1]);
+            // Regex to handle all cases: constant, variable, coefficient, exponent (using '^' for parsing)
+            const termMatch = termString.match(/^(\d*)?([a-z])?(\^(\d+))?$/);
+            if (termMatch) {
+                if (termMatch[1]) { 
+                    coefficient = parseInt(termMatch[1]);
                 }
-                if (parts[2]) { // Has a variable
-                    variable = parts[2];
-                    exponent = 1; // Default exponent if variable exists
+                if (termMatch[2]) { 
+                    variable = termMatch[2];
+                    exponent = 1;
                 }
-                if (parts[4]) { // Has an explicit exponent
-                    exponent = parseInt(parts[4]);
+                if (termMatch[4]) {
+                    exponent = parseInt(termMatch[4]);
                 }
-                // Special case: if it's just 'x' or 'd', coefficient is 1
-                if (!parts[1] && parts[2]) {
+                // If variable exists but no explicit coefficient number (e.g., 'x', 'd', 'm')
+                if (!termMatch[1] && termMatch[2]) {
                     coefficient = 1;
                 }
+                // If it's just 'x^2'
+                if (!termMatch[1] && termMatch[2] && termMatch[4]) {
+                    coefficient = 1;
+                }
+
             } else { // Handle constants like '10' or '12'
-                coefficient = parseInt(termString) || 0; // If not a number, default to 0
+                coefficient = parseInt(termString) || 0;
                 variable = '';
                 exponent = 0;
             }
@@ -565,22 +701,12 @@
 
         /**
          * Normalizes the input algebraic expression by standardizing format and sorting terms.
-         * @param {string} input - The algebraic expression string to normalize.
-         * @returns {string} The normalized and sorted expression string.
          */
         function normalizeInput(input) {
-            // 1. Initial Cleaning: lowercase, superscripts, no whitespace
+            // 1. Initial Cleaning: lowercase, remove multiplication symbols, superscripts, no whitespace
             let cleanedInput = input.toLowerCase();
-            cleanedInput = cleanedInput.replace(/²/g, '^2');
-            cleanedInput = cleanedInput.replace(/³/g, '^3');
-            cleanedInput = cleanedInput.replace(/¹/g, '^1');
-            cleanedInput = cleanedInput.replace(/⁴/g, '^4');
-            cleanedInput = cleanedInput.replace(/⁵/g, '^5');
-            cleanedInput = cleanedInput.replace(/⁶/g, '^6');
-            cleanedInput = cleanedInput.replace(/⁷/g, '^7');
-            cleanedInput = cleanedInput.replace(/⁸/g, '^8');
-            cleanedInput = cleanedInput.replace(/⁹/g, '^9');
-            cleanedInput = cleanedInput.replace(/⁰/g, '^0');
+            cleanedInput = cleanedInput.replace(/²/g, '^2'); // Normalize superscript square to ^2
+            cleanedInput = cleanedInput.replace(/[*×]/g, ''); // Remove explicit multiplication signs
             cleanedInput = cleanedInput.replace(/\s/g, '');
 
             // 2. Add leading '+' for first term if missing and positive
@@ -588,10 +714,13 @@
                 cleanedInput = '+' + cleanedInput;
             }
 
-            // 3. Split into terms
-            const termStrings = cleanedInput.match(/[+-]?\d*[a-z]?(\^\d+)?|[+-]?\d+/g);
+            // 3. Split into terms (looking for [sign][coefficient][variable][^exponent] or [sign][constant])
+            // This is a complex step, ensuring the regex handles all potential terms correctly after normalization to ^ notation
+            const termStrings = cleanedInput.match(/[+-]?(?:\d*[a-z](\^\d+)?|\d+)/g);
+            
             if (!termStrings) return '';
-
+            
+            // 4. Parse terms
             const parsedTerms = termStrings.map(termString => {
                 let sign = '+';
                 let value = termString;
@@ -602,82 +731,69 @@
                     value = termString.substring(1);
                 }
 
-                let coefficient = 1;
-                let variable = '';
-                let exponent = 0;
-
-                const termMatch = value.match(/^(\d*)?([a-z])?(\^(\d+))?$/);
-                if (termMatch) {
-                    if (termMatch[1]) {
-                        coefficient = parseInt(termMatch[1]);
-                    }
-                    if (termMatch[2]) {
-                        variable = termMatch[2];
-                        exponent = 1;
-                    }
-                    if (termMatch[4]) {
-                        exponent = parseInt(termMatch[4]);
-                    }
-                    if (!termMatch[1] && termMatch[2]) {
-                        coefficient = 1;
-                    }
-                } else {
-                    coefficient = parseInt(value) || 0;
-                    variable = '';
-                    exponent = 0;
-                }
-
-                return { sign, coefficient, variable, exponent, original: termString };
+                let term = parseTerm(value);
+                term.sign = sign;
+                return term;
             });
 
-            // 4. Sort terms
+            // 5. Sort terms: highest exponent first, then constant last.
             parsedTerms.sort((a, b) => {
+                // Exponents descending (x^2, x, 1)
                 if (a.exponent !== b.exponent) {
                     return b.exponent - a.exponent;
                 }
-                if (a.variable && b.variable) {
+                // Variable name alphabetical for tie-breaker
+                if (a.variable !== b.variable) {
                     return a.variable.localeCompare(b.variable);
                 }
-                if (a.variable && !b.variable) return -1;
-                if (!a.variable && b.variable) return 1;
-                return a.coefficient - b.coefficient;
+                // Constant terms last
+                if (a.variable === '' && b.variable !== '') return 1;
+                if (a.variable !== '' && b.variable === '') return -1;
+                return 0;
             });
 
-            // 5. Reconstruct expression
+            // 6. Reconstruct expression
             let reconstructed = '';
             parsedTerms.forEach((term, index) => {
+                if (term.coefficient === 0 && term.variable !== '') return; // Ignore zero variable terms
+
                 let termString = '';
-                if (term.variable === '') {
-                    termString = term.coefficient.toString();
-                } else {
-                    termString = term.coefficient === 1 && term.variable !== '' ? term.variable : term.coefficient.toString() + term.variable;
+                let absCoefficient = Math.abs(term.coefficient);
+                let currentSign = (term.sign === '-') ? '-' : '+';
+
+                // Handle coefficients and variables
+                if (term.variable === '') { // Constant term
+                    termString = absCoefficient.toString();
+                } else { // Variable term
+                    termString = (absCoefficient === 1 && term.exponent > 0) ? term.variable : absCoefficient.toString() + term.variable;
                     if (term.exponent > 1) {
-                        termString += '^' + term.exponent;
+                        termString += '^' + term.exponent; 
                     }
                 }
 
-                if (term.sign === '-') {
-                    reconstructed += '-' + termString;
-                } else {
-                    if (index > 0 || term.coefficient < 0) {
-                        reconstructed += '+' + termString;
-                    } else {
-                        reconstructed += termString;
-                    }
+                // Add sign
+                if (index > 0 || currentSign === '-') {
+                    reconstructed += currentSign;
                 }
+                
+                reconstructed += termString;
             });
             
-            if (reconstructed.startsWith('+') && parsedTerms[0] && parsedTerms[0].sign === '+' && parsedTerms[0].coefficient >= 0) {
+            // Final cleanup: remove leading '+' if present
+            if (reconstructed.startsWith('+')) {
                 reconstructed = reconstructed.substring(1);
+            }
+            
+            // Handle case where input was just a number (e.g., '0')
+            if (reconstructed === '' && input.match(/^\s*0\s*$/)) {
+                return '0';
             }
 
             return reconstructed;
         }
+
+        // --- CHECK ANSWER LOGIC (Updated to use normalized answers) ---
         
-        /**
-         * Checks the user's answer for a given exercise.
-         * @param {number} exerciseNum - The number of the exercise to check.
-         */
         function checkAnswer(exerciseNum) {
             const inputId = `exercise${exerciseNum}`;
             const feedbackId = `feedback${exerciseNum}`;
@@ -692,30 +808,117 @@
                 feedbackElement.textContent = "إجابة صحيحة! أحسنت!";
                 feedbackElement.className = "feedback correct";
                 
-                // Increment solved count and disable input
                 solvedCount++;
                 document.getElementById(inputId).disabled = true;
                 document.querySelector(`#${inputId} + button`).disabled = true;
                 
-                // Show success banner if all exercises are solved
                 if (solvedCount === Object.keys(correctAnswers).length) {
                     document.getElementById('successBanner').style.display = 'block';
                 }
             } else {
-                feedbackElement.textContent = `إجابة غير صحيحة. الإجابة الصحيحة هي: ${correctAnswers[exerciseNum]}`;
+                // Use the normalized answer with superscript '²' for friendly display in feedback
+                const displayAnswer = correctAnswers[exerciseNum].replace(/\^2/g, '²');
+                feedbackElement.textContent = `إجابة غير صحيحة. حاول مرة أخرى.`;
                 feedbackElement.className = "feedback incorrect";
             }
         }
         
-        // Initialize input fields to respond to the 'Enter' key press.
-        document.querySelectorAll('.input-group input').forEach(input => {
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const exerciseNum = this.id.replace('exercise', '');
-                    checkAnswer(parseInt(exerciseNum));
-                }
+        // --- KEYBOARD LOGIC ---
+        const keyboard = document.getElementById('virtual-keyboard');
+        const inputs = document.querySelectorAll('.input-group input');
+
+        /**
+         * Inserts a value into the active input field at the cursor position.
+         */
+        function insertAtCursor(input, value) {
+            if (!input) return;
+
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const text = input.value;
+
+            // Insert the new value
+            input.value = text.substring(0, start) + value + text.substring(end);
+            
+            // Move the cursor after the inserted text
+            const newCursorPosition = start + value.length;
+            input.selectionStart = newCursorPosition;
+            input.selectionEnd = newCursorPosition;
+        }
+
+        /**
+         * Handles the click event for all keyboard buttons.
+         */
+        function handleKey(key) {
+            if (!activeInput || activeInput.disabled) return;
+
+            const input = activeInput;
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            let text = input.value;
+
+            switch (key) {
+                case 'DEL': // Backspace functionality
+                    if (start === end && start > 0) {
+                        // Delete one character before the cursor
+                        input.value = text.substring(0, start - 1) + text.substring(end);
+                        input.selectionStart = start - 1;
+                        input.selectionEnd = start - 1;
+                    } else if (start !== end) {
+                        // Delete the selected text
+                        input.value = text.substring(0, start) + text.substring(end);
+                        input.selectionStart = start;
+                        input.selectionEnd = start;
+                    }
+                    break;
+                case 'CLS': // Clear Input
+                    input.value = '';
+                    input.selectionStart = 0;
+                    input.selectionEnd = 0;
+                    break;
+                default: // Regular characters (numbers, variables, operators, '²', etc.)
+                    insertAtCursor(input, key);
+                    break;
+            }
+            // Manually restore focus after action
+            input.focus();
+        }
+
+        // Add event listeners for the virtual keyboard buttons
+        document.querySelectorAll('.key-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const key = e.target.getAttribute('data-key');
+                handleKey(key);
             });
         });
+
+        // Add focus/blur listeners to all input fields
+        inputs.forEach(input => {
+            // Important: Mark inputs as readonly and inputmode=none to prevent native keyboard
+            input.readOnly = true;
+
+            input.addEventListener('focus', () => {
+                activeInput = input;
+                keyboard.classList.add('visible');
+            });
+
+            // Handle focus out (blur) to hide the keyboard
+            input.addEventListener('blur', () => {
+                setTimeout(() => {
+                    // Check if focus truly left the input fields and keyboard buttons
+                    if (!document.activeElement || (!document.activeElement.closest('.input-group') && !document.activeElement.closest('#virtual-keyboard'))) {
+                         activeInput = null;
+                         keyboard.classList.remove('visible');
+                    }
+                }, 100); 
+            });
+        });
+
+        // Set the first input as active on load for immediate use
+        if (inputs.length > 0) {
+            inputs[0].focus();
+        }
     </script>
 </body>
 </html>
+
