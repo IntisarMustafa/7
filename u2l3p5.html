@@ -27,16 +27,23 @@
         }
 
         /* Game container - the main game area */
+        /* --- Default (Desktop/Contained Look) Styles --- */
         #game-container {
             position: relative;
-            width: 100%;
-            max-width: 600px; /* Limit max width for desktop, but fluid for mobile */
-            height: 100vh;
+            /* Fixed dimensions for desktop to maintain aspect ratio */
+            width: 450px; 
+            height: 750px; 
+            max-width: 90vw; /* Ensure it fits on smaller screens if needed */
+            max-height: 90vh; /* Ensure it fits vertically */
+            
             background: linear-gradient(to bottom, #70c5ce, #8fd8e0, #a8e6cf); /* Sky gradient */
             overflow: hidden;
             touch-action: none; /* Disable touch gestures on the container */
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            
+            /* Enhanced desktop aesthetics */
+            border-radius: 15px; 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 0 10px #4a4a4a; /* Strong shadow and frame */
+            border: 5px solid #fff;
         }
 
         /* Bird styling */
@@ -470,13 +477,17 @@
             60% { transform: translateX(-50%) translateY(-5px); }
         }
 
-        /* Responsive adjustments */
+        /* --- Responsive adjustments --- */
+
+        /* Mobile Styles (Max Width 768px) - Full screen, no borders */
         @media (max-width: 768px) {
             #game-container {
                 width: 100%;
                 max-width: none; /* Full width on smaller screens */
                 height: 100vh;
                 border-radius: 0;
+                box-shadow: none;
+                border: none;
             }
             .score-container {
                 font-size: 2.5rem;
@@ -852,6 +863,9 @@
 
             // Initialize game state and start screen
             function initGame() {
+                // Check mobile status
+                isMobile = window.innerWidth <= 768; 
+                
                 if (isMobile) {
                     tapToStartIndicator.style.display = 'block';
                 } else {
@@ -1355,6 +1369,9 @@
                 e.preventDefault(); // Prevent default touch behavior for the entire start screen
                 startGame();
             }, { passive: false });
+            
+            // Handle resizing for proper mobile/desktop mode switching
+            window.addEventListener('resize', initGame);
 
             // Initialize the game when the page loads
             initGame();
@@ -1362,3 +1379,4 @@
     </script>
 </body>
 </html>
+
