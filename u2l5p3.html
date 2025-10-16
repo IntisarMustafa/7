@@ -30,6 +30,8 @@
             padding: 20px;
             min-height: 100vh;
             font-size: 1.1rem;
+            /* Added padding-bottom to account for the fixed keyboard */
+            padding-bottom: 250px; 
         }
         
         .container {
@@ -215,6 +217,11 @@
             border-radius: 5px 0 0 5px;
             font-size: 1.2rem;
             font-family: 'Cairo', sans-serif;
+            /* Ensure native keyboard is disabled on touch devices */
+            touch-action: none; 
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: pointer;
         }
         
         .input-group button {
@@ -374,6 +381,78 @@
             color: var(--light-blue);
         }
 
+        /* --- VIRTUAL KEYBOARD STYLES --- */
+        #virtual-keyboard {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--royal-blue);
+            border-top: 4px solid var(--gold);
+            padding: 10px 5px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #virtual-keyboard.visible {
+            transform: translateY(0);
+        }
+
+        .keyboard-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .key-button {
+            background: var(--light-blue);
+            color: white;
+            border: none;
+            padding: 15px 5px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.1s, transform 0.1s;
+            box-shadow: 0 3px 0 var(--royal-blue);
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .key-button:active {
+            box-shadow: 0 0 0 var(--royal-blue);
+            transform: translateY(3px);
+            background: var(--sky-blue);
+        }
+        
+        .key-button.function-key {
+            background: var(--gold);
+            color: var(--royal-blue);
+            font-size: 1.2rem;
+            font-weight: 800;
+            box-shadow: 0 3px 0 #cc942e;
+        }
+
+        .key-button.function-key:active {
+            background: #ffd166;
+            box-shadow: 0 0 0 #cc942e;
+        }
+        
+        .key-button.variable-key {
+            background: #4CAF50; /* Green for variables */
+            box-shadow: 0 3px 0 #38703a;
+        }
+
+        .key-button.variable-key:active {
+            background: #66BB6A;
+            box-shadow: 0 0 0 #38703a;
+        }
+        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .exercises-container {
@@ -405,6 +484,7 @@
             }
             body {
                 font-size: 1rem;
+                padding-bottom: 250px; /* Adjust body padding for fixed keyboard */
             }
             .section-title {
                 font-size: 1.5rem;
@@ -441,6 +521,20 @@
             }
             .area-model-grid .label-one {
                 font-size: 1rem;
+            }
+
+            #virtual-keyboard {
+                padding: 8px 3px;
+            }
+            .keyboard-grid {
+                gap: 5px;
+            }
+            .key-button {
+                padding: 12px 0px;
+                font-size: 1.4rem;
+            }
+            .key-button.function-key {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -546,7 +640,7 @@
                     <h3>التمرين 1</h3>
                     <div class="problem">أبسط المقدار الجبري: \( (x+2)(x+5) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkAnswer(1)">تحقق</button>
                     </div>
                     <div id="feedback1" class="feedback"></div>
@@ -557,7 +651,7 @@
                     <h3>التمرين 2</h3>
                     <div class="problem">أبسط المقدار الجبري: \( (3-d)(4-d) \)</div>
                     <div class="input-group">
-                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة">
+                        <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                         <button onclick="checkAnswer(2)">تحقق</button>
                     </div>
                     <div id="feedback2" class="feedback"></div>
@@ -577,23 +671,61 @@
         </footer>
     </div>
 
+    <!-- VIRTUAL KEYBOARD HTML (Updated: ^2 changed to ²) -->
+    <div id="virtual-keyboard">
+        <div class="keyboard-grid">
+            <!-- Row 1 -->
+            <button class="key-button" data-key="7">7</button>
+            <button class="key-button" data-key="8">8</button>
+            <button class="key-button" data-key="9">9</button>
+            <button class="key-button variable-key" data-key="x">x</button>
+            <button class="key-button variable-key" data-key="d">d</button>
+            
+            <!-- Row 2 -->
+            <button class="key-button" data-key="4">4</button>
+            <button class="key-button" data-key="5">5</button>
+            <button class="key-button" data-key="6">6</button>
+            <button class="key-button" data-key="+">+</button>
+            <button class="key-button" data-key="-">-</button>
+
+            <!-- Row 3 -->
+            <button class="key-button" data-key="1">1</button>
+            <button class="key-button" data-key="2">2</button>
+            <button class="key-button" data-key="3">3</button>
+            <button class="key-button" data-key="^">^</button>
+            <button class="key-button function-key" data-key="²">²</button> <!-- CHANGED: data-key="²" and button text "²" -->
+
+            <!-- Row 4 -->
+            <button class="key-button" data-key="0">0</button>
+            <button class="key-button" data-key="(">(</button>
+            <button class="key-button" data-key=")">)</button>
+            <button class="key-button function-key" data-key="DEL">مسح</button>
+            <button class="key-button function-key" data-key="CLS">إلغاء</button>
+        </div>
+    </div>
+    <!-- END VIRTUAL KEYBOARD HTML -->
+
     <script>
         // Define the correct simplified algebraic expressions for the exercises.
-        // These are the answers expected from the user's input.
+        // NOTE: The answers now use the standard superscript '²'
         const correctAnswers = {
-            1: "x^2 + 7x + 10",
-            2: "d^2 - 7d + 12" 
+            1: "x² + 7x + 10",
+            2: "d² - 7d + 12" 
         };
         
         // Counter for the number of correctly solved exercises.
         let solvedCount = 0;
+        let activeInput = null; // To track the currently focused input field
 
         /**
          * Parses a single algebraic term from a string.
-         * @param {string} termString - The string representation of a term (e.g., "+x^2", "-7x", "10").
+         * @param {string} termString - The string representation of a term (e.g., "+x²", "-7x", "10").
          * @returns {object} An object containing the parsed components: { sign, coefficient, variable, exponent }.
          */
         function parseTerm(termString) {
+            // Normalize superscript '²' to a temporary '^2' for easier regex parsing
+            termString = termString.replace(/²/g, '^2'); 
+
             let sign = '+';
             if (termString.startsWith('-')) {
                 sign = '-';
@@ -606,51 +738,48 @@
             let variable = '';
             let exponent = 0;
 
-            const parts = termString.match(/^(\d*)?([a-z])?(\^(\d+))?$/);
-            if (parts) {
-                if (parts[1]) { // Has a coefficient number
-                    coefficient = parseInt(parts[1]);
+            // Regex to handle all cases: constant, variable, coefficient, exponent (using '^' for parsing)
+            const termMatch = termString.match(/^(\d*)?([a-z])?(\^(\d+))?$/);
+            if (termMatch) {
+                if (termMatch[1]) { 
+                    coefficient = parseInt(termMatch[1]);
                 }
-                if (parts[2]) { // Has a variable
-                    variable = parts[2];
-                    exponent = 1; // Default exponent if variable exists
+                if (termMatch[2]) { 
+                    variable = termMatch[2];
+                    exponent = 1;
                 }
-                if (parts[4]) { // Has an explicit exponent
-                    exponent = parseInt(parts[4]);
+                if (termMatch[4]) {
+                    exponent = parseInt(termMatch[4]);
                 }
-                // Special case: if it's just 'x' or 'd', coefficient is 1
-                if (!parts[1] && parts[2]) {
+                // If variable exists but no explicit coefficient number (e.g., 'x', 'd')
+                if (!termMatch[1] && termMatch[2]) {
                     coefficient = 1;
                 }
+                // If it's just 'x^2'
+                if (!termMatch[1] && termMatch[2] && termMatch[4]) {
+                    coefficient = 1;
+                }
+
             } else { // Handle constants like '10' or '12'
-                coefficient = parseInt(termString) || 0; // If not a number, default to 0
+                coefficient = parseInt(termString) || 0;
                 variable = '';
                 exponent = 0;
             }
             
-            return { sign, coefficient, variable, exponent, original: termString };
+            return { sign, coefficient, variable, exponent };
         }
 
         /**
          * Normalizes the input algebraic expression by standardizing format and sorting terms.
-         * This function converts the input to lowercase, replaces common superscript characters,
-         * removes all whitespace, parses terms, sorts them, and reconstructs the expression.
          * @param {string} input - The algebraic expression string to normalize.
          * @returns {string} The normalized and sorted expression string.
          */
         function normalizeInput(input) {
             // 1. Initial Cleaning: lowercase, superscripts, no whitespace
             let cleanedInput = input.toLowerCase();
-            cleanedInput = cleanedInput.replace(/²/g, '^2');
-            cleanedInput = cleanedInput.replace(/³/g, '^3');
-            cleanedInput = cleanedInput.replace(/¹/g, '^1');
-            cleanedInput = cleanedInput.replace(/⁴/g, '^4');
-            cleanedInput = cleanedInput.replace(/⁵/g, '^5');
-            cleanedInput = cleanedInput.replace(/⁶/g, '^6');
-            cleanedInput = cleanedInput.replace(/⁷/g, '^7');
-            cleanedInput = cleanedInput.replace(/⁸/g, '^8');
-            cleanedInput = cleanedInput.replace(/⁹/g, '^9');
-            cleanedInput = cleanedInput.replace(/⁰/g, '^0');
+            // Normalize all common superscript characters to '²' for consistency
+            cleanedInput = cleanedInput.replace(/\^2/g, '²');
+            cleanedInput = cleanedInput.replace(/²/g, '²'); 
             cleanedInput = cleanedInput.replace(/\s/g, '');
 
             // 2. Add leading '+' for first term if missing and positive
@@ -658,10 +787,17 @@
                 cleanedInput = '+' + cleanedInput;
             }
 
-            // 3. Split into terms
-            const termStrings = cleanedInput.match(/[+-]?[a-z]?\d*(\^[+-]?\d+)?|[+-]?\d+/g); // More robust regex for terms
-            if (!termStrings) return ''; // Return empty if no terms found
-
+            // 3. Split into terms (use '²' in regex for splitting)
+            const termStrings = cleanedInput.match(/[+-]?(?:(?:\d*[a-z]²)|(?:\d*[a-z])|(?:\d+))/g);
+            
+            if (!termStrings) {
+                // If complex regex fails, try simple one for single term or constant
+                const simpleMatch = cleanedInput.match(/[+-]?(?:[a-z]|\d+)/g);
+                if (!simpleMatch) return '';
+                // Re-clean just in case a complex term slipped through
+                return simpleMatch.map(term => term.startsWith('+') ? term.substring(1) : term).join('');
+            }
+            
             const parsedTerms = termStrings.map(termString => {
                 let sign = '+';
                 let value = termString;
@@ -672,80 +808,56 @@
                     value = termString.substring(1);
                 }
 
-                let coefficient = 1;
-                let variable = '';
-                let exponent = 0;
-
-                // Regex to capture coefficient, variable, and exponent
-                const termMatch = value.match(/^(\d*)?([a-z])?(\^(\d+))?$/);
-                if (termMatch) {
-                    if (termMatch[1]) { // Coefficient exists
-                        coefficient = parseInt(termMatch[1]);
-                    }
-                    if (termMatch[2]) { // Variable exists
-                        variable = termMatch[2];
-                        exponent = 1; // Default exponent for a variable
-                    }
-                    if (termMatch[4]) { // Explicit exponent exists
-                        exponent = parseInt(termMatch[4]);
-                    }
-                    // If no coefficient number but variable exists (e.g., 'x', 'd')
-                    if (!termMatch[1] && termMatch[2]) {
-                        coefficient = 1;
-                    }
-                } else { // It's likely a standalone number (constant)
-                    coefficient = parseInt(value) || 0;
-                    variable = '';
-                    exponent = 0;
-                }
-
-                return { sign, coefficient, variable, exponent, original: termString };
+                // Parse the value using the helper function (which internally uses ^2)
+                let term = parseTerm(value);
+                term.sign = sign;
+                return term;
             });
 
-            // 4. Sort terms
+            // 4. Sort terms: highest exponent first, then constant last.
             parsedTerms.sort((a, b) => {
-                // Primary sort: by exponent (descending)
+                // Exponents descending (x^2, x, 1)
                 if (a.exponent !== b.exponent) {
                     return b.exponent - a.exponent;
                 }
-                // Secondary sort: by variable name (alphabetical ascending)
-                if (a.variable && b.variable) {
-                    return a.variable.localeCompare(b.variable);
+                // Variable name alphabetical for tie-breaker (d, x)
+                if (a.variable !== b.variable) {
+                    return b.variable.localeCompare(a.variable);
                 }
-                // Tertiary sort: constants come last (no variable)
-                if (a.variable && !b.variable) return -1;
-                if (!a.variable && b.variable) return 1;
-                
-                // Finally, by coefficient (ascending) for consistency if all else is equal
-                return a.coefficient - b.coefficient;
+                return 0;
             });
 
             // 5. Reconstruct expression
             let reconstructed = '';
             parsedTerms.forEach((term, index) => {
+                // Ignore zero terms
+                if (term.coefficient === 0) return;
+
                 let termString = '';
-                if (term.variable === '') { // It's a constant
-                    termString = term.coefficient.toString();
-                } else {
-                    termString = term.coefficient === 1 ? term.variable : term.coefficient.toString() + term.variable;
+                let absCoefficient = Math.abs(term.coefficient);
+                let currentSign = (term.sign === '-') ? '-' : '+';
+
+                // Handle coefficients
+                if (term.variable === '') { // Constant term
+                    termString = absCoefficient.toString();
+                } else { // Variable term
+                    termString = (absCoefficient === 1 && term.exponent > 0) ? term.variable : absCoefficient.toString() + term.variable;
                     if (term.exponent > 1) {
-                        termString += '^' + term.exponent;
+                        // Use the requested superscript character
+                        termString += '²'; 
                     }
                 }
 
-                if (term.sign === '-') {
-                    reconstructed += '-' + termString;
-                } else {
-                    if (index > 0 || term.coefficient < 0) { // Add '+' if not the very first term or if it's a negative constant
-                        reconstructed += '+' + termString;
-                    } else { // First term and positive, no '+' needed
-                        reconstructed += termString;
-                    }
+                // Add sign
+                if (index > 0 || currentSign === '-') {
+                    reconstructed += currentSign;
                 }
+                
+                reconstructed += termString;
             });
             
-            // Final cleanup: remove leading '+' if present and not needed (e.g., "+x^2" -> "x^2")
-            if (reconstructed.startsWith('+') && parsedTerms[0] && parsedTerms[0].sign === '+' && parsedTerms[0].coefficient >= 0) {
+            // Final cleanup: remove leading '+' if present
+            if (reconstructed.startsWith('+')) {
                 reconstructed = reconstructed.substring(1);
             }
 
@@ -754,7 +866,6 @@
         
         /**
          * Checks the user's answer for a given exercise.
-         * It compares the user's simplified algebraic expression with the correct one.
          * @param {number} exerciseNum - The number of the exercise to check.
          */
         function checkAnswer(exerciseNum) {
@@ -784,14 +895,110 @@
                     document.getElementById('successBanner').style.display = 'block';
                 }
             } else {
-                // If the simplified answer is incorrect, provide feedback with the correct simplified form.
-                feedbackElement.textContent = `إجابة غير صحيحة. الإجابة الصحيحة هي: ${correctAnswers[exerciseNum]}`;
+                // The display answer should also use the requested '²' format.
+                const displayAnswer = correctAnswers[exerciseNum].replace(/\^2/g, '²');
+                feedbackElement.textContent = `إجابة غير صحيحة. حاول مرة أخرى. (مثال: ${displayAnswer})`;
                 feedbackElement.className = "feedback incorrect";
             }
         }
         
-        // Initialize input fields to respond to the 'Enter' key press.
-        document.querySelectorAll('.input-group input').forEach(input => {
+        // --- KEYBOARD LOGIC ---
+        const keyboard = document.getElementById('virtual-keyboard');
+        const inputs = document.querySelectorAll('.input-group input');
+
+        /**
+         * Inserts a value into the active input field at the cursor position.
+         * @param {string} value - The character/string to insert.
+         */
+        function insertAtCursor(input, value) {
+            if (!input) return;
+
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const text = input.value;
+
+            // Insert the new value
+            input.value = text.substring(0, start) + value + text.substring(end);
+            
+            // Move the cursor after the inserted text
+            const newCursorPosition = start + value.length;
+            input.selectionStart = newCursorPosition;
+            input.selectionEnd = newCursorPosition;
+
+            // Manually trigger input event for feedback/change tracking if needed
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        /**
+         * Handles the click event for all keyboard buttons.
+         * @param {string} key - The data-key value of the pressed button.
+         */
+        function handleKey(key) {
+            if (!activeInput || activeInput.disabled) return;
+
+            const input = activeInput;
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            let text = input.value;
+
+            switch (key) {
+                case 'DEL': // Backspace functionality
+                    if (start === end && start > 0) {
+                        // Delete one character before the cursor
+                        input.value = text.substring(0, start - 1) + text.substring(end);
+                        input.selectionStart = start - 1;
+                        input.selectionEnd = start - 1;
+                    } else if (start !== end) {
+                        // Delete the selected text
+                        input.value = text.substring(0, start) + text.substring(end);
+                        input.selectionStart = start;
+                        input.selectionEnd = start;
+                    }
+                    break;
+                case 'CLS': // Clear Input
+                    input.value = '';
+                    input.selectionStart = 0;
+                    input.selectionEnd = 0;
+                    break;
+                default: // Regular characters (numbers, variables, operators, parenthesis, single exponent char, and '²')
+                    insertAtCursor(input, key);
+                    break;
+            }
+            // Manually restore focus after action
+            input.focus();
+        }
+
+        // Add event listeners for the virtual keyboard buttons
+        document.querySelectorAll('.key-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const key = e.target.getAttribute('data-key');
+                handleKey(key);
+            });
+        });
+
+        // Add focus/blur listeners to all input fields
+        inputs.forEach(input => {
+            // Disable native keyboard by making input read-only, only allow clicks/taps to focus
+            input.readOnly = true;
+
+            input.addEventListener('focus', () => {
+                activeInput = input;
+                keyboard.classList.add('visible');
+            });
+
+            // Handle focus out (blur) to hide the keyboard if no input is active
+            input.addEventListener('blur', () => {
+                // Do not hide immediately on blur to allow key press to register
+                setTimeout(() => {
+                    // Check if focus truly left the input fields and keyboard buttons
+                    if (!document.activeElement.closest('.input-group') && !document.activeElement.closest('#virtual-keyboard')) {
+                         activeInput = null;
+                         keyboard.classList.remove('visible');
+                    }
+                }, 100); 
+            });
+
+             // Initialize input fields to respond to the 'Enter' key press (if a physical keyboard is used)
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     const exerciseNum = this.id.replace('exercise', '');
@@ -799,6 +1006,12 @@
                 }
             });
         });
+
+        // Set the first input as active on load
+        if (inputs.length > 0) {
+            activeInput = inputs[0];
+            keyboard.classList.add('visible');
+        }
     </script>
 </body>
 </html>
