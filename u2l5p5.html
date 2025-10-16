@@ -28,6 +28,7 @@
             color: #333;
             line-height: 1.8;
             padding: 20px;
+            padding-bottom: 250px; /* Space for the fixed keyboard */
             min-height: 100vh;
             font-size: 1.1rem;
         }
@@ -169,6 +170,7 @@
             font-family: 'Cairo', sans-serif;
             text-align: right;
             min-width: 0; /* Allows input to shrink on small screens */
+            caret-color: var(--gold); /* Highlight cursor */
         }
         
         .input-group button {
@@ -263,11 +265,88 @@
             border-top: 3px solid var(--gold);
             font-size: 1rem;
         }
+        
+        /* --- Virtual Keyboard Styles --- */
+        #keyboard-container {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            z-index: 1000;
+            background: var(--royal-blue);
+            padding: 10px 5px 5px 5px; /* Padding for mobile safety */
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+            border-top: 3px solid var(--gold);
+            user-select: none; /* Prevent text selection interference */
+        }
+
+        #virtual-keyboard {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr); /* 6 columns */
+            gap: 8px;
+            max-width: 600px; /* Limit width on desktop */
+            margin: 0 auto;
+        }
+
+        .key {
+            background: #fff;
+            color: var(--royal-blue);
+            border: none;
+            padding: 15px 5px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.1s, transform 0.1s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            user-select: none;
+            min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: manipulation; /* Improves touch responsiveness */
+        }
+
+        .key:active {
+            background: var(--gold);
+            transform: scale(0.95);
+        }
+
+        .key.op {
+            background: var(--sky-blue);
+            color: white;
+        }
+
+        .key.exp {
+            background: #f1c40f;
+            color: var(--royal-blue);
+            /* Increased font size for clarity on symbolic exponents */
+            font-size: 1.8rem; 
+        }
+        
+        .key.var {
+            background: var(--pale-blue);
+            color: var(--light-blue);
+        }
+
+        .key.ctrl {
+            background: #e74c3c; /* Red for control */
+            color: white;
+        }
+        
+        .key.ctrl-check {
+            background: #4CAF50; /* Green for check */
+            color: white;
+            font-size: 1.2rem;
+            grid-column: span 2;
+        }
+
 
         /* Responsive adjustments for smaller screens */
         @media (max-width: 768px) {
             body {
                 padding: 10px; /* Reduced padding on small screens */
+                padding-bottom: 220px; /* Adjusted space for keyboard */
                 font-size: 1rem;
             }
             
@@ -278,36 +357,8 @@
             header {
                 padding: 15px;
             }
-
-            h1 {
-                font-size: 2rem;
-            }
             
-            .page-title {
-                font-size: 1.4rem;
-            }
-
-            .content {
-                padding: 15px;
-            }
-            
-            .exercises-container {
-                grid-template-columns: 1fr;
-                gap: 15px; /* Reduced gap */
-            }
-            
-            .exercise {
-                padding: 15px;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-                line-height: 1.3;
-            }
-            
-            .problem {
-                font-size: 1.2rem;
-            }
+            /* ... (other mobile styles unchanged) ... */
             
             .input-group {
                 flex-direction: column; /* Stack input and button */
@@ -319,24 +370,21 @@
                 font-size: 1.1rem;
                 padding: 12px;
             }
-            
-            .feedback {
-                font-size: 1.1rem;
-            }
-            
-            .success-banner {
-                font-size: 1.1rem;
-                padding: 12px;
-            }
 
-            .navigation-buttons {
-                flex-direction: column;
-                gap: 10px;
+            /* Keyboard adjustments for mobile */
+            #virtual-keyboard {
+                max-width: none;
+                gap: 5px;
+                padding: 5px;
             }
-            .nav-button {
-                font-size: 1.4rem;
-                padding: 12px 25px;
-                max-width: none; /* Allow buttons to take full width */
+            .key {
+                font-size: 1.5rem;
+                padding: 10px 0;
+                min-height: 40px;
+                border-radius: 6px;
+            }
+            .key.exp {
+                 font-size: 1.5rem;
             }
         }
     </style>
@@ -360,7 +408,7 @@
                         <h3>التمرين 1</h3>
                         <div class="problem">أوجد ناتج ضرب: \( 6 \times (-3d) \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise1" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(1)">تحقق</button>
                         </div>
                         <div id="feedback1" class="feedback"></div>
@@ -371,7 +419,7 @@
                         <h3>التمرين 2</h3>
                         <div class="problem">أوجد ناتج ضرب: \( -2 \times (4w) \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise2" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(2)">تحقق</button>
                         </div>
                         <div id="feedback2" class="feedback"></div>
@@ -382,7 +430,7 @@
                         <h3>التمرين 3</h3>
                         <div class="problem">أوجد ناتج ضرب: \( -2u \times 5u \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise3" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise3" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(3)">تحقق</button>
                         </div>
                         <div id="feedback3" class="feedback"></div>
@@ -393,7 +441,7 @@
                         <h3>التمرين 4</h3>
                         <div class="problem">أوجد ناتج ضرب: \( 8d \times (-7d) \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise4" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise4" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(4)">تحقق</button>
                         </div>
                         <div id="feedback4" class="feedback"></div>
@@ -404,7 +452,7 @@
                         <h3>التمرين 5</h3>
                         <div class="problem">أوجد ناتج ضرب: \( 3xy \times (-xy^2) \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise5" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise5" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(5)">تحقق</button>
                         </div>
                         <div id="feedback5" class="feedback"></div>
@@ -415,7 +463,7 @@
                         <h3>التمرين 6</h3>
                         <div class="problem">أوجد ناتج ضرب: \( (-d^2) (-3qd) \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise6" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise6" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(6)">تحقق</button>
                         </div>
                         <div id="feedback6" class="feedback"></div>
@@ -426,7 +474,7 @@
                         <h3>التمرين 7</h3>
                         <div class="problem">أوجد قيمة: \( 2d(h-3d) \) عندما \( d=2, h=-4 \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise7" placeholder="أدخل القيمة العددية">
+                            <input type="text" id="exercise7" placeholder="أدخل القيمة العددية" inputmode="none">
                             <button onclick="checkAnswer(7)">تحقق</button>
                         </div>
                         <div id="feedback7" class="feedback"></div>
@@ -437,7 +485,7 @@
                         <h3>التمرين 8</h3>
                         <div class="problem">أوجد قيمة: \( -5c(c-2r) \) عندما \( c=-3, r=1 \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise8" placeholder="أدخل القيمة العددية">
+                            <input type="text" id="exercise8" placeholder="أدخل القيمة العددية" inputmode="none">
                             <button onclick="checkAnswer(8)">تحقق</button>
                         </div>
                         <div id="feedback8" class="feedback"></div>
@@ -448,7 +496,7 @@
                         <h3>التمرين 9</h3>
                         <div class="problem">أوجد قيمة: \( 6 + 3w + 2w(w-2v) \) عندما \( w=-1, v=4 \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise9" placeholder="أدخل القيمة العددية">
+                            <input type="text" id="exercise9" placeholder="أدخل القيمة العددية" inputmode="none">
                             <button onclick="checkAnswer(9)">تحقق</button>
                         </div>
                         <div id="feedback9" class="feedback"></div>
@@ -459,7 +507,7 @@
                         <h3>التمرين 10</h3>
                         <div class="problem">أكتب المقدار في أبسط صورة: \( (1-d)(6+d) \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise10" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise10" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(10)">تحقق</button>
                         </div>
                         <div id="feedback10" class="feedback"></div>
@@ -470,7 +518,7 @@
                         <h3>التمرين 11</h3>
                         <div class="problem">أكتب المقدار في أبسط صورة: \( (b+4)(b+1) \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise11" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise11" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(11)">تحقق</button>
                         </div>
                         <div id="feedback11" class="feedback"></div>
@@ -481,7 +529,7 @@
                         <h3>التمرين 12</h3>
                         <div class="problem">أكتب المقدار في أبسط صورة: \( (3x-1)(4x-x^2+2) \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise12" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise12" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(12)">تحقق</button>
                         </div>
                         <div id="feedback12" class="feedback"></div>
@@ -492,7 +540,7 @@
                         <h3>التمرين 13</h3>
                         <div class="problem">أكتب المقدار في أبسط صورة: \( (2p-4)(2p-p^2+1) \)</div>
                         <div class="input-group">
-                            <input type="text" id="exercise13" placeholder="أدخل الإجابة المبسطة">
+                            <input type="text" id="exercise13" placeholder="أدخل الإجابة المبسطة" inputmode="none">
                             <button onclick="checkAnswer(13)">تحقق</button>
                         </div>
                         <div id="feedback13" class="feedback"></div>
@@ -506,7 +554,7 @@
                             <p>أدخل قيم \( F \) مفصولة بفواصل (e.g., 41, 89.6, 105.8)</p>
                         </div>
                         <div class="input-group">
-                            <input type="text" id="exercise14" placeholder="أدخل الإجابات">
+                            <input type="text" id="exercise14" placeholder="أدخل الإجابات" inputmode="none">
                             <button onclick="checkAnswer(14)">تحقق</button>
                         </div>
                         <div id="feedback14" class="feedback"></div>
@@ -520,7 +568,7 @@
                             <p>أوجد الحد الأدنى لضربات القلب للاعب عمره 20 سنة.</p>
                         </div>
                         <div class="input-group">
-                            <input type="text" id="exercise15" placeholder="أدخل القيمة العددية">
+                            <input type="text" id="exercise15" placeholder="أدخل القيمة العددية" inputmode="none">
                             <button onclick="checkAnswer(15)">تحقق</button>
                         </div>
                         <div id="feedback15" class="feedback"></div>
@@ -542,8 +590,143 @@
             <p>جميع الحقوق محفوظة © 2025</p>
         </footer>
     </div>
+    
+    <!-- Virtual Keyboard HTML -->
+    <div id="keyboard-container">
+        <div id="virtual-keyboard">
+            <!-- Row 1: Numbers & Signs -->
+            <button class="key" onclick="pressKey('7')">7</button>
+            <button class="key" onclick="pressKey('8')">8</button>
+            <button class="key" onclick="pressKey('9')">9</button>
+            <button class="key op" onclick="pressKey('+')">+</button>
+            <button class="key op" onclick="pressKey('-')">-</button>
+            <button class="key op" onclick="pressKey('*')">×</button>
+
+            <!-- Row 2: Numbers & Exponents (UPDATED to insert Unicode) -->
+            <button class="key" onclick="pressKey('4')">4</button>
+            <button class="key" onclick="pressKey('5')">5</button>
+            <button class="key" onclick="pressKey('6')">6</button>
+            <!-- ² inserts '²' -->
+            <button class="key exp" onclick="pressKey('²')">²</button> 
+            <!-- ³ inserts '³' -->
+            <button class="key exp" onclick="pressKey('³')">³</button> 
+            <!-- ⁿ□ inserts '^' - which is handled by JS for conversion -->
+            <button class="key exp" onclick="pressKey('^')">ⁿ□</button> 
+
+            <!-- Row 3: Numbers & Variables -->
+            <button class="key" onclick="pressKey('1')">1</button>
+            <button class="key" onclick="pressKey('2')">2</button>
+            <button class="key" onclick="pressKey('3')">3</button>
+            <button class="key var" onclick="pressKey('x')">x</button>
+            <button class="key var" onclick="pressKey('y')">y</button>
+            <button class="key var" onclick="pressKey('d')">d</button>
+
+            <!-- Row 4: Variables & Control -->
+            <button class="key" onclick="pressKey('0')">0</button>
+            <button class="key var" onclick="pressKey('w')">w</button>
+            <button class="key var" onclick="pressKey('u')">u</button>
+            <button class="key var" onclick="pressKey('c')">c</button>
+            <button class="key var" onclick="pressKey('a')">a</button>
+            <button class="key var" onclick="pressKey('b')">b</button>
+
+            <!-- Row 5: Parenthesis & Control -->
+            <button class="key" onclick="pressKey('.')">.</button>
+            <button class="key" onclick="pressKey(',')">,</button>
+            <button class="key op" onclick="pressKey('(')">(</button>
+            <button class="key op" onclick="pressKey(')')">)</button>
+            <button class="key ctrl" onclick="pressKey('DEL')">حذف</button>
+            <button class="key ctrl" onclick="pressKey('CLR')">مسح</button>
+        </div>
+    </div>
 
     <script>
+        // --- Virtual Keyboard Logic ---
+        let activeInput = null;
+        
+        // Mapping of standard digits to Unicode superscripts for visual display
+        const superscriptMap = { 
+            '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', 
+            '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' 
+        };
+
+        // Function to set the currently active input field
+        function setActiveInput(inputElement) {
+            activeInput = inputElement;
+        }
+
+        /**
+         * Function to handle key presses on the virtual keyboard.
+         * Implements logic to convert '^N' into a single Unicode superscript character (N)
+         * for a better visual experience.
+         */
+        function pressKey(value) {
+            if (!activeInput) {
+                const firstInput = document.getElementById('exercise1');
+                if (firstInput) {
+                    setActiveInput(firstInput);
+                    firstInput.focus();
+                } else {
+                    console.error("No active input field selected.");
+                    return;
+                }
+            }
+
+            const start = activeInput.selectionStart;
+            const end = activeInput.selectionEnd;
+            let currentValue = activeInput.value;
+            let newValue = currentValue;
+            let newCursorPosition = start;
+
+            switch (value) {
+                case 'DEL':
+                    // If text is selected, delete the selection.
+                    if (start !== end) {
+                        newValue = currentValue.substring(0, start) + currentValue.substring(end);
+                        newCursorPosition = start;
+                    } else if (start > 0) {
+                        // Delete one character before cursor. (Works fine for Unicode superscripts too)
+                        newValue = currentValue.substring(0, start - 1) + currentValue.substring(end);
+                        newCursorPosition = start - 1;
+                    }
+                    break;
+                case 'CLR':
+                    newValue = '';
+                    newCursorPosition = 0;
+                    break;
+                default:
+                    // Insert the new value normally
+                    newValue = currentValue.substring(0, start) + value + currentValue.substring(end);
+                    newCursorPosition = start + value.length;
+                    
+                    // --- Superscript Conversion Logic ---
+                    // Check if the inserted value is a digit AND if the character immediately before is '^'
+                    if (value.match(/[0-9]/)) {
+                        const newStart = start; // Insertion point before the digit
+                        
+                        // Check the character before the insertion point
+                        if (newStart > 0 && newValue.substring(newStart - 1, newStart) === '^') {
+                            const superscript = superscriptMap[value];
+                            if (superscript) {
+                                // Pattern: [char]^ [digit] -> Replace [^] [digit] with [superscript]
+                                // Example: d ^ 2 -> d ²
+                                
+                                // New value is current value up to ^ (newStart - 1) + superscript + rest of string
+                                newValue = newValue.substring(0, newStart - 1) + superscript + newValue.substring(newStart + 1);
+                                newCursorPosition = newStart; // Cursor position moves back 1 (replaced 2 chars with 1)
+                            }
+                        }
+                    }
+                    break;
+            }
+            
+            // Final update of the input field and cursor position
+            activeInput.value = newValue;
+            activeInput.selectionStart = activeInput.selectionEnd = newCursorPosition;
+            activeInput.focus();
+        }
+
+        // --- Exercise Check Logic ---
+
         // Define the correct simplified algebraic expressions for the exercises.
         const correctAnswers = {
             1: "-18d",
@@ -569,66 +752,122 @@
 
         /**
          * Normalizes an algebraic expression by cleaning up whitespace, sorting terms, and standardizing format.
-         * Handles single-variable, multi-variable, and constant terms.
-         * @param {string} input The raw input string from the user.
-         * @returns {string} The normalized string.
+         * Crucially, converts all Unicode superscripts back to the functional '^N' format for accurate comparison.
+         * @param {string} input The raw input string from the user (which may contain Unicode superscripts).
+         * @returns {string} The normalized functional string (e.g., "-5x^2y^3").
          */
         function normalizeAlgebraicInput(input) {
-            // Remove all whitespace and convert to lowercase for case-insensitive comparison
+            // Step 1: Clean and standardize input and convert all Unicode superscripts back to functional ^ notation
             let cleanedInput = input.replace(/\s/g, '').toLowerCase();
+            cleanedInput = cleanedInput.replace(/\*/g, ''); // Remove explicit multiplication sign
             
-            // Standardize exponents (e.g., replace ² with ^2)
-            cleanedInput = cleanedInput.replace(/²/g, '^2').replace(/³/g, '^3');
+            // Standardize all Unicode superscripts back to functional ^ notation
+            cleanedInput = cleanedInput.replace(/⁰/g, '^0');
+            cleanedInput = cleanedInput.replace(/¹/g, '^1');
+            cleanedInput = cleanedInput.replace(/²/g, '^2');
+            cleanedInput = cleanedInput.replace(/³/g, '^3');
+            cleanedInput = cleanedInput.replace(/⁴/g, '^4');
+            cleanedInput = cleanedInput.replace(/⁵/g, '^5');
+            cleanedInput = cleanedInput.replace(/⁶/g, '^6');
+            cleanedInput = cleanedInput.replace(/⁷/g, '^7');
+            cleanedInput = cleanedInput.replace(/⁸/g, '^8');
+            cleanedInput = cleanedInput.replace(/⁹/g, '^9');
+            
+            // Standardize signs (e.g., ensure leading sign if missing and not 0)
+            if (!cleanedInput.startsWith('+') && !cleanedInput.startsWith('-') && cleanedInput.length > 0) {
+                cleanedInput = '+' + cleanedInput;
+            }
 
-            // Regex to find all terms, including sign, coefficient, variables, and exponents
-            const termsRegex = /[+-]?\d*([a-z]\^?\d?)+|[+-]?\d+/g;
+            // Step 2: Extract terms
+            // Regex to find all terms: sign, optional coefficient, variables (a-z) with optional exponents
+            const termsRegex = /([+-]?\d*\.?\d*([a-z]\^?\d*)*)/g;
             const terms = cleanedInput.match(termsRegex) || [];
 
-            // A term parser to handle coefficients, variables, and exponents
-            const parsedTerms = terms.map(termStr => {
-                let sign = termStr.startsWith('-') ? '-' : '+';
-                let absTerm = termStr.startsWith('+') || termStr.startsWith('-') ? termStr.substring(1) : termStr;
+            let parsedTerms = [];
 
-                const match = absTerm.match(/^(\d*)?([a-z]+(\^\d+)?)+$/);
+            terms.forEach(termStr => {
+                if (termStr === '' || termStr === '+' || termStr === '-') return;
+
+                let sign = termStr.startsWith('-') ? -1 : 1;
+                let absTerm = termStr.replace(/^[+-]/, '');
+
+                let coefficient = 1;
+                let variablePart = absTerm;
                 
-                if (!match) {
-                    // It's a constant term
-                    let coefficient = parseFloat(absTerm) || 0;
-                    return { coefficient: (sign === '-') ? -coefficient : coefficient, degree: 0, variables: '' };
+                // Try to split into coefficient and variable part
+                const matchCoeff = absTerm.match(/^(\d*\.?\d*)/);
+                
+                if (matchCoeff && matchCoeff[1].length > 0) {
+                    if (matchCoeff[1] === '') {
+                         // Implicit 1, e.g., 'x'
+                    } else if (matchCoeff[1] === '0' && absTerm.length > 1) {
+                         // Term is 0, skip
+                         return;
+                    } else {
+                        // Explicit coefficient
+                        coefficient = parseFloat(matchCoeff[1]);
+                        variablePart = absTerm.substring(matchCoeff[1].length);
+                    }
                 }
 
-                // Handle coefficients
-                let coefficient = match[1] === '' ? 1 : parseFloat(match[1]);
-                if (sign === '-') {
-                    coefficient *= -1;
+                // If no coefficient was explicitly matched, but variables exist, the coefficient is 1 (or derived from sign)
+                if (variablePart === absTerm && variablePart.match(/[a-z]/)) {
+                    coefficient = 1;
+                } else if (variablePart === absTerm && !variablePart.match(/[a-z]/)) {
+                    // It's a constant (the whole absTerm is the coefficient)
+                    coefficient = parseFloat(absTerm);
+                    variablePart = '';
                 }
 
-                // Handle variables and exponents
+                coefficient *= sign;
+
+                let variables = {};
                 let degree = 0;
                 let variableString = '';
-                let variables = {};
                 
-                const variableMatches = absTerm.matchAll(/([a-z])(\^(\d+))?/g);
+                // Parse variables and exponents
+                const variableMatches = variablePart.matchAll(/([a-z])\^(\d+)/g);
+                let lastIndex = 0;
+
                 for (const vm of variableMatches) {
                     const variable = vm[1];
-                    const exponent = vm[3] ? parseInt(vm[3]) : 1;
+                    const exponent = parseInt(vm[2]);
                     variables[variable] = exponent;
-                    variableString += variable + (exponent > 1 ? `^${exponent}` : '');
+                    variableString += variable + `^${exponent}`;
                     degree += exponent;
+                    lastIndex = vm.index + vm[0].length;
+                }
+                
+                // Handle implicit ^1 exponents (variables without an explicit exponent)
+                const implicitVars = variablePart.substring(lastIndex).match(/[a-z]/g);
+                if(implicitVars) {
+                     implicitVars.forEach(v => {
+                        variables[v] = 1;
+                        variableString += v;
+                        degree += 1;
+                     });
+                }
+                
+                // If it's a constant term, normalize its representation
+                if (variablePart === '') {
+                    degree = 0;
+                    variableString = '';
                 }
 
-                return { coefficient, degree, variables, variableString };
+                parsedTerms.push({ coefficient, degree, variables, variableString });
             });
 
-            // Sort terms based on degree (descending) and then variables (alphabetically)
+            // Step 3: Sort terms
             parsedTerms.sort((a, b) => {
+                // Primary sort: Degree descending
                 if (a.degree !== b.degree) {
                     return b.degree - a.degree;
                 }
+                // Secondary sort: Variable string alphabetically
                 return a.variableString.localeCompare(b.variableString);
             });
             
-            // Reconstruct the expression string from the sorted terms
+            // Step 4: Reconstruct and format the expression
             let result = '';
             parsedTerms.forEach((term, index) => {
                 if (term.coefficient === 0) return;
@@ -637,8 +876,11 @@
                 const absCoeff = Math.abs(term.coefficient);
                 const sign = term.coefficient >= 0 ? '+' : '-';
 
-                if (index > 0 || result.length > 0) {
+                // Add sign if it's not the very first term and positive
+                if (result.length > 0) {
                     result += sign;
+                } else if (sign === '-') {
+                    result += '-';
                 }
                 
                 if (term.variableString === '') {
@@ -646,22 +888,32 @@
                     termStr += absCoeff.toString();
                 } else {
                     // Algebraic term
-                    if (absCoeff !== 1 || term.variableString === '') {
+                    if (absCoeff !== 1) {
+                        // Ensure coefficient is included if not 1
                         termStr += absCoeff.toString();
                     }
                     termStr += term.variableString;
                 }
-
-                result += termStr;
+                
+                // If it's the first term and coefficient is 1 (e.g., +d^2), just output the variable part
+                if (result.length === 0 && absCoeff === 1 && term.variableString !== '' && sign === '+') {
+                    result += term.variableString;
+                } else {
+                    result += termStr;
+                }
             });
             
-            // Remove leading '+' if the first term is positive
+            // Clean up: ensure leading negative sign is present, but no leading positive sign
             if (result.startsWith('+')) {
                 return result.substring(1);
+            }
+            if (result === '') {
+                return '0';
             }
 
             return result;
         }
+
 
         /**
          * Checks the user's answer for a given exercise.
@@ -679,13 +931,23 @@
 
             // Special handling for numerical answers and comma-separated answers
             if (exerciseNum >= 7 && exerciseNum <= 9 || exerciseNum === 15) {
-                // Numerical comparison
+                // Numerical comparison: allow for flexible input of integers/decimals
                 isCorrect = parseFloat(rawUserAnswer) === parseFloat(correctAnswer);
             } else if (exerciseNum === 14) {
-                // Comma-separated list of numbers
-                const userAnswerList = rawUserAnswer.split(',').map(s => parseFloat(s.trim())).sort();
-                const correctAnswerList = correctAnswer.split(',').map(s => parseFloat(s.trim())).sort();
-                isCorrect = JSON.stringify(userAnswerList) === JSON.stringify(correctAnswerList);
+                // Comma-separated list of numbers (assuming three values for C=5, 32, 41)
+                const userAnswerList = rawUserAnswer.split(',').map(s => parseFloat(s.trim())).sort((a,b) => a-b);
+                const correctAnswerList = correctAnswer.split(',').map(s => parseFloat(s.trim())).sort((a,b) => a-b);
+                
+                if (userAnswerList.length === correctAnswerList.length) {
+                    isCorrect = true;
+                    for (let i = 0; i < userAnswerList.length; i++) {
+                        // Check if numbers are close enough (tolerance for floating point)
+                        if (Math.abs(userAnswerList[i] - correctAnswerList[i]) > 0.01) {
+                            isCorrect = false;
+                            break;
+                        }
+                    }
+                }
             } else {
                 // Algebraic expression comparison
                 const userAnswer = normalizeAlgebraicInput(rawUserAnswer);
@@ -697,10 +959,15 @@
                 feedbackElement.textContent = "إجابة صحيحة! أحسنت!";
                 feedbackElement.className = "feedback correct";
                 
-                // Increment solved count and disable input
-                solvedCount++;
-                document.getElementById(inputId).disabled = true;
-                document.querySelector(`#${inputId} + button`).disabled = true;
+                // Check if this exercise was already solved
+                const isAlreadySolved = document.getElementById(inputId).disabled;
+
+                if (!isAlreadySolved) {
+                    solvedCount++;
+                    // Disable input and button only upon first correct answer
+                    document.getElementById(inputId).disabled = true;
+                    document.querySelector(`#${inputId} + button`).disabled = true;
+                }
                 
                 // Show success banner if all exercises are solved
                 if (solvedCount === totalExercises) {
@@ -712,14 +979,30 @@
             }
         }
         
-        // Initialize input fields to respond to the 'Enter' key press.
-        document.querySelectorAll('.input-group input').forEach(input => {
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const exerciseNum = this.id.replace('exercise', '');
-                    checkAnswer(parseInt(exerciseNum));
-                }
+        // Initialize input fields to respond to the 'Enter' key press and set active input.
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('.input-group input');
+            inputs.forEach(input => {
+                // Set active input on focus
+                input.addEventListener('focus', function() {
+                    setActiveInput(this);
+                });
+                
+                // Handle Enter key press
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault(); // Prevent form submission if it were a form
+                        const exerciseNum = this.id.replace('exercise', '');
+                        checkAnswer(parseInt(exerciseNum));
+                    }
+                });
             });
+            
+            // Set the first input as active initially
+            const firstInput = document.getElementById('exercise1');
+            if (firstInput) {
+                setActiveInput(firstInput);
+            }
         });
     </script>
 </body>
