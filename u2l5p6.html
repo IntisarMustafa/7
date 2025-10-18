@@ -1,1207 +1,1571 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>لعبة ضرب المقادير الجبرية</title>
-    
-    <!-- إضافة مكتبة MathJax لتحسين عرض المعادلات -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angry Birds - نسخة احترافية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /*
-        * تخصيص عام
-        */
+        /* CSS لصفحة اللعبة */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
         }
-
-        body {
-            background: #0f2027;
-            color: #fff;
-            min-height: 100vh;
+        
+        /* التعديل: إزالة min-height: 100vh; و padding لتفعيل التمرير الطبيعي */
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d);
+            perspective: 1000px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
+
+        /* التعديل: إزالة min-height: 95vh; والسماح بالمحتوى بتحديد الارتفاع */
+        .game-container {
+            display: flex;
             flex-direction: column;
-            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+            padding: 10px;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 20px 0; /* إضافة هوامش لتمكين التمرير */
+        }
+        
+        .header {
+            flex-shrink: 0;
+            text-align: center;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s ease-in-out;
+            margin-bottom: 5px;
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #FFD700, #FF4500);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
             position: relative;
         }
 
-        body::before {
+        .header h1::after {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></svg>');
-            background-size: 150px 150px;
-            opacity: 0.3;
-            z-index: -1;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(180px, 70%);
+            height: 2px;
+            background: linear-gradient(to right, #FF4500, #FFD700);
+            border-radius: 2px;
         }
 
-        /*
-        * تخصيص لوحة اللعب (Canvas)
-        */
-        #gameCanvas {
-            background: #000428;
+        .score-board {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-around;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            gap: 5px;
+        }
+
+        .score-item {
+            color: white;
+            font-size: clamp(0.7rem, 3vw, 1.1rem);
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            min-width: 60px;
+        }
+
+        .score-item span {
+            font-size: clamp(1rem, 4vw, 1.6rem);
+            color: #FFD700;
+            margin-top: 2px;
+        }
+
+        /* التعديل: تحديد حجم اللعبة بحيث يمكن أن يتغير مع الصفحة */
+        .game-canvas-container {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: 50vh; /* تحديد ارتفاع نسبي للوحة اللعب */
+            max-width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 4px solid #5a3921;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            touch-action: none; /* إيقاف سلوك التمرير داخل منطقة اللعب فقط */
+        }
+        
+        canvas {
             display: block;
-            touch-action: none;
-            width: 100vw;
-            height: 100vh;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        /*
-        * تخصيص شاشة البداية والإيقاف المؤقت وأسئلة الجبر
-        */
-        .game-overlay, .question-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
+        }
+
+        .controls {
+            flex-shrink: 0;
+            margin: 0 auto;
             display: flex;
             justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            background: rgba(0, 0, 0, 0.9);
-            text-align: center;
-            padding: 20px;
-            z-index: 50;
-            transition: opacity 0.5s ease;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 500px;
         }
 
-        .game-overlay.hidden, .question-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .game-overlay h1 {
-            font-size: clamp(2rem, 8vw, 4rem);
-            color: #4fc3f7;
-            text-shadow: 0 0 15px rgba(79, 195, 247, 0.9);
-            letter-spacing: 2px;
-            margin-bottom: 20px;
-        }
-
-        .game-overlay p {
-            font-size: clamp(1rem, 4vw, 1.5rem);
-            color: #bbdefb;
-            margin-bottom: 30px;
-        }
-
-        .game-overlay .btn {
-            background: linear-gradient(to right, #1a2980, #26d0ce);
+        button {
+            background: linear-gradient(to bottom, #FF8C00, #FF4500);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: clamp(1rem, 4vw, 1.5rem);
+            padding: 8px 16px;
+            font-size: clamp(0.8rem, 3.2vw, 1rem);
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 10px #26d0ce;
-            margin-top: 10px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
+            min-width: 110px;
+            flex: 1;
         }
 
-        .game-overlay .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px #26d0ce;
+        button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 6px rgba(255, 69, 0, 0.3);
+        }
+        
+        #sound-toggle {
+            background: #4CAF50;
+        }
+        #sound-toggle.off {
+            background: #F44336;
         }
 
-        .game-overlay .btn:active {
-            transform: translateY(1px);
-        }
-
-        .stats {
-            position: absolute;
-            top: 15px;
-            display: flex;
-            justify-content: space-around;
+        .instructions {
+            flex-shrink: 0;
+            margin-top: 8px;
+            color: white;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 10px;
+            border-radius: 12px;
             width: 100%;
-            padding: 0 20px;
+            max-width: 500px;
+            margin: 8px auto 0;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            font-size: clamp(0.65rem, 2.5vw, 0.9rem);
+        }
+
+        .instructions h3 {
+            margin-bottom: 5px;
+            color: #FFD700;
+            font-size: clamp(0.8rem, 3vw, 1.1rem);
+            text-align: center;
+        }
+
+        .instructions p {
+            margin: 3px 0;
+            line-height: 1.3;
+        }
+
+        .bird-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 10px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: clamp(0.75rem, 2.8vw, 0.9rem);
+            z-index: 10;
+            animation: bounce 2s infinite;
+        }
+
+        .bird-icon {
+            width: 22px;
+            height: 22px;
+            background: #FF4500;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .bird-icon::before {
+            content: "";
+            position: absolute;
+            top: 4px;
+            right: -3px;
+            width: 10px;
+            height: 10px;
+            background: #FFD700;
+            border-radius: 50%;
+        }
+
+        .bird-icon::after {
+            content: "";
+            position: absolute;
+            top: 8px;
+            right: -6px;
+            width: 6px;
+            height: 2px;
+            background: #FF6347;
+            border-radius: 2px;
+            transform: rotate(-20deg);
+        }
+
+        .power-bar {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(250px, 75%);
+            height: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
             z-index: 10;
         }
 
-        .stat-item {
-            font-size: clamp(1rem, 3vw, 1.3rem);
-            background: rgba(0, 30, 60, 0.7);
-            padding: 8px 15px;
+        .power-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #4CAF50, #FFD700, #FF4500);
             border-radius: 8px;
-            box-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
+            transition: width 0.1s;
         }
 
-        .stat-value {
-            font-weight: bold;
-            color: #4fc3f7;
-            text-shadow: 0 0 5px #4fc3f7;
-        }
-        
-        /* نمط رسالة المستوى الجديد */
-        #levelUpMessage {
+        .touch-indicator {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 20;
             transform: translate(-50%, -50%);
-            font-size: clamp(2rem, 10vw, 5rem);
-            color: #26d0ce;
-            text-shadow: 0 0 20px #26d0ce, 0 0 40px #26d0ce;
             opacity: 0;
-            animation: fadeInOut 2s forwards;
-            z-index: 100;
-        }
-        
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            25% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-            75% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
-        }
-
-        /* تخصيص خاص بشاشة الأسئلة */
-        .question-container {
+            transition: opacity 0.2s;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
         }
         
-        /* FIX: Ensure mathematical text is left-to-right */
-        .question-text, .answer-btn {
-            direction: ltr;
-            text-align: left;
-            unicode-bidi: embed;
+        /* تأثيرات 3D */
+        .game-canvas-container {
+            transform-style: preserve-3d;
+            transform: rotateX(3deg);
         }
 
-        .question-text {
-            font-size: clamp(1.5rem, 6vw, 3rem);
-            color: #fff;
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            background: rgba(79, 195, 247, 0.2);
-            border-radius: 15px;
+        .header h1 {
+            animation: colorChange 5s infinite alternate;
         }
 
-        .answers-container {
+        @keyframes colorChange {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.8); opacity: 0.7; }
+        }
+
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 8px;
+            }
+
+            .header {
+                margin-bottom: 8px;
+            }
+
+            .score-board {
+                padding: 8px;
+                max-width: 100%;
+            }
+
+            .controls {
+                margin: 8px auto;
+                gap: 8px;
+            }
+
+            button {
+                padding: 8px 16px;
+                min-width: 100px;
+            }
+
+            .instructions {
+                padding: 10px;
+                margin-top: 8px;
+                font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .score-board {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .score-item {
+                min-width: 45%;
+                margin-bottom: 5px;
+            }
+
+            .controls {
+                flex-direction: row;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+
+            button {
+                flex-grow: 1;
+            }
+            .instructions p {
+                font-size: clamp(0.6rem, 2.5vw, 0.8rem);
+            }
+        }
+
+        /* رسالة انتهاء اللعبة / إكمال المستوى */
+        .game-over-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 30;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .game-over-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .game-over-content {
+            text-align: center;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid #FFD700;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .game-over-content h2 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: #FFD700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .game-over-content p {
+            font-size: clamp(1rem, 4vw, 2rem);
+            margin: 15px 0;
+        }
+
+        .game-over-content button {
+            margin: 5px;
+        }
+
+        /* رسالة تحميل اللعبة */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            z-index: 50;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            width: 90%;
-            max-width: 500px;
-        }
-        
-        .answer-btn {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #4fc3f7;
-            color: #fff;
-            font-size: clamp(1rem, 4vw, 1.5rem);
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            font-size: 2rem;
         }
         
-        .answer-btn:hover {
-            background: rgba(79, 195, 247, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .answer-btn.correct {
-            background-color: #4CAF50; /* أخضر */
-            border-color: #388E3C;
-        }
-        
-        .answer-btn.wrong {
-            background-color: #F44336; /* أحمر */
-            border-color: #D32F2F;
-            animation: shake 0.5s;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #FFD700;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-top: 20px;
         }
 
-        #soundToggle {
-            background: rgba(26, 41, 128, 0.7);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
-            transition: all 0.2s ease;
-            margin-top: 10px;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        #soundToggle:hover {
-            background: rgba(38, 208, 206, 0.7);
+        /* واجهة شاشة السؤال */
+        .question-overlay {
+            /* التعديل الرئيسي: استخدام position: fixed لتغطية كامل الشاشة (Viewport) */
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out;
+            padding: 20px;
+        }
+        
+        .question-overlay.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
-        /* إضافة تعليمات للتحكم على الكمبيوتر */
-        .controls-info {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.6);
-            padding: 10px 15px;
+        .question-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            /* الحفاظ على max-height لتمكين التمرير الداخلي إذا كان المحتوى طويلاً */
+            max-height: 90vh; 
+            overflow-y: auto;
+        }
+
+        .question-content h2 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: #FF4500;
+            margin-bottom: 20px;
+        }
+
+        .question-content p {
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: #FFD700;
+            color: #1a2a6c;
+            border: 2px solid #b21f1f;
+            padding: 12px;
             border-radius: 10px;
-            font-size: 14px;
-            display: none;
-            z-index: 20;
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        @media (min-width: 768px) {
-            .controls-info {
-                display: block;
-            }
+        .option-btn:hover {
+            background: #FFC107;
+        }
+
+        .option-btn:active {
+            transform: scale(0.98);
+        }
+        
+        #feedbackText {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+        }
+
+        #explanation {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #f0f0f0;
+            color: #555;
+            border: 1px dashed #ccc;
+            text-align: right; /* تنسيق النص داخل الشرح */
+        }
+        
+        #explanation h4 {
+            text-align: center;
+            color: #1a2a6c;
+            margin-bottom: 5px;
+        }
+
+        /* تنسيق خاص للرموز الرياضية الإنجليزية */
+        .math-expression {
+            direction: ltr;
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-transform: lowercase; /* إضافة هذه السطر لفرض الأحرف الصغيرة */
+            color: #000;
+            background: #e9e9e9;
+            padding: 2px 4px;
+            border-radius: 3px;
         }
 
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
+    <div class="game-container">
+        <div class="header">
+            <h1>Angry Birds</h1>
+        </div>
 
-    <!-- شاشة التراكب (تظهر قبل بدء اللعبة وأثناء الإيقاف المؤقت) -->
-    <div id="gameOverlay" class="game-overlay">
-        <h1 id="overlayTitle">لعبة ضرب المقادير الجبرية</h1>
-        <p id="overlayMessage">انقر أو اضغط على الزر للبدء</p>
-        <button id="overlayBtn" class="btn">بدء اللعبة</button>
-    </div>
-    
-    <!-- شاشة الأسئلة الجبرية -->
-    <div id="questionOverlay" class="question-overlay hidden">
-        <div class="question-container">
-            <h2 class="question-text"></h2>
-            <div class="answers-container"></div>
+        <div class="score-board">
+            <div class="score-item">
+                النقاط: <span id="score">0</span>
+            </div>
+            <div class="score-item">
+                الطيور المتبقية: <span id="birds-left">5</span>
+            </div>
+            <div class="score-item">
+                المرحلة: <span id="level">1</span>
+            </div>
+        </div>
+
+        <div class="game-canvas-container">
+            <div class="loading-overlay" id="loadingOverlay">
+                جاري تحميل اللعبة...
+                <div class="spinner"></div>
+            </div>
+            <canvas id="gameCanvas"></canvas>
+            <div class="touch-indicator" id="touchIndicator"></div>
+            <div class="bird-indicator">
+                <i class="fas fa-angry"></i>
+                <span>جاهز للإطلاق!</span>
+            </div>
+            <div class="power-bar">
+                <div class="power-fill" id="power-fill"></div>
+            </div>
+
+            <!-- رسالة انتهاء اللعبة / إكمال المستوى -->
+            <div class="game-over-overlay" id="gameOverOverlay">
+                <div class="game-over-content">
+                    <h2 id="gameOverTitle"></h2>
+                    <p id="gameOverScore"></p>
+                    <button id="restartBtn">إعادة تشغيل</button>
+                    <button id="nextLevelBtn">المستوى التالي</button>
+                </div>
+            </div>
+
+            <!-- تم إزالة شاشة السؤال من هنا -->
+        </div>
+
+        <div class="controls">
+            <button id="sound-toggle">تشغيل الصوت</button>
+            <button id="resetBtn">إعادة ضبط</button>
+        </div>
+
+        <div class="instructions">
+            <h3>كيف تلعب:</h3>
+            <p>1. اسحب الطائر للخلف لتحديد قوة وسرعة الإطلاق</p>
+            <p>2. حرر إصبعك لإطلاق الطائر نحو الأهداف</p>
+            <p>3. دمر جميع الأهداف لإنهاء المرحلة</p>
+            <p>4. لديك عدد محدود من الطيور لكل مرحلة</p>
         </div>
     </div>
     
-    <!-- رسالة المستويات -->
-    <div id="levelUpMessage" style="display:none;"></div>
+    <!-- محتوى إضافي لتمكين التمرير على الأجهزة الصغيرة -->
+    <div style="height: 50px;"></div>
 
-    <!-- معلومات حالة اللعبة -->
-    <div class="stats">
-        <div class="stat-item">المستوى: <span id="level" class="stat-value">1</span></div>
-        <div class="stat-item">النقاط: <span id="score" class="stat-value">0</span></div>
-        <div class="stat-item">الأرواح: <span id="lives" class="stat-value">3</span></div>
-        <button id="soundToggle">الصوت: تشغيل</button>
+    <!-- شاشة السؤال - تم نقلها هنا لتغطي كامل الشاشة -->
+    <div class="question-overlay hidden" id="questionScreen">
+        <div class="question-content">
+            <h2>درس: ضرب المقادير الجبرية</h2>
+            <p id="questionText"></p>
+            <div class="options-container" id="optionsContainer"></div>
+            <p id="feedbackText"></p>
+            <div id="explanation">
+                <h4>الشرح:</h4>
+                <p id="explanationText"></p>
+            </div>
+        </div>
     </div>
-    
-    <!-- تعليمات التحكم على الكمبيوتر -->
-    <div class="controls-info">
-        استخدم الأسهم للتحرك ومفتاح المسافة لإطلاق النار
-    </div>
-    
+    <!-- نهاية شاشة السؤال -->
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const canvas = document.getElementById('gameCanvas');
-            const ctx = canvas.getContext('2d');
-            const scoreElement = document.getElementById('score');
-            const livesElement = document.getElementById('lives');
-            const levelElement = document.getElementById('level');
-            const overlay = document.getElementById('gameOverlay');
-            const overlayTitle = document.getElementById('overlayTitle');
-            const overlayMessage = document.getElementById('overlayMessage');
-            const overlayBtn = document.getElementById('overlayBtn');
-            const questionOverlay = document.getElementById('questionOverlay');
-            const questionTextElement = questionOverlay.querySelector('.question-text');
-            const answersContainer = questionOverlay.querySelector('.answers-container');
-            const soundToggleBtn = document.getElementById('soundToggle');
-            const levelUpMessageElement = document.getElementById('levelUpMessage');
+        // العناصر من DOM
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const birdsLeftElement = document.getElementById('birds-left');
+        const levelElement = document.getElementById('level');
+        const resetBtn = document.getElementById('resetBtn');
+        const soundToggleBtn = document.getElementById('sound-toggle');
+        const powerFill = document.getElementById('power-fill');
+        const touchIndicator = document.getElementById('touchIndicator');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const gameOverTitle = document.getElementById('gameOverTitle');
+        const gameOverScore = document.getElementById('gameOverScore');
+        const restartBtn = document.getElementById('restartBtn');
+        const nextLevelBtn = document.getElementById('nextLevelBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
 
-            let GAME_WIDTH;
-            let GAME_HEIGHT;
-            
-            // حالة اللعبة
-            let gameState = {
-                level: 1,
-                score: 0,
-                lives: 3,
-                gameOver: false,
-                gameStarted: false,
-                paused: false,
-                enemies: [],
-                bullets: [],
-                explosions: [],
-                particles: [],
-                enemySpawnRate: 60,
-                enemySpawnCounter: 0,
-                enemySpeed: 2
-            };
-            
-            // متغير للتحكم في إطلاق النار التلقائي
-            let fireInterval = null;
-            
-            // متغيرات للتحكم باللوحة المفاتيح
-            let keys = {
-                ArrowLeft: false,
-                ArrowRight: false,
-                space: false
-            };
-            
-            // متغيرات للتحكم بالماوس
-            let mouseX = 0;
-            let mouseDown = false;
-            
-            // أسئلة الجبر للصف السابع (المنهاج الأردني)
-            const questions = [
-                // أسئلة ضرب حد بمقدار
-                {
-                    problem: '$$5(x+3)$$',
-                    answers: ['5x + 8', '5x + 15', '5x + 3', '8x'],
-                    correct: '5x + 15'
-                },
-                {
-                    problem: '$$2x(x-4)$$',
-                    answers: ['2x + 8', '2x - 8', '$$2x^2 - 8x$$', '$$2x^2 - 4$$'],
-                    correct: '$$2x^2 - 8x$$'
-                },
-                {
-                    problem: '$$-3(2x+1)$$',
-                    answers: ['-6x + 1', '-6x - 3', '6x + 3', '-6x + 3'],
-                    correct: '-6x - 3'
-                },
-                {
-                    problem: '$$x(x+5)$$',
-                    answers: ['x + 5', '2x + 5', '$$x^2 + 5x$$', '6x'],
-                    correct: '$$x^2 + 5x$$'
-                },
-                {
-                    problem: '$$10(y-2)$$',
-                    answers: ['10y - 20', '10y + 20', '10y - 2', '20y'],
-                    correct: '10y - 20'
-                },
-                {
-                    problem: '$$-4y(2-y)$$',
-                    answers: ['$$-8y + 4y^2$$', '$$8y - 4y^2$$', '$$-4y^2 - 8y$$', '$$8y + 4y^2$$'],
-                    correct: '$$-8y + 4y^2$$'
-                },
-                // أسئلة ضرب مقدار بمقدار (جديدة)
-                {
-                    problem: '$$(x+3)(x+5)$$',
-                    answers: ['$$x^2 + 8x + 15$$', '$$x^2 + 15x + 8$$', '$$x^2 + 3x + 5$$', '$$x^2 + 15$$'],
-                    correct: '$$x^2 + 8x + 15$$'
-                },
-                {
-                    problem: '$$(2x-1)(x+4)$$',
-                    answers: ['$$2x^2 + 7x - 4$$', '$$2x^2 + 9x - 4$$', '$$2x^2 - 4$$', '$$2x^2 - 7x - 4$$'],
-                    correct: '$$2x^2 + 7x - 4$$'
-                },
-                {
-                    problem: '$$(x-2)(x-4)$$',
-                    answers: ['$$x^2 + 6x - 8$$', '$$x^2 - 6x + 8$$', '$$x^2 - 2x - 4$$', '$$x^2 + 8$$'],
-                    correct: '$$x^2 - 6x + 8$$'
-                },
-                {
-                    problem: '$$(3y+2)(y+1)$$',
-                    answers: ['$$3y^2 + 2y + 1$$', '$$3y^2 + 5y + 2$$', '$$3y^2 + 3y + 2$$', '$$3y^2 + 2$$'],
-                    correct: '$$3y^2 + 5y + 2$$'
-                },
-            ];
+        // عناصر شاشة الأسئلة الجديدة
+        const questionScreen = document.getElementById('questionScreen');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const feedbackText = document.getElementById('feedbackText');
+        const explanation = document.getElementById('explanation');
+        const explanationText = document.getElementById('explanationText');
 
-            // تهيئة المستويات
-            const levelsConfig = [
-                { scoreToNextLevel: 100, enemySpawnRate: 80, enemySpeed: 1.5 },
-                { scoreToNextLevel: 250, enemySpawnRate: 70, enemySpeed: 2 },
-                { scoreToNextLevel: 500, enemySpawnRate: 60, enemySpeed: 2.5 },
-                { scoreToNextLevel: 800, enemySpawnRate: 50, enemySpeed: 3 },
-                { scoreToNextLevel: 1200, enemySpawnRate: 40, enemySpeed: 3.5 }
-            ];
+        // متغيرات اللعبة
+        let score = 0;
+        let birdsLeft = 0;
+        let currentLevel = 1;
+        let gameRunning = true; // متغير للتحكم في حالة اللعبة (إيقاف مؤقت عند السؤال)
+        let gameObjects = [];
+        let slingshot = { x: 0, y: 0 };
+        let currentBird = null;
+        let releasedBirds = []; // مصفوفة لتتبع الطيور التي تم إطلاقها
+        // متغيرات للتحكم باللمس والماوس
+        let input = { x: 0, y: 0, active: false, power: 0 };
+        let birdLaunchDelay = 1000; // تأخير قبل ظهور الطائر التالي
 
-            // مصفوفة للنجوم في الخلفية
-            let stars = [];
-            const numStars = 150;
-            const starSpeed = 0.5;
+        // --- إضافة المؤثرات الصوتية ---
+        let soundEnabled = true;
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        /**
+         * تشغيل صوت من نوع موجة معينة
+         * @param {number} frequency - تردد الصوت بالهرتز
+         * @param {string} type - نوع الموجة ('sine', 'square', 'sawtooth', 'triangle')
+         * @param {number} duration - مدة الصوت بالثواني
+         * @param {number} volume - مستوى الصوت (0 إلى 1)
+         */
+        function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
+            if (!soundEnabled) return;
             
-            // متغير للتحكم في الصوت
-            let soundEnabled = true;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = type;
+            oscillator.frequency.value = frequency;
+            
+            // إضافة تأثيرات تلاشي (fade-in و fade-out) للصوت
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
 
-            // إنشاء مؤثرات صوتية
-            let audioContext;
-            
-            function initAudio() {
-                try {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                } catch (e) {
-                    console.log("Web Audio API غير مدعومة في هذا المتصفح");
-                    soundEnabled = false;
-                    soundToggleBtn.textContent = "الصوت: غير مدعوم";
-                    soundToggleBtn.disabled = true;
-                }
+        // تهيئة المستويات
+        const levels = {
+            1: {
+                targets: [{ x: 0.8, y: 0.75 }, { x: 0.87, y: 0.75 }],
+                blocks: [
+                    { x: 0.68, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.72, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.76, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.72, y: 0.55, w: 0.1, h: 0.05, color: '#A52A2A' }
+                ],
+                birds: 5,
+            },
+            2: {
+                targets: [{ x: 0.8, y: 0.75 }, { x: 0.87, y: 0.75 }, { x: 0.78, y: 0.55 }],
+                blocks: [
+                    { x: 0.65, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.70, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.75, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.8, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.70, y: 0.55, w: 0.1, h: 0.05, color: '#A52A2A' }
+                ],
+                birds: 4,
+            },
+            3: {
+                targets: [{ x: 0.8, y: 0.75 }, { x: 0.87, y: 0.75 }, { x: 0.78, y: 0.55 }, { x: 0.85, y: 0.55 }],
+                blocks: [
+                    { x: 0.68, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.72, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.76, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.80, y: 0.75, w: 0.037, h: 0.2 },
+                    { x: 0.72, y: 0.55, w: 0.1, h: 0.05, color: '#A52A2A' },
+                    { x: 0.85, y: 0.55, w: 0.05, h: 0.1, color: '#A52A2A' },
+                    { x: 0.78, y: 0.35, w: 0.1, h: 0.05, color: '#A52A2A' }
+                ],
+                birds: 3,
             }
-
-            // دالة لتشغيل نغمة واحدة
-            function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.3) {
-                if (!soundEnabled || !audioContext) return;
-                
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.type = type;
-                oscillator.frequency.value = frequency;
-                gainNode.gain.value = volume;
-                
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + duration);
+        };
+        
+        // الأسئلة الجديدة من المستخدم - تم تعديلها لاستخدام الرموز الإنجليزية الصغيرة
+        const questions = [
+            {
+                question: "ما ناتج ضرب: <span class='math-expression'>(3x + 2)(2x - 5)</span>؟",
+                options: [
+                    "<span class='math-expression'>6x² - 11x - 10</span>", 
+                    "<span class='math-expression'>6x² + 11x - 10</span>", 
+                    "<span class='math-expression'>6x² - 19x - 10</span>", 
+                    "<span class='math-expression'>6x² - 19x + 10</span>"
+                ],
+                correct: 0,
+                explanation: "الطريقة: <span class='math-expression'>(3x × 2x) + (3x × -5) + (2 × 2x) + (2 × -5) = 6x² - 15x + 4x - 10 = 6x² - 11x - 10</span>"
+            },
+            {
+                question: "ما ناتج: <span class='math-expression'>(4y - 3)²</span>؟",
+                options: [
+                    "<span class='math-expression'>16y² - 24y + 9</span>", 
+                    "<span class='math-expression'>16y² - 12y + 9</span>", 
+                    "<span class='math-expression'>16y² + 24y + 9</span>", 
+                    "<span class='math-expression'>16y² - 9</span>"
+                ],
+                correct: 0,
+                explanation: "الطريقة: <span class='math-expression'>(4y - 3)² = (4y - 3)(4y - 3) = (4y × 4y) + (4y × -3) + (-3 × 4y) + (-3 × -3) = 16y² - 12y - 12y + 9 = 16y² - 24y + 9</span>"
+            },
+            {
+                question: "ما ناتج: <span class='math-expression'>2a(3a² - 4a + 5)</span>؟",
+                options: [
+                    "<span class='math-expression'>6a³ - 8a² + 10a</span>", 
+                    "<span class='math-expression'>6a³ - 4a + 5</span>", 
+                    "<span class='math-expression'>5a³ - 8a² + 10a</span>", 
+                    "<span class='math-expression'>6a² - 8a + 10</span>"
+                ],
+                correct: 0,
+                explanation: "الطريقة: <span class='math-expression'>2a × 3a² = 6a³</span>، <span class='math-expression'>2a × -4a = -8a²</span>، <span class='math-expression'>2a × 5 = 10a</span>، إذن الناتج: <span class='math-expression'>6a³ - 8a² + 10a</span>"
+            },
+            {
+                question: "ما ناتج: <span class='math-expression'>(x + 4)(x - 4)</span>؟",
+                options: [
+                    "<span class='math-expression'>x² - 16</span>", 
+                    "<span class='math-expression'>x² + 8x - 16</span>", 
+                    "<span class='math-expression'>x² - 8x + 16</span>", 
+                    "<span class='math-expression'>x² + 16</span>"
+                ],
+                correct: 0,
+                explanation: "الطريقة: هذه حالة فرق مربعين: <span class='math-expression'>(a + b)(a - b) = a² - b²</span>، إذن <span class='math-expression'>(x + 4)(x - 4) = x² - 4² = x² - 16</span>"
+            },
+            {
+                question: "ما ناتج: <span class='math-expression'>(2x + 3)(x² - x + 4)</span>؟",
+                options: [
+                    "<span class='math-expression'>2x³ + x² + 5x + 12</span>", 
+                    "<span class='math-expression'>2x³ - x² + 5x + 12</span>", 
+                    "<span class='math-expression'>2x³ + x² - 5x + 12</span>", 
+                    "<span class='math-expression'>2x³ - x² - 5x + 12</span>"
+                ],
+                correct: 0,
+                explanation: "الطريقة: <span class='math-expression'>(2x × x²) + (2x × -x) + (2x × 4) + (3 × x²) + (3 × -x) + (3 × 4) = 2x³ - 2x² + 8x + 3x² - 3x + 12 = 2x³ + x² + 5x + 12</span>"
+            },
+            {
+                question: "ما ناتج: <span class='math-expression'>(x + 2)(x + 5)</span>؟",
+                options: [
+                    "<span class='math-expression'>x² + 7x + 10</span>", 
+                    "<span class='math-expression'>x² + 3x + 10</span>", 
+                    "<span class='math-expression'>x² + 7x + 7</span>", 
+                    "<span class='math-expression'>x² + 10x + 10</span>"
+                ],
+                correct: 0,
+                explanation: "الطريقة: <span class='math-expression'>(x × x) + (x × 5) + (2 × x) + (2 × 5) = x² + 5x + 2x + 10 = x² + 7x + 10</span>"
+            },
+            {
+                question: "ما ناتج: <span class='math-expression'>(3z - 2)(4z + 1)</span>؟",
+                options: [
+                    "<span class='math-expression'>12z² - 5z - 2</span>", 
+                    "<span class='math-expression'>12z² + 5z - 2</span>", 
+                    "<span class='math-expression'>12z² - 11z - 2</span>", 
+                    "<span class='math-expression'>12z² - 5z + 2</span>"
+                ],
+                correct: 0,
+                explanation: "الطريقة: <span class='math-expression'>(3z × 4z) + (3z × 1) + (-2 × 4z) + (-2 × 1) = 12z² + 3z - 8z - 2 = 12z² - 5z - 2</span>"
+            },
+            {
+                question: "ما ناتج: <span class='math-expression'>5(2x² - 3x + 4)</span>؟",
+                options: [
+                    "<span class='math-expression'>10x² - 15x + 20</span>", 
+                    "<span class='math-expression'>10x² - 3x + 4</span>", 
+                    "<span class='math-expression'>7x² - 8x + 9</span>", 
+                    "<span class='math-expression'>10x² - 15x + 4</span>"
+                ],
+                correct: 0,
+                explanation: "الطريقة: <span class='math-expression'>5 × 2x² = 10x²</span>، <span class='math-expression'>5 × -3x = -15x</span>، <span class='math-expression'>5 × 4 = 20</span>، إذن الناتج: <span class='math-expression'>10x² - 15x + 20</span>"
             }
-
-            // دالة جديدة لتشغيل تسلسل من النغمات (ميلودي)
-            function playMelody(notes, tempo = 120, volume = 0.5) {
-                if (!soundEnabled || !audioContext) return;
-                
-                const noteDuration = 60 / tempo; // مدة النوتة بالثانية
-                let time = audioContext.currentTime;
-
-                notes.forEach(note => {
-                    if (note.frequency > 0) {
-                        const oscillator = audioContext.createOscillator();
-                        const gainNode = audioContext.createGain();
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(audioContext.destination);
-                        
-                        oscillator.type = note.type || 'sine';
-                        oscillator.frequency.value = note.frequency;
-                        gainNode.gain.setValueAtTime(volume, time);
-                        
-                        oscillator.start(time);
-                        oscillator.stop(time + noteDuration * note.duration);
-                    }
-                    time += noteDuration * note.duration;
-                });
-            }
-
-            // السفينة
-            const player = {
-                x: 0,
-                y: 0,
-                width: 60,
-                height: 60,
-                speed: 7,
-                dx: 0, // سرعة الحركة الأفقية
-                draw: function() {
-                    // لهب المحرك (نظام جسيمات)
-                    const flameColor = ctx.createLinearGradient(this.x, this.y + this.height / 2, this.x, this.y + this.height);
-                    flameColor.addColorStop(0, 'rgba(255, 100, 0, 0.8)');
-                    flameColor.addColorStop(0.5, 'rgba(255, 200, 0, 0.5)');
-                    flameColor.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                    
-                    if (fireInterval || mouseDown || keys.space) {
-                        ctx.fillStyle = flameColor;
-                        ctx.beginPath();
-                        ctx.moveTo(this.x - 10, this.y + this.height / 2);
-                        ctx.lineTo(this.x, this.y + this.height);
-                        ctx.lineTo(this.x + 10, this.y + this.height / 2);
-                        ctx.closePath();
-                        ctx.fill();
-                    }
-                    
-                    // جسم السفينة الرئيسي
-                    ctx.fillStyle = '#4fc3f7';
-                    ctx.shadowColor = '#4fc3f7';
-                    ctx.shadowBlur = 10;
-                    ctx.beginPath();
-                    ctx.moveTo(this.x, this.y - 15);
-                    ctx.lineTo(this.x - this.width / 2, this.y + this.height / 2);
-                    ctx.lineTo(this.x - this.width / 4, this.y + this.height / 3);
-                    ctx.lineTo(this.x + this.width / 4, this.y + this.height / 3);
-                    ctx.lineTo(this.x + this.width / 2, this.y + this.height / 2);
-                    ctx.closePath();
-                    ctx.fill();
-                    
-                    // قمرة القيادة
-                    ctx.fillStyle = '#e1f5fe';
-                    ctx.shadowBlur = 5;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y - 5, 10, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    // إعادة تعيين الظلال
-                    ctx.shadowBlur = 0;
-                }
-            };
+        ];
+        
+        /**
+         * عرض سؤال عشوائي من مصفوفة الأسئلة
+         */
+        function showQuestion() {
+            gameRunning = false; // إيقاف اللعبة مؤقتًا
             
-            // كائن لتأثير الانفجار
-            function Explosion(x, y, color) {
+            feedbackText.textContent = "";
+            explanation.style.display = "none";
+            
+            // اختيار سؤال عشوائي
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            const q = questions[randomIndex];
+            
+            // عرض السؤال
+            questionText.innerHTML = q.question;
+            optionsContainer.innerHTML = "";
+            
+            // إضافة الخيارات
+            q.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.innerHTML = option;
+                button.classList.add('option-btn');
+                button.addEventListener('click', () => checkAnswer(index, q.correct, q.explanation));
+                optionsContainer.appendChild(button);
+            });
+            
+            // إظهار شاشة السؤال
+            questionScreen.classList.remove('hidden');
+            questionScreen.classList.add('visible');
+        }
+        
+        /**
+         * التحقق من إجابة اللاعب على السؤال
+         * @param {number} selectedIndex - فهرس الخيار الذي اختاره اللاعب
+         * @param {number} correctIndex - فهرس الإجابة الصحيحة
+         * @param {string} explanationTextContent - نص الشرح للإجابة
+         */
+        function checkAnswer(selectedIndex, correctIndex, explanationTextContent) {
+            // إيقاف إمكانية النقر على الأزرار بعد الاختيار
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === correctIndex) {
+                // الإجابة صحيحة: نضيف 3 طيور ونستكمل اللعب
+                birdsLeft += 3;
+                updateUI();
+                playSound(523.25, 'sine', 0.2, 0.5); // صوت صحيح
+                feedbackText.textContent = "✓ إجابة صحيحة! لقد حصلت على 3 طيور إضافية.";
+                feedbackText.style.color = "#2ecc71";
+                
+                // عرض الشرح
+                explanationText.innerHTML = explanationTextContent;
+                explanation.style.display = "block";
+                
+                // بعد 3 ثوانٍ، نخفي شاشة السؤال ونعود للعبة
+                setTimeout(() => {
+                    questionScreen.classList.remove('visible');
+                    gameRunning = true;
+                    loadNextBird();
+                }, 3000);
+            } else {
+                // الإجابة خاطئة: تنتهي اللعبة
+                playSound(200, 'square', 0.5, 0.6); // صوت الخسارة
+                feedbackText.textContent = "❌ إجابة خاطئة! لقد انتهت اللعبة.";
+                feedbackText.style.color = "#e74c3c";
+                
+                // عرض الشرح
+                explanationText.innerHTML = explanationTextContent;
+                explanation.style.display = "block";
+                
+                // بعد 3 ثوانٍ، نعرض شاشة نهاية اللعبة
+                setTimeout(() => {
+                    showGameOverMessage('انتهت اللعبة!', `نقاطك النهائية: ${score}`, false, false);
+                    questionScreen.classList.remove('visible');
+                }, 3000);
+            }
+        }
+
+        // تعريف الفئات
+        class Bird {
+            constructor(x, y) {
                 this.x = x;
                 this.y = y;
-                this.particles = [];
-                this.life = 0;
-                
-                for (let i = 0; i < 20; i++) {
-                    this.particles.push({
-                        x: this.x,
-                        y: this.y,
-                        speedX: (Math.random() - 0.5) * 5,
-                        speedY: (Math.random() - 0.5) * 5,
-                        size: Math.random() * 5 + 2,
-                        color: color,
-                        alpha: 1
-                    });
-                }
-                
-                this.update = function() {
-                    this.life++;
-                    this.particles.forEach(p => {
-                        p.x += p.speedX;
-                        p.y += p.y;
-                        p.alpha -= 0.05;
-                        p.size -= 0.1;
-                    });
-                };
-                
-                this.draw = function() {
-                    this.particles.forEach(p => {
-                        ctx.globalAlpha = p.alpha;
-                        ctx.fillStyle = p.color;
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    });
-                    ctx.globalAlpha = 1;
-                };
-            }
-            
-            // دالة لتبديل ترتيب عناصر المصفوفة عشوائياً
-            function shuffle(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                return array;
+                this.radius = Math.min(20, canvas.width * 0.025);
+                this.color = '#DD2E44';
+                this.velocity = { x: 0, y: 0 };
+                this.launched = false;
+                this.trail = [];
+                this.trailMaxLength = 20;
+                this.isStatic = true; // الطائر في وضعية ثابتة قبل الإطلاق
             }
 
-            // دالة لتغيير حجم اللوحة عند تحميل الصفحة وتغيير حجم النافذة
-            function resizeCanvas() {
-                GAME_WIDTH = window.innerWidth;
-                GAME_HEIGHT = window.innerHeight;
-                
-                canvas.width = GAME_WIDTH;
-                canvas.height = GAME_HEIGHT;
-
-                // التعديل: تكييف حجم اللاعب
-                player.width = Math.max(60, GAME_WIDTH / 10);
-                player.height = Math.max(60, GAME_WIDTH / 10);
-
-                // إعادة وضع السفينة بعد تغيير الحجم لتجنب اختفائها
-                if (gameState.gameStarted) {
-                    player.x = GAME_WIDTH / 2;
-                    player.y = GAME_HEIGHT - (GAME_HEIGHT * 0.15); // وضعها في الأسفل
-                }
-
-                // إعادة إنشاء النجوم
-                createStars();
-            }
-
-            // إنشاء النجوم
-            function createStars() {
-                stars = [];
-                for (let i = 0; i < numStars; i++) {
-                    stars.push({
-                        x: Math.random() * GAME_WIDTH,
-                        y: Math.random() * GAME_HEIGHT,
-                        size: Math.random() * 2,
-                        speed: Math.random() * starSpeed + 0.1
-                    });
-                }
-            }
-
-            // رسم النجوم
-            function drawStars() {
-                ctx.fillStyle = '#ffffff';
-                stars.forEach(star => {
+            draw() {
+                // رسم مسار الطائر
+                for (let i = 0; i < this.trail.length; i++) {
+                    const alpha = i / this.trail.length;
+                    const size = this.radius * alpha;
                     ctx.beginPath();
-                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.arc(this.trail[i].x, this.trail[i].y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(221, 46, 68, ${0.5 * alpha})`;
                     ctx.fill();
+                    ctx.closePath();
+                }
+
+                // رسم جسم الطائر
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+                
+                // تفاصيل الطائر (عيون، حواجب، منقار، ريشة)
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.3, 0, Math.PI * 2);
+                ctx.arc(this.x + this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+                ctx.closePath();
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.1, 0, Math.PI * 2);
+                ctx.arc(this.x + this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.1, 0, Math.PI * 2);
+                ctx.fillStyle = 'black';
+                ctx.fill();
+                ctx.closePath();
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = this.radius * 0.15;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.radius * 0.45, this.y - this.radius * 0.5);
+                ctx.lineTo(this.x - this.radius * 0.05, this.y - this.radius * 0.4);
+                ctx.moveTo(this.x + this.radius * 0.45, this.y - this.radius * 0.5);
+                ctx.lineTo(this.x + this.radius * 0.05, this.y - this.radius * 0.4);
+                ctx.stroke();
+                ctx.fillStyle = '#FDD835';
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y + this.radius * 0.2);
+                ctx.lineTo(this.x - this.radius * 0.4, this.y + this.radius * 0.5);
+                ctx.lineTo(this.x + this.radius * 0.4, this.y + this.radius * 0.5);
+                ctx.fill();
+                ctx.closePath();
+                ctx.fillStyle = '#555';
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y - this.radius, this.radius * 0.6, this.radius * 0.2, -Math.PI / 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            update() {
+                if (this.launched) {
+                    this.isStatic = false;
+                    this.trail.push({ x: this.x, y: this.y });
+                    if (this.trail.length > this.trailMaxLength) {
+                        this.trail.shift();
+                    }
+
+                    // تطبيق الجاذبية
+                    this.velocity.y += canvas.height * 0.001;
+
+                    // تحديث الموضع
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+
+                    // --- التعديل هنا: تحسين كشف التصادم مع الحدود ---
+                    const groundHeight = canvas.height * 0.08;
+
+                    // التصادم مع الجدار الأيسر
+                    if (this.x - this.radius < 0) {
+                        this.velocity.x *= -0.7;
+                        this.x = this.radius; // إعادة ضبط الموضع لضمان عدم خروجه عن الشاشة
+                    }
+                    // التصادم مع الجدار الأيمن
+                    if (this.x + this.radius > canvas.width) {
+                        this.velocity.x *= -0.7;
+                        this.x = canvas.width - this.radius; // إعادة ضبط الموضع
+                    }
+                    // التصادم مع السقف
+                    if (this.y - this.radius < 0) {
+                        this.velocity.y *= -0.5;
+                        this.y = this.radius; // إعادة ضبط الموضع
+                    }
+                    // التصادم مع الأرض
+                    if (this.y + this.radius > canvas.height - groundHeight) {
+                        this.y = canvas.height - groundHeight - this.radius;
+                        this.velocity.y *= -0.5;
+                        this.velocity.x *= 0.7; // تقليل السرعة الأفقية عند الارتداد من الأرض
+                    }
+                    // --- نهاية التعديل ---
+                }
+            }
+        }
+
+        class TargetBird {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = Math.min(18, canvas.width * 0.022);
+                this.color = '#388E3C';
+                this.health = 100;
+                this.isHit = false;
+            }
+
+            draw() {
+                // رسم الطائر الهدف مع التفاصيل
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#1B5E20';
+                ctx.stroke();
+
+                // --- التعديلات هنا: تصحيح العيون والمنقار والحواجب ---
+                // رسم بياض العينين
+                ctx.fillStyle = '#fff';
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.ellipse(this.x - this.radius * 0.4, this.y - this.radius * 0.3, this.radius * 0.3, this.radius * 0.4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.beginPath();
+                // تصحيح إحداثيات العين الثانية
+                ctx.ellipse(this.x + this.radius * 0.4, this.y - this.radius * 0.3, this.radius * 0.3, this.radius * 0.4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // رسم حدقة العينين
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.4, this.y - this.radius * 0.3, this.radius * 0.1, 0, Math.PI * 2, false);
+                // تصحيح إحداثيات الحدقة الثانية
+                ctx.arc(this.x + this.radius * 0.4, this.y - this.radius * 0.3, this.radius * 0.1, 0, Math.PI * 2, false);
+                ctx.fill();
+
+                // رسم المنقار
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y + this.radius * 0.15);
+                ctx.lineTo(this.x - this.radius * 0.4, this.y + this.radius * 0.45);
+                ctx.lineTo(this.x + this.radius * 0.4, this.y + this.radius * 0.45);
+                ctx.closePath();
+                ctx.fillStyle = '#F4D03F';
+                ctx.fill();
+                ctx.strokeStyle = '#B7950B';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // رسم الحاجبين
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.radius * 0.75, this.y - this.radius * 0.75);
+                ctx.lineTo(this.x, this.y - this.radius * 0.55);
+                ctx.moveTo(this.x + this.radius * 0.75, this.y - this.radius * 0.75);
+                ctx.lineTo(this.x, this.y - this.radius * 0.55);
+                ctx.stroke();
+                // --- نهاية التعديلات ---
+            }
+        }
+
+        class Block {
+            constructor(x, y, width, height, color = '#A0522D') {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                this.color = color;
+                this.health = 100;
+                this.isHit = false;
+            }
+
+            draw() {
+                // رسم الكتلة
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+
+                // إضافة تفاصيل الخشب
+                const woodGradient = ctx.createLinearGradient(this.x, this.y, this.x + this.width, this.y + this.height);
+                woodGradient.addColorStop(0, '#A0522D');
+                woodGradient.addColorStop(0.5, '#D2691E');
+                woodGradient.addColorStop(1, '#A0522D');
+                ctx.fillStyle = woodGradient;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+
+                ctx.strokeStyle = '#5D4037';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(this.x, this.y, this.width, this.height);
+
+                ctx.strokeStyle = 'rgba(93, 64, 55, 0.5)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(this.x + this.width / 2, this.y + this.height / 2, this.width / 4, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+        }
+        
+        // تحميل الطائر التالي في المقلاع
+        function loadNextBird() {
+            if (birdsLeft > 0) {
+                birdsLeft--;
+                currentBird = new Bird(slingshot.x, slingshot.y);
+                updateUI();
+            } else {
+                currentBird = null; // لا يوجد طيور متبقية
+            }
+        }
+
+
+        // تهيئة حجم اللوحة
+        function setupCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            slingshot = {
+                x: canvas.width * 0.15,
+                y: canvas.height * 0.75
+            };
+
+            loadLevel(currentLevel);
+        }
+
+        // تحميل مستوى اللعبة
+        function loadLevel(levelNum) {
+            loadingOverlay.style.display = 'flex';
+            setTimeout(() => {
+                const levelData = levels[levelNum];
+                if (!levelData) {
+                    showGameOverMessage('لقد فزت باللعبة!', `نقاطك النهائية: ${score}`, true, true);
+                    loadingOverlay.style.display = 'none';
+                    return;
+                }
+
+                // إعادة تعيين الكائنات للمستوى الجديد
+                gameObjects = [];
+                releasedBirds = [];
+                
+                // إضافة كتلة الأرض
+                const groundHeight = canvas.height * 0.08;
+                gameObjects.push(new Block(0, canvas.height - groundHeight, canvas.width, groundHeight, '#4A752C'));
+
+                // إضافة الأهداف والكتل من بيانات المستوى
+                levelData.targets.forEach(t => {
+                    const radius = Math.min(18, canvas.width * 0.022);
+                    gameObjects.push(new TargetBird(canvas.width * t.x, canvas.height - (canvas.height * (1-t.y)) - radius));
                 });
-            }
-
-            // تحديث النجوم
-            function updateStars() {
-                stars.forEach(star => {
-                    star.y += star.speed;
-                    if (star.y > GAME_HEIGHT) {
-                        star.y = 0;
-                        star.x = Math.random() * GAME_WIDTH;
-                    }
+                levelData.blocks.forEach(b => {
+                    gameObjects.push(new Block(
+                        canvas.width * b.x,
+                        canvas.height - (canvas.height * (1-b.y)) - (b.h ? canvas.height * b.h : canvas.width * b.w),
+                        canvas.width * b.w,
+                        b.h ? canvas.height * b.h : canvas.width * b.w,
+                        b.color
+                    ));
                 });
+                
+                // إعداد الطائر الجديد وعدد الطيور المتبقية
+                birdsLeft = levelData.birds;
+                loadNextBird();
+                updateUI();
+                loadingOverlay.style.display = 'none';
+            }, 1000); // تأخير وهمي للتحميل
+        }
+
+        // رسم المقلاع
+        function drawSlingshot() {
+            const slingshotWidth = canvas.width * 0.02;
+            const slingshotHeight = canvas.height * 0.1;
+            const baseWidth = slingshotWidth * 2;
+            const baseHeight = slingshotHeight;
+
+            // قاعدة المقلاع
+            ctx.fillStyle = '#5D4037';
+            ctx.fillRect(slingshot.x - slingshotWidth, slingshot.y, slingshotWidth * 2, slingshotHeight);
+
+            // حامل المقلاع
+            ctx.beginPath();
+            ctx.moveTo(slingshot.x - baseWidth, slingshot.y + slingshotHeight * 0.3);
+            ctx.lineTo(slingshot.x, slingshot.y - slingshotHeight * 0.2);
+            ctx.lineTo(slingshot.x + baseWidth, slingshot.y + slingshotHeight * 0.3);
+            ctx.closePath();
+            ctx.fillStyle = '#795548';
+            ctx.fill();
+            ctx.strokeStyle = '#5D4037';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            if (currentBird && !currentBird.launched) {
+                // رسم شريط المطاط
+                ctx.beginPath();
+                ctx.moveTo(slingshot.x - slingshotWidth * 2, slingshot.y - slingshotHeight * 0.1);
+                ctx.lineTo(currentBird.x, currentBird.y);
+                ctx.lineTo(slingshot.x + slingshotWidth * 2, currentBird.y);
+                ctx.strokeStyle = 'rgba(139, 69, 19, 0.7)';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+            }
+        }
+
+        // الانتقال للطائر التالي أو التحقق من إكمال المستوى / انتهاء اللعبة
+        // التعديل: تم إعادة كتابة هذه الوظيفة لتتحقق بشكل صحيح من حالة اللعبة بعد كل رمية.
+        // إذا توقف الطائر ولم تنتهِ الأهداف، وإذا كان هناك طيور متبقية، فسيتم تحميل طائر جديد تلقائياً.
+        function nextBird() {
+            // التحقق مما إذا كانت أي من الطيور التي تم إطلاقها لا تزال تتحرك
+            const isAnyBirdMoving = releasedBirds.some(b => b.launched && (Math.abs(b.velocity.x) > 0.5 || Math.abs(b.velocity.y) > 0.5));
+            if (isAnyBirdMoving) {
+                // إذا كان هناك طائر يتحرك، انتظر 500ms وتحقق مرة أخرى
+                setTimeout(nextBird, 500);
+                return;
             }
 
-            // إنشاء عدو (كويكب يحمل مسألة)
-            function createEnemy(type = 'normal', size = null, x = null, y = null, speedX = 0) {
-                const problem = questions[Math.floor(Math.random() * questions.length)];
-                let enemySize;
-                let enemyColor;
-                
-                // تحديد نوع وحجم ولون العدو بناءً على المعلمات
-                if (type === 'normal') {
-                    // التعديل: جعل الكويكبات العادية أصغر ومتكيفة مع حجم الشاشة
-                    enemySize = Math.random() * (GAME_WIDTH / 20) + (GAME_WIDTH / 40);
-                    enemyColor = '#8b4513';
-                } else if (type === 'splitting') {
-                    // التعديل: جعل الكويكبات المنقسمة أصغر ومتكيفة مع حجم الشاشة
-                    enemySize = Math.random() * (GAME_WIDTH / 15) + (GAME_WIDTH / 30);
-                    enemyColor = '#483D8B'; // لون بنفسجي غامق
-                } else if (type === 'splitPart') {
-                    enemySize = size;
-                    enemyColor = '#6A5ACD'; // لون أفتح قليلاً
-                }
-
-                return {
-                    x: x !== null ? x : Math.random() * (GAME_WIDTH - enemySize),
-                    y: y !== null ? y : -enemySize,
-                    width: enemySize,
-                    height: enemySize,
-                    speed: Math.random() * 1 + gameState.enemySpeed,
-                    speedX: speedX,
-                    problem: problem, // إضافة المسألة الجبرية
-                    type: type, // نوع العدو
-                    draw: function() {
-                        // رسم كويكب
-                        ctx.fillStyle = enemyColor;
-                        ctx.shadowColor = enemyColor;
-                        ctx.shadowBlur = 15;
-                        ctx.beginPath();
-                        ctx.arc(this.x + this.width / 2, this.y + this.height / 2, this.width / 2, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // رسم تفاصيل الكويكب
-                        if (this.type === 'normal') {
-                            ctx.fillStyle = '#a0522d';
-                            ctx.beginPath();
-                            ctx.arc(this.x + this.width / 2.5, this.y + this.height / 2.5, this.width / 8, 0, Math.PI * 2);
-                            ctx.arc(this.x + this.width / 1.5, this.y + this.height / 1.5, this.width / 6, 0, Math.PI * 2);
-                            ctx.fill();
-                        } else if (this.type === 'splitting' || this.type === 'splitPart') {
-                             ctx.fillStyle = '#7B68EE'; // لون أفتح
-                             ctx.beginPath();
-                             ctx.arc(this.x + this.width / 3, this.y + this.height / 3, this.width / 7, 0, Math.PI * 2);
-                             ctx.arc(this.x + this.width / 1.4, this.y + this.height / 1.4, this.width / 5, 0, Math.PI * 2);
-                             ctx.fill();
-                        }
-                        
-                        ctx.shadowBlur = 0;
-                    }
-                };
-            }
-
-            // إطلاق رصاصة
-            function fireBullet() {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
-                
-                // التعديل: تكييف حجم الرصاصة مع حجم الشاشة
-                const bulletWidth = Math.max(4, GAME_WIDTH / 100);
-                const bulletHeight = Math.max(20, GAME_HEIGHT / 20);
-                
-                gameState.bullets.push({
-                    x: player.x,
-                    y: player.y,
-                    width: bulletWidth,
-                    height: bulletHeight,
-                    speed: 15,
-                    draw: function() {
-                        // تأثير الرصاصة
-                        const laserGradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y - this.height);
-                        laserGradient.addColorStop(0, '#ffeb3b');
-                        laserGradient.addColorStop(1, 'rgba(255, 255, 255, 0.7)');
-                        
-                        ctx.fillStyle = laserGradient;
-                        ctx.shadowColor = '#ffeb3b';
-                        ctx.shadowBlur = 15;
-                        ctx.fillRect(this.x - this.width / 2, this.y, this.width, this.height);
-                        
-                        ctx.shadowBlur = 0;
-                    }
-                });
-
-                // مؤثر صوتي: إطلاق نار
-                playSound(440, 'triangle', 0.05, 0.5);
-            }
+            // بمجرد توقف جميع الطيور، تحقق من حالة اللعبة
+            const targets = gameObjects.filter(obj => obj instanceof TargetBird);
             
-            // أحداث التحكم باللمس على اللوحة
-            canvas.addEventListener('touchstart', handleTouchStart);
-            canvas.addEventListener('touchmove', handleTouchMove);
-            canvas.addEventListener('touchend', handleTouchEnd);
-            canvas.addEventListener('touchcancel', handleTouchEnd);
-
-            function handleTouchStart(e) {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
-                e.preventDefault();
-                const touchX = e.touches[0].clientX;
-                player.x = touchX;
-                
-                // بدء إطلاق النار التلقائي
-                if (!fireInterval) {
-                    fireInterval = setInterval(fireBullet, 100);
-                }
+            if (targets.length === 0) {
+                // إذا تم تدمير كل الأهداف، فز اللاعب
+                playSound(1000, 'triangle', 0.5, 0.6); // صوت الفوز
+                showGameOverMessage('لقد نجحت!', `نقاطك: ${score}`, true, false);
+            } else if (birdsLeft > 0) {
+                // إذا لم تنتهِ الأهداف وكان هناك طيور متبقية، فحمّل الطائر التالي
+                loadNextBird();
+            } else {
+                // إذا لم تنتهِ الأهداف ولم يتبقَ طيور، اعرض السؤال
+                showQuestion();
             }
-            
-            function handleTouchMove(e) {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
-                e.preventDefault();
-                const touchX = e.touches[0].clientX;
-                player.x = touchX;
-            }
-            
-            function handleTouchEnd(e) {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
-                e.preventDefault();
-                // إيقاف إطلاق النار التلقائي
-                clearInterval(fireInterval);
-                fireInterval = null;
-            }
+        }
 
-            // أحداث الماوس للكمبيوتر
-            canvas.addEventListener('mousemove', (e) => {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
-                const rect = canvas.getBoundingClientRect();
-                // تم تعديل هذا السطر لتحديث موقع اللاعب مباشرة بناءً على الماوس
-                player.x = e.clientX - rect.left;
-            });
+        // الكشف عن التصادمات
+        function detectCollisions() {
+            // التحقق من تصادم جميع الطيور التي تم إطلاقها
+            for (const bird of releasedBirds) {
+                if (!bird || !bird.launched) continue;
 
-            canvas.addEventListener('mousedown', () => {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
-                mouseDown = true;
-                if (!fireInterval) {
-                    fireInterval = setInterval(fireBullet, 100);
-                }
-            });
+                for (let i = 0; i < gameObjects.length; i++) {
+                    const obj = gameObjects[i];
 
-            canvas.addEventListener('mouseup', () => {
-                mouseDown = false;
-                clearInterval(fireInterval);
-                fireInterval = null;
-            });
-
-            canvas.addEventListener('mouseleave', () => {
-                mouseDown = false;
-                clearInterval(fireInterval);
-                fireInterval = null;
-            });
-
-            // أحداث لوحة المفاتيح للكمبيوتر
-            window.addEventListener('keydown', (e) => {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
-                
-                if (e.key === 'ArrowLeft') keys.ArrowLeft = true;
-                if (e.key === 'ArrowRight') keys.ArrowRight = true;
-                if (e.key === ' ') {
-                    e.preventDefault(); // منع تحريك الصفحة بالمسافة
-                    keys.space = true;
-                    if (!fireInterval) {
-                        fireInterval = setInterval(fireBullet, 100);
-                    }
-                }
-            });
-
-            window.addEventListener('keyup', (e) => {
-                if (e.key === 'ArrowLeft') keys.ArrowLeft = false;
-                if (e.key === 'ArrowRight') keys.ArrowRight = false;
-                if (e.key === ' ') {
-                    keys.space = false;
-                    clearInterval(fireInterval);
-                    fireInterval = null;
-                }
-            });
-
-            // تحريك اللاعب
-            function movePlayer() {
-                // هذا هو الجزء المحدث:
-                // الآن يتم استخدام الأزرار لتغيير موقع اللاعب بشكل تدريجي
-                // حركة الماوس واللمس يتم التعامل معها مباشرة في "mousemove" و "handleTouchMove"
-                if (keys.ArrowLeft) {
-                    player.x -= player.speed;
-                }
-                if (keys.ArrowRight) {
-                    player.x += player.speed;
-                }
-                
-                // التأكد من أن اللاعب لا يخرج عن حدود اللوحة
-                player.x = Math.max(player.width / 2, Math.min(GAME_WIDTH - player.width / 2, player.x));
-            }
-
-            // تحديث الأعداء
-            function updateEnemies() {
-                gameState.enemySpawnCounter++;
-                if (gameState.enemySpawnCounter >= gameState.enemySpawnRate) {
-                    // فرصة 1 من 4 لإنشاء عدو من النوع المنقسم
-                    if (Math.random() < 0.25) {
-                        gameState.enemies.push(createEnemy('splitting'));
-                    } else {
-                        // تم التعديل هنا:
-                        // جعل الكويكبات تظهر من أي مكان على طول المحور السيني
-                        let startX = Math.random() * GAME_WIDTH;
-                        let endX = Math.random() * GAME_WIDTH;
-                        // حساب سرعة الأعداء الأفقية بناءً على نقطة النهاية المرغوبة
-                        let speedX = (endX - startX) / (GAME_HEIGHT / (Math.random() * 1 + gameState.enemySpeed));
-                        gameState.enemies.push(createEnemy('normal', null, startX, -50, speedX));
-                    }
-                    gameState.enemySpawnCounter = 0;
-                }
-                
-                for (let i = gameState.enemies.length - 1; i >= 0; i--) {
-                    const enemy = gameState.enemies[i];
-                    enemy.y += enemy.speed;
-                    enemy.x += enemy.speedX; // لتحديث حركة الأجزاء المنقسمة
-                    
-                    // منطق جديد: جعل الأجزاء المنقسمة ترتد عند حدود الشاشة
-                    if (enemy.type === 'splitPart') {
-                        if (enemy.x <= 0 || enemy.x + enemy.width >= GAME_WIDTH) {
-                            enemy.speedX *= -1;
-                        }
-                    }
-
-                    if (enemy.y > GAME_HEIGHT) {
-                        gameState.enemies.splice(i, 1);
-                        // لا نخسر حياة إلا إذا كان العدو الأساسي هو الذي تجاوز اللاعب
-                        if (enemy.type === 'normal' || enemy.type === 'splitting') {
-                           gameState.lives--; // فقدان حياة عند تجاوز العدو
-                           livesElement.textContent = gameState.lives;
-                           if (gameState.lives <= 0) {
-                               gameState.gameOver = true;
-                           }
-                        }
-                    }
-                }
-            }
-            
-            // تحديث الرصاصات
-            function updateBullets() {
-                for (let i = gameState.bullets.length - 1; i >= 0; i--) {
-                    const bullet = gameState.bullets[i];
-                    bullet.y -= bullet.speed;
-                    
-                    if (bullet.y < 0) {
-                        gameState.bullets.splice(i, 1);
-                        continue;
-                    }
-
-                    for (let j = gameState.enemies.length - 1; j >= 0; j--) {
-                        const enemy = gameState.enemies[j];
-                        
-                        const dx = bullet.x - (enemy.x + enemy.width / 2);
-                        const dy = bullet.y - (enemy.y + enemy.height / 2);
+                    if (obj instanceof TargetBird) {
+                        const dx = bird.x - obj.x;
+                        const dy = bird.y - obj.y;
                         const distance = Math.sqrt(dx * dx + dy * dy);
 
-                        if (distance < enemy.width / 2) {
-                            // تم الاصطدام!
-                            gameState.explosions.push(new Explosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#4fc3f7'));
-                            
-                            // تشغيل النغمة الجديدة عند اصطدام الرصاصة بالكويكب
-                            const hitMelody = [
-                                { frequency: 440, duration: 0.1 },
-                                { frequency: 523.25, duration: 0.1 },
-                                { frequency: 659.25, duration: 0.1 }
-                            ];
-                            playMelody(hitMelody, 120, 0.5);
+                        if (distance < bird.radius + obj.radius) {
+                            playSound(300, 'sine', 0.1, 0.5); // صوت اصطدام بالطائر الهدف
+                            obj.health -= 50; // تم تعديل قيمة الضرر هنا
+                            bird.velocity.x = dx * 0.1;
+                            bird.velocity.y = dy * 0.1;
 
-                            // التعامل مع الأنواع المختلفة من الأعداء
-                            if (enemy.type === 'splitting') {
-                                // إنشاء جزأين صغيرين
-                                const newSize = enemy.width / 2;
-                                const speedMultiplier = 1.5;
-                                
-                                gameState.enemies.push(createEnemy('splitPart', newSize, enemy.x, enemy.y, -enemy.speed * speedMultiplier));
-                                gameState.enemies.push(createEnemy('splitPart', newSize, enemy.x, enemy.y, enemy.speed * speedMultiplier));
-                                
-                                gameState.score += 5; // نقاط قليلة لضرب العدو الكبير
-                            } else if (enemy.type === 'splitPart') {
-                                gameState.score += 5; // نقاط لكل قطعة من القطع المنقسمة
-                            } else {
-                                // زيادة النقاط وتدمير العدو العادي
-                                gameState.score += 10;
+                            if (obj.health <= 0) {
+                                gameObjects.splice(i, 1);
+                                i--;
+                                score += 100;
+                                updateUI();
+                                playSound(800, 'square', 0.2, 0.8); // صوت تدمير الهدف
                             }
+                        }
+                    }
+
+                    if (obj instanceof Block) {
+                        if (bird.x + bird.radius > obj.x &&
+                            bird.x - bird.radius < obj.x + obj.width &&
+                            bird.y + bird.radius > obj.y &&
+                            bird.y - bird.radius < obj.y + obj.height) {
                             
-                            // تدمير العدو والرصاصة
-                            gameState.enemies.splice(j, 1);
-                            gameState.bullets.splice(i, 1);
-                            
-                            scoreElement.textContent = gameState.score;
-                            break;
+                            playSound(440, 'triangle', 0.1, 0.4); // صوت اصطدام بالكتلة
+                            let dx = (bird.x - (obj.x + obj.width / 2)) / (obj.width / 2);
+                            let dy = (bird.y - (obj.y + obj.height / 2)) / (obj.height / 2);
+
+                            if (Math.abs(dx) > Math.abs(dy)) {
+                                bird.velocity.x *= -0.7;
+                                bird.x += dx > 0 ? 5 : -5;
+                            } else {
+                                bird.velocity.y *= -0.7;
+                                bird.y += dy > 0 ? 5 : -5;
+                            }
+
+                            obj.health -= 50; // تم تعديل قيمة الضرر هنا
+
+                            const r = Math.min(255, Math.floor(160 + (100 - obj.health) * 0.95));
+                            const g = Math.max(0, Math.floor(82 - (100 - obj.health) * 0.82));
+                            const b = Math.max(0, Math.floor(45 - (100 - obj.health) * 0.45));
+                            obj.color = `rgb(${r}, ${g}, ${b})`;
+
+                            score += 10;
+                            updateUI();
+
+                            if (obj.health <= 0) {
+                                gameObjects.splice(i, 1);
+                                i--;
+                                playSound(600, 'sawtooth', 0.2, 0.7); // صوت تدمير الكتلة
+                            }
                         }
                     }
                 }
             }
-            
-            // دالة لإظهار السؤال
-            function showQuestion(enemy, enemyIndex) {
-                const problem = enemy.problem;
-                
-                // استخدام innerHTML لإظبار الرموز الرياضية
-                questionTextElement.innerHTML = problem.problem;
+        }
 
-                answersContainer.innerHTML = '';
-                
-                // خلط الخيارات عشوائياً
-                const shuffledAnswers = shuffle([...problem.answers]);
-                
-                shuffledAnswers.forEach(answer => {
-                    const button = document.createElement('button');
-                    button.classList.add('answer-btn');
-                    button.innerHTML = answer; // استخدام innerHTML للرموز
-                    button.addEventListener('click', () => checkAnswer(answer, problem.correct, enemyIndex));
-                    answersContainer.appendChild(button);
-                });
-                
-                questionOverlay.classList.remove('hidden');
+        // تحديث عناصر واجهة المستخدم
+        function updateUI() {
+            scoreElement.textContent = score;
+            birdsLeftElement.textContent = birdsLeft;
+            levelElement.textContent = currentLevel;
+        }
 
-                // طلب من MathJax إعادة تهيئة العناصر الجديدة
-                if (window.MathJax) {
-                    MathJax.typesetPromise([questionOverlay]);
-                }
+        // إظهار رسالة انتهاء اللعبة / إكمال المستوى
+        function showGameOverMessage(title, finalScore, levelComplete, gameWon = false) {
+            gameOverTitle.textContent = title;
+            gameOverScore.textContent = finalScore;
+            gameOverOverlay.classList.add('visible');
+
+            if (gameWon) {
+                nextLevelBtn.style.display = 'none';
+                restartBtn.style.display = 'block';
+                restartBtn.textContent = 'إعادة اللعبة';
+            } else if (levelComplete) {
+                nextLevelBtn.style.display = 'block';
+                restartBtn.style.display = 'none';
+            } else {
+                nextLevelBtn.style.display = 'none';
+                restartBtn.style.display = 'block';
+                restartBtn.textContent = 'إعادة تشغيل';
             }
-            
-            // دالة للتحقق من الإجابة
-            function checkAnswer(selectedAnswer, correctAnswer, enemyIndex) {
-                const buttons = answersContainer.querySelectorAll('.answer-btn');
-                let isCorrect = (selectedAnswer === correctAnswer);
+        }
 
-                buttons.forEach(btn => {
-                    btn.disabled = true;
-                    if (btn.textContent === correctAnswer) {
-                        btn.classList.add('correct');
-                    }
-                    if (!isCorrect && btn.textContent === selectedAnswer) {
-                        btn.classList.add('wrong');
-                    }
-                });
+        // إعادة تعيين اللعبة
+        function resetGame() {
+            score = 0;
+            currentLevel = 1;
+            gameRunning = true;
+            loadLevel(currentLevel);
+            updateUI();
+            gameOverOverlay.classList.remove('visible');
+        }
 
-                if (isCorrect) {
-                    // تشغيل نغمة أجمل عند الإجابة الصحيحة
-                    const correctMelody = [
-                        { frequency: 523.25, duration: 0.1 },
-                        { frequency: 659.25, duration: 0.1 },
-                        { frequency: 783.99, duration: 0.2 },
-                    ];
-                    playMelody(correctMelody, 180, 0.7);
-                    
-                    // تأخير قصير قبل استئناف اللعبة
-                    setTimeout(() => {
-                        questionOverlay.classList.add('hidden');
-                        gameState.paused = false; // استئناف اللعبة
-                    }, 1000);
-                } else {
-                    playSound(80, 'sawtooth', 0.2, 1.0);
-                    // الإجابة خاطئة
-                    setTimeout(() => {
-                        questionOverlay.classList.add('hidden');
-                        gameState.paused = false;
-                        
-                        gameState.lives--; // فقدان حياة بسبب الإجابة الخاطئة
-                        livesElement.textContent = gameState.lives;
-                        
-                        // تأثير اهتزاز الشاشة
-                        canvas.style.transform = 'translateX(10px)';
-                        setTimeout(() => {
-                            canvas.style.transform = 'translateX(-10px)';
-                            setTimeout(() => {
-                                canvas.style.transform = 'translateX(0)';
-                            }, 50);
-                        }, 50);
-
-                        if (gameState.lives <= 0) {
-                            gameState.gameOver = true;
-                        }
-                    }, 1000);
-                }
-            }
-            
-            // الكشف عن تصادم الأعداء مع اللاعب
-            function checkPlayerCollision() {
-                if (gameState.paused) return; // لا يوجد تصادم أثناء الإيقاف المؤقت
-                for (let i = gameState.enemies.length - 1; i >= 0; i--) {
-                    const enemy = gameState.enemies[i];
-                    
-                    const dx = player.x - (enemy.x + enemy.width / 2);
-                    const dy = (player.y) - (enemy.y + enemy.height / 2);
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < player.width / 2 + enemy.width / 2) {
-                        // تم الاصطدام! نوقف اللعبة ونظهر السؤال
-                        gameState.paused = true;
-                        showQuestion(enemy, i); // تمرير العدو الذي اصطدم
-                        
-                        // إزالة العدو من اللعبة
-                        gameState.enemies.splice(i, 1);
-
-                        // مؤثر صوتي: اصطدام اللاعب
-                        playSound(80, 'sawtooth', 0.2, 1.0);
-
-                        // لا توجد نهاية فورية للعبة، الإجابة الخاطئة هي التي تؤدي إلى خسارة الأرواح
-                        break;
-                    }
-                }
-            }
-            
-            // دالة التحقق من التقدم في المستويات
-            function checkLevelUp() {
-                const currentLevelConfig = levelsConfig[gameState.level - 1];
-                if (currentLevelConfig && gameState.score >= currentLevelConfig.scoreToNextLevel) {
-                    gameState.level++;
-                    
-                    if (levelsConfig[gameState.level - 1]) {
-                        const nextLevelConfig = levelsConfig[gameState.level - 1];
-                        gameState.enemySpawnRate = nextLevelConfig.enemySpawnRate;
-                        gameState.enemySpeed = nextLevelConfig.enemySpeed;
-                        
-                        // عرض رسالة المستوى الجديد
-                        levelUpMessageElement.style.display = 'block';
-                        levelUpMessageElement.textContent = `المستوى ${gameState.level}`;
-                        setTimeout(() => {
-                            levelUpMessageElement.style.display = 'none';
-                        }, 2000);
-                        
-                        // مؤثر صوتي: تقدم في المستوى
-                        playSound(600, 'sine', 0.2, 0.7);
-                    } else {
-                        // تهانينا، لقد فزت باللعبة!
-                        gameState.gameOver = true;
-                        overlayTitle.textContent = 'تهانينا!';
-                        overlayMessage.textContent = `لقد أكملت جميع المستويات! نقاطك النهائية: ${gameState.score}`;
-                        overlayBtn.textContent = 'إعادة التشغيل';
-                        overlay.classList.remove('hidden');
-                    }
-                }
-            }
-
-            // رسم اللعبة
-            function draw() {
-                ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-                
-                // تحديث ورسم النجوم
-                updateStars();
-                drawStars();
-
-                player.draw();
-                gameState.enemies.forEach(enemy => enemy.draw());
-                gameState.bullets.forEach(bullet => bullet.draw());
-                
-                // تحديث ورسم الانفجارات
-                gameState.explosions.forEach(explosion => {
-                    explosion.update();
-                    explosion.draw();
-                });
-                gameState.explosions = gameState.explosions.filter(exp => exp.life < 20); // إزالة الانفجارات القديمة
-            }
-            
-            // تحديث اللعبة
-            function update() {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted) return;
-                
-                movePlayer();
-                updateEnemies();
-                updateBullets();
-                checkPlayerCollision();
-                checkLevelUp();
-            }
-            
-            // حلقة اللعبة
-            function gameLoop() {
-                update();
-                draw();
-                
-                levelElement.textContent = gameState.level;
-                
-                if (gameState.gameOver) {
-                    overlayTitle.textContent = 'انتهت اللعبة!';
-                    overlayMessage.textContent = `نقاطك النهائية: ${gameState.score}`;
-                    overlayBtn.textContent = 'إعادة التشغيل';
-                    overlay.classList.remove('hidden');
-                } else if (gameState.paused && gameState.gameStarted) {
-                    overlayTitle.textContent = 'إيقاف مؤقت';
-                    overlayMessage.textContent = 'اللعبة في وضع الإيقاف المؤقت';
-                    overlayBtn.textContent = 'استمرار';
-                    overlay.classList.remove('hidden');
-                } else if (!gameState.gameStarted) {
-                    overlay.classList.remove('hidden');
-                } else {
-                    overlay.classList.add('hidden');
-                }
-                
+        // حلقة اللعبة الرئيسية
+        function gameLoop() {
+            if (!gameRunning) {
                 requestAnimationFrame(gameLoop);
+                return;
             }
-            
-            // بدء اللعبة
-            function startGame() {
-                // إعادة تعيين حالة اللعبة
-                gameState = {
-                    level: 1,
-                    score: 0,
-                    lives: 3,
-                    gameOver: false,
-                    gameStarted: true,
-                    paused: false,
-                    enemies: [],
-                    bullets: [],
-                    explosions: [],
-                    enemySpawnCounter: 0,
-                    enemySpawnRate: levelsConfig[0].enemySpawnRate,
-                    enemySpeed: levelsConfig[0].enemySpeed
-                };
-                
-                // التأكد من أن أبعاد اللوحة محدثة
-                resizeCanvas();
-                
-                // إعادة تعيين موقع اللاعب
-                player.x = GAME_WIDTH / 2;
-                player.y = GAME_HEIGHT - (GAME_HEIGHT * 0.15); // وضعها في الأسفل
-                
-                // مؤثر صوتي: بدء اللعبة
-                playSound(200, 'sine', 0.1, 0.3);
-                
-                scoreElement.textContent = '0';
-                livesElement.textContent = '3';
-                levelElement.textContent = '1';
-                questionOverlay.classList.add('hidden'); // إخفاء شاشة الأسئلة
-            }
-            
-            // أحداث الأزرار
-            overlayBtn.addEventListener('click', () => {
-                if (!gameState.gameStarted || gameState.gameOver || gameState.paused) {
-                    startGame();
-                } 
-            });
 
-            soundToggleBtn.addEventListener('click', () => {
-                soundEnabled = !soundEnabled;
-                soundToggleBtn.textContent = `الصوت: ${soundEnabled ? 'تشغيل' : 'إيقاف'}`;
-            });
+            // مسح اللوحة
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // رسم عناصر الخلفية
+            const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            skyGradient.addColorStop(0, '#87CEEB');
+            skyGradient.addColorStop(1, '#E0F7FA');
+            ctx.fillStyle = skyGradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const sunGradient = ctx.createRadialGradient(
+                canvas.width * 0.9, canvas.height * 0.1, 10,
+                canvas.width * 0.9, canvas.height * 0.1, 80
+            );
+            sunGradient.addColorStop(0, '#FFEB3B');
+            sunGradient.addColorStop(1, 'rgba(255, 235, 59, 0)');
+            ctx.fillStyle = sunGradient;
+            ctx.beginPath();
+            ctx.arc(canvas.width * 0.9, canvas.height * 0.1, 80, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(canvas.width * 0.12, canvas.height * 0.16, canvas.width * 0.05, 0, Math.PI * 2);
+            ctx.arc(canvas.width * 0.19, canvas.height * 0.14, canvas.width * 0.04, 0, Math.PI * 2);
+            ctx.arc(canvas.width * 0.16, canvas.height * 0.2, canvas.width * 0.045, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(canvas.width * 0.75, canvas.height * 0.12, canvas.width * 0.06, 0, Math.PI * 2);
+            ctx.arc(canvas.width * 0.81, canvas.height * 0.1, canvas.width * 0.05, 0, Math.PI * 2);
+            ctx.arc(canvas.width * 0.79, canvas.height * 0.16, canvas.width * 0.055, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#4A752C';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height - canvas.height * 0.08);
+            ctx.lineTo(canvas.width * 0.25, canvas.height - canvas.height * 0.25);
+            ctx.lineTo(canvas.width * 0.5, canvas.height - canvas.height * 0.08);
+            ctx.fill();
+            ctx.fillStyle = '#3E6627';
+            ctx.beginPath();
+            ctx.moveTo(canvas.width * 0.37, canvas.height - canvas.height * 0.08);
+            ctx.lineTo(canvas.width * 0.62, canvas.height - canvas.height * 0.35);
+            ctx.lineTo(canvas.width * 0.87, canvas.height - canvas.height * 0.08);
+            ctx.fill();
             
-            // إيقاف اللعبة مؤقتًا عند فقدان التركيز
-            window.addEventListener('blur', () => {
-                if (gameState.gameStarted && !gameState.gameOver) {
-                    gameState.paused = true;
-                }
-            });
+            drawSlingshot();
+
+            // تحديث ورسم جميع الكائنات، بما في ذلك الطيور التي تم إطلاقها
+            for(let i = 0; i < gameObjects.length; i++) {
+                gameObjects[i].draw();
+            }
+
+            for (let i = 0; i < releasedBirds.length; i++) {
+                releasedBirds[i].update();
+                releasedBirds[i].draw();
+            }
+
+            if (currentBird && !currentBird.launched) {
+                currentBird.draw();
+            }
+
+            detectCollisions();
+
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // --- معالجات أحداث الماوس واللمس الموحدة ---
+        // وظيفة مساعدة للحصول على إحداثيات الإدخال
+        function getEventPosition(e) {
+            const rect = canvas.getBoundingClientRect();
+            let x, y;
+            if (e.touches) { // لمس
+                x = e.touches[0].clientX - rect.left;
+                y = e.touches[0].clientY - rect.top;
+            } else { // ماوس
+                x = e.clientX - rect.left;
+                y = e.clientY - rect.top;
+            }
+            return { x, y };
+        }
+
+        function handleInputStart(e) {
+            if (!gameRunning || !currentBird || currentBird.launched) return;
+            const pos = getEventPosition(e);
             
-            // يجب أن يتم تغيير حجم اللوحة أولاً
-            resizeCanvas();
-            initAudio();
+            const dxInitial = pos.x - slingshot.x;
+            const dyInitial = pos.y - slingshot.y;
+            const distanceInitial = Math.sqrt(dxInitial * dxInitial + dyInitial * dyInitial);
+
+            if (distanceInitial < currentBird.radius * 2) {
+                input.active = true;
+                e.preventDefault();
+            }
+        }
+
+        function handleInputMove(e) {
+            if (!gameRunning || !input.active || !currentBird || currentBird.launched) return;
+            const pos = getEventPosition(e);
             
-            window.addEventListener('resize', resizeCanvas);
+            const dx = pos.x - slingshot.x;
+            const dy = pos.y - slingshot.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const maxDistance = canvas.width * 0.2;
+
+            if (distance > maxDistance) {
+                const angle = Math.atan2(dy, dx);
+                input.x = slingshot.x + Math.cos(angle) * maxDistance;
+                input.y = slingshot.y + Math.sin(angle) * maxDistance;
+            } else {
+                input.x = pos.x;
+                input.y = pos.y;
+            }
+
+            currentBird.x = input.x;
+            currentBird.y = input.y;
+            input.power = distance / maxDistance;
+            powerFill.style.width = `${input.power * 100}%`;
+            e.preventDefault();
+        }
+
+        function handleInputEnd(e) {
+            if (!gameRunning || !input.active || !currentBird || currentBird.launched) return;
+            input.active = false;
+            const dx = slingshot.x - currentBird.x;
+            const dy = slingshot.y - currentBird.y;
+            const launchFactor = Math.min(canvas.width, canvas.height) * 0.001;
+            currentBird.velocity.x = dx * launchFactor;
+            currentBird.velocity.y = dy * launchFactor;
+            currentBird.launched = true;
+            releasedBirds.push(currentBird); // إضافة الطائر الذي تم إطلاقه إلى المصفوفة
+            currentBird = null; // إزالة الطائر الحالي من المقلاع
+            powerFill.style.width = '0%';
             
+            // --- تشغيل صوت الإطلاق عند التحرير ---
+            const launchVolume = Math.min(1, Math.sqrt(dx * dx + dy * dy) / (canvas.width * 0.2)) * 0.8;
+            playSound(220 + launchVolume * 150, 'sine', 0.2, launchVolume);
+
+            // تأخير قبل استدعاء nextBird للتحقق من حالة اللعبة
+            setTimeout(() => {
+                nextBird();
+            }, birdLaunchDelay);
+        }
+
+        // أحداث الأزرار
+        resetBtn.addEventListener('click', resetGame);
+
+        restartBtn.addEventListener('click', () => {
+            gameOverOverlay.classList.remove('visible');
+            resetGame();
+        });
+
+        nextLevelBtn.addEventListener('click', () => {
+            gameOverOverlay.classList.remove('visible');
+            currentLevel++;
+            loadLevel(currentLevel);
+        });
+        
+        // حدث تبديل الصوت
+        soundToggleBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundToggleBtn.textContent = soundEnabled ? 'إيقاف الصوت' : 'تشغيل الصوت';
+            soundToggleBtn.classList.toggle('off', !soundEnabled);
+        });
+
+        // التهيئة الأولية ومستمعو الأحداث
+        window.addEventListener('load', () => {
+            setupCanvas();
             gameLoop();
         });
+
+        window.addEventListener('resize', setupCanvas);
+
+        // إضافة مستمعي أحداث اللمس (للأجهزة المحمولة)
+        canvas.addEventListener('touchstart', handleInputStart, { passive: false });
+        canvas.addEventListener('touchmove', handleInputMove, { passive: false });
+        canvas.addEventListener('touchend', handleInputEnd, { passive: true });
+        canvas.addEventListener('touchcancel', handleInputEnd, { passive: true });
+
+        // إضافة مستمعي أحداث الماوس (للكمبيوتر)
+        canvas.addEventListener('mousedown', handleInputStart);
+        canvas.addEventListener('mousemove', handleInputMove);
+        canvas.addEventListener('mouseup', handleInputEnd);
     </script>
 </body>
 </html>
