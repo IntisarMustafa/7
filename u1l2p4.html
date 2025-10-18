@@ -497,6 +497,10 @@
         // === نهاية كود الموسيقى ===
 
         document.addEventListener('DOMContentLoaded', () => {
+            // === إضافة Delta Time للتحكم في السرعة ===
+            let lastTime = 0;
+            let deltaTime = 1;
+
             // DOM Elements
             const gameArea = document.getElementById('game-area');
             const startScreen = document.getElementById('start-screen');
@@ -978,6 +982,7 @@
                 isRolling = true;
                 playerY = 0;
                 playerVelocity = 0;
+                lastTime = 0; // إعادة تعيين الوقت لـ Delta Time
                 startScreen.style.display = 'none';
                 endScreen.style.display = 'none';
                 questionModal.style.display = 'none';
@@ -1007,30 +1012,44 @@
                 requestAnimationFrame(updateGame);
                 startMusic(); // تشغيل الموسيقى عند بدء اللعبة
             }
-            // Update game state
-            function updateGame() {
+            // Update game state مع Delta Time
+            function updateGame(currentTime) {
                 if (!gameRunning || gamePaused) return;
+                
+                // حساب Delta Time
+                if (!lastTime) lastTime = currentTime;
+                deltaTime = (currentTime - lastTime) / 16.67;
+                deltaTime = Math.min(deltaTime, 2); // منع القيم العالية جداً
+                lastTime = currentTime;
+
+                // تحديث المنصات الطائرة مع Delta Time
                 flyingPlatforms.forEach((platform, index) => {
                     const platformEl = platform.element;
                     const currentRight = parseFloat(platformEl.style.right || 0);
-                    platformEl.style.right = `${currentRight + (obstacleSpeed * currentSpeedMultiplier)}px`;
+                    platformEl.style.right = `${currentRight + (obstacleSpeed * currentSpeedMultiplier * deltaTime)}px`;
+                    
                     if (currentRight > gameArea.offsetWidth + 120) {
                         platformEl.remove();
                         flyingPlatforms.splice(index, 1);
                     }
+                    
                     if (!platform.passed && currentRight > gameArea.offsetWidth - player.offsetWidth - 50) {
                         platform.passed = true;
                     }
                 });
+
+                // تحديث العملات مع Delta Time
                 coins.forEach((coin, index) => {
                     const coinEl = coin.element;
                     const currentRight = parseFloat(coinEl.style.right || 0);
-                    coinEl.style.right = `${currentRight + (obstacleSpeed * currentSpeedMultiplier)}px`;
+                    coinEl.style.right = `${currentRight + (obstacleSpeed * currentSpeedMultiplier * deltaTime)}px`;
+                    
                     if (currentRight > gameArea.offsetWidth + 50) {
                         coinEl.remove();
                         coins.splice(index, 1);
                     }
                 });
+
                 let onPlatform = false;
                 flyingPlatforms.forEach(platform => {
                     const platformRect = platform.element.getBoundingClientRect();
@@ -1079,11 +1098,13 @@
                         }
                     }
                 });
+
                 if (!onPlatform) {
-                    playerVelocity -= gravity * gravityDirection;
-                    playerY += playerVelocity;
+                    playerVelocity -= (gravity * gravityDirection * deltaTime);
+                    playerY += (playerVelocity * deltaTime);
                     currentPlatform = null;
                 }
+
                 const maxPlayerY = gameArea.offsetHeight - groundLevel - playerHeight;
                 if (playerY < 0) {
                     playerY = 0;
@@ -1104,17 +1125,21 @@
                         showGameMessage('جاذبية معكوسة!');
                     }
                 }
+
                 player.style.bottom = `${groundLevel + playerY}px`;
+
                 if (playerMode !== 'ship' && isRolling) {
-                    rotationAngle += rotationSpeed * gravityDirection;
+                    rotationAngle += (rotationSpeed * gravityDirection * deltaTime);
                     player.style.transform = `rotate(${rotationAngle}deg)`;
                 } else if (playerMode !== 'ship') {
                     player.style.transform = `rotate(${rotationAngle}deg)`;
                 } else {
                     player.style.transform = `rotate(0deg)`;
                 }
+
                 score += 1;
                 scoreElement.textContent = score;
+
                 const newLevel = Math.floor(score / 1000) + 1;
                 if (newLevel > level) {
                     level = newLevel;
@@ -1133,25 +1158,32 @@
                         }, obstacleIntervalTime / currentSpeedMultiplier);
                     }
                 }
+
                 const progress = Math.min(100, (score % 1000) / 1000 * 100);
                 progressBar.style.width = `${progress}%`;
+
+                // تحديث العناصر الخلفية مع Delta Time
                 backgroundElements.forEach(el => {
                     const currentLeft = parseFloat(el.style.left || 0);
                     const parallaxSpeed = parseFloat(el.dataset.parallaxSpeed);
-                    el.style.left = `${currentLeft - (obstacleSpeed * parallaxSpeed * currentSpeedMultiplier)}px`;
+                    el.style.left = `${currentLeft - (obstacleSpeed * parallaxSpeed * currentSpeedMultiplier * deltaTime)}px`;
                     if (currentLeft < -el.offsetWidth) {
                         el.style.left = `${gameArea.offsetWidth + Math.random() * gameArea.offsetWidth}px`;
                     }
                 });
+
+                // تحديث العوائق مع Delta Time
                 obstacles.forEach((obs, index) => {
                     const obstacle = obs.element;
                     const currentRight = parseFloat(obstacle.style.right || 0);
-                    obstacle.style.right = `${currentRight + (obstacleSpeed * currentSpeedMultiplier)}px`;
+                    obstacle.style.right = `${currentRight + (obstacleSpeed * currentSpeedMultiplier * deltaTime)}px`;
+                    
                     if (obs.isMoving) {
                         const time = Date.now() * obs.moveSpeed + obs.moveOffset;
                         const offsetY = Math.sin(time) * obs.moveRange;
                         obstacle.style.bottom = `${obs.initialY + offsetY}px`;
                     }
+                    
                     if (!obs.passed && currentRight > gameArea.offsetWidth - 220) {
                         obs.passed = true;
                         lastObstaclePassed = score;
@@ -1165,14 +1197,17 @@
                             );
                         }
                     }
+                    
                     if (currentRight > gameArea.offsetWidth + 120) {
                         obstacle.remove();
                         obstacles.splice(index, 1);
                     }
+                    
                     if (detectCollision(player, obstacle, obs)) {
                         return;
                     }
                 });
+
                 coins.forEach((coin, index) => {
                     if (!coin.collected && detectCoinCollision(player, coin.element)) {
                         coin.collected = true;
@@ -1184,6 +1219,7 @@
                         coins.splice(index, 1);
                     }
                 });
+
                 requestAnimationFrame(updateGame);
             }
             // Show the question modal
