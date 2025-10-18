@@ -349,11 +349,10 @@
             
             let GAME_WIDTH;
             let GAME_HEIGHT;
-
-            // === إصلاح السرعة: تحديد الزمن المثالي للإطار (60 إطار/ثانية) ===
-            const IDEAL_FRAME_TIME = 1000 / 60; 
-            // =================================================================
-
+            
+            // متغير ثابت للتحويل من منطق الإطار إلى منطق الوقت (بافتراض 60 إطار في الثانية كمرجع)
+            const REFERENCE_FPS = 60;
+            
             // حالة اللعبة
             let gameState = {
                 level: 1,
@@ -367,12 +366,13 @@
                 isQuestionActive: false,
                 pathPoints: [],
                 pathWidth: 150,
-                pathSpeed: 1,
+                pathSpeed: 1, // سرعة المسار الابتدائية (مضاعف للسرعة)
                 targetPathSpeed: 4,
-                lastTime: 0,
+                lastTime: 0, // لتخزين وقت الإطار السابق
                 
                 obstacles: [],
-                obstacleGenerationInterval: 1000,
+                obstacleGenerationInterval: 1000, // بالمللي ثانية
+                timeSinceLastObstacle: 0, // تتبع الوقت منذ آخر عائق
                 
                 // إضافة حالة أزرار لوحة المفاتيح
                 keys: {
@@ -439,7 +439,6 @@
             ];
 
             // قائمة الأسئلة المحدثة بصيغة LaTeX
-            // تم التحقق من دقة جميع الأسئلة والإجابات
             const questions = [
                 {
                     question: "اكتب العدد النسبي \\(0.5\\) على صورة كسر عادي \\( \\frac{a}{b} \\).",
@@ -617,7 +616,6 @@
                 }
             }
             
-            // تم تعديل صوت نهاية المستوى ليكون أكثر احتفالية
             function playLevelUpSound() {
                 playSound(1000, 'sine', 0.1, 0.4);
                 setTimeout(() => playSound(1200, 'sine', 0.1, 0.4), 100);
@@ -735,7 +733,7 @@
                     const angle = Math.PI;
                     const spread = Math.random() * Math.PI / 8 - Math.PI / 16;
                     const pAngle = angle + spread;
-                    const pSpeed = Math.random() * 3 + 2;
+                    const pSpeed = Math.random() * 3 + 2; // السرعة لا تزال "في الإطار" عند الإنشاء
                     
                     thrusterParticles.push({
                         x: ship.x,
@@ -743,23 +741,28 @@
                         vx: Math.cos(pAngle) * pSpeed,
                         vy: Math.sin(pAngle) * pSpeed,
                         size: Math.random() * 8 + 3,
-                        life: 60,
+                        life: 60, // 60 إطار = 1 ثانية عند 60 إطار في الثانية
                         color: `rgba(255, 100, 50, ${Math.random() * 0.7 + 0.3})`
                     });
                 }
             }
-
-            // === إصلاح السرعة: تمرير عامل دلتا الوقت لتحديث الجسيمات ===
-            function updateThrusterParticles(deltaTimeFactor) {
+            
+            // تم تحديث الدالة لتعمل مع deltaTime
+            function updateThrusterParticles(deltaTime) {
+                const deltaTimeSeconds = deltaTime / 1000;
+                
                 thrusterParticles = thrusterParticles.filter(p => p.life > 0);
                 thrusterParticles.forEach(p => {
-                    p.x += p.vx * deltaTimeFactor;
-                    p.y += p.vy * deltaTimeFactor;
-                    p.life -= 1 * deltaTimeFactor;
-                    p.size *= 0.95;
+                    // تحويل السرعات إلى مسافة بالوقت
+                    // p.vx, p.vy هي السرعات المقاسة في الإطار (بافتراض 60 إطار في الثانية)
+                    p.x += p.vx * deltaTimeSeconds * REFERENCE_FPS;
+                    p.y += p.vy * deltaTimeSeconds * REFERENCE_FPS;
+                    
+                    // تقليل العمر وحجم الجسيمات بناءً على الوقت
+                    p.life -= (deltaTimeSeconds * REFERENCE_FPS); 
+                    p.size *= Math.pow(0.95, deltaTimeSeconds * REFERENCE_FPS / REFERENCE_FPS);
                 });
             }
-            // =======================================================
 
             function drawThrusterParticles() {
                 thrusterParticles.forEach(p => {
@@ -783,27 +786,32 @@
                     celebrationParticles.push({
                         x: GAME_WIDTH / 2,
                         y: GAME_HEIGHT / 2,
-                        vx: Math.cos(angle) * speed,
-                        vy: Math.sin(angle) * speed,
+                        vx: Math.cos(angle) * speed, // سرعة الإطار
+                        vy: Math.sin(angle) * speed, // سرعة الإطار
                         size: Math.random() * 5 + 3,
-                        life: 120,
+                        life: 120, // 2 ثانية
                         color: colors[Math.floor(Math.random() * colors.length)]
                     });
                 }
             }
 
-            // === إصلاح السرعة: تمرير عامل دلتا الوقت لتحديث جسيمات الاحتفال ===
-            function updateCelebrationParticles(deltaTimeFactor) {
+            // تم تحديث الدالة لتعمل مع deltaTime
+            function updateCelebrationParticles(deltaTime) {
+                const deltaTimeSeconds = deltaTime / 1000;
+                
                 celebrationParticles = celebrationParticles.filter(p => p.life > 0);
                 celebrationParticles.forEach(p => {
-                    p.x += p.vx * deltaTimeFactor;
-                    p.y += p.vy * deltaTimeFactor;
-                    p.life -= 1 * deltaTimeFactor;
-                    p.size *= 0.98;
-                    p.vy += 0.1 * deltaTimeFactor; // إضافة جاذبية بسيطة
+                    // تحويل السرعات إلى مسافة بالوقت
+                    p.x += p.vx * deltaTimeSeconds * REFERENCE_FPS;
+                    p.y += p.vy * deltaTimeSeconds * REFERENCE_FPS;
+                    
+                    p.life -= (deltaTimeSeconds * REFERENCE_FPS);
+                    p.size *= Math.pow(0.98, deltaTimeSeconds * REFERENCE_FPS / REFERENCE_FPS);
+                    
+                    // الجاذبية scaled
+                    p.vy += 0.1 * deltaTimeSeconds * REFERENCE_FPS;
                 });
             }
-            // ===========================================================
 
             function drawCelebrationParticles() {
                 celebrationParticles.forEach(p => {
@@ -824,7 +832,7 @@
                         x: Math.random() * GAME_WIDTH,
                         y: Math.random() * GAME_HEIGHT,
                         size: Math.random() * 2,
-                        speed: Math.random() * starSpeed + 0.1,
+                        speed: Math.random() * starSpeed + 0.1, // سرعة الإطار
                         color: `rgba(255, 255, 255, ${Math.random() * 0.7 + 0.3})`
                     });
                 }
@@ -839,17 +847,19 @@
                 });
             }
 
-            // === إصلاح السرعة: تمرير عامل دلتا الوقت لتحديث النجوم ===
-            function updateStars(deltaTimeFactor) {
+            // تم تحديث الدالة لتعمل مع deltaTime
+            function updateStars(deltaTime) {
+                const deltaTimeSeconds = deltaTime / 1000;
+                
                 stars.forEach(star => {
-                    star.x -= star.speed * gameState.pathSpeed / 2 * deltaTimeFactor; // تطبيق عامل دلتا
+                    // تحويل السرعة إلى مسافة بالوقت
+                    star.x -= star.speed * gameState.pathSpeed / 2 * deltaTimeSeconds * REFERENCE_FPS;
                     if (star.x < 0) {
                         star.x = GAME_WIDTH;
                         star.y = Math.random() * GAME_HEIGHT;
                     }
                 });
             }
-            // ===================================================
             
             function getSawtoothPathY(x, timeOffset) {
                 const period = 500;
@@ -883,10 +893,10 @@
                 }
             }
             
-            // === إصلاح السرعة: تطبيق عامل دلتا الوقت على حركة المسار ===
-            function updatePath(deltaTimeFactor) {
+            // تم تحديث الدالة لتعمل مع حركة المسافة المحسوبة بالوقت
+            function updatePath(movementDistance) {
                 gameState.pathPoints.forEach(point => {
-                    point.x -= gameState.pathSpeed * deltaTimeFactor;
+                    point.x -= movementDistance;
                 });
 
                 // إضافة نقطة جديدة عند نهاية المسار عند الحاجة
@@ -899,7 +909,6 @@
                     gameState.pathPoints.push({ x: newX, y: newY });
                 }
             }
-            // =======================================================
             
             function drawPath() {
                 ctx.strokeStyle = 'rgba(79, 195, 247, 0.4)';
@@ -967,48 +976,41 @@
                 ctx.setLineDash([]);
             }
             
-            let lastObstacleTime = 0;
-            function generateObstacles(timestamp) {
-                if (timestamp - lastObstacleTime > gameState.obstacleGenerationInterval) {
-                    const pathPoint = gameState.pathPoints.find(p => p.x > GAME_WIDTH * 0.9);
-                    
-                    if (pathPoint) {
-                        // تعديل: زيادة حجم العوائق بعد الثانية 16
-                        let obstacleRadius;
-                        if (gameState.gameTime >= 16) {
-                            // حجم أكبر بعد 16 ثانية
-                            obstacleRadius = Math.random() * 10 + 15; // حجم بين 15 و 25
-                        } else {
-                            // الحجم الأصلي
-                            obstacleRadius = Math.random() * 5 + 10; // حجم بين 10 و 15
-                        }
-
-                        let randomY;
-                        
-                        // وضع العوائق على حدود المسار
-                        if (Math.random() > 0.5) {
-                            // على الحد العلوي للمسار
-                            randomY = pathPoint.y - gameState.pathWidth / 2 + obstacleRadius;
-                        } else {
-                            // على الحد السفلي للمسار
-                            randomY = pathPoint.y + gameState.pathWidth / 2 - obstacleRadius;
-                        }
-
-                        const colorIndex = (gameState.level - 1) % levelColors.length;
-                        const obstacleColor = levelColors[colorIndex];
-
-                        gameState.obstacles.push({
-                            x: GAME_WIDTH,
-                            y: randomY,
-                            radius: obstacleRadius,
-                            color: obstacleColor
-                        });
+            // تم تحديث الدالة لتستخدم timeSinceLastObstacle بدلاً من timestamp
+            function generateObstacles() {
+                // ليس هناك حاجة لمعلمة timestamp هنا، لأننا نستخدم gameState.timeSinceLastObstacle
+                
+                const pathPoint = gameState.pathPoints.find(p => p.x > GAME_WIDTH * 0.9);
+                
+                if (pathPoint) {
+                    let obstacleRadius;
+                    if (gameState.gameTime >= 16) {
+                        obstacleRadius = Math.random() * 10 + 15; 
+                    } else {
+                        obstacleRadius = Math.random() * 5 + 10;
                     }
+
+                    let randomY;
                     
-                    lastObstacleTime = timestamp;
-                    // تقليل الفاصل الزمني لتوليد العوائق مع تقدم المستوى لزيادة الصعوبة
-                    gameState.obstacleGenerationInterval = Math.max(500, 1000 - gameState.level * 50);
+                    if (Math.random() > 0.5) {
+                        randomY = pathPoint.y - gameState.pathWidth / 2 + obstacleRadius;
+                    } else {
+                        randomY = pathPoint.y + gameState.pathWidth / 2 - obstacleRadius;
+                    }
+
+                    const colorIndex = (gameState.level - 1) % levelColors.length;
+                    const obstacleColor = levelColors[colorIndex];
+
+                    gameState.obstacles.push({
+                        x: GAME_WIDTH,
+                        y: randomY,
+                        radius: obstacleRadius,
+                        color: obstacleColor
+                    });
                 }
+                
+                // تقليل الفاصل الزمني لتوليد العوائق مع تقدم المستوى لزيادة الصعوبة
+                gameState.obstacleGenerationInterval = Math.max(500, 1000 - gameState.level * 50);
             }
             
             function drawObstacles() {
@@ -1051,14 +1053,13 @@
                 });
             }
 
-            // === إصلاح السرعة: تطبيق عامل دلتا الوقت على حركة العوائق ===
-            function updateObstacles(deltaTimeFactor) {
+            // تم تحديث الدالة لتعمل مع حركة المسافة المحسوبة بالوقت
+            function updateObstacles(movementDistance) {
                 gameState.obstacles.forEach(obstacle => {
-                    obstacle.x -= gameState.pathSpeed * deltaTimeFactor;
+                    obstacle.x -= movementDistance;
                 });
                 gameState.obstacles = gameState.obstacles.filter(obstacle => obstacle.x + obstacle.radius > 0);
             }
-            // ========================================================
 
             function checkPathCollision() {
                 let minDistance = Infinity;
@@ -1108,14 +1109,12 @@
                 return false;
             }
 
-            // تحقق من الاصطدام: إذا حدث أي اصطدام، سيتم إظهار السؤال.
             function checkCollision() {
                 if (checkPathCollision() || checkObstacleCollision()) {
                     handleQuestionCollision();
                 }
             }
 
-            // دالة لإدارة الاصطدام وإظهار السؤال
             function handleQuestionCollision() {
                 playCollisionSound();
                 gameState.paused = true;
@@ -1123,29 +1122,23 @@
                 stopThrusterSound();
                 stopBackgroundMelody();
 
-                // ===== التعديل هنا: اختيار السؤال من قائمة السؤال المعدة =====
                 if (questionPool.length === 0) {
-                    setupQuestionPool(); // إعادة تعبئة القائمة إذا كانت فارغة
+                    setupQuestionPool(); 
                 }
                 currentQuestion = questionPool.pop();
-                // =====================================================================
 
                 showQuestion(currentQuestion);
             }
 
-            // دالة لإظهار السؤال على الشاشة باستخدام MathJax
             function showQuestion(question) {
                 questionTextElement.innerHTML = question.question;
                 answerOptionsContainer.innerHTML = '';
                 feedbackMessageElement.textContent = '';
                 
-                // === التعديل هنا: نحصل على الإجابة الصحيحة قبل الخلط ===
-                // هذا يمنع تعديل الفهرس الأصلي للسؤال في المصفوفة
                 const correctAnswerText = question.options[question.correctAnswerIndex];
                 
                 const shuffledOptions = shuffleArray([...question.options]);
                 
-                // === التعديل هنا: نجد الفهرس الجديد للإجابة الصحيحة ونخزنه في متغير مؤقت ===
                 currentCorrectIndex = shuffledOptions.findIndex(option => option === correctAnswerText);
                 
                 shuffledOptions.forEach((option, index) => {
@@ -1158,17 +1151,14 @@
                 
                 questionOverlay.classList.remove('hidden');
 
-                // إضافة تأخير بسيط قبل طلب إعادة العرض لضمان تحميل MathJax
                 setTimeout(() => {
                      if (window.MathJax) {
                         window.MathJax.typesetPromise([questionTextElement, answerOptionsContainer]).catch((err) => console.error('MathJax typesetting failed:', err));
                     }
-                }, 100); // 100 مللي ثانية كافية عادةً
+                }, 100); 
             }
 
-            // دالة للتعامل مع الإجابة
             function handleAnswer(selectedIndex) {
-                // === التعديل هنا: نقارن الفهرس المختار بالفهرس الصحيح المؤقت ===
                 const isCorrect = (selectedIndex === currentCorrectIndex);
                 const buttons = answerOptionsContainer.querySelectorAll('.answer-btn');
                 
@@ -1186,7 +1176,6 @@
                     feedbackMessageElement.textContent = "إجابة صحيحة! استمر في اللعب.";
                     feedbackMessageElement.style.color = "#00b09b";
                     
-                    // إضافة نقاط إضافية للإجابة الصحيحة إلى نقاط المستوى الحالي
                     gameState.currentLevelScore += 50; 
                     scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
 
@@ -1194,31 +1183,28 @@
                         questionOverlay.classList.add('hidden');
                         gameState.isQuestionActive = false;
                         
-                        // ===== إعادة تهيئة اللعبة بالكامل بعد الإجابة الصحيحة =====
+                        // إعادة تهيئة المسار والعوائق
                         initializePath();
                         gameState.obstacles = [];
-                        gameState.pathSpeed = 1; // إعادة السرعة إلى نقطة البداية
+                        gameState.pathSpeed = 1 + (gameState.level - 1) * 0.5; // إعادة السرعة إلى نقطة البداية للمستوى الحالي
                         positionShipOnPath();
                         gameState.paused = false;
-                        gameState.lastTime = performance.now(); // إعادة ضبط الوقت عند استئناف اللعبة
-                        // ====================================================================================
+                        // لا نغير lastTime هنا، بل في gameLoop لضمان تدفق زمني مستمر
 
-                        startBackgroundMelody(); // استئناف الموسيقى الخلفية
-                        startThrusterSound(); // استئناف صوت الدفع
+                        startBackgroundMelody(); 
+                        startThrusterSound();
                     }, 1500);
                 } else {
-                    // التغيير المطلوب: إنهاء اللعبة عند الإجابة الخاطئة
                     playIncorrectSound();
                     feedbackMessageElement.textContent = "إجابة خاطئة. انتهت اللعبة!";
                     feedbackMessageElement.style.color = "#c04848";
                     setTimeout(() => {
                         questionOverlay.classList.add('hidden');
-                        gameState.gameOver = true; // إنهاء اللعبة
+                        gameState.gameOver = true; 
                     }, 1500);
                 }
             }
 
-            // دالة لوضع المركبة في منتصف المسار الآمن
             function positionShipOnPath() {
                 const shipX = GAME_WIDTH * 0.2;
                 let foundSegment = false;
@@ -1255,7 +1241,7 @@
                 }
             }
 
-            // ===== تحديث: تعديل معالجات أحداث الفأرة لتعمل مثل اللمس =====
+            // معالجات أحداث الفأرة واللمس (تم تركها كما هي لأنها تعتمد على فرق الإحداثيات وهو متغير متناسب مع الوقت)
             canvas.addEventListener('mousedown', (e) => {
                 if (gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
                     mouseState.isDown = true;
@@ -1269,17 +1255,13 @@
             });
 
             canvas.addEventListener('mousemove', (e) => {
-                // التحكم بالفأرة يعمل فقط إذا كان زر الفأرة مضغوطاً
                 if (mouseState.isDown && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
-                    // هنا لا نحتاج لضرب دلتا الوقت لأننا نستخدم فرق الإحداثيات مباشرة
                     const deltaY = e.clientY - mouseState.lastY;
                     ship.y += deltaY;
                     mouseState.lastY = e.clientY;
-                    // التأكد من أن المركبة لا تخرج عن حدود الشاشة
                     ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
                 }
             });
-            // ===== نهاية التعديل =====
             
             // معالجات أحداث اللمس
             canvas.addEventListener('touchstart', handleTouchStart);
@@ -1299,7 +1281,6 @@
                 if (!touchState.isTouched) return;
                 e.preventDefault();
                 const touch = e.changedTouches[0];
-                // هنا لا نحتاج لضرب دلتا الوقت لأننا نستخدم فرق الإحداثيات مباشرة
                 const deltaY = touch.clientY - touchState.lastY;
                 ship.y += deltaY;
                 touchState.lastY = touch.clientY;
@@ -1311,41 +1292,40 @@
                 touchState.lastY = null;
             }
 
-            function draw() {
+            // تم تحديث الدالة لتعمل مع deltaTime
+            function draw(deltaTime) {
                 ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
                 
-                // تحديث النجوم وحركة الجسيمات يتم الآن في حلقة التحديث مع دلتا تايم
+                updateStars(deltaTime);
                 drawStars();
                 
                 drawPath();
                 
                 drawObstacles();
 
+                generateThrusterParticles();
+                updateThrusterParticles(deltaTime);
                 drawThrusterParticles();
                 
                 ship.draw();
                 
-                // رسم جسيمات الاحتفال
+                updateCelebrationParticles(deltaTime);
                 drawCelebrationParticles();
             }
             
-            // دالة للبدء بالمستوى التالي
             function nextLevel() {
-                // إضافة نقاط المستوى الحالي إلى النقاط الإجمالية
                 gameState.totalScore += gameState.currentLevelScore;
                 
-                // زيادة الصعوبة للمستوى التالي
                 gameState.level++;
                 gameState.gameTime = 0;
                 gameState.isLevelComplete = false;
                 gameState.paused = false;
                 
-                // إعادة تعيين نقاط المستوى الحالي
                 gameState.currentLevelScore = 0;
                 
                 // تحديث سرعة المسار لزيادة الصعوبة
-                gameState.pathSpeed = 1 + (gameState.level - 1) * 0.5; // سرعة ابتدائية أسرع
-                gameState.targetPathSpeed = gameState.pathSpeed + 3 + (gameState.level - 1) * 1; // سرعة مستهدفة أعلى
+                gameState.pathSpeed = 1 + (gameState.level - 1) * 0.5;
+                gameState.targetPathSpeed = gameState.pathSpeed + 3 + (gameState.level - 1) * 1;
                 
                 // تضييق المسار
                 gameState.pathWidth = 150 - (gameState.level - 1) * 10;
@@ -1355,87 +1335,106 @@
                 scoreElement.textContent = gameState.totalScore;
                 timeElement.textContent = gameState.gameTime;
                 
-                gameState.obstacles = []; // إعادة تعيين العوائق
+                gameState.obstacles = [];
+                gameState.timeSinceLastObstacle = 0; // إعادة ضبط مؤقت العوائق
                 
                 initializePath();
                 positionShipOnPath();
                 
-                gameState.lastTime = performance.now();
+                // لا نغير lastTime هنا، بل في gameLoop
                 
                 startThrusterSound();
                 startBackgroundMelody();
                 
-                // إخفاء شارة الاحتفال
                 celebrationBadge.style.display = 'none';
                 
-                // إعادة تعيين مجموعة الأسئلة للمستوى الجديد
                 setupQuestionPool();
             }
 
-            function update(timestamp) {
+            // تم تحديث الدالة لتعمل مع deltaTime
+            function update(deltaTime) {
                 
-                // === إصلاح السرعة: حساب دلتا الوقت وعامل التحجيم ===
-                const deltaTime = timestamp - gameState.lastTime;
-                gameState.lastTime = timestamp;
-                const deltaTimeFactor = deltaTime / IDEAL_FRAME_TIME;
-                // =================================================
-
                 if (gameState.paused || gameState.gameOver || !gameState.gameStarted || gameState.isQuestionActive) {
-                    // تحديث جسيمات الاحتفال حتى بعد إيقاف اللعبة
-                    updateCelebrationParticles(deltaTimeFactor);
+                    return; // يتم تحديث جسيمات الاحتفال في دالة draw
+                }
+                
+                const deltaTimeSeconds = deltaTime / 1000;
+
+                // 1. تحديث زمن اللعبة
+                gameState.gameTime += deltaTimeSeconds;
+                timeElement.textContent = Math.floor(gameState.gameTime);
+
+                // 2. زيادة سرعة المركبة تدريجياً (Scaled)
+                if (gameState.pathSpeed < gameState.targetPathSpeed) {
+                    // 0.01 * 60 (مرجع) = 0.6 سرعة في الثانية تقريباً
+                    gameState.pathSpeed += 0.01 * deltaTimeSeconds * REFERENCE_FPS;
+                }
+
+                // 3. التحقق من انتهاء المستوى
+                if (Math.floor(gameState.gameTime) >= 30 && !gameState.isLevelComplete) {
+                    gameState.paused = true;
+                    gameState.isLevelComplete = true;
+                    playLevelUpSound();
+                    stopThrusterSound();
+                    stopBackgroundMelody();
+                    generateCelebrationParticles();
+                    celebrationBadge.style.display = 'block'; 
                     return;
                 }
                 
-                gameState.gameTime += deltaTime / 1000;
-                timeElement.textContent = Math.floor(gameState.gameTime);
-
-                // === إصلاح السرعة: تطبيق عامل دلتا الوقت على التسارع ===
-                // زيادة سرعة المركبة تدريجياً حتى تصل للسرعة المستهدفة
-                if (gameState.pathSpeed < gameState.targetPathSpeed) {
-                    // تم ضرب قيمة التسارع الثابتة بـ deltaTimeFactor
-                    gameState.pathSpeed += 0.01 * deltaTimeFactor; 
-                }
-                // =================================================
-
-                // === إصلاح السرعة: تطبيق عامل دلتا الوقت على حركة المركبة بلوحة المفاتيح ===
-                // هذا يضمن أن حركة المركبة بالأسهم تكون ثابتة بالوقت
+                // 4. نقاط الوقت للمستوى الحالي
+                gameState.currentLevelScore = Math.floor(gameState.gameTime * 10);
+                scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
+                
+                // 5. حركة المركبة (Scaled: بكسل في الثانية)
                 let dy = 0;
-                const baseSpeed = 5; // السرعة الثابتة بالبكسل في الإطار المثالي
+                const speed = 300; // سرعة 300 بكسل في الثانية (ما يعادل 5 بكسل/إطار عند 60 إطار/ثانية)
                 if (gameState.keys.ArrowUp || gameState.keys.w) {
-                    dy = -baseSpeed;
+                    dy = -speed;
                 }
                 if (gameState.keys.ArrowDown || gameState.keys.s) {
-                    dy = baseSpeed;
+                    dy = speed;
                 }
-                ship.y += dy * deltaTimeFactor; // تطبيق عامل دلتا الوقت على الحركة
-                // =================================================================
+                ship.y += dy * deltaTimeSeconds; // المسافة = السرعة * الزمن
 
-                // التأكد من أن المركبة لا تخرج عن حدود الشاشة
-                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
-
-                // تحديث المسار والعوائق (تم تمرير العامل لهما)
-                updatePath(deltaTimeFactor);
-                updateObstacles(deltaTimeFactor);
-                generateObstacles(timestamp);
+                // 6. حركة المسار والعوائق (Scaled: بكسل في الثانية)
+                const movementDistance = gameState.pathSpeed * deltaTimeSeconds * REFERENCE_FPS;
                 
-                // التحقق من الاصطدامات
+                updatePath(movementDistance);
+                updateObstacles(movementDistance);
+                
+                // 7. توليد العوائق باستخدام مؤقت الوقت
+                gameState.timeSinceLastObstacle += deltaTime;
+                if (gameState.timeSinceLastObstacle > gameState.obstacleGenerationInterval) {
+                    generateObstacles(); 
+                    gameState.timeSinceLastObstacle = 0; // إعادة ضبط المؤقت
+                }
+                
+                // 8. التحقق من الاصطدامات
                 checkCollision();
-
-                // تحديث جسيمات الاحتفال والنجوم
-                updateCelebrationParticles(deltaTimeFactor);
-                updateThrusterParticles(deltaTimeFactor);
-                updateStars(deltaTimeFactor); // النجوم أيضاً تتأثر بالسرعة
             }
             
+            let lastTimestamp = 0; // تخزين آخر وقت تم فيه عرض الإطار
+
             function gameLoop(timestamp) {
                 if (!gameState.gameStarted) {
+                    // تحديث الوقت الأولي في أول إطار بعد البدء
+                    lastTimestamp = timestamp; 
                     requestAnimationFrame(gameLoop);
                     return;
                 }
-
-                update(timestamp);
-                draw();
                 
+                // حساب فرق الوقت بين الإطار الحالي والسابق (بالمللي ثانية)
+                const deltaTime = timestamp - lastTimestamp;
+                lastTimestamp = timestamp;
+                
+                // تحديث منطق اللعبة
+                update(deltaTime);
+                
+                // رسم اللعبة
+                draw(deltaTime);
+                
+                // منطق عرض الشاشات
                 if (gameState.gameOver) {
                     overlayTitle.textContent = 'انتهت اللعبة!';
                     overlayMessage.textContent = `نقاطك الإجمالية: ${gameState.totalScore}`;
@@ -1443,7 +1442,7 @@
                     overlay.classList.remove('hidden');
                     stopThrusterSound();
                     stopBackgroundMelody();
-                } else if (gameState.isLevelComplete) { // حالة جديدة لانتهاء المستوى
+                } else if (gameState.isLevelComplete) { 
                     overlayTitle.textContent = 'انتهى المستوى!';
                     overlayMessage.textContent = `لقد جمعت ${gameState.currentLevelScore} نقطة في هذا المستوى.\nنقاطك الإجمالية: ${gameState.totalScore + gameState.currentLevelScore}`;
                     overlayBtn.textContent = 'المستوى التالي';
@@ -1479,12 +1478,13 @@
                     isQuestionActive: false,
                     pathPoints: [],
                     pathWidth: 150,
-                    pathSpeed: 1, // سرعة المسار الابتدائية
-                    targetPathSpeed: 4, // السرعة المستهدفة
-                    lastTime: performance.now(), // تحديث الوقت عند البدء
+                    pathSpeed: 1, 
+                    targetPathSpeed: 4, 
+                    lastTime: performance.now(),
                     
                     obstacles: [],
                     obstacleGenerationInterval: 1000,
+                    timeSinceLastObstacle: 0, // تهيئة مؤقت العوائق
                     keys: {
                         ArrowUp: false,
                         ArrowDown: false,
@@ -1493,7 +1493,6 @@
                     }
                 };
                 
-                // إعداد مجموعة الأسئلة الجديدة في بداية اللعبة
                 setupQuestionPool();
                 
                 initializePath();
@@ -1504,6 +1503,7 @@
                 levelElement.textContent = '1';
                 
                 thrusterParticles = [];
+                celebrationParticles = []; // تهيئة جسيمات الاحتفال
                 
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -1511,18 +1511,18 @@
                 startThrusterSound();
                 startBackgroundMelody();
                 
-                // إخفاء الشاشة الرئيسية
+                celebrationBadge.style.display = 'none';
                 overlay.classList.add('hidden');
             }
             
             overlayBtn.addEventListener('click', () => {
                 if (gameState.gameOver || !gameState.gameStarted) {
                     startGame();
-                } else if (gameState.isLevelComplete) { // التعامل مع زر "المستوى التالي"
+                } else if (gameState.isLevelComplete) { 
                     nextLevel();
                 } else if (gameState.paused) {
                     gameState.paused = false;
-                    gameState.lastTime = performance.now();
+                    // لا نغير lastTime هنا، بل نعتمد على التحديث التلقائي في gameLoop
                 }
             });
 
@@ -1549,7 +1549,6 @@
             
             // إضافة معالجات أحداث لوحة المفاتيح
             window.addEventListener('keydown', (e) => {
-                // تحقق من المفاتيح المسموحة فقط
                 if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'ArrowDown' || e.key === 's') {
                     e.preventDefault();
                     gameState.keys[e.key] = true;
@@ -1565,10 +1564,8 @@
             resizeCanvas();
             createStars();
             
-            // استدعاء gameLoop لبدء حلقة اللعبة بعد تحميل الصفحة
+            // تبدأ حلقة اللعبة هنا
             requestAnimationFrame(gameLoop);
-            
-            // لا تبدأ اللعبة تلقائيًا، بل انتظر ضغط زر "بدء اللعبة"
         });
     </script>
 </body>
