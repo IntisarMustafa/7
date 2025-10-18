@@ -349,7 +349,11 @@
             
             let GAME_WIDTH;
             let GAME_HEIGHT;
-            
+
+            // === إصلاح السرعة: تحديد الزمن المثالي للإطار (60 إطار/ثانية) ===
+            const IDEAL_FRAME_TIME = 1000 / 60; 
+            // =================================================================
+
             // حالة اللعبة
             let gameState = {
                 level: 1,
@@ -745,15 +749,17 @@
                 }
             }
 
-            function updateThrusterParticles() {
+            // === إصلاح السرعة: تمرير عامل دلتا الوقت لتحديث الجسيمات ===
+            function updateThrusterParticles(deltaTimeFactor) {
                 thrusterParticles = thrusterParticles.filter(p => p.life > 0);
                 thrusterParticles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life--;
+                    p.x += p.vx * deltaTimeFactor;
+                    p.y += p.vy * deltaTimeFactor;
+                    p.life -= 1 * deltaTimeFactor;
                     p.size *= 0.95;
                 });
             }
+            // =======================================================
 
             function drawThrusterParticles() {
                 thrusterParticles.forEach(p => {
@@ -786,16 +792,18 @@
                 }
             }
 
-            function updateCelebrationParticles() {
+            // === إصلاح السرعة: تمرير عامل دلتا الوقت لتحديث جسيمات الاحتفال ===
+            function updateCelebrationParticles(deltaTimeFactor) {
                 celebrationParticles = celebrationParticles.filter(p => p.life > 0);
                 celebrationParticles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life--;
+                    p.x += p.vx * deltaTimeFactor;
+                    p.y += p.vy * deltaTimeFactor;
+                    p.life -= 1 * deltaTimeFactor;
                     p.size *= 0.98;
-                    p.vy += 0.1; // إضافة جاذبية بسيطة
+                    p.vy += 0.1 * deltaTimeFactor; // إضافة جاذبية بسيطة
                 });
             }
+            // ===========================================================
 
             function drawCelebrationParticles() {
                 celebrationParticles.forEach(p => {
@@ -831,15 +839,17 @@
                 });
             }
 
-            function updateStars() {
+            // === إصلاح السرعة: تمرير عامل دلتا الوقت لتحديث النجوم ===
+            function updateStars(deltaTimeFactor) {
                 stars.forEach(star => {
-                    star.x -= star.speed * gameState.pathSpeed / 2;
+                    star.x -= star.speed * gameState.pathSpeed / 2 * deltaTimeFactor; // تطبيق عامل دلتا
                     if (star.x < 0) {
                         star.x = GAME_WIDTH;
                         star.y = Math.random() * GAME_HEIGHT;
                     }
                 });
             }
+            // ===================================================
             
             function getSawtoothPathY(x, timeOffset) {
                 const period = 500;
@@ -859,8 +869,6 @@
                 return yOffset * amplitude - amplitude / 2;
             }
             
-            // تم تعديل هذه الدالة لحل مشكلة الاصطدام السريع.
-            // الآن يتم إنشاء المسار ليبدأ قبل المركبة بمسافة كافية لضمان عدم الاصطدام.
             function initializePath() {
                 gameState.pathPoints = [];
                 const segments = 100;
@@ -868,7 +876,6 @@
                 const initialYOffset = GAME_HEIGHT / 2;
                 
                 // نبدأ توليد النقاط من موقع أبعد على اليسار لتجنب الاصطدام الفوري.
-                // يتم توليد نقاط المسار الآن من -GAME_WIDTH*2 لضمان وجود مسار آمن.
                 for (let i = -20; i <= segments; i++) {
                     const x = i * segmentWidth;
                     const y = getSawtoothPathY(x, gameState.gameTime) + initialYOffset;
@@ -876,9 +883,10 @@
                 }
             }
             
-            function updatePath() {
+            // === إصلاح السرعة: تطبيق عامل دلتا الوقت على حركة المسار ===
+            function updatePath(deltaTimeFactor) {
                 gameState.pathPoints.forEach(point => {
-                    point.x -= gameState.pathSpeed;
+                    point.x -= gameState.pathSpeed * deltaTimeFactor;
                 });
 
                 // إضافة نقطة جديدة عند نهاية المسار عند الحاجة
@@ -891,6 +899,7 @@
                     gameState.pathPoints.push({ x: newX, y: newY });
                 }
             }
+            // =======================================================
             
             function drawPath() {
                 ctx.strokeStyle = 'rgba(79, 195, 247, 0.4)';
@@ -1042,12 +1051,14 @@
                 });
             }
 
-            function updateObstacles() {
+            // === إصلاح السرعة: تطبيق عامل دلتا الوقت على حركة العوائق ===
+            function updateObstacles(deltaTimeFactor) {
                 gameState.obstacles.forEach(obstacle => {
-                    obstacle.x -= gameState.pathSpeed;
+                    obstacle.x -= gameState.pathSpeed * deltaTimeFactor;
                 });
                 gameState.obstacles = gameState.obstacles.filter(obstacle => obstacle.x + obstacle.radius > 0);
             }
+            // ========================================================
 
             function checkPathCollision() {
                 let minDistance = Infinity;
@@ -1183,8 +1194,7 @@
                         questionOverlay.classList.add('hidden');
                         gameState.isQuestionActive = false;
                         
-                        // ===== التعديل لحل المشكلة: إعادة تهيئة اللعبة بالكامل بعد الإجابة الصحيحة =====
-                        // إعادة تهيئة المسار وجميع عناصر اللعبة لتوفير بيئة آمنة للبدء من جديد.
+                        // ===== إعادة تهيئة اللعبة بالكامل بعد الإجابة الصحيحة =====
                         initializePath();
                         gameState.obstacles = [];
                         gameState.pathSpeed = 1; // إعادة السرعة إلى نقطة البداية
@@ -1261,6 +1271,7 @@
             canvas.addEventListener('mousemove', (e) => {
                 // التحكم بالفأرة يعمل فقط إذا كان زر الفأرة مضغوطاً
                 if (mouseState.isDown && gameState.gameStarted && !gameState.paused && !gameState.isQuestionActive) {
+                    // هنا لا نحتاج لضرب دلتا الوقت لأننا نستخدم فرق الإحداثيات مباشرة
                     const deltaY = e.clientY - mouseState.lastY;
                     ship.y += deltaY;
                     mouseState.lastY = e.clientY;
@@ -1288,6 +1299,7 @@
                 if (!touchState.isTouched) return;
                 e.preventDefault();
                 const touch = e.changedTouches[0];
+                // هنا لا نحتاج لضرب دلتا الوقت لأننا نستخدم فرق الإحداثيات مباشرة
                 const deltaY = touch.clientY - touchState.lastY;
                 ship.y += deltaY;
                 touchState.lastY = touch.clientY;
@@ -1302,15 +1314,13 @@
             function draw() {
                 ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
                 
-                updateStars();
+                // تحديث النجوم وحركة الجسيمات يتم الآن في حلقة التحديث مع دلتا تايم
                 drawStars();
                 
                 drawPath();
                 
                 drawObstacles();
 
-                generateThrusterParticles();
-                updateThrusterParticles();
                 drawThrusterParticles();
                 
                 ship.draw();
@@ -1363,72 +1373,62 @@
             }
 
             function update(timestamp) {
-                if (gameState.paused || gameState.gameOver || !gameState.gameStarted || gameState.isQuestionActive) {
-                    // تحديث جسيمات الاحتفال حتى بعد إيقاف اللعبة
-                    updateCelebrationParticles();
-                    return;
-                }
                 
+                // === إصلاح السرعة: حساب دلتا الوقت وعامل التحجيم ===
                 const deltaTime = timestamp - gameState.lastTime;
                 gameState.lastTime = timestamp;
+                const deltaTimeFactor = deltaTime / IDEAL_FRAME_TIME;
+                // =================================================
+
+                if (gameState.paused || gameState.gameOver || !gameState.gameStarted || gameState.isQuestionActive) {
+                    // تحديث جسيمات الاحتفال حتى بعد إيقاف اللعبة
+                    updateCelebrationParticles(deltaTimeFactor);
+                    return;
+                }
                 
                 gameState.gameTime += deltaTime / 1000;
                 timeElement.textContent = Math.floor(gameState.gameTime);
 
+                // === إصلاح السرعة: تطبيق عامل دلتا الوقت على التسارع ===
                 // زيادة سرعة المركبة تدريجياً حتى تصل للسرعة المستهدفة
                 if (gameState.pathSpeed < gameState.targetPathSpeed) {
-                    gameState.pathSpeed += 0.01;
+                    // تم ضرب قيمة التسارع الثابتة بـ deltaTimeFactor
+                    gameState.pathSpeed += 0.01 * deltaTimeFactor; 
                 }
+                // =================================================
 
-                // === التغيير المطلوب: التحقق من انتهاء المستوى بعد 30 ثانية ===
-                if (Math.floor(gameState.gameTime) >= 30 && !gameState.isLevelComplete) {
-                    gameState.paused = true;
-                    gameState.isLevelComplete = true;
-                    playLevelUpSound();
-                    stopThrusterSound();
-                    stopBackgroundMelody();
-                    generateCelebrationParticles(); // توليد جسيمات الاحتفال
-                    celebrationBadge.style.display = 'block'; // إظهار الشارة
-                    return; // إيقاف تحديث اللعبة
-                }
-                
-                // نقاط الوقت للمستوى الحالي
-                gameState.currentLevelScore = Math.floor(gameState.gameTime * 10);
-                scoreElement.textContent = gameState.totalScore + gameState.currentLevelScore;
-                
-                // === هذا الجزء من الكود هو ما يضمن أن المركبة لا تتحرك تلقائياً ===
-                // تحديث موقع المركبة بناءً على ضغط المفاتيح فقط.
-                // إذا لم يضغط اللاعب على أي مفتاح، فإن قيمة dy ستكون صفرًا، وبالتالي لن تتحرك المركبة.
+                // === إصلاح السرعة: تطبيق عامل دلتا الوقت على حركة المركبة بلوحة المفاتيح ===
+                // هذا يضمن أن حركة المركبة بالأسهم تكون ثابتة بالوقت
                 let dy = 0;
-                const speed = 5; // سرعة الحركة بالأسهم
+                const baseSpeed = 5; // السرعة الثابتة بالبكسل في الإطار المثالي
                 if (gameState.keys.ArrowUp || gameState.keys.w) {
-                    dy = -speed;
+                    dy = -baseSpeed;
                 }
                 if (gameState.keys.ArrowDown || gameState.keys.s) {
-                    dy = speed;
+                    dy = baseSpeed;
                 }
-                ship.y += dy;
+                ship.y += dy * deltaTimeFactor; // تطبيق عامل دلتا الوقت على الحركة
                 // =================================================================
 
                 // التأكد من أن المركبة لا تخرج عن حدود الشاشة
-                // هذا الجزء من الكود تم نقله للتحكم بالفأرة واللمس
-                // ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
+                ship.y = Math.max(30, Math.min(GAME_HEIGHT - 30, ship.y));
 
-                // تحديث المسار والعوائق
-                updatePath();
-                updateObstacles();
+                // تحديث المسار والعوائق (تم تمرير العامل لهما)
+                updatePath(deltaTimeFactor);
+                updateObstacles(deltaTimeFactor);
                 generateObstacles(timestamp);
                 
                 // التحقق من الاصطدامات
                 checkCollision();
 
-                // تحديث جسيمات الاحتفال
-                updateCelebrationParticles();
+                // تحديث جسيمات الاحتفال والنجوم
+                updateCelebrationParticles(deltaTimeFactor);
+                updateThrusterParticles(deltaTimeFactor);
+                updateStars(deltaTimeFactor); // النجوم أيضاً تتأثر بالسرعة
             }
             
             function gameLoop(timestamp) {
                 if (!gameState.gameStarted) {
-                    // اللعبة لم تبدأ بعد، لا تفعل شيئًا
                     requestAnimationFrame(gameLoop);
                     return;
                 }
