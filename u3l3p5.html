@@ -1698,13 +1698,14 @@
                 health = 500;
                 value = 50;
             } else if (type === "normal") {
-                wolfGeometry = new THREE.ConeGeometry(2, 3, 8);
+                // التعديل: جعل الذئاب العادية أصغر حجماً
+                wolfGeometry = new THREE.ConeGeometry(1.5, 2.5, 8); // تم تقليل الحجم من (2, 3) إلى (1.5, 2.5)
                 wolfMaterial = new THREE.MeshStandardMaterial({
                     color: 0x8b4513,
                     roughness: 0.7,
                 });
-                // التعديل: الذئاب العادية أصبحت سريعة وضعيفة
-                health = 50; // صحة منخفضة تموت بضربة واحدة
+                // التعديل: الذئاب العادية أصبحت أضعف وأقل ضرراً
+                health = 30; // تم تقليل الصحة من 50 إلى 30
                 value = 5;
             } else if (type === "fast") {
                 wolfGeometry = new THREE.ConeGeometry(1.5, 2.5, 8);
@@ -1840,12 +1841,12 @@
 
             wolfGroup.position.set(x, type === "giant" ? 4 : 2, z);
 
-            // التعديل: الذئاب العادية أصبحت سريعة وتهاجم اللاعب من أي مسافة
+            // التعديل: الذئاب العادية أصبحت أقل سرعة وأقل ضرراً
             const isAggressive = type === "aggressive";
             const isNormal = type === "normal";
             
-            // الذئاب العادية تهاجم الآن من أي مسافة
-            const baseSpeed = isNormal ? 0.15 : (isAggressive ? 0.12 : Math.random() * 0.04 + 0.01);
+            // التعديل: تقليل سرعة الذئاب العادية
+            const baseSpeed = isNormal ? 0.1 : (isAggressive ? 0.12 : Math.random() * 0.04 + 0.01);
             
             // تحديد مدى الكشف بناءً على نوع الذئب
             let detectionRange;
@@ -1869,8 +1870,8 @@
                 attackRange: (isAggressive || isNormal) ? 5 : 0,
                 attackDamage: (isAggressive || isNormal) ? 10 : 0,
                 lastAttackTime: 0,
-                // إضافة خاصية جديدة للضرر بالتصادم
-                collisionDamage: (isAggressive || isNormal) ? 15 : 5,
+                // التعديل: تقليل ضرر التصادم للذئاب العادية من 15 إلى 8
+                collisionDamage: isNormal ? 8 : (isAggressive ? 15 : 5),
                 lastCollisionTime: 0,
                 collisionCooldown: 1000, // 1 ثانية بين كل ضرر
                 // إضافة خاصية جديدة للذئاب الشرسة
@@ -2396,6 +2397,221 @@
         let gameLoopId;
         const treasureBoxes = [];
 
+        // دالة مساعدة للحصول على الأرقام العربية
+        function getArabicNumber(num) {
+            const arabicNumbers = {
+                1: "الأول", 2: "الثاني", 3: "الثالث", 4: "الرابع", 5: "الخامس",
+                6: "السادس", 7: "السابع", 8: "الثامن", 9: "التاسع", 10: "العاشر",
+                11: "الحادي عشر", 12: "الثاني عشر", 13: "الثالث عشر", 14: "الرابع عشر",
+                15: "الخامس عشر"
+            };
+            return arabicNumbers[num] || num;
+        }
+
+        // توليد سؤال رياضي حول المتتاليات - تم التعديل لعرض المتتاليات في سطر مستقل
+        function generateMathQuestion() {
+            const questionTypes = ["arithmetic_sequence", "geometric_sequence", "general_term_rule", "find_rule"];
+            const selectedType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+
+            if (selectedType === "arithmetic_sequence") {
+                // متتالية حسابية
+                const firstTerm = Math.floor(Math.random() * 10) + 1;
+                const commonDifference = Math.floor(Math.random() * 5) + 1;
+                const sequenceLength = 4; // عدد حدود المتتالية المعطاة
+
+                let sequence = [];
+                for (let i = 0; i < sequenceLength; i++) {
+                    sequence.push(firstTerm + i * commonDifference);
+                }
+
+                const nextTerm = firstTerm + sequenceLength * commonDifference;
+                const question = `ما الحد التالي في المتتالية الآتية؟`;
+                const options = [nextTerm.toString()];
+
+                while (options.length < 4) {
+                    // إنشاء خيارات خاطئة
+                    let wrongAnswer = nextTerm + (Math.floor(Math.random() * 10) - 5); // عدد عشوائي حول الإجابة الصحيحة
+                    if (wrongAnswer === nextTerm) {
+                        wrongAnswer += 1;
+                    }
+                    if (!options.includes(wrongAnswer.toString())) {
+                        options.push(wrongAnswer.toString());
+                    }
+                }
+
+                options.sort(() => Math.random() - 0.5);
+
+                return {
+                    question,
+                    options,
+                    answer: nextTerm.toString(),
+                    sequence: sequence // إضافة المتتالية للعرض المنفصل
+                };
+            } else if (selectedType === "geometric_sequence") {
+                // متتالية هندسية
+                const firstTerm = Math.floor(Math.random() * 5) + 1;
+                const commonRatio = Math.floor(Math.random() * 3) + 2; // تجنب 1 لتكون متتالية غير ثابتة
+                const sequenceLength = 4;
+
+                let sequence = [];
+                for (let i = 0; i < sequenceLength; i++) {
+                    sequence.push(firstTerm * Math.pow(commonRatio, i));
+                }
+
+                const nextTerm = firstTerm * Math.pow(commonRatio, sequenceLength);
+                const question = `ما الحد التالي في المتتالية الآتية؟`;
+                const options = [nextTerm.toString()];
+
+                while (options.length < 4) {
+                    let wrongAnswer = nextTerm + (Math.floor(Math.random() * 10) - 5);
+                    if (wrongAnswer === nextTerm) {
+                        wrongAnswer += 1;
+                    }
+                    if (!options.includes(wrongAnswer.toString())) {
+                        options.push(wrongAnswer.toString());
+                    }
+                }
+
+                options.sort(() => Math.random() - 0.5);
+
+                return {
+                    question,
+                    options,
+                    answer: nextTerm.toString(),
+                    sequence: sequence // إضافة المتتالية للعرض المنفصل
+                };
+            } else if (selectedType === "general_term_rule") {
+                // النوع الجديد: قاعدة الحد العام للمتتالية
+                const multiplier = Math.floor(Math.random() * 8) + 2; // عدد بين 2 و 9
+                const adder = Math.floor(Math.random() * 10) + 1; // عدد بين 1 و 10
+                const termPosition = Math.floor(Math.random() * 10) + 5; // رتبة الحد بين 5 و 14
+                
+                // إنشاء قاعدة الحد العام
+                const rule = `اضرب رتبة الحد في ${multiplier} ثم اطرح ${adder}`;
+                
+                // حساب الحد المطلوب
+                const answer = (termPosition * multiplier) - adder;
+                
+                const question = `إذا كانت قاعدة الحد العام للمتتالية هي: ${rule}. فأوجد الحد ${getArabicNumber(termPosition)}`;
+                const options = [answer.toString()];
+
+                // إنشاء خيارات خاطئة
+                while (options.length < 4) {
+                    let wrongAnswer = answer + (Math.floor(Math.random() * 10) - 5);
+                    if (wrongAnswer === answer) {
+                        wrongAnswer += Math.floor(Math.random() * 5) + 1;
+                    }
+                    if (!options.includes(wrongAnswer.toString())) {
+                        options.push(wrongAnswer.toString());
+                    }
+                }
+
+                options.sort(() => Math.random() - 0.5);
+
+                return {
+                    question,
+                    options,
+                    answer: answer.toString(),
+                    sequence: null
+                };
+            } else if (selectedType === "find_rule") {
+                // نوع إضافي: إيجاد قاعدة المتتالية من حدود معطاة
+                const ruleType = Math.random() > 0.5 ? "arithmetic" : "geometric";
+                
+                if (ruleType === "arithmetic") {
+                    const firstTerm = Math.floor(Math.random() * 10) + 1;
+                    const commonDifference = Math.floor(Math.random() * 5) + 1;
+                    const sequence = [firstTerm, firstTerm + commonDifference, firstTerm + 2 * commonDifference];
+                    
+                    const question = `ما قاعدة الحد العام للمتتالية: ${sequence.join('، ')}، ...؟`;
+                    const correctRule = `اضرب رتبة الحد في ${commonDifference} ثم اجمع ${firstTerm - commonDifference}`;
+                    const options = [correctRule];
+                    
+                    // إنشاء قواعد خاطئة
+                    while (options.length < 4) {
+                        let wrongDiff = commonDifference + (Math.floor(Math.random() * 3) - 1);
+                        if (wrongDiff === commonDifference) wrongDiff += 1;
+                        if (wrongDiff < 1) wrongDiff = 1;
+                        
+                        let wrongFirst = firstTerm + (Math.floor(Math.random() * 3) - 1);
+                        if (wrongFirst === firstTerm) wrongFirst += 1;
+                        
+                        const wrongRule = `اضرب رتبة الحد في ${wrongDiff} ثم اجمع ${wrongFirst - wrongDiff}`;
+                        if (!options.includes(wrongRule)) {
+                            options.push(wrongRule);
+                        }
+                    }
+                    
+                    options.sort(() => Math.random() - 0.5);
+                    
+                    return {
+                        question,
+                        options,
+                        answer: correctRule,
+                        sequence: sequence
+                    };
+                } else {
+                    // قاعدة هندسية
+                    const firstTerm = Math.floor(Math.random() * 5) + 1;
+                    const commonRatio = Math.floor(Math.random() * 3) + 2;
+                    const sequence = [firstTerm, firstTerm * commonRatio, firstTerm * commonRatio * commonRatio];
+                    
+                    const question = `ما قاعدة الحد العام للمتتالية: ${sequence.join('، ')}، ...؟`;
+                    const correctRule = `اضرب ${firstTerm} في ${commonRatio} أس (رتبة الحد ناقص 1)`;
+                    const options = [correctRule];
+                    
+                    // إنشاء قواعد خاطئة
+                    while (options.length < 4) {
+                        let wrongRatio = commonRatio + (Math.floor(Math.random() * 2) - 0);
+                        if (wrongRatio === commonRatio) wrongRatio += 1;
+                        if (wrongRatio < 2) wrongRatio = 2;
+                        
+                        let wrongFirst = firstTerm + (Math.floor(Math.random() * 2) - 0);
+                        if (wrongFirst === firstTerm) wrongFirst += 1;
+                        if (wrongFirst < 1) wrongFirst = 1;
+                        
+                        const wrongRule = `اضرب ${wrongFirst} في ${wrongRatio} أس (رتبة الحد ناقص 1)`;
+                        if (!options.includes(wrongRule)) {
+                            options.push(wrongRule);
+                        }
+                    }
+                    
+                    options.sort(() => Math.random() - 0.5);
+                    
+                    return {
+                        question,
+                        options,
+                        answer: correctRule,
+                        sequence: sequence
+                    };
+                }
+            }
+        }
+
+        // دالة جديدة لعرض المتتالية في سطر مستقل وباتجاه من اليسار لليمين
+        function displaySequence(sequence) {
+            sequenceContainer.innerHTML = ''; // مسح المحتوى السابق
+
+            sequence.forEach((term, index) => {
+                const termElement = document.createElement('span');
+                termElement.className = 'sequence-item';
+                termElement.textContent = term;
+
+                // إضافة فاصلة بين الحدود باستثناء الأخير
+                if (index < sequence.length - 1) {
+                    termElement.textContent += '، ';
+                }
+
+                sequenceContainer.appendChild(termElement);
+            });
+
+            // إضافة علامة النقاط الثلاثة للإشارة إلى استمرار المتتالية
+            const dotsElement = document.createElement('span');
+            dotsElement.className = 'sequence-item';
+            dotsElement.textContent = '...';
+            sequenceContainer.appendChild(dotsElement);
+        }
+
         // دالة لإنشاء المرتفعات (المنصات)
         function spawnPlatforms() {
             const platformCount = 10;
@@ -2458,14 +2674,14 @@
             }
         }
 
-        // إنشاء ذئاب للجولة الحالية - تم تعديلها لإنشاء ذئاب عادية (سريعة وضعيفة)
+        // إنشاء ذئاب للجولة الحالية - تم تعديلها لإنشاء ذئاب عادية (أصغر وأقل ضرراً)
         function spawnWavesForRound() {
             // التعديل: زيادة عدد الذئاب العادية بشكل كبير
             const currentWolfCount = 20 + (round - 1) * 10; // زاد عدد الذئاب بشكل كبير
 
             for (let i = 0; i < currentWolfCount; i++) {
                 let type;
-                type = "normal"; // التعديل: الذئاب الأخرى غير قريبة من الخراف تكون عادية (سريعة وضعيفة)
+                type = "normal"; // التعديل: الذئاب الأخرى غير قريبة من الخراف تكون عادية (أصغر وأقل ضرراً)
 
                 const wolfX = Math.random() * 900 - 450;
                 const wolfZ = Math.random() * 900 - 450;
@@ -4078,105 +4294,6 @@
             setupKeyboardControls(); // تهيئة تحكم لوحة المفاتيح
         });
 
-        // توليد سؤال رياضي حول المتتاليات - تم التعديل لعرض المتتاليات في سطر مستقل
-        function generateMathQuestion() {
-            const questionTypes = ["arithmetic_sequence", "geometric_sequence"];
-            const selectedType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
-
-            if (selectedType === "arithmetic_sequence") {
-                // متتالية حسابية
-                const firstTerm = Math.floor(Math.random() * 10) + 1;
-                const commonDifference = Math.floor(Math.random() * 5) + 1;
-                const sequenceLength = 4; // عدد حدود المتتالية المعطاة
-
-                let sequence = [];
-                for (let i = 0; i < sequenceLength; i++) {
-                    sequence.push(firstTerm + i * commonDifference);
-                }
-
-                const nextTerm = firstTerm + sequenceLength * commonDifference;
-                const question = `ما الحد التالي في المتتالية الآتية؟`;
-                const options = [nextTerm.toString()];
-
-                while (options.length < 4) {
-                    // إنشاء خيارات خاطئة
-                    let wrongAnswer = nextTerm + (Math.floor(Math.random() * 10) - 5); // عدد عشوائي حول الإجابة الصحيحة
-                    if (wrongAnswer === nextTerm) {
-                        wrongAnswer += 1;
-                    }
-                    if (!options.includes(wrongAnswer.toString())) {
-                        options.push(wrongAnswer.toString());
-                    }
-                }
-
-                options.sort(() => Math.random() - 0.5);
-
-                return {
-                    question,
-                    options,
-                    answer: nextTerm.toString(),
-                    sequence: sequence // إضافة المتتالية للعرض المنفصل
-                };
-            } else {
-                // متتالية هندسية
-                const firstTerm = Math.floor(Math.random() * 5) + 1;
-                const commonRatio = Math.floor(Math.random() * 3) + 2; // تجنب 1 لتكون متتالية غير ثابتة
-                const sequenceLength = 4;
-
-                let sequence = [];
-                for (let i = 0; i < sequenceLength; i++) {
-                    sequence.push(firstTerm * Math.pow(commonRatio, i));
-                }
-
-                const nextTerm = firstTerm * Math.pow(commonRatio, sequenceLength);
-                const question = `ما الحد التالي في المتتالية الآتية؟`;
-                const options = [nextTerm.toString()];
-
-                while (options.length < 4) {
-                    let wrongAnswer = nextTerm + (Math.floor(Math.random() * 10) - 5);
-                    if (wrongAnswer === nextTerm) {
-                        wrongAnswer += 1;
-                    }
-                    if (!options.includes(wrongAnswer.toString())) {
-                        options.push(wrongAnswer.toString());
-                    }
-                }
-
-                options.sort(() => Math.random() - 0.5);
-
-                return {
-                    question,
-                    options,
-                    answer: nextTerm.toString(),
-                    sequence: sequence // إضافة المتتالية للعرض المنفصل
-                };
-            }
-        }
-
-        // دالة جديدة لعرض المتتالية في سطر مستقل وباتجاه من اليسار لليمين
-        function displaySequence(sequence) {
-            sequenceContainer.innerHTML = ''; // مسح المحتوى السابق
-
-            sequence.forEach((term, index) => {
-                const termElement = document.createElement('span');
-                termElement.className = 'sequence-item';
-                termElement.textContent = term;
-
-                // إضافة فاصلة بين الحدود باستثناء الأخير
-                if (index < sequence.length - 1) {
-                    termElement.textContent += '، ';
-                }
-
-                sequenceContainer.appendChild(termElement);
-            });
-
-            // إضافة علامة النقاط الثلاثة للإشارة إلى استمرار المتتالية
-            const dotsElement = document.createElement('span');
-            dotsElement.className = 'sequence-item';
-            dotsElement.textContent = '...';
-            sequenceContainer.appendChild(dotsElement);
-        }
-
         function checkTreasureBoxCollision() {
             const playerPos = new THREE.Vector3();
             player.getWorldPosition(playerPos);
@@ -4211,7 +4328,12 @@
             questionText.textContent = questionData.question;
 
             // عرض المتتالية في سطر مستقل
-            displaySequence(questionData.sequence);
+            if (questionData.sequence) {
+                displaySequence(questionData.sequence);
+                sequenceContainer.style.display = 'block';
+            } else {
+                sequenceContainer.style.display = 'none';
+            }
 
             optionsContainer.innerHTML = "";
             questionData.options.forEach((option) => {
