@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- KaTeX CDN for mathematical rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        // Tailwind configuration for the Royal Blue theme
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'royal-blue': '#1a237e',
+                        'light-blue-accent': '#64b5f6',
+                        'golden-bar': '#fcd34d',
+                        'page-bg': '#ffffff',
+                    },
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    arabic: ['Noto Sans Arabic', 'sans-serif'] 
+                },
+            }
+        }
+    </script>
+    <style>
+        /* Ensuring math elements have LTR direction for correct rendering */
+        .math-display {
+            direction: ltr; 
+            font-size: 1.25rem;
+            text-align: left; 
+            background-color: transparent; 
+            padding: 0;
+            margin: 0;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        /* Fixing input direction for number fields on RTL page */
+        input[type="number"], input[type="text"] {
+            direction: ltr;
+            text-align: left;
+        }
+        
+        /* New: Minimalist card styling for book page look */
+        .book-page {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 800px;
+            padding-top: 0;
+        }
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+        }
+        
+        /* Style for the two-column step layout similar to the book */
+        .step-container {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ccc;
+        }
+        .step-label {
+            font-weight: bold;
+            color: #1f2937;
+            text-align: right;
+            width: 100%;
+            padding-top: 5px; 
+            padding-bottom: 5px; 
+            direction: rtl;
+        }
+        .step-math {
+            flex-grow: 1;
+            direction: ltr;
+            text-align: left;
+            width: 100%;
+        }
+
+        /* Media query for tablet and desktop */
+        @media (min-width: 640px) {
+            .step-container {
+                flex-direction: row-reverse;
+            }
+            .step-label {
+                width: auto;
+                min-width: 200px; 
+                max-width: 30%; 
+            }
+            .step-math {
+                width: auto;
+            }
+            .math-display {
+                font-size: 1.5rem; 
+                text-align: center; 
+            }
+        }
+        
+        /* Navigation Button Style */
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 800; 
+            font-size: 1.125rem; 
+            border-radius: 0.75rem; 
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+        }
+        /* Ensure KaTeX itself has LTR direction */
+        .katex {
+            direction: ltr !important;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 flex items-start justify-center">
+
+    <!-- Main Container - Page Template (Book Look) -->
+    <div class="w-full max-w-4xl bg-white text-gray-800 rounded-lg book-page my-8 pb-8">
+        
+        <!-- PROFESSIONAL ROYAL BLUE HEADER (RTL) -->
+        <div class="w-full bg-royal-blue text-white shadow-2xl mb-6 rounded-t-lg">
+            
+            <!-- Header Content -->
+            <header class="py-6 px-6">
+                <!-- Centered content -->
+                <div class="flex justify-center items-center text-center">
+                    
+                    <!-- Lesson Title (Centered) -->
+                    <h1 class="text-3xl font-extrabold tracking-wide" dir="rtl">
+                        الدرس 3: المتتاليات
+                    </h1>
+                </div>
+            </header>
+            
+            <!-- GOLDEN Divider Bar -->
+            <div class="h-1 bg-golden-bar w-full"></div>
+        </div>
+
+        <!-- Content Padding -->
+        <div class="px-8" dir="rtl">
+            
+            <!-- New Descriptive Introduction Section -->
+            <p class="text-base text-gray-700 text-right mb-4 border-b border-gray-200 pb-2" dir="rtl">
+                يمكنني استعمال مقدار جبري لكتابة الحد العام للمتتالية.
+            </p>
+
+            <!-- Title Section - "Example 4" Style - ALIGNED RIGHT -->
+            <div class="mb-6 text-right">
+                <h2 class="inline-block text-2xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl" dir="rtl">
+                    مثال 4
+                </h2>
+            </div>
+            
+            <!-- Main Example Title/Description -->
+            <h3 class="text-xl font-bold mb-4 text-right leading-relaxed" dir="rtl">
+                الحد العام للمتتالية هو (اضرب رتبة الحد في $\frac{1}{4}$ ثم أجمع $\frac{27}{4}$). أكتب الحد العام باستخدام مقدار جبري، ثم استخدامه لأجد الحدود الثلاثة الأولى.
+            </h3>
+            
+            <p class="text-base mb-4 text-right leading-loose" dir="rtl">
+                يمكنني أن أكتب الحد العام المعطى على صورة (أي حد يساوي $\frac{1}{4}$ مضروبًا في رتبة الحد مضافًا إليه $\frac{27}{4}$، لأرمز إلى رتبة أي حد في المتتالية بالمتغير $n$، ولأرمز إلى الحد العام نفسه بالرمز $T_n$).
+                <br>
+                أكتب هذه العبارة بالرموز كما يأتي:
+            </p>
+
+            <!-- General Term Display -->
+            <div class="mb-8 p-2 rounded-lg text-gray-800 border-b-2 border-dashed border-royal-blue/50" dir="ltr">
+                <div id="generalTermDisplay" class="math-display">
+                    <!-- Formula: T_n = (1/4)n + 27/4 -->
+                    $$T_n = \frac{1}{4}n + \frac{27}{4}$$
+                </div>
+            </div>
+            
+            <!-- Static Calculation of First Three Terms -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold mb-3 text-royal-blue text-right" dir="rtl">
+                    أجد الحدود الثلاثة الأولى (حسب المثال):
+                </h3>
+                <div class="space-y-4">
+                    <!-- T1 Calculation -->
+                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="step-container border-b-0">
+                            <span class="step-label" dir="rtl">أُعوض $n=1$:</span>
+                            <span class="step-math">
+                                <div class="math-display">
+                                    $$T_1 = \frac{1}{4}(1) + \frac{27}{4} = \frac{28}{4} = 7$$
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- T2 Calculation -->
+                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="step-container border-b-0">
+                            <span class="step-label" dir="rtl">أُعوض $n=2$:</span>
+                            <span class="step-math">
+                                <div class="math-display">
+                                    $$T_2 = \frac{1}{4}(2) + \frac{27}{4} = \frac{29}{4} = 7\frac{1}{4}$$
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- T3 Calculation -->
+                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="step-container border-b-0">
+                            <span class="step-label" dir="rtl">أُعوض $n=3$:</span>
+                            <span class="step-math">
+                                <div class="math-display">
+                                    $$T_3 = \frac{1}{4}(3) + \frac{27}{4} = \frac{30}{4} = \frac{15}{2} = 7\frac{1}{2}$$
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Interactive Calculator Section -->
+            <h3 class="text-xl font-bold mb-4 text-right border-b border-gray-300 pb-2 text-royal-blue" dir="rtl">
+                استخدم الحد العام، لأجد قيمة الحد $T_n$ (تفاعلي):
+            </h3>
+            
+            <!-- Input for Interactive Calculation -->
+            <div class="p-4 bg-indigo-50 rounded-lg mb-6 flex flex-col sm:flex-row gap-4 items-end border border-indigo-200" dir="rtl">
+                <div class="flex-grow w-full">
+                    <label for="termNumber" class="block text-sm font-medium mb-2 text-gray-700" dir="rtl">
+                        أدخل رتبة الحد المطلوب ($n$):
+                    </label>
+                    <input type="number" id="termNumber" value="4" min="1" step="1"
+                           class="w-full p-3 rounded-lg bg-white text-gray-800 border border-indigo-400 focus:ring-light-blue-accent focus:border-light-blue-accent transition"
+                           placeholder="مثال: 4" onkeydown="if(event.key === 'Enter') calculateTerm()">
+                </div>
+                
+                <button onclick="calculateTerm()"
+                        class="w-full sm:w-auto px-6 py-3 bg-light-blue-accent text-royal-blue font-bold rounded-lg hover:bg-light-blue-accent/90 transition transform hover:scale-[1.02] active:scale-95 whitespace-nowrap shadow-md">
+                    احسب $T_n$ و الخطوات
+                </button>
+            </div>
+
+            <!-- Result Display Area -->
+            <div id="resultContainer" class="mt-6">
+                <h3 class="text-xl font-bold mb-3 text-royal-blue text-right" dir="rtl">
+                    خطوات حساب الحد (تفاعلي):
+                </h3>
+                <div id="calculationSteps" class="p-4 rounded-lg bg-white" dir="rtl">
+                    <!-- Dynamic calculation steps will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Message Box for Errors/Info -->
+            <div id="messageBox" class="mt-4 p-3 text-center bg-yellow-100 text-yellow-800 rounded-lg hidden border border-yellow-300" role="alert" dir="rtl">
+                <!-- Error message will appear here -->
+            </div>
+
+            <!-- "Check your understanding" Section -->
+            <div class="mt-10 pt-4 border-t-4 border-royal-blue/70" dir="rtl">
+                <div class="flex justify-end items-center mb-4">
+                    <h2 class="text-xl font-bold text-royal-blue bg-light-blue-accent/30 py-1 px-4 rounded-md border border-light-blue-accent" dir="rtl">
+                        أتحقق من فهمي (تفاعلي)
+                    </h2>
+                </div>
+                
+                <p class="text-base text-right leading-loose mb-4" dir="rtl">
+                    الحد العام للمتتالية هو (اضرب رتبة الحد في $\frac{1}{6}$ ثم أطرح $\frac{5}{6}$). أكتب الحد العام باستخدام مقدار جبري: 
+                    <strong class="text-royal-blue">
+                        <span dir="ltr">$$T_n = \frac{1}{6}n - \frac{5}{6}$$</span>
+                    </strong> 
+                    <br>
+                    استخدم هذا الحد العام لأجد الحدود الثلاثة الأولى ($T_1, T_2, T_3$).
+                </p>
+
+                <!-- Inputs for T1, T2, T3 -->
+                <div class="p-4 bg-green-50 rounded-lg border border-green-200" dir="rtl">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label for="check_t1" class="block text-sm font-medium mb-2 text-gray-700">
+                                <span dir="ltr" class="inline-block">$T_1$</span> (كعدد صحيح أو كسر):
+                            </label>
+                            <input type="text" id="check_t1" dir="ltr" class="w-full p-3 rounded-lg bg-white text-gray-800 border border-green-400 focus:ring-green-600 focus:border-green-600 transition" placeholder="مثال: -2/3 أو 5">
+                        </div>
+                        <div>
+                            <label for="check_t2" class="block text-sm font-medium mb-2 text-gray-700">
+                                <span dir="ltr" class="inline-block">$T_2$</span> (كعدد صحيح أو كسر):
+                            </label>
+                            <input type="text" id="check_t2" dir="ltr" class="w-full p-3 rounded-lg bg-white text-gray-800 border border-green-400 focus:ring-green-600 focus:border-green-600 transition" placeholder="مثال: -2/3 أو 5">
+                        </div>
+                        <div>
+                            <label for="check_t3" class="block text-sm font-medium mb-2 text-gray-700">
+                                <span dir="ltr" class="inline-block">$T_3$</span> (كعدد صحيح أو كسر):
+                            </label>
+                            <input type="text" id="check_t3" dir="ltr" class="w-full p-3 rounded-lg bg-white text-gray-800 border border-green-400 focus:ring-green-600 focus:border-green-600 transition" placeholder="مثال: -2/3 أو 5">
+                        </div>
+                    </div>
+
+                    <button onclick="checkUnderstanding()"
+                            class="w-full px-6 py-3 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition transform hover:scale-[1.01] active:scale-95 shadow-md">
+                        تحقق من إجابتي
+                    </button>
+                </div>
+                
+                <!-- Feedback Area -->
+                <div id="checkFeedback" class="mt-4 p-4 text-center rounded-lg border hidden" role="alert" dir="rtl">
+                    <!-- Feedback message will appear here -->
+                </div>
+            </div>
+            
+            <!-- NAVIGATION BAR -->
+            <div class="mt-12 pt-4 border-t border-gray-300 flex justify-between items-center">
+                
+                <!-- السابق (Previous) -->
+                <a href="u3l3p2.html" 
+                   class="nav-btn prev-btn bg-light-blue-accent text-royal-blue hover:bg-light-blue-accent/80 transition transform active:scale-95 shadow-xl flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    السابق
+                </a>
+                
+                <!-- التالي (Next) -->
+                <a href="u3l3p4.html" 
+                   class="nav-btn next-btn bg-royal-blue text-white hover:bg-royal-blue/80 transition transform active:scale-95 shadow-xl flex items-center gap-2">
+                    التالي
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // --- Utility Functions (GCD, Mixed Number, Fraction Parsing) ---
+        
+        function gcd(a, b) {
+            return b === 0 ? a : gcd(b, a % b);
+        }
+
+        function toMixedNumber(numerator, denominator) {
+            if (denominator === 0) return 'خطأ: القسمة على صفر';
+            
+            const sign = numerator * denominator < 0 ? '-' : '';
+            const absNum = Math.abs(numerator);
+            const absDen = Math.abs(denominator);
+
+            const commonDivisor = gcd(absNum, absDen);
+            const simplifiedNum = absNum / commonDivisor;
+            const simplifiedDen = absDen / commonDivisor;
+
+            const integerPart = Math.floor(simplifiedNum / simplifiedDen);
+            const remainder = simplifiedNum % simplifiedDen;
+            
+            if (remainder === 0) {
+                return sign + integerPart.toString();
+            } else if (integerPart === 0) {
+                return sign + `\\frac{${remainder}}{${simplifiedDen}}`;
+            } else {
+                return sign + `${integerPart}\\frac{${remainder}}{${simplifiedDen}}`;
+            }
+        }
+
+        function parseInput(input) {
+            input = String(input).trim(); 
+            if (!input) return NaN;
+
+            if (input.includes('/')) {
+                const parts = input.split('/');
+                if (parts.length === 2) {
+                    const num = parseFloat(parts[0]);
+                    const den = parseFloat(parts[1]);
+                    if (!isNaN(num) && !isNaN(den) && den !== 0) {
+                        return num / den;
+                    }
+                }
+            }
+            const num = parseFloat(input);
+            if (!isNaN(num)) {
+                return num;
+            }
+            return NaN;
+        }
+
+        // --- Core Functions for Interaction ---
+
+        function calculateTerm() {
+            const nInput = document.getElementById('termNumber');
+            const n = parseInt(nInput.value);
+            const resultContainer = document.getElementById('resultContainer');
+            const calculationSteps = document.getElementById('calculationSteps');
+            const messageBox = document.getElementById('messageBox');
+
+            if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
+                messageBox.classList.remove('hidden');
+                messageBox.textContent = 'يرجى إدخال رقم صحيح موجب لرتبة الحد ($n$).';
+                resultContainer.classList.add('hidden');
+                return;
+            }
+
+            messageBox.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+
+            const numerator = n + 27;
+            const denominator = 4;
+            
+            const finalMixedNumber = toMixedNumber(numerator, denominator);
+            
+            let stepsHtml = '';
+            
+            stepsHtml += `
+                <div class="step-container">
+                    <span class="step-label" dir="rtl">قاعدة الحد العام</span>
+                    <span class="step-math"><div class="math-display">$$T_n = \\frac{1}{4}n + \\frac{27}{4}$$</div></span>
+                </div>
+            `;
+            
+            stepsHtml += `
+                <div class="step-container">
+                    <span class="step-label" dir="rtl">أُعوض رتبة الحد ($n=${n}$)</span>
+                    <span class="step-math"><div class="math-display">$$T_{${n}} = \\frac{1}{4}(${n}) + \\frac{27}{4}$$</div></span>
+                </div>
+            `;
+            
+            stepsHtml += `
+                <div class="step-container">
+                    <span class="step-label" dir="rtl">أُبسط (الجمع)</span>
+                    <span class="step-math"><div class="math-display">$$T_{${n}} = \\frac{${n}}{4} + \\frac{27}{4} = \\frac{${numerator}}{4}$$</div></span>
+                </div>
+            `;
+
+            stepsHtml += `
+                <div class="step-container border-b-0">
+                    <span class="step-label text-royal-blue" dir="rtl">إذن، الحد $T_{${n}}$ هو:</span>
+                    <span class="step-math"><div class="math-display">$$T_{${n}} = ${finalMixedNumber}$$</div></span>
+                </div>
+            `;
+
+            calculationSteps.innerHTML = stepsHtml;
+            
+            // Render the math in the calculationSteps element
+            renderMathInElement(calculationSteps, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ],
+                throwOnError: false
+            });
+        }
+        
+        function checkUnderstanding() {
+            const inputT1 = document.getElementById('check_t1').value;
+            const inputT2 = document.getElementById('check_t2').value;
+            const inputT3 = document.getElementById('check_t3').value;
+            const feedbackBox = document.getElementById('checkFeedback');
+
+            const expectedT1 = -2/3; 
+            const expectedT2 = -1/2; 
+            const expectedT3 = -1/3; 
+
+            const userT1 = parseInput(inputT1);
+            const userT2 = parseInput(inputT2);
+            const userT3 = parseInput(inputT3);
+
+            let allCorrect = true;
+            let feedback = '';
+
+            const epsilon = 0.0001;
+
+            function checkAndStyleInput(inputElementId, userAnswer, expectedAnswer, errorText, isCorrect) {
+                const inputElement = document.getElementById(inputElementId);
+                if (isCorrect) {
+                    inputElement.classList.add('border-green-500');
+                    inputElement.classList.remove('border-red-500');
+                } else {
+                    inputElement.classList.add('border-red-500');
+                    inputElement.classList.remove('border-green-500');
+                    allCorrect = false;
+                    feedback += errorText;
+                }
+            }
+
+            checkAndStyleInput('check_t1', userT1, expectedT1, `<li><span dir="ltr" class="inline-block">$T_1$</span> خاطئ. الإجابة الصحيحة هي <span dir="ltr" class="inline-block">$-\\frac{2}{3}$</span>.</li>`, Math.abs(userT1 - expectedT1) < epsilon);
+
+            checkAndStyleInput('check_t2', userT2, expectedT2, `<li><span dir="ltr" class="inline-block">$T_2$</span> خاطئ. الإجابة الصحيحة هي <span dir="ltr" class="inline-block">$-\\frac{1}{2}$</span>.</li>`, Math.abs(userT2 - expectedT2) < epsilon);
+
+            checkAndStyleInput('check_t3', userT3, expectedT3, `<li><span dir="ltr" class="inline-block">$T_3$</span> خاطئ. الإجابة الصحيحة هي <span dir="ltr" class="inline-block">$-\\frac{1}{3}$</span>.</li>`, Math.abs(userT3 - expectedT3) < epsilon);
+
+            feedbackBox.classList.remove('hidden');
+
+            if (allCorrect) {
+                feedbackBox.classList.remove('bg-red-100', 'text-red-800', 'border-red-300');
+                feedbackBox.classList.add('bg-green-100', 'text-green-800', 'border-green-300');
+                feedbackBox.innerHTML = '<strong>إجابة صحيحة!</strong> أحسنت، جميع الحدود الثلاثة صحيحة.';
+            } else {
+                feedbackBox.classList.remove('bg-green-100', 'text-green-800', 'border-green-300');
+                feedbackBox.classList.add('bg-red-100', 'text-red-800', 'border-red-300');
+                
+                feedbackBox.innerHTML = '<strong dir="rtl">هناك خطأ في الإجابات:</strong><ul dir="rtl">' + feedback + '</ul><p class="mt-2 text-sm" dir="rtl">تأكد من استخدامك للحد العام <span dir="ltr" class="inline-block">$T_n = \\frac{1}{6}n - \\frac{5}{6}$</span> في كل مرة.</p>';
+            }
+
+            // Render the math in the feedbackBox
+            renderMathInElement(feedbackBox, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ],
+                throwOnError: false
+            });
+        }
+        
+        // Initialize when the DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // Render all static math in the document
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ],
+                throwOnError: false
+            });
+            
+            // Run initial calculation for the default input (n=4)
+            calculateTerm();
+        });
+
+    </script>
+</body>
+</html>
