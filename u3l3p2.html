@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدرس 3: المتتاليات - الحد العام</title>
+    <!-- Tailwind CSS for styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math symbols -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* Define a consistent color scheme based on the book's look */
+        :root {
+            --color-blue-dark: #1f3a8a; /* Deep Blue for headers */
+            --color-red-accent: #dc2626; /* Red for accents and focus areas */
+            --color-nav-bg: #e2e8f0; /* Light gray for navigation bar */
+        }
+
+        /* Import Noto Sans Arabic for high-quality Arabic typography */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+            background-color: #f4f7fa; 
+            padding-bottom: 5rem; 
+            text-align: right; 
+        }
+        
+        /* Container for the page content, simulating the book page layout */
+        .page-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #fff;
+            margin: 1rem auto;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+        }
+
+        /* Fixed Navigation Footer Style */
+        .nav-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--color-nav-bg);
+            border-top: 2px solid #cbd5e1;
+            z-index: 1000;
+        }
+        .nav-button {
+            padding: 0.75rem 1.5rem;
+            font-weight: bold;
+            border-radius: 0.5rem;
+            transition: opacity 0.2s, transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .nav-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Styling for the explore dots pattern (Triangular Numbers) */
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #2c5282;
+            border-radius: 50%;
+            margin: 2px;
+            display: inline-block;
+        }
+        .pattern-dot-model {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 0.5rem;
+            min-width: 80px;
+        }
+        .pattern-dot-model .flex {
+            justify-content: center;
+        }
+
+        /* Styling for the sequence visualization (Crucial for LTR display in RTL document) */
+        .sequence-viz {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 1.5rem 0;
+            direction: ltr; /* Force sequence direction LTR: الحد 1 -> الحد 4 */
+            gap: 0.5rem; 
+            flex-wrap: wrap; 
+            padding: 0.5rem;
+        }
+        .term-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* Styling the difference arrows/labels */
+        .arrow-container {
+            width: 3rem; 
+            min-width: 2.5rem;
+            height: 1rem; 
+            position: relative;
+        }
+        @media (min-width: 640px) {
+            .sequence-viz {
+                gap: 2rem; 
+                flex-wrap: nowrap;
+            }
+            .arrow-container {
+                width: 5rem; 
+            }
+        }
+        
+        /* Utility styles */
+        .lesson-header { background-color: var(--color-blue-dark); color: white; }
+        .info-box { border: 1px solid #90cdf4; background-color: #ebf8ff; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .check-box { border: 2px solid #f6e05e; background-color: #fffbeb; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .calc-row { display: flex; justify-content: space-between; align-items: center; direction: ltr; margin-bottom: 0.25rem; padding: 0.5rem; border-bottom: 1px solid #e2e8f0; }
+        .unit-3-table { width: 100%; margin: 1rem 0; border-collapse: collapse; }
+        .unit-3-table th, .unit-3-table td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; font-size: 0.9rem; }
+        .term-value { font-size: 1.25rem; font-weight: bold; color: #1f3a8a; border: 2px solid #a0aec0; padding: 0.25rem 0.5rem; border-radius: 0.25rem; background-color: #edf2f7; text-align: center; min-width: 3rem;}
+        .feedback { padding: 0.5rem; border-radius: 0.5rem; font-weight: bold; display: none; margin-top: 0.5rem; }
+        .arrow-label { position: absolute; top: -1.5rem; left: 0; right: 0; text-align: center; font-size: 1rem; font-weight: 700; }
+        .input-group { display: flex; gap: 0.75rem; align-items: stretch; margin-top: 1rem; flex-wrap: wrap; }
+        .text-input { 
+            flex-grow: 1; 
+            min-width: 120px; /* Ensure inputs are usable on small screens */
+            padding: 0.5rem; 
+            border: 1px solid #ccc; 
+            border-radius: 0.5rem; 
+            text-align: left; 
+            direction: ltr; 
+        }
+        .check-button {
+             padding: 0.5rem 1rem;
+             color: white;
+             font-weight: bold;
+             border-radius: 0.5rem;
+             transition: background-color 0.2s;
+             flex-shrink: 0; /* Prevent button from shrinking */
+        }
+        .math { font-family: 'KaTeX_Main', serif; } /* Custom style for math expressions outside KaTeX delimiters if needed */
+
+    </style>
+</head>
+<body>
+    <div class="page-container p-4 sm:p-8">
+        
+        <!-- PAGE 78 CONTENT -->
+        
+        <header class="lesson-header flex items-center justify-center space-x-4 rtl:space-x-reverse py-4 shadow-md mb-6 rounded-t-lg">
+            <h2 class="text-4xl font-extrabold text-yellow-300 leading-none">3</h2>
+            <h1 class="text-3xl font-extrabold tracking-wide border-r border-white pr-4">الدرس</h1>
+            <span class="text-3xl font-extrabold tracking-wide">المتتاليات</span>
+        </header>
+
+        <!-- The Lesson Idea and Vocabulary Box -->
+        <div class="flex flex-col sm:flex-row justify-between items-start mb-6">
+            <!-- Content Text Column -->
+            <div class="w-full sm:w-2/3">
+                <p class="text-base leading-relaxed mb-4">
+                    يمكنني أيضاً أن أجد أي حد في المتتالية إذا علمتُ العلاقة التي تربط بين أي حد في المتتالية ورتبته. وتُسمّى هذه العلاقة **قاعدة الحد العام**، ومن هذه الطريقة أن أجد الحد المطلوب من دون الحاجة إلى إيجاد جميع الحدود التي تسبقه. لنتعرّف إلى هذا في المثال:
+                </p>
+            </div>
+            <!-- Sidebar/Floating Box Placeholder -->
+            <div class="w-full sm:w-1/3 sm:mr-4 mt-4 sm:mt-0">
+                <div class="info-box bg-red-100 border-red-300 text-center">
+                    <h4 class="text-red-700 font-bold mb-2">الحد العام</h4>
+                    <p class="text-sm">ينبغي أيضاً أن أجد أن حد في المتتالية إذا علمت العلاقة بين أي حد في المتتالية ورتبته وتسمى قاعدة الحد العام، ومن هذه الطريقة أن أجد الحد المطلوب من دون الحاجة إلى إيجاد جميع الحدود التي تسبقه. لنتعرف لهذا في المثال: </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Example 2 -->
+        <div class="p-4 border border-gray-300 rounded-lg mb-6">
+            <h3 class="text-xl font-bold text-blue-700 mb-2 border-b-2 border-gray-200 pb-2">مثال 2</h3>
+            <p class="text-base font-bold mb-4">
+                إذا كانت قاعدة الحد العام للمتتالية هي: اضرب رتبة الحد في $3$ ثم أضف $2$. فأوجد كلاً من الحدين السابع والثامن وقارن.
+            </p>
+            
+            <!-- Visual Calculation for Example 2 (Matching book diagram) -->
+            <div class="w-full mx-auto overflow-x-auto" dir="ltr">
+                <div class="min-w-max">
+                    <!-- Adjusted Header: LTR column order -->
+                    <div class="calc-row text-sm bg-gray-100 font-bold">
+                        <div class="w-1/6 text-center">الرتبة</div>
+                        <div class="w-1/6 text-center">$\times 3$</div>
+                        <div class="w-1/6 text-center">$+ 2$</div>
+                        <div class="w-1/6 text-center">الحد</div>
+                        <div class="w-2/6 text-left">الحساب</div>
+                    </div>
+                    
+                    <!-- Row for 7th term -->
+                    <div class="calc-row text-lg">
+                        <div class="w-1/6">7</div>
+                        <div class="w-1/6">21</div>
+                        <div class="w-1/6">23</div>
+                        <div class="w-1/6 font-bold text-red-600">23</div>
+                        <div class="w-2/6 text-left">$7 \times 3 + 2 = 23$</div>
+                    </div>
+
+                    <!-- Row for 8th term -->
+                    <div class="calc-row text-lg">
+                        <div class="w-1/6">8</div>
+                        <div class="w-1/6">24</div>
+                        <div class="w-1/6">26</div>
+                        <div class="w-1/6 font-bold text-red-600">26</div>
+                        <div class="w-2/6 text-left">$8 \times 3 + 2 = 26$</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-base mt-4 font-bold text-gray-700">
+                الحد السابع هو $23$ والحد الثامن هو $26$.
+            </p>
+        </div>
+
+        <!-- Check Understanding Section (Interactive 1: a_n = 7n - 6) -->
+        <div class="check-box bg-yellow-50 border-yellow-400 p-4 mb-6">
+            <h3 class="text-xl font-bold text-yellow-700 mb-2 flex items-center">
+                أتحقق من فهمي: 
+            </h3>
+            <p class="text-base mb-4 font-bold">
+                إذا كانت قاعدة الحد العام للمتتالية هي: اضرب رتبة الحد في $7$ ثم اطرح $6$. فأوجد كلاً من الحدود السابع والثامن والتاسع.
+            </p>
+            
+            <!-- Input Group for 7th, 8th, 9th terms - LTR Layout applied here -->
+            <div class="input-group" dir="ltr">
+                <input type="text" id="a7-input" class="text-input" placeholder="الحد السابع" dir="ltr">
+                <input type="text" id="a8-input" class="text-input" placeholder="الحد الثامن" dir="ltr">
+                <input type="text" id="a9-input" class="text-input" placeholder="الحد التاسع" dir="ltr">
+                <button onclick="checkPage78Answer()" class="check-button bg-yellow-600 hover:bg-yellow-700">تحقق</button>
+            </div>
+            <div id="feedback-78" class="feedback"></div>
+        </div>
+
+        <!-- Example 3 (Geometric Pattern - Triangular Numbers) -->
+        <div class="p-4 border border-gray-300 rounded-lg mb-6">
+            <h3 class="text-xl font-bold text-blue-700 mb-2 border-b-2 border-gray-200 pb-2">مثال 3</h3>
+            <p class="text-base font-bold mb-4">
+                في ما يلي نمط هندسي يمثل عدد الدوائر في متتالية: (المتتالية: $1, 3, 6, 10, \dots$)
+            </p>
+
+            <!-- Pattern Dots (1, 3, 6, 10) - TRIANGULAR PATTERN -->
+            <div class="pattern-dots flex justify-center flex-wrap gap-4 sm:gap-8" dir="ltr">
+                <!-- النموذج (1) -->
+                <div class="pattern-dot-model text-center">
+                    <div class="flex"><span class="dot"></span></div>
+                    <p class="text-sm mt-2 font-bold text-gray-700">النموذج (1)</p>
+                </div>
+
+                <!-- النموذج (2) -->
+                <div class="pattern-dot-model text-center">
+                    <div class="flex"><span class="dot"></span><span class="dot"></span></div>
+                    <div class="flex justify-center"><span class="dot"></span></div>
+                    <p class="text-sm mt-2 font-bold text-gray-700">النموذج (2)</p>
+                </div>
+
+                <!-- النموذج (3) -->
+                <div class="pattern-dot-model text-center">
+                    <div class="flex"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                    <div class="flex"><span class="dot"></span><span class="dot"></span></div>
+                    <div class="flex justify-center"><span class="dot"></span></div>
+                    <p class="text-sm mt-2 font-bold text-gray-700">النموذج (3)</p>
+                </div>
+
+                <!-- النموذج (4) -->
+                <div class="pattern-dot-model text-center">
+                    <div class="flex"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                    <div class="flex"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                    <div class="flex"><span class="dot"></span><span class="dot"></span></div>
+                    <div class="flex justify-center"><span class="dot"></span></div>
+                    <p class="text-sm mt-2 font-bold text-gray-700">النموذج (4)</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Number Indicator -->
+        <div class="text-center text-sm text-gray-500 mt-4 border-t pt-2">78</div>
+        
+        <!-- Divider for page break visualization -->
+        <div class="h-1 bg-gray-300 my-8"></div>
+        
+        <!-- PAGE 79 CONTENT -->
+        
+        <header class="text-xl font-extrabold text-blue-700 mb-6 border-b-4 border-blue-200 pb-2">الوحدة 3</header>
+        
+        <!-- Title and Text Box (Find the relationship between terms) -->
+        <div class="info-box bg-white border-none shadow-none p-0 mb-4">
+            <h4 class="text-lg font-bold text-red-600 mb-2">أجد القاعدة التي تربط كل حد في المتتالية بالحد الذي يليه:</h4>
+            <p class="text-base leading-relaxed mb-4">
+                بالانتقال من الحد إلى الحد الذي يليه، أجد أنني دوماً أضيف $4$. إذن، القاعدة التي تربط كل حد بالحد الذي يليه هي إضافة $4$.
+            </p>
+        </div>
+
+        <!-- Geometric Pattern Visualization (1, 5, 9, 13) - LTR Forward Direction - RESPONSIVE -->
+        <div class="sequence-viz">
+            <!-- Term 1 (Start Left) -->
+            <div class="term-item">
+                <div class="term-value bg-red-100">1</div>
+                <div class="term-label">الحد 1</div>
+            </div>
+            
+            <!-- Arrow +4 -->
+            <div class="arrow-container">
+                <span class="arrow-label text-red-600">$+4$</span>
+                <!-- SVG marker definition is necessary for the first arrow, others can reference it -->
+                <svg class="absolute top-1/2 left-0 right-0 w-full h-[2px]" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <line x1="5" y1="5" x2="95" y2="5" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Term 2 -->
+            <div class="term-item">
+                <div class="term-value bg-red-100">5</div>
+                <div class="term-label">الحد 2</div>
+            </div>
+            
+            <!-- Arrow +4 -->
+            <div class="arrow-container">
+                <span class="arrow-label text-red-600">$+4$</span>
+                <svg class="absolute top-1/2 left-0 right-0 w-full h-[2px]" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <line x1="5" y1="5" x2="95" y2="5" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowhead)"/>
+                </svg>
+            </div>
+
+            <!-- Term 3 -->
+            <div class="term-item">
+                <div class="term-value bg-red-100">9</div>
+                <div class="term-label">الحد 3</div>
+            </div>
+            
+             <!-- Arrow +4 -->
+            <div class="arrow-container">
+                <span class="arrow-label text-red-600">$+4$</span>
+                <svg class="absolute top-1/2 left-0 right-0 w-full h-[2px]" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <line x1="5" y1="5" x2="95" y2="5" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowhead)"/>
+                </svg>
+            </div>
+
+            <!-- Term 4 (End Right) -->
+            <div class="term-item">
+                <div class="term-value bg-red-100">13</div>
+                <div class="term-label">الحد 4</div>
+            </div>
+        </div>
+
+        <!-- Title and Text Box (Find the general term rule) -->
+        <div class="info-box bg-white border-none shadow-none p-0 mb-4">
+            <h4 class="text-lg font-bold text-red-600 mb-2">أجد قاعدة الحد العام:</h4>
+            <p class="text-base leading-relaxed mb-4">
+                تتزايد السلسلة في المتتالية بمقدار $4$. وهذا قد يذكرني بضرب رتبة الحد بـ $4$. لذلك أُقارن بين قيمة كل حد في المتتالية والعدد الذي أُضربه في $4$. لإيجاد قاعدة الحد العام، أُجرّب الأعداد في جدول غير مقتنع بالعدد $4$. إذن، قاعدة الحد العام هي: اضرب رتبة الحد في $4$ ثم اطرح $3$.
+            </p>
+        </div>
+        
+        <!-- Table for Finding General Term (a_n = 4n - 3) - RESPONSIVE -->
+        <div class="w-full overflow-x-auto">
+            <table class="unit-3-table min-w-max" dir="ltr">
+                <thead>
+                    <tr>
+                        <th class="w-1/6">الرتبة</th>
+                        <th class="w-1/6">$\times 4$</th>
+                        <th class="w-1/6">$- 3$</th>
+                        <th class="w-1/6">قيمة الحد</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>4</td>
+                        <td>1</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>8</td>
+                        <td>5</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>12</td>
+                        <td>9</td>
+                        <td>9</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>16</td>
+                        <td>13</td>
+                        <td>13</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Text Box (Find the value of the 15th term) -->
+        <div class="info-box bg-white border-none shadow-none p-0 mb-4">
+            <h4 class="text-lg font-bold text-red-600 mb-2">ما قيمة الحد الذي رتبته $15$؟</h4>
+            <p class="text-base leading-relaxed mb-4">
+                لإيجاد عدد الدوائر، فإنني أطبّق قاعدة الحد العام على الحد الذي رتبته $15$: اضرب الرتبة في $4$ ثم اطرح $3$ من الناتج.
+            </p>
+            <div class="text-center font-bold text-xl my-4" dir="ltr">
+                الحد 15 : $\quad 4 \times 15 - 3 = 57$
+            </div>
+        </div>
+
+        <!-- Check Understanding Section (Interactive 2: Geometric Pattern - Triangular Numbers) -->
+        <div class="check-box bg-yellow-50 border-yellow-400 p-4 mb-6">
+            <h3 class="text-xl font-bold text-yellow-700 mb-2 flex items-center">
+                أتحقق من فهمي: 
+            </h3>
+            <p class="text-base font-bold mb-4">
+                في ما يلي نمط هندسي يمثل عدد الدوائر في متتالية: (المتتالية: $1, 3, 6, 10, \dots$)
+            </p>
+
+            <!-- Check Pattern Dots (1, 3, 6, 10) - TRIANGULAR PATTERN -->
+            <div class="pattern-dots flex justify-center flex-wrap gap-4 sm:gap-8" dir="ltr">
+                <!-- النموذج (1) -->
+                <div class="pattern-dot-model text-center">
+                    <div class="flex"><span class="dot bg-red-600"></span></div>
+                    <p class="text-sm mt-2 font-bold text-gray-700">النموذج 1</p>
+                </div>
+
+                <!-- النموذج (2) -->
+                <div class="pattern-dot-model text-center">
+                    <div class="flex"><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span></div>
+                    <div class="flex justify-center"><span class="dot bg-red-600"></span></div>
+                    <p class="text-sm mt-2 font-bold text-gray-700">النموذج 2</p>
+                </div>
+
+                <!-- النموذج (3) -->
+                <div class="pattern-dot-model text-center">
+                    <div class="flex"><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span></div>
+                    <div class="flex"><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span></div>
+                    <div class="flex justify-center"><span class="dot bg-red-600"></span></div>
+                    <p class="text-sm mt-2 font-bold text-gray-700">النموذج 3</p>
+                </div>
+
+                <!-- النموذج (4) -->
+                <div class="pattern-dot-model text-center">
+                    <div class="flex"><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span></div>
+                    <div class="flex"><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span></div>
+                    <div class="flex"><span class="dot bg-red-600"></span><span class="dot bg-red-600"></span></div>
+                    <div class="flex justify-center"><span class="dot bg-red-600"></span></div>
+                    <p class="text-sm mt-2 font-bold text-gray-700">النموذج 4</p>
+                </div>
+            </div>
+            
+            <ol class="list-decimal list-inside pr-4 space-y-2 text-base">
+                <li>أجد القاعدة التي تربط كل حد في المتتالية بالحد الذي يليه.</li>
+                <li>ما قيمة الحد الذي رتبته $12$؟</li>
+            </ol>
+            
+            <!-- Input Group for rule and 12th term - LTR Layout applied here -->
+            <div class="input-group" dir="ltr">
+                <!-- Hint updated for clarity -->
+                <input type="text" id="rule-9" class="text-input" placeholder="قاعدة الحد التالي (مثال: أضف عدداً متزايداً)" dir="ltr">
+                <input type="text" id="a12-input" class="text-input" placeholder="الحد الثاني عشر" dir="ltr">
+                <button onclick="checkPage79Answer()" class="check-button bg-yellow-600 hover:bg-yellow-700">تحقق</button>
+            </div>
+            <div id="feedback-79" class="feedback"></div>
+        </div>
+
+        <div class="text-center text-sm text-gray-500 mt-4 border-t pt-2">79</div>
+    </div>
+    
+    <!-- FIXED NAVIGATION FOOTER -->
+    <footer class="nav-footer flex justify-between p-4 shadow-xl">
+        <!-- Previous Button (Aligned Right in RTL) -->
+        <a href="u3l3p1.html" class="nav-button bg-gray-600 text-white hover:bg-gray-700">
+            السابق
+        </a>
+        
+        <!-- Next Button (Aligned Left in RTL) -->
+        <a href="u3l3p3.html" class="nav-button bg-blue-600 text-white hover:bg-blue-700">
+            التالي
+        </a>
+    </footer>
+    
+    <!-- JavaScript for Interactivity -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Initialize KaTeX auto-render for all math expressions delimited by $
+            renderMathInElement(document.body, {
+                ignoreHtmlTags: ["script", "noscript", "style", "textarea"], 
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                throwOnError: false
+            });
+
+            // Helper function to normalize user input (handle Arabic numbers, spaces, commas, etc.)
+            function normalizeInput(input) {
+                if (typeof input !== 'string') return input;
+                const normalized = input
+                    .replace(/،/g, '.') 
+                    .replace(/,/g, '.') 
+                    .replace(/ /g, '') 
+                    // Convert Eastern Arabic numerals (٠-٩)
+                    .replace(/[\u0660-\u0669]/g, function (d) {
+                        return d.charCodeAt(0) - 0x0660;
+                    })
+                    // Convert Persian/Urdu numerals (۰-۹)
+                    .replace(/[\u06f0-\u06f9]/g, function (d) {
+                        return d.charCodeAt(0) - 0x06f0;
+                    });
+                
+                return normalized.toLowerCase().trim();
+            }
+
+            // Function to check the General Term answers (a_n = 7n - 6) - Page 78
+            window.checkPage78Answer = function() {
+                const inputA7 = document.getElementById('a7-input');
+                const inputA8 = document.getElementById('a8-input');
+                const inputA9 = document.getElementById('a9-input');
+                const feedbackElement = document.getElementById('feedback-78');
+
+                // Correct answers: 7n - 6
+                const correctA7 = 43; // 7*7 - 6
+                const correctA8 = 50; // 7*8 - 6
+                const correctA9 = 57; // 7*9 - 6
+
+                let correctCount = 0;
+                
+                function checkAndStyle(input, correct) {
+                    const userValue = parseFloat(normalizeInput(input.value));
+                    const isCorrect = !isNaN(userValue) && Math.abs(userValue - correct) < 0.001;
+                    
+                    if (isCorrect) {
+                        input.style.borderColor = '#48bb78'; /* Green */
+                        return true;
+                    } else {
+                        input.style.borderColor = '#e53e3e'; /* Red */
+                        return false;
+                    }
+                }
+
+                if (checkAndStyle(inputA7, correctA7)) correctCount++;
+                if (checkAndStyle(inputA8, correctA8)) correctCount++;
+                if (checkAndStyle(inputA9, correctA9)) correctCount++;
+
+                feedbackElement.style.display = 'block';
+
+                if (correctCount === 3) {
+                    feedbackElement.textContent = "إجابة صحيحة! الحدود هي 43، 50، 57.";
+                    feedbackElement.className = "feedback bg-green-100 text-green-800";
+                } else {
+                    feedbackElement.textContent = `حاول مرة أخرى. لديك ${correctCount} إجابات صحيحة. تذكر أن القاعدة هي: اضرب رتبة الحد في 7 ثم اطرح 6.`;
+                    feedbackElement.className = "feedback bg-red-100 text-red-800";
+                }
+            };
+
+            // Function to check the Geometric Pattern answers (Triangular Numbers) - Page 79
+            window.checkPage79Answer = function() {
+                const inputRule = document.getElementById('rule-9');
+                const inputA12 = document.getElementById('a12-input');
+                const feedbackElement = document.getElementById('feedback-79');
+
+                // 1. Rule: Pattern is +2, +3, +4, +5... (the difference increases by 1)
+                const ruleValue = normalizeInput(inputRule.value);
+                // Acceptable answer if it mentions "add" and "increasing/variable" or "rank"
+                const isRuleCorrect = ruleValue.includes('أضف') && (ruleValue.includes('تزايد') || ruleValue.includes('يزيد') || ruleValue.includes('متغير') || ruleValue.includes('الرتبة') || ruleValue.includes('1')); 
+                
+                // 2. Term a_12 (Triangular Number: n*(n+1)/2)
+                const correctA12 = 78; // 12 * 13 / 2 = 78
+                const userA12 = parseFloat(normalizeInput(inputA12.value));
+
+                const isA12Correct = !isNaN(userA12) && Math.abs(userA12 - correctA12) < 0.001;
+                
+                // Visual feedback on inputs
+                inputRule.style.borderColor = isRuleCorrect ? '#48bb78' : '#e53e3e';
+                inputA12.style.borderColor = isA12Correct ? '#48bb78' : '#e53e3e';
+
+                feedbackElement.style.display = 'block';
+
+                if (isRuleCorrect && isA12Correct) {
+                    feedbackElement.textContent = "إجابة صحيحة لكلا الجزأين! الحد 12 هو 78، والقاعدة هي إضافة عدد متزايد (+2، +3، +4، وهكذا).";
+                    feedbackElement.className = "feedback bg-green-100 text-green-800";
+                } else if (isRuleCorrect) {
+                    feedbackElement.textContent = `قاعدة الربط صحيحة (إضافة عدد متزايد). الحد 12 خاطئ (الحد الصحيح هو ${correctA12}).`;
+                    feedbackElement.className = "feedback bg-red-100 text-red-800";
+                } else if (isA12Correct) {
+                    feedbackElement.textContent = `الحد 12 صحيح (${correctA12}). قاعدة الربط خاطئة (لاحظ أن الفرق يتزايد بواحد في كل مرة).`;
+                    feedbackElement.className = "feedback bg-red-100 text-red-800";
+                } else {
+                    feedbackElement.textContent = "كلا الإجابتين خاطئتان. الحد الصحيح هو 78، والقاعدة هي إضافة عدد يتزايد بواحد في كل مرة.";
+                    feedbackElement.className = "feedback bg-red-100 text-red-800";
+                }
+            };
+        });
+    </script>
+</body>
+</html>
