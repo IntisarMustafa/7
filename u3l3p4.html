@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاعلية المتتاليات - الوحدة 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX CDN for mathematical rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        // Tailwind configuration for the Royal Blue theme
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'royal-blue': '#1a237e', // Deep Indigo/Royal Blue
+                        'light-blue-accent': '#64b5f6', // Bright accent
+                        'golden-bar': '#fcd34d',
+                        // Feedback colors
+                        'success-bg': '#ecfdf5',
+                        'success-text': '#059669',
+                        'error-bg': '#fef2f2',
+                        'error-text': '#ef4444',
+                    },
+                },
+                fontFamily: {
+                    // Added Noto Sans Arabic for robust Arabic display
+                    sans: ['Inter', 'Noto Sans Arabic', 'sans-serif'],
+                },
+            }
+        }
+    </script>
+    <style>
+        /* Ensuring math elements have LTR direction for correct rendering */
+        .math-display {
+            direction: ltr;
+            font-size: 1.25rem;
+            text-align: left;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Fixing input direction for number/text fields on RTL page */
+        input[type="number"],
+        input[type="text"] {
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Minimalist card styling for book page look, using responsive max-width */
+        .book-page {
+            box-shadow: 0 10px 30px rgba(26, 35, 126, 0.1); /* Subtle blue shadow */
+            border: 1px solid #e0e0e0;
+            max-width: 900px; /* Slightly wider */
+            width: 95%;
+            padding-top: 0;
+        }
+
+        body {
+            background-color: #f8fafc; /* Very light background */
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+        }
+
+        /* Ensure KaTeX itself has LTR direction */
+        .katex {
+            direction: ltr !important;
+            display: inline-block;
+        }
+        
+        /* Input focus glow effect */
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.5);
+        }
+
+        /* Enhanced button styles */
+        .check-button {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .check-button:hover {
+            box-shadow: 0 6px 12px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+        .check-button:active {
+            box-shadow: none;
+            transform: scale(0.98);
+        }
+
+    </style>
+</head>
+
+<body class="min-h-screen p-4 flex items-start justify-center">
+    <!-- Main Container - Page Template (Book Look) -->
+    <div class="w-full bg-white text-gray-800 rounded-xl book-page my-8 pb-8">
+
+        <!-- PROFESSIONAL ROYAL BLUE HEADER (RTL) -->
+        <div class="w-full bg-royal-blue text-white shadow-2xl mb-8 rounded-t-xl">
+            <header class="py-6 px-6">
+                <div class="flex flex-col items-center text-center">
+                    <h1 class="text-4xl font-extrabold tracking-wider border-b-2 border-white/50 pb-2 mb-2" dir="rtl"> تدريب على المتتاليات الحسابية </h1>
+                    <p class="text-lg font-light text-light-blue-accent" dir="rtl"> الوحدة 3: تطبيقات تفاعلية </p>
+                </div>
+            </header>
+            <!-- GOLDEN Divider Bar -->
+            <div class="h-1 bg-golden-bar w-full"></div>
+        </div>
+
+        <!-- Content Padding -->
+        <div class="px-4 sm:px-10 space-y-12" dir="rtl">
+
+            <!-- Section 1: Find the Next Three Terms (Q1: 67, 78, 89, 100, ...) Rule: +11 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-indigo-50 border-indigo-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 1 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    أوجد الحدود الثلاثة التالية في المتتالية: <strong dir="ltr" class="text-royal-blue math-display font-mono">$67, 78, 89, 100, \dots$</strong>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- T5 Input -->
+                    <div>
+                        <label for="q1_t5" class="block text-sm font-medium mb-2 text-gray-700"> الحد الخامس ($T_5$): </label>
+                        <input type="number" id="q1_t5" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-indigo-400 focus:ring-indigo-600 focus:border-indigo-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T6 Input -->
+                    <div>
+                        <label for="q1_t6" class="block text-sm font-medium mb-2 text-gray-700"> الحد السادس ($T_6$): </label>
+                        <input type="number" id="q1_t6" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-indigo-400 focus:ring-indigo-600 focus:border-indigo-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T7 Input -->
+                    <div>
+                        <label for="q1_t7" class="block text-sm font-medium mb-2 text-gray-700"> الحد السابع ($T_7$): </label>
+                        <input type="number" id="q1_t7" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-indigo-400 focus:ring-indigo-600 focus:border-indigo-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence1()"
+                    class="check-button w-full px-6 py-3 bg-light-blue-accent text-royal-blue font-extrabold rounded-lg hover:bg-light-blue-accent/90">
+                    تحقق من الإجابات
+                </button>
+
+                <div id="feedback_q1" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+            
+            <!-- Section 2: Find the Next Three Terms (Q2: 101, 95, 89, 83, ...) Rule: -6 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-green-50 border-green-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 2 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    أوجد الحدود الثلاثة التالية في المتتالية: <strong dir="ltr" class="text-royal-blue math-display font-mono">$101, 95, 89, 83, \dots$</strong>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- T5 Input -->
+                    <div>
+                        <label for="q2_t5" class="block text-sm font-medium mb-2 text-gray-700"> الحد الخامس ($T_5$): </label>
+                        <input type="number" id="q2_t5" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-green-400 focus:ring-green-600 focus:border-green-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T6 Input -->
+                    <div>
+                        <label for="q2_t6" class="block text-sm font-medium mb-2 text-gray-700"> الحد السادس ($T_6$): </label>
+                        <input type="number" id="q2_t6" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-green-400 focus:ring-green-600 focus:border-green-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T7 Input -->
+                    <div>
+                        <label for="q2_t7" class="block text-sm font-medium mb-2 text-gray-700"> الحد السابع ($T_7$): </label>
+                        <input type="number" id="q2_t7" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-green-400 focus:ring-green-600 focus:border-green-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence2()"
+                    class="check-button w-full px-6 py-3 bg-green-600 text-white font-extrabold rounded-lg hover:bg-green-700">
+                    تحقق من الإجابات
+                </button>
+
+                <div id="feedback_q2" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Section 3: Find the Next Three Terms (Q3: -17, -13, -9, -5, ...) Rule: +4 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-indigo-50 border-indigo-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 3 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    أوجد الحدود الثلاثة التالية في المتتالية: <strong dir="ltr" class="text-royal-blue math-display font-mono">$-17, -13, -9, -5, \dots$</strong>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- T5 Input -->
+                    <div>
+                        <label for="q3_t5" class="block text-sm font-medium mb-2 text-gray-700"> الحد الخامس ($T_5$): </label>
+                        <input type="number" id="q3_t5" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-indigo-400 focus:ring-indigo-600 focus:border-indigo-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T6 Input -->
+                    <div>
+                        <label for="q3_t6" class="block text-sm font-medium mb-2 text-gray-700"> الحد السادس ($T_6$): </label>
+                        <input type="number" id="q3_t6" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-indigo-400 focus:ring-indigo-600 focus:border-indigo-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T7 Input -->
+                    <div>
+                        <label for="q3_t7" class="block text-sm font-medium mb-2 text-gray-700"> الحد السابع ($T_7$): </label>
+                        <input type="number" id="q3_t7" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-indigo-400 focus:ring-indigo-600 focus:border-indigo-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence3()"
+                    class="check-button w-full px-6 py-3 bg-light-blue-accent text-royal-blue font-extrabold rounded-lg hover:bg-light-blue-accent/90">
+                    تحقق من الإجابات
+                </button>
+
+                <div id="feedback_q3" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Section 4: Find the Next Three Terms (Q4: 7, 2, -3, -8, ...) Rule: -5 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-purple-50 border-purple-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 4 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    أوجد الحدود الثلاثة التالية في المتتالية: <strong dir="ltr" class="text-royal-blue math-display font-mono">$7, 2, -3, -8, \dots$</strong>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- T5 Input -->
+                    <div>
+                        <label for="q4_t5" class="block text-sm font-medium mb-2 text-gray-700"> الحد الخامس ($T_5$): </label>
+                        <input type="number" id="q4_t5" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-purple-400 focus:ring-purple-600 focus:border-purple-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T6 Input -->
+                    <div>
+                        <label for="q4_t6" class="block text-sm font-medium mb-2 text-gray-700"> الحد السادس ($T_6$): </label>
+                        <input type="number" id="q4_t6" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-purple-400 focus:ring-purple-600 focus:border-purple-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T7 Input -->
+                    <div>
+                        <label for="q4_t7" class="block text-sm font-medium mb-2 text-gray-700"> الحد السابع ($T_7$): </label>
+                        <input type="number" id="q4_t7" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-purple-400 focus:ring-purple-600 focus:border-purple-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence4()"
+                    class="check-button w-full px-6 py-3 bg-purple-600 text-white font-extrabold rounded-lg hover:bg-purple-700">
+                    تحقق من الإجابات
+                </button>
+
+                <div id="feedback_q4" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Section 5: Find the Next Three Terms (Q5: 8, 14, 20, 26, ...) Rule: +6 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-blue-50 border-blue-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 5 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    أوجد الحدود الثلاثة التالية في المتتالية: <strong dir="ltr" class="text-royal-blue math-display font-mono">$8, 14, 20, 26, \dots$</strong>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- T5 Input -->
+                    <div>
+                        <label for="q5_t5" class="block text-sm font-medium mb-2 text-gray-700"> الحد الخامس ($T_5$): </label>
+                        <input type="number" id="q5_t5" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-blue-400 focus:ring-blue-600 focus:border-blue-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T6 Input -->
+                    <div>
+                        <label for="q5_t6" class="block text-sm font-medium mb-2 text-gray-700"> الحد السادس ($T_6$): </label>
+                        <input type="number" id="q5_t6" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-blue-400 focus:ring-blue-600 focus:border-blue-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T7 Input -->
+                    <div>
+                        <label for="q5_t7" class="block text-sm font-medium mb-2 text-gray-700"> الحد السابع ($T_7$): </label>
+                        <input type="number" id="q5_t7" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-blue-400 focus:ring-blue-600 focus:border-blue-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence5()"
+                    class="check-button w-full px-6 py-3 bg-blue-600 text-white font-extrabold rounded-lg hover:bg-blue-700">
+                    تحقق من الإجابات
+                </button>
+
+                <div id="feedback_q5" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Section 6: Find the Next Three Terms (Q6: 18, 10, 2, -6, ...) Rule: -8 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-pink-50 border-pink-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 6 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    أوجد الحدود الثلاثة التالية في المتتالية: <strong dir="ltr" class="text-royal-blue math-display font-mono">$18, 10, 2, -6, \dots$</strong>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- T5 Input -->
+                    <div>
+                        <label for="q6_t5" class="block text-sm font-medium mb-2 text-gray-700"> الحد الخامس ($T_5$): </label>
+                        <input type="number" id="q6_t5" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-pink-400 focus:ring-pink-600 focus:border-pink-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T6 Input -->
+                    <div>
+                        <label for="q6_t6" class="block text-sm font-medium mb-2 text-gray-700"> الحد السادس ($T_6$): </label>
+                        <input type="number" id="q6_t6" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-pink-400 focus:ring-pink-600 focus:border-pink-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T7 Input -->
+                    <div>
+                        <label for="q6_t7" class="block text-sm font-medium mb-2 text-gray-700"> الحد السابع ($T_7$): </label>
+                        <input type="number" id="q6_t7" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-pink-400 focus:ring-pink-600 focus:border-pink-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence6()"
+                    class="check-button w-full px-6 py-3 bg-pink-600 text-white font-extrabold rounded-lg hover:bg-pink-700">
+                    تحقق من الإجابات
+                </button>
+
+                <div id="feedback_q6" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Section 7: Find the General Term (Q7: 130, 118, 106, 94, ...) Rule: -12n + 142 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-red-50 border-red-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 7 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    في المتتالية <strong dir="ltr" class="text-royal-blue math-display font-mono">$130, 118, 106, 94, \dots$</strong>:
+                    <br>
+                    <span class="font-normal text-base block mt-2">1. اكتب الحد العام ($T_n$) على شكل <strong dir="ltr">$an + b$</strong>.</span>
+                    <span class="font-normal text-base block">2. استخدمه لإيجاد قيمة الحد السابع ($T_{7}$).</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- General Term Input (a and b) -->
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <div class="flex-1">
+                            <label for="q7_a" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $a$ (معامل $n$): </label>
+                            <input type="number" id="q7_a" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-red-400 focus:ring-red-600 focus:border-red-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                        <div class="flex-1">
+                            <label for="q7_b" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $b$ (الثابت): </label>
+                            <input type="number" id="q7_b" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-red-400 focus:ring-red-600 focus:border-red-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                    </div>
+                    <!-- T7 Input -->
+                    <div>
+                        <label for="q7_t7" class="block text-sm font-medium mb-2 text-gray-700"> قيمة الحد $T_{7}$: </label>
+                        <input type="number" id="q7_t7" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-red-400 focus:ring-red-600 focus:border-red-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence7()"
+                    class="check-button w-full px-6 py-3 bg-red-600 text-white font-extrabold rounded-lg hover:bg-red-700">
+                    تحقق من القاعدة والقيمة
+                </button>
+
+                <div id="feedback_q7" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Section 8: Find the General Term (Q8: 19, 28, 37, 46, ...) Rule: 9n + 10 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-teal-50 border-teal-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 8 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    في المتتالية <strong dir="ltr" class="text-royal-blue math-display font-mono">$19, 28, 37, 46, \dots$</strong>:
+                    <br>
+                    <span class="font-normal text-base block mt-2">1. اكتب الحد العام ($T_n$) على شكل <strong dir="ltr">$an + b$</strong>.</span>
+                    <span class="font-normal text-base block">2. استخدمه لإيجاد قيمة الحد العشرين ($T_{20}$).</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- General Term Input (a and b) -->
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <div class="flex-1">
+                            <label for="q8_a" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $a$ (معامل $n$): </label>
+                            <input type="number" id="q8_a" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-teal-400 focus:ring-teal-600 focus:border-teal-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                        <div class="flex-1">
+                            <label for="q8_b" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $b$ (الثابت): </label>
+                            <input type="number" id="q8_b" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-teal-400 focus:ring-teal-600 focus:border-teal-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                    </div>
+                    <!-- T20 Input -->
+                    <div>
+                        <label for="q8_t20" class="block text-sm font-medium mb-2 text-gray-700"> قيمة الحد $T_{20}$: </label>
+                        <input type="number" id="q8_t20" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-teal-400 focus:ring-teal-600 focus:border-teal-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence8()"
+                    class="check-button w-full px-6 py-3 bg-teal-600 text-white font-extrabold rounded-lg hover:bg-teal-700">
+                    تحقق من القاعدة والقيمة
+                </button>
+
+                <div id="feedback_q8" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+            
+            <!-- NEW Section 9: Find the General Term (Q9: 11, 22, 33, 44, ...) Rule: 11n + 0 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-cyan-50 border-cyan-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 9 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    في المتتالية <strong dir="ltr" class="text-royal-blue math-display font-mono">$11, 22, 33, 44, \dots$</strong>:
+                    <br>
+                    <span class="font-normal text-base block mt-2">1. اكتب الحد العام ($T_n$) على شكل <strong dir="ltr">$an + b$</strong>.</span>
+                    <span class="font-normal text-base block">2. استخدمه لإيجاد قيمة الحد الثاني عشر ($T_{12}$).</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- General Term Input (a and b) -->
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <div class="flex-1">
+                            <label for="q9_a" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $a$ (معامل $n$): </label>
+                            <input type="number" id="q9_a" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-cyan-400 focus:ring-cyan-600 focus:border-cyan-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                        <div class="flex-1">
+                            <label for="q9_b" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $b$ (الثابت): </label>
+                            <input type="number" id="q9_b" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-cyan-400 focus:ring-cyan-600 focus:border-cyan-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                    </div>
+                    <!-- T12 Input -->
+                    <div>
+                        <label for="q9_t12" class="block text-sm font-medium mb-2 text-gray-700"> قيمة الحد $T_{12}$: </label>
+                        <input type="number" id="q9_t12" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-cyan-400 focus:ring-cyan-600 focus:border-cyan-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence9()"
+                    class="check-button w-full px-6 py-3 bg-cyan-600 text-white font-extrabold rounded-lg hover:bg-cyan-700">
+                    تحقق من القاعدة والقيمة
+                </button>
+
+                <div id="feedback_q9" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Section 10: Find the General Term (Q10: -25, -18, -11, -4, ...) Rule: 7n - 32 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-orange-50 border-orange-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 10 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    في المتتالية <strong dir="ltr" class="text-royal-blue math-display font-mono">$-25, -18, -11, -4, \dots$</strong>:
+                    <br>
+                    <span class="font-normal text-base block mt-2">1. اكتب الحد العام ($T_n$) على شكل <strong dir="ltr">$an + b$</strong>.</span>
+                    <span class="font-normal text-base block">2. استخدمه لإيجاد قيمة الحد السابع ($T_{7}$).</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- General Term Input (a and b) -->
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <div class="flex-1">
+                            <label for="q10_a" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $a$ (معامل $n$): </label>
+                            <input type="number" id="q10_a" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-orange-400 focus:ring-orange-600 focus:border-orange-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                        <div class="flex-1">
+                            <label for="q10_b" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $b$ (الثابت): </label>
+                            <input type="number" id="q10_b" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-orange-400 focus:ring-orange-600 focus:border-orange-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                    </div>
+                    <!-- T7 Input -->
+                    <div>
+                        <label for="q10_t7" class="block text-sm font-medium mb-2 text-gray-700"> قيمة الحد $T_{7}$: </label>
+                        <input type="number" id="q10_t7" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-orange-400 focus:ring-orange-600 focus:border-orange-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence10()"
+                    class="check-button w-full px-6 py-3 bg-orange-600 text-white font-extrabold rounded-lg hover:bg-orange-700">
+                    تحقق من القاعدة والقيمة
+                </button>
+
+                <div id="feedback_q10" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+            
+            <!-- NEW Section 11: Find Specific Term (Q11: T_n = 5n + 4) -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-lime-50 border-lime-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 11 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    استخدم قاعدة الحد العام <strong dir="ltr" class="text-royal-blue math-display font-mono">$T_n = 5n + 4$</strong> لإيجاد قيمة الحد العشرين ($T_{20}$).
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 items-center justify-center">
+                    <!-- T20 Input -->
+                    <div>
+                        <label for="q11_t20" class="block text-sm font-medium mb-2 text-gray-700"> قيمة الحد $T_{20}$: </label>
+                        <input type="number" id="q11_t20" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-lime-400 focus:ring-lime-600 focus:border-lime-600 transition input-glow"
+                            placeholder="أدخل الإجابة">
+                    </div>
+                    <!-- Placeholder/Spacing -->
+                    <div class="hidden md:block"></div> 
+                </div>
+
+                <button onclick="checkSequence11()"
+                    class="check-button w-full px-6 py-3 bg-lime-600 text-white font-extrabold rounded-lg hover:bg-lime-700">
+                    تحقق من القيمة
+                </button>
+
+                <div id="feedback_q11" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+            
+            <!-- NEW Section 12: Find Specific Term (Q12: T_n = -1.5n + 20) -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-fuchsia-50 border-fuchsia-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 12 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    استخدم قاعدة الحد العام <strong dir="ltr" class="text-royal-blue math-display font-mono">$T_n = -1.5n + 20$</strong> لإيجاد قيمة الحد الخمسين ($T_{50}$).
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 items-center justify-center">
+                    <!-- T50 Input -->
+                    <div>
+                        <label for="q12_t50" class="block text-sm font-medium mb-2 text-gray-700"> قيمة الحد $T_{50}$: </label>
+                        <input type="number" step="0.5" id="q12_t50" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-fuchsia-400 focus:ring-fuchsia-600 focus:border-fuchsia-600 transition input-glow"
+                            placeholder="أدخل الإجابة">
+                    </div>
+                    <!-- Placeholder/Spacing -->
+                    <div class="hidden md:block"></div> 
+                </div>
+
+                <button onclick="checkSequence12()"
+                    class="check-button w-full px-6 py-3 bg-fuchsia-600 text-white font-extrabold rounded-lg hover:bg-fuchsia-700">
+                    تحقق من القيمة
+                </button>
+
+                <div id="feedback_q12" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Section 16: Specific General Term (Q16: T_n = 0.75n + 0.75) Rule: 0.75n + 0.75 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-yellow-50 border-yellow-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> المسألة 16 </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    القاعدة اللفظية للحد العام هي: (ضرب رتبة الحد في <strong dir="ltr">$\frac{3}{4}$</strong> ثم اجمع <strong dir="ltr">$\frac{3}{4}$</strong>).
+                    <br>
+                    <span class="font-normal text-base block mt-2">1. اكتب الحد العام باستخدام مقدار جبري (<strong dir="ltr">$an + b$</strong>).</span>
+                    <span class="font-normal text-base block">2. استخدمه لإيجاد الحدود الثلاثة الأولى ($T_{1}, T_{2}, T_{3}$).</span>
+                </h3>
+
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+                    <!-- A Input -->
+                    <div>
+                        <label for="q16_a" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $a$: </label>
+                        <input type="number" step="0.01" id="q16_a" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-yellow-400 focus:ring-yellow-600 focus:border-yellow-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- B Input -->
+                    <div>
+                        <label for="q16_b" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $b$: </label>
+                        <input type="number" step="0.01" id="q16_b" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-yellow-400 focus:ring-yellow-600 focus:border-yellow-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T1 Input -->
+                    <div>
+                        <label for="q16_t1" class="block text-sm font-medium mb-2 text-gray-700"> الحد $T_{1}$: </label>
+                        <input type="number" step="0.01" id="q16_t1" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-yellow-400 focus:ring-yellow-600 focus:border-yellow-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                    <!-- T2 Input -->
+                    <div>
+                        <label for="q16_t2" class="block text-sm font-medium mb-2 text-gray-700"> الحد $T_{2}$: </label>
+                        <input type="number" step="0.01" id="q16_t2" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-yellow-400 focus:ring-yellow-600 focus:border-yellow-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                     <!-- T3 Input -->
+                     <div>
+                        <label for="q16_t3" class="block text-sm font-medium mb-2 text-gray-700"> الحد $T_{3}$: </label>
+                        <input type="number" step="0.01" id="q16_t3" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-yellow-400 focus:ring-yellow-600 focus:border-yellow-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkSequence16()"
+                    class="check-button w-full px-6 py-3 bg-yellow-600 text-white font-extrabold rounded-lg hover:bg-yellow-700">
+                    تحقق من القاعدة والحدود
+                </button>
+
+                <div id="feedback_q16" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Section 17: Geometric Pattern Challenge (Q13, Q14, Q15) Rule: 3n + 1 -->
+            <div class="border p-4 sm:p-6 rounded-xl bg-gray-50 border-gray-200 shadow-lg">
+                <div class="mb-4 text-right">
+                    <h2 class="inline-block text-xl font-extrabold text-white bg-royal-blue py-1 px-4 rounded-lg shadow-xl"> نمط هندسي (13 - 15) </h2>
+                </div>
+                <h3 class="text-lg font-bold mb-4 text-right leading-relaxed text-gray-700">
+                    **وصف النمط:** يمثل النمط متتالية عدد المربعات في كل شكل:
+                    <br>
+                    <strong dir="ltr" class="text-royal-blue math-display font-mono block mt-1">$4, 7, 10, 13, \dots$</strong>
+                    <br>
+                    <span class="font-normal text-base block mt-4">1. ما قاعدة الحد العام ($T_n$)؟ (المسألة 14).</span>
+                    <span class="font-normal text-base block">2. ما عدد المربعات في الحد الذي رتبته 10؟ (المسألة 15).</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- General Term Input (a and b) -->
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <div class="flex-1">
+                            <label for="q14_a" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $a$ (معامل $n$): </label>
+                            <input type="number" id="q14_a" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-gray-400 focus:ring-gray-600 focus:border-gray-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                        <div class="flex-1">
+                            <label for="q14_b" class="block text-sm font-medium mb-2 text-gray-700"> قيمة $b$ (الثابت): </label>
+                            <input type="number" id="q14_b" dir="ltr"
+                                class="w-full p-3 rounded-lg bg-white text-gray-800 border border-gray-400 focus:ring-gray-600 focus:border-gray-600 transition input-glow"
+                                placeholder="...">
+                        </div>
+                    </div>
+                    <!-- T10 Input -->
+                    <div>
+                        <label for="q15_t10" class="block text-sm font-medium mb-2 text-gray-700"> عدد المربعات في الحد $T_{10}$: </label>
+                        <input type="number" id="q15_t10" dir="ltr"
+                            class="w-full p-3 rounded-lg bg-white text-gray-800 border border-gray-400 focus:ring-gray-600 focus:border-gray-600 transition input-glow"
+                            placeholder="...">
+                    </div>
+                </div>
+
+                <button onclick="checkPattern14()"
+                    class="check-button w-full px-6 py-3 bg-gray-600 text-white font-extrabold rounded-lg hover:bg-gray-700">
+                    تحقق من إجابات النمط
+                </button>
+
+                <div id="feedback_q14" class="mt-4 p-3 text-center rounded-lg border hidden transition-all duration-300" role="alert"></div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
+                <a href="u3l3p3.html" class="flex items-center px-6 py-3 bg-gray-600 text-white border border-transparent font-bold rounded-lg hover:bg-gray-700 transition shadow-md">
+                    <span class="ml-2 text-xl">→</span> السابق
+                </a>
+                <a href="u3l3p5.html" class="flex items-center px-6 py-3 bg-royal-blue text-white font-bold rounded-lg hover:bg-blue-900 transition shadow-md">
+                    التالي <span class="mr-2 text-xl">←</span>
+                </a>
+            </div>
+
+            <!-- FOOTER INFO -->
+            <div class="mt-4 pt-4 flex justify-center items-center">
+                <span class="text-sm text-gray-500"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Utility Functions ---
+
+        // Sets the feedback message and color, and renders math inside it
+        function setFeedback(id, message, isCorrect) {
+            const box = document.getElementById(id);
+            // Ensure the box is visible and reset styles
+            box.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'border-red-300', 'bg-green-100', 'text-green-800', 'border-green-300');
+            box.innerHTML = `<strong dir="rtl">${isCorrect ? 'إجابة صحيحة!' : 'خطأ!'}</strong> <span dir="rtl">${message}</span>`;
+            
+            // Apply new colors
+            if (isCorrect) {
+                box.classList.add('bg-green-100', 'text-green-800', 'border-green-300');
+            } else {
+                box.classList.add('bg-red-100', 'text-red-800', 'border-red-300');
+            }
+
+            // Ensure math is rendered if present in the feedback message
+            renderMathInElement(box, { 
+                delimiters: [{ left: "$", right: "$", display: false }], 
+                throwOnError: false 
+            });
+        }
+
+        // Helper to update input border color based on correctness
+        function updateInputBorder(id, isCorrect) {
+            const input = document.getElementById(id);
+            if (input) {
+                input.style.borderColor = isCorrect ? '#10b981' : '#ef4444';
+                input.style.boxShadow = isCorrect ? '0 0 0 2px rgba(16, 185, 129, 0.2)' : '0 0 0 2px rgba(239, 68, 68, 0.2)';
+            }
+        }
+
+        // --- Core Functions for Interaction (Finding Next 3 Terms) ---
+
+        // Check for Sequence Q1: 67, 78, 89, 100, ... (Rule: +11)
+        function checkSequence1() {
+            const t5 = parseInt(document.getElementById('q1_t5').value);
+            const t6 = parseInt(document.getElementById('q1_t6').value);
+            const t7 = parseInt(document.getElementById('q1_t7').value);
+
+            const expectedT5 = 111;
+            const expectedT6 = 122;
+            const expectedT7 = 133;
+
+            const isT5Correct = t5 === expectedT5;
+            const isT6Correct = t6 === expectedT6;
+            const isT7Correct = t7 === expectedT7;
+            const allCorrect = isT5Correct && isT6Correct && isT7Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'أحسنت! قاعدة المتتالية هي إضافة 11 في كل مرة.';
+            } else {
+                message = 'تحقق من إجاباتك. قاعدة المتتالية هي إضافة 11. ';
+                if (!isT5Correct) message += ` <br> الحد الخامس ($T_5$) يجب أن يكون ${expectedT5}.`;
+                if (!isT6Correct) message += ` <br> الحد السادس ($T_6$) يجب أن يكون ${expectedT6}.`;
+                if (!isT7Correct) message += ` <br> الحد السابع ($T_7$) يجب أن يكون ${expectedT7}.`;
+            }
+
+            updateInputBorder('q1_t5', isT5Correct);
+            updateInputBorder('q1_t6', isT6Correct);
+            updateInputBorder('q1_t7', isT7Correct);
+
+            setFeedback('feedback_q1', message, allCorrect);
+        }
+        
+        // Check for Sequence Q2: 101, 95, 89, 83, ... (Rule: -6)
+        function checkSequence2() {
+            const t5 = parseInt(document.getElementById('q2_t5').value);
+            const t6 = parseInt(document.getElementById('q2_t6').value);
+            const t7 = parseInt(document.getElementById('q2_t7').value);
+
+            const expectedT5 = 77;
+            const expectedT6 = 71;
+            const expectedT7 = 65;
+
+            const isT5Correct = t5 === expectedT5;
+            const isT6Correct = t6 === expectedT6;
+            const isT7Correct = t7 === expectedT7;
+            const allCorrect = isT5Correct && isT6Correct && isT7Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'إجابة ممتازة! قاعدة المتتالية هي طرح 6 في كل مرة.';
+            } else {
+                message = 'تحقق من إجاباتك. قاعدة المتتالية هي طرح 6. ';
+                if (!isT5Correct) message += ` <br> الحد الخامس ($T_5$) يجب أن يكون ${expectedT5}.`;
+                if (!isT6Correct) message += ` <br> الحد السادس ($T_6$) يجب أن يكون ${expectedT6}.`;
+                if (!isT7Correct) message += ` <br> الحد السابع ($T_7$) يجب أن يكون ${expectedT7}.`;
+            }
+
+            updateInputBorder('q2_t5', isT5Correct);
+            updateInputBorder('q2_t6', isT6Correct);
+            updateInputBorder('q2_t7', isT7Correct);
+
+            setFeedback('feedback_q2', message, allCorrect);
+        }
+
+        // Check for Sequence Q3: -17, -13, -9, -5, ... (Rule: +4)
+        function checkSequence3() {
+            const t5 = parseInt(document.getElementById('q3_t5').value);
+            const t6 = parseInt(document.getElementById('q3_t6').value);
+            const t7 = parseInt(document.getElementById('q3_t7').value);
+
+            const expectedT5 = -1;
+            const expectedT6 = 3;
+            const expectedT7 = 7;
+
+            const isT5Correct = t5 === expectedT5;
+            const isT6Correct = t6 === expectedT6;
+            const isT7Correct = t7 === expectedT7;
+            const allCorrect = isT5Correct && isT6Correct && isT7Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'أحسنت! قاعدة المتتالية هي إضافة 4 في كل مرة.';
+            } else {
+                message = 'تحقق من إجاباتك. قاعدة المتتالية هي إضافة 4. ';
+                if (!isT5Correct) message += ` <br> الحد الخامس ($T_5$) يجب أن يكون ${expectedT5}.`;
+                if (!isT6Correct) message += ` <br> الحد السادس ($T_6$) يجب أن يكون ${expectedT6}.`;
+                if (!isT7Correct) message += ` <br> الحد السابع ($T_7$) يجب أن يكون ${expectedT7}.`;
+            }
+
+            updateInputBorder('q3_t5', isT5Correct);
+            updateInputBorder('q3_t6', isT6Correct);
+            updateInputBorder('q3_t7', isT7Correct);
+
+            setFeedback('feedback_q3', message, allCorrect);
+        }
+        
+        // Check for Sequence Q4: 7, 2, -3, -8, ... (Rule: -5)
+        function checkSequence4() {
+            const t5 = parseInt(document.getElementById('q4_t5').value);
+            const t6 = parseInt(document.getElementById('q4_t6').value);
+            const t7 = parseInt(document.getElementById('q4_t7').value);
+
+            const expectedT5 = -13;
+            const expectedT6 = -18;
+            const expectedT7 = -23;
+
+            const isT5Correct = t5 === expectedT5;
+            const isT6Correct = t6 === expectedT6;
+            const isT7Correct = t7 === expectedT7;
+            const allCorrect = isT5Correct && isT6Correct && isT7Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'إجابة صحيحة! قاعدة المتتالية هي طرح 5 في كل مرة. (انتبه للإشارات السالبة).';
+            } else {
+                message = 'تحقق من إجاباتك. قاعدة المتتالية هي طرح 5. ';
+                if (!isT5Correct) message += ` <br> الحد الخامس ($T_5$) يجب أن يكون ${expectedT5}.`;
+                if (!isT6Correct) message += ` <br> الحد السادس ($T_6$) يجب أن يكون ${expectedT6}.`;
+                if (!isT7Correct) message += ` <br> الحد السابع ($T_7$) يجب أن يكون ${expectedT7}.`;
+            }
+
+            updateInputBorder('q4_t5', isT5Correct);
+            updateInputBorder('q4_t6', isT6Correct);
+            updateInputBorder('q4_t7', isT7Correct);
+
+            setFeedback('feedback_q4', message, allCorrect);
+        }
+
+        // Check for Sequence Q5: 8, 14, 20, 26, ... (Rule: +6)
+        function checkSequence5() {
+            const t5 = parseInt(document.getElementById('q5_t5').value);
+            const t6 = parseInt(document.getElementById('q5_t6').value);
+            const t7 = parseInt(document.getElementById('q5_t7').value);
+
+            const expectedT5 = 32;
+            const expectedT6 = 38;
+            const expectedT7 = 44;
+
+            const isT5Correct = t5 === expectedT5;
+            const isT6Correct = t6 === expectedT6;
+            const isT7Correct = t7 === expectedT7;
+            const allCorrect = isT5Correct && isT6Correct && isT7Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'ممتاز! قاعدة المتتالية هي إضافة 6 في كل مرة.';
+            } else {
+                message = 'تحقق من إجاباتك. قاعدة المتتالية هي إضافة 6. ';
+                if (!isT5Correct) message += ` <br> الحد الخامس ($T_5$) يجب أن يكون ${expectedT5}.`;
+                if (!isT6Correct) message += ` <br> الحد السادس ($T_6$) يجب أن يكون ${expectedT6}.`;
+                if (!isT7Correct) message += ` <br> الحد السابع ($T_7$) يجب أن يكون ${expectedT7}.`;
+            }
+
+            updateInputBorder('q5_t5', isT5Correct);
+            updateInputBorder('q5_t6', isT6Correct);
+            updateInputBorder('q5_t7', isT7Correct);
+
+            setFeedback('feedback_q5', message, allCorrect);
+        }
+
+        // Check for Sequence Q6: 18, 10, 2, -6, ... (Rule: -8)
+        function checkSequence6() {
+            const t5 = parseInt(document.getElementById('q6_t5').value);
+            const t6 = parseInt(document.getElementById('q6_t6').value);
+            const t7 = parseInt(document.getElementById('q6_t7').value);
+
+            const expectedT5 = -14;
+            const expectedT6 = -22;
+            const expectedT7 = -30;
+
+            const isT5Correct = t5 === expectedT5;
+            const isT6Correct = t6 === expectedT6;
+            const isT7Correct = t7 === expectedT7;
+            const allCorrect = isT5Correct && isT6Correct && isT7Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'رائع! قاعدة المتتالية هي طرح 8 في كل مرة.';
+            } else {
+                message = 'تحقق من إجاباتك. قاعدة المتتالية هي طرح 8. ';
+                if (!isT5Correct) message += ` <br> الحد الخامس ($T_5$) يجب أن يكون ${expectedT5}.`;
+                if (!isT6Correct) message += ` <br> الحد السادس ($T_6$) يجب أن يكون ${expectedT6}.`;
+                if (!isT7Correct) message += ` <br> الحد السابع ($T_7$) يجب أن يكون ${expectedT7}.`;
+            }
+
+            updateInputBorder('q6_t5', isT5Correct);
+            updateInputBorder('q6_t6', isT6Correct);
+            updateInputBorder('q6_t7', isT7Correct);
+
+            setFeedback('feedback_q6', message, allCorrect);
+        }
+
+        // --- Core Functions for Interaction (Finding General Term/Specific Term) ---
+
+        // Check for Sequence Q7: 130, 118, 106, 94, ... (Rule: -12n + 142)
+        function checkSequence7() {
+            // Use parseFloat for coefficients, though they are integers here
+            const a = parseFloat(document.getElementById('q7_a').value);
+            const b = parseFloat(document.getElementById('q7_b').value);
+            const t7 = parseFloat(document.getElementById('q7_t7').value);
+
+            // Expected Rule: T_n = -12n + 142
+            const expectedA = -12;
+            const expectedB = 142;
+            // Expected T7: -12 * 7 + 142 = 58
+            const expectedT7 = 58;
+
+            const isACorrect = a === expectedA;
+            const isBCorrect = b === expectedB;
+            const isT7Correct = t7 === expectedT7;
+            const allCorrect = isACorrect && isBCorrect && isT7Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'ممتاز! الحد العام هو <span dir="ltr" class="font-mono text-lg">$T_n = -12n + 142$</span> وقيمة <span dir="ltr" class="font-mono text-lg">$T_{7}$</span> صحيحة وهي $58$.';
+            } else {
+                message = 'تحقق من إجاباتك: ';
+                if (!isACorrect || !isBCorrect) message += ' <br> الحد العام غير صحيح. (القاعدة الصحيحة هي: $T_n = -12n + 142$)';
+                if (isACorrect && isBCorrect && !isT7Correct) message += ' <br> الحد العام صحيح، لكن قيمة $T_{7}$ خاطئة. (القيمة الصحيحة هي $58$)';
+                if (!isACorrect && !isBCorrect && !isT7Correct) message += ' <br> جميع الإجابات خاطئة. ركز على إيجاد الفرق المشترك (-12) ثم إيجاد الحد الثابت ($142$).';
+            }
+
+            updateInputBorder('q7_a', isACorrect);
+            updateInputBorder('q7_b', isBCorrect);
+            updateInputBorder('q7_t7', isT7Correct);
+
+            setFeedback('feedback_q7', message, allCorrect);
+        }
+        
+        // Check for Sequence Q8: 19, 28, 37, 46, ... (Rule: 9n + 10)
+        function checkSequence8() {
+            // Use parseFloat for coefficients, though they are integers here
+            const a = parseFloat(document.getElementById('q8_a').value);
+            const b = parseFloat(document.getElementById('q8_b').value);
+            const t20 = parseFloat(document.getElementById('q8_t20').value);
+
+            // Expected Rule: T_n = 9n + 10
+            const expectedA = 9;
+            const expectedB = 10;
+            // Expected T20: 9 * 20 + 10 = 190
+            const expectedT20 = 190;
+
+            const isACorrect = a === expectedA;
+            const isBCorrect = b === expectedB;
+            const isT20Correct = t20 === expectedT20;
+            const allCorrect = isACorrect && isBCorrect && isT20Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'ممتاز! الحد العام هو <span dir="ltr" class="font-mono text-lg">$T_n = 9n + 10$</span> وقيمة <span dir="ltr" class="font-mono text-lg">$T_{20}$</span> صحيحة وهي $190$.';
+            } else {
+                message = 'تحقق من إجاباتك: ';
+                if (!isACorrect || !isBCorrect) message += ' <br> الحد العام غير صحيح. (القاعدة الصحيحة هي: $T_n = 9n + 10$)';
+                if (isACorrect && isBCorrect && !isT20Correct) message += ' <br> الحد العام صحيح، لكن قيمة $T_{20}$ خاطئة. (القيمة الصحيحة هي $190$)';
+                if (!isACorrect && !isBCorrect && !isT20Correct) message += ' <br> جميع الإجابات خاطئة. ركز على إيجاد الفرق المشترك ($9$) ثم إيجاد الحد الثابت ($10$).';
+            }
+
+            updateInputBorder('q8_a', isACorrect);
+            updateInputBorder('q8_b', isBCorrect);
+            updateInputBorder('q8_t20', isT20Correct);
+
+            setFeedback('feedback_q8', message, allCorrect);
+        }
+        
+        // NEW Check for Sequence Q9: 11, 22, 33, 44, ... (Rule: 11n + 0)
+        function checkSequence9() {
+            // Use parseFloat for coefficients, though they are integers here
+            const a = parseFloat(document.getElementById('q9_a').value);
+            const b = parseFloat(document.getElementById('q9_b').value);
+            const t12 = parseFloat(document.getElementById('q9_t12').value);
+
+            // Expected Rule: T_n = 11n + 0
+            const expectedA = 11;
+            const expectedB = 0;
+            // Expected T12: 11 * 12 + 0 = 132
+            const expectedT12 = 132;
+
+            const isACorrect = a === expectedA;
+            const isBCorrect = b === expectedB;
+            const isT12Correct = t12 === expectedT12;
+            const allCorrect = isACorrect && isBCorrect && isT12Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'عمل رائع! الحد العام هو <span dir="ltr" class="font-mono text-lg">$T_n = 11n + 0$</span> (أو $T_n=11n$) وقيمة <span dir="ltr" class="font-mono text-lg">$T_{12}$</span> صحيحة وهي $132$.';
+            } else {
+                message = 'تحقق من إجاباتك: ';
+                if (!isACorrect || !isBCorrect) message += ' <br> الحد العام غير صحيح. (القاعدة الصحيحة هي: $T_n = 11n + 0$)';
+                if (isACorrect && isBCorrect && !isT12Correct) message += ' <br> الحد العام صحيح، لكن قيمة $T_{12}$ خاطئة. (القيمة الصحيحة هي $132$)';
+                if (!isACorrect && !isBCorrect && !isT12Correct) message += ' <br> جميع الإجابات خاطئة. المتتالية مضاعفات العدد 11.';
+            }
+
+            updateInputBorder('q9_a', isACorrect);
+            updateInputBorder('q9_b', isBCorrect);
+            updateInputBorder('q9_t12', isT12Correct);
+
+            setFeedback('feedback_q9', message, allCorrect);
+        }
+        
+        // Check for Sequence Q10: -25, -18, -11, -4, ... (Rule: 7n - 32)
+        function checkSequence10() {
+            // Use parseFloat for coefficients, though they are integers here
+            const a = parseFloat(document.getElementById('q10_a').value);
+            const b = parseFloat(document.getElementById('q10_b').value);
+            const t7 = parseFloat(document.getElementById('q10_t7').value);
+
+            // Expected Rule: T_n = 7n - 32
+            const expectedA = 7;
+            const expectedB = -32;
+            // Expected T7: 7 * 7 - 32 = 49 - 32 = 17
+            const expectedT7 = 17;
+
+            const isACorrect = a === expectedA;
+            const isBCorrect = b === expectedB;
+            const isT7Correct = t7 === expectedT7;
+            const allCorrect = isACorrect && isBCorrect && isT7Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'أحسنت! الحد العام هو <span dir="ltr" class="font-mono text-lg">$T_n = 7n - 32$</span> وقيمة <span dir="ltr" class="font-mono text-lg">$T_{7}$</span> صحيحة وهي $17$.';
+            } else {
+                message = 'تحقق من إجاباتك: ';
+                if (!isACorrect || !isBCorrect) message += ' <br> الحد العام غير صحيح. (القاعدة الصحيحة هي: $T_n = 7n - 32$)';
+                if (isACorrect && isBCorrect && !isT7Correct) message += ' <br> الحد العام صحيح، لكن قيمة $T_{7}$ خاطئة. (القيمة الصحيحة هي $17$)';
+                if (!isACorrect && !isBCorrect && !isT7Correct) message += ' <br> جميع الإجابات خاطئة. ركز على إيجاد الفرق المشترك ($7$) ثم إيجاد الحد الثابت ($-32$).';
+            }
+
+            updateInputBorder('q10_a', isACorrect);
+            updateInputBorder('q10_b', isBCorrect);
+            updateInputBorder('q10_t7', isT7Correct);
+
+            setFeedback('feedback_q10', message, allCorrect);
+        }
+        
+        // NEW Check for Sequence Q11: T_n = 5n + 4. Find T20.
+        function checkSequence11() {
+            const t20 = parseFloat(document.getElementById('q11_t20').value);
+            // Expected T20: 5 * 20 + 4 = 104
+            const expectedT20 = 104;
+
+            const isT20Correct = t20 === expectedT20;
+
+            let message = '';
+            if (isT20Correct) {
+                message = 'صحيح! عند التعويض عن $n=20$ في القاعدة $T_n = 5n + 4$، تحصل على $T_{20} = 5(20) + 4 = 104$.';
+            } else {
+                message = `تحقق من حساباتك. القيمة الصحيحة للحد $T_{20}$ هي $104$.`;
+            }
+
+            updateInputBorder('q11_t20', isT20Correct);
+            setFeedback('feedback_q11', message, isT20Correct);
+        }
+        
+        // NEW Check for Sequence Q12: T_n = -1.5n + 20. Find T50.
+        function checkSequence12() {
+            const t50 = parseFloat(document.getElementById('q12_t50').value);
+            // Expected T50: -1.5 * 50 + 20 = -75 + 20 = -55
+            const expectedT50 = -55;
+            const tolerance = 0.001;
+            const isT50Correct = Math.abs(t50 - expectedT50) < tolerance;
+
+            let message = '';
+            if (isT50Correct) {
+                message = 'أحسنت! عند التعويض عن $n=50$ في القاعدة $T_n = -1.5n + 20$، تحصل على $T_{50} = -1.5(50) + 20 = -55$.';
+            } else {
+                message = `تحقق من حساباتك. القيمة الصحيحة للحد $T_{50}$ هي $-55$.`;
+            }
+
+            updateInputBorder('q12_t50', isT50Correct);
+            setFeedback('feedback_q12', message, isT50Correct);
+        }
+
+        // Check for Sequence Q16: T_n = (3/4)n + 3/4 = 0.75n + 0.75
+        function checkSequence16() {
+            // Use parseFloat as the sequence involves fractions/decimals
+            const a = parseFloat(document.getElementById('q16_a').value);
+            const b = parseFloat(document.getElementById('q16_b').value);
+            const t1 = parseFloat(document.getElementById('q16_t1').value);
+            const t2 = parseFloat(document.getElementById('q16_t2').value);
+            const t3 = parseFloat(document.getElementById('q16_t3').value);
+
+            const tolerance = 0.001; // For floating-point comparison
+
+            // Expected Rule: T_n = 0.75n + 0.75
+            const expectedA = 0.75;
+            const expectedB = 0.75;
+            // Expected terms: T1=1.5, T2=2.25, T3=3
+            const expectedT1 = 1.5;
+            const expectedT2 = 2.25;
+            const expectedT3 = 3.0;
+
+            const isACorrect = Math.abs(a - expectedA) < tolerance;
+            const isBCorrect = Math.abs(b - expectedB) < tolerance;
+            const isT1Correct = Math.abs(t1 - expectedT1) < tolerance;
+            const isT2Correct = Math.abs(t2 - expectedT2) < tolerance;
+            const isT3Correct = Math.abs(t3 - expectedT3) < tolerance;
+            
+            const allCorrect = isACorrect && isBCorrect && isT1Correct && isT2Correct && isT3Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'رائع! الحد العام هو <span dir="ltr" class="font-mono text-lg">$T_n = 0.75n + 0.75$</span> والحدود الثلاثة الأولى ($1.5, 2.25, 3$) صحيحة.';
+            } else {
+                message = 'تحقق من إجاباتك: ';
+                if (!isACorrect || !isBCorrect) message += ' <br> الحد العام غير صحيح. (القاعدة هي $T_n = 0.75n + 0.75$)';
+                if (!isT1Correct || !isT2Correct || !isT3Correct) {
+                    message += ' <br> أحد الحدود غير صحيح. تذكر أن $T_n = 0.75n + 0.75$.';
+                    if (isACorrect && isBCorrect) message += ' <br> قيم الحدود الصحيحة هي: $T_1 = 1.5$، $T_2 = 2.25$، $T_3 = 3$.';
+                }
+            }
+
+            updateInputBorder('q16_a', isACorrect);
+            updateInputBorder('q16_b', isBCorrect);
+            updateInputBorder('q16_t1', isT1Correct);
+            updateInputBorder('q16_t2', isT2Correct);
+            updateInputBorder('q16_t3', isT3Correct);
+
+            setFeedback('feedback_q16', message, allCorrect);
+        }
+
+        // Check for Pattern Q14/Q15: 4, 7, 10, 13, ... (Rule: 3n + 1)
+        function checkPattern14() {
+            // Use parseFloat for coefficients, though they are integers here
+            const a = parseFloat(document.getElementById('q14_a').value);
+            const b = parseFloat(document.getElementById('q14_b').value);
+            const t10 = parseFloat(document.getElementById('q15_t10').value);
+
+            // Expected Rule: T_n = 3n + 1
+            const expectedA = 3;
+            const expectedB = 1;
+            // Expected T10: 3 * 10 + 1 = 31
+            const expectedT10 = 31;
+
+            const isACorrect = a === expectedA;
+            const isBCorrect = b === expectedB;
+            const isT10Correct = t10 === expectedT10;
+            const allCorrect = isACorrect && isBCorrect && isT10Correct;
+
+            let message = '';
+            if (allCorrect) {
+                message = 'رائع! لقد أوجدت القاعدة <span dir="ltr" class="font-mono text-lg">$T_n = 3n + 1$</span> وطبقتها بشكل صحيح لحساب عدد المربعات في الحد العاشر ($31$).';
+            } else {
+                message = 'تحقق من إجاباتك: ';
+                if (!isACorrect || !isBCorrect) message += ' <br> الحد العام غير صحيح. (القاعدة الصحيحة هي: $T_n = 3n + 1$)';
+                if (isACorrect && isBCorrect && !isT10Correct) message += ' <br> الحد العام صحيح، لكن قيمة $T_{10}$ خاطئة. (القيمة الصحيحة هي $31$)';
+                if (!isACorrect && !isBCorrect && !isT10Correct) message += ' <br> جميع الإجابات خاطئة. النمط يزداد بـ 3 مربعات في كل مرة.';
+            }
+
+            updateInputBorder('q14_a', isACorrect);
+            updateInputBorder('q14_b', isBCorrect);
+            updateInputBorder('q15_t10', isT10Correct);
+
+            setFeedback('feedback_q14', message, allCorrect);
+        }
+
+        // Initialize when the DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", function () {
+            // Render all static math in the document (titles and descriptions)
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
+</body>
+</html>
