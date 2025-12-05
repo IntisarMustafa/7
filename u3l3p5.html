@@ -1511,6 +1511,349 @@
             return position;
         }
 
+        // دالة جديدة لإنشاء ذئب مفصل مع أرجل متحركة
+        function createDetailedWolf(x, z, type) {
+            const wolfGroup = new THREE.Group();
+            
+            // تحديد الألوان بناءً على نوع الذئب
+            let furMain, furLight, furHighlight;
+            let scaleFactor = 1;
+            
+            switch(type) {
+                case 'giant':
+                    furMain = 0x990000;
+                    furLight = 0xbb3333;
+                    furHighlight = 0xff6666;
+                    scaleFactor = 1.5;
+                    break;
+                case 'aggressive':
+                    furMain = 0x8b4513;
+                    furLight = 0xa0522d;
+                    furHighlight = 0xd2691e;
+                    scaleFactor = 0.96; // تم التعديل: تصغير بنسبة 20% (1.2 × 0.8 = 0.96)
+                    break;
+                case 'strong':
+                    furMain = 0x2f4f4f;
+                    furLight = 0x4f6f6f;
+                    furHighlight = 0x6f8f8f;
+                    scaleFactor = 1.1;
+                    break;
+                case 'fast':
+                    furMain = 0x696969;
+                    furLight = 0x808080;
+                    furHighlight = 0x999999;
+                    scaleFactor = 0.9;
+                    break;
+                case 'normal':
+                default:
+                    furMain = 0x505050;
+                    furLight = 0x777777;
+                    furHighlight = 0x999999;
+                    scaleFactor = 0.77; // تم التعديل: تكبير بنسبة 10% (0.7 × 1.1 = 0.77)
+            }
+            
+            // المواد
+            const matBody = new THREE.MeshStandardMaterial({ 
+                color: furMain, 
+                flatShading: true,
+                roughness: 0.8 
+            });
+            const matLight = new THREE.MeshStandardMaterial({ 
+                color: furLight, 
+                flatShading: true,
+                roughness: 0.8 
+            });
+            const matHighlight = new THREE.MeshStandardMaterial({ 
+                color: furHighlight, 
+                flatShading: true,
+                roughness: 0.8 
+            });
+
+            // 1. الجسد
+            // الصدر
+            const chestGeom = new THREE.DodecahedronGeometry(1.4 * scaleFactor);
+            chestGeom.scale(1, 1.1, 1.4);
+            const chest = new THREE.Mesh(chestGeom, matBody);
+            chest.position.y = 2.8 * scaleFactor;
+            wolfGroup.add(chest);
+
+            // البطن
+            const bellyGeom = new THREE.DodecahedronGeometry(1.1 * scaleFactor);
+            bellyGeom.scale(0.9, 1, 1.3);
+            const belly = new THREE.Mesh(bellyGeom, matLight);
+            belly.position.set(0, 2.9 * scaleFactor, -1.8 * scaleFactor);
+            wolfGroup.add(belly);
+
+            // 2. الرأس
+            const headGroup = new THREE.Group();
+            headGroup.position.set(0, 4.2 * scaleFactor, 1.8 * scaleFactor);
+
+            // الجمجمة
+            const skull = new THREE.Mesh(new THREE.BoxGeometry(1.2 * scaleFactor, 1.2 * scaleFactor, 1.4 * scaleFactor), matBody);
+            headGroup.add(skull);
+
+            // الأنف
+            const snout = new THREE.Mesh(new THREE.BoxGeometry(0.7 * scaleFactor, 0.7 * scaleFactor, 1.2 * scaleFactor), matLight);
+            snout.position.set(0, -0.1 * scaleFactor, 1.1 * scaleFactor);
+            headGroup.add(snout);
+
+            // طرف الأنف
+            const noseTip = new THREE.Mesh(new THREE.BoxGeometry(0.3 * scaleFactor, 0.2 * scaleFactor, 0.2 * scaleFactor), 
+                new THREE.MeshStandardMaterial({ color: 0x1a1a1a, flatShading: true }));
+            noseTip.position.set(0, 0.2 * scaleFactor, 1.7 * scaleFactor);
+            headGroup.add(noseTip);
+
+            // الفك السفلي
+            const jawGroup = new THREE.Group();
+            jawGroup.position.set(0, -0.4 * scaleFactor, 0.8 * scaleFactor);
+            const jawMesh = new THREE.Mesh(new THREE.BoxGeometry(0.6 * scaleFactor, 0.3 * scaleFactor, 1.0 * scaleFactor), matLight);
+            jawGroup.add(jawMesh);
+            headGroup.add(jawGroup);
+
+            // الأذنين
+            const earGeo = new THREE.ConeGeometry(0.3 * scaleFactor, 0.8 * scaleFactor, 4);
+            const earL = new THREE.Mesh(earGeo, matBody);
+            earL.position.set(0.4 * scaleFactor, 0.8 * scaleFactor, -0.3 * scaleFactor);
+            earL.rotation.set(-0.2, 0, -0.2);
+            headGroup.add(earL);
+
+            const earR = new THREE.Mesh(earGeo, matBody);
+            earR.position.set(-0.4 * scaleFactor, 0.8 * scaleFactor, -0.3 * scaleFactor);
+            earR.rotation.set(-0.2, 0, 0.2);
+            headGroup.add(earR);
+
+            // العيون
+            const eyeGeo = new THREE.BoxGeometry(0.1 * scaleFactor, 0.15 * scaleFactor, 0.05 * scaleFactor);
+            const eyeMat = new THREE.MeshStandardMaterial({ 
+                color: 0xffaa00, 
+                emissive: 0xffaa00, 
+                emissiveIntensity: 0.5 
+            });
+            const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+            const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+            eyeL.position.set(0.35 * scaleFactor, 0.2 * scaleFactor, 0.7 * scaleFactor);
+            eyeR.position.set(-0.35 * scaleFactor, 0.2 * scaleFactor, 0.7 * scaleFactor);
+            headGroup.add(eyeL);
+            headGroup.add(eyeR);
+
+            wolfGroup.add(headGroup);
+
+            // 3. الذيل
+            const tailGroup = new THREE.Group();
+            tailGroup.position.set(0, 3.2 * scaleFactor, -2.5 * scaleFactor);
+            
+            // قاعدة الذيل
+            const tailBase = new THREE.Mesh(new THREE.CylinderGeometry(0.2 * scaleFactor, 0.5 * scaleFactor, 1.5 * scaleFactor, 5), matBody);
+            tailBase.position.set(0, -0.5 * scaleFactor, -0.5 * scaleFactor);
+            tailBase.rotation.x = -0.8;
+            tailGroup.add(tailBase);
+            
+            // طرف الذيل
+            const tailTip = new THREE.Mesh(new THREE.ConeGeometry(0.4 * scaleFactor, 1.5 * scaleFactor, 5), matHighlight);
+            tailTip.position.set(0, -1.5 * scaleFactor, -1.0 * scaleFactor);
+            tailTip.rotation.x = -0.5;
+            tailGroup.add(tailTip);
+            
+            wolfGroup.add(tailGroup);
+
+            // 4. الأرجل (متضمنة في المجموعة للإشارة إليها لاحقاً للتحريك)
+            const legs = [];
+            
+            function createLeg(x, z, isBack) {
+                const legGroup = new THREE.Group();
+                legGroup.position.set(x, 2.8 * scaleFactor, z);
+
+                // الفخذ
+                const thighH = isBack ? 1.4 : 1.2;
+                const thigh = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.35 * scaleFactor, 0.5 * scaleFactor, thighH * scaleFactor, 5), 
+                    matBody
+                );
+                thigh.position.set(0, -thighH * scaleFactor / 2, 0);
+                thigh.rotation.x = isBack ? 0.3 : -0.1;
+                legGroup.add(thigh);
+
+                // الساق السفلية
+                const shinH = 1.0;
+                const shin = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.2 * scaleFactor, 0.3 * scaleFactor, shinH * scaleFactor, 4), 
+                    matLight
+                );
+                shin.position.set(0, -thighH * scaleFactor - shinH * scaleFactor / 2 + 0.1 * scaleFactor, 
+                                  isBack ? -0.3 * scaleFactor : 0.1 * scaleFactor);
+                shin.rotation.x = isBack ? -0.5 : 0.1;
+                legGroup.add(shin);
+
+                // القدم
+                const paw = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.4 * scaleFactor, 0.3 * scaleFactor, 0.5 * scaleFactor), 
+                    matBody
+                );
+                paw.position.set(0, -thighH * scaleFactor - shinH * scaleFactor - 0.1 * scaleFactor, 
+                                 isBack ? -0.5 * scaleFactor : 0.2 * scaleFactor);
+                legGroup.add(paw);
+
+                wolfGroup.add(legGroup);
+                return legGroup;
+            }
+
+            // إنشاء الأرجل الأربعة
+            legs.push(createLeg(0.6 * scaleFactor, 0.5 * scaleFactor, false));  // Front L
+            legs.push(createLeg(-0.6 * scaleFactor, 0.5 * scaleFactor, false)); // Front R
+            legs.push(createLeg(0.6 * scaleFactor, -2.0 * scaleFactor, true));  // Back L
+            legs.push(createLeg(-0.6 * scaleFactor, -2.0 * scaleFactor, true)); // Back R
+
+            // تخزين مراجع الأرجل للتحريك لاحقاً
+            wolfGroup.userData.legs = legs;
+            wolfGroup.userData.head = headGroup;
+            wolfGroup.userData.jaw = jawGroup;
+            wolfGroup.userData.tail = tailGroup;
+            wolfGroup.userData.walkCycle = 0;
+            wolfGroup.userData.earL = earL;
+            wolfGroup.userData.earR = earR;
+
+            // تطبيق التحجيم النهائي
+            wolfGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
+            
+            // تحديد موضع الذئب - التصحيح هنا: الذئاب العادية والشرسة على الأرض، العملاقة ترتفع قليلاً
+            wolfGroup.position.set(x, type === 'giant' ? 4 * scaleFactor : 0, z);
+            
+            // إضافة تأثير خاص للذئاب العدوانية
+            if (type === 'aggressive') {
+                const glowGeometry = new THREE.SphereGeometry(2.5 * scaleFactor, 16, 16);
+                const glowMaterial = new THREE.MeshBasicMaterial({
+                    color: furMain,
+                    transparent: true,
+                    opacity: 0.3,
+                });
+                const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+                wolfGroup.add(glow);
+            }
+
+            return wolfGroup;
+        }
+
+        // دالة لتحريك أرجل الذئب
+        function animateWolfLegs(wolf, deltaTime) {
+            if (!wolf.userData.legs) return;
+            
+            const legs = wolf.userData.legs;
+            const isChasing = wolf.userData.isChasing || false;
+            
+            // زيادة دورة المشي فقط إذا كان الذئب يتحرك
+            if (isChasing && wolf.userData.speed > 0) {
+                wolf.userData.walkCycle += deltaTime * wolf.userData.speed * 10;
+            }
+            
+            const walkSpeed = isChasing ? 8 : 4;
+            const legSwing = Math.sin(wolf.userData.walkCycle * walkSpeed) * 0.3;
+            
+            // تحريك الأرجل الأمامية والخلفية بشكل معاكس
+            // الأرجل الأمامية
+            if (legs[0]) legs[0].rotation.x = legSwing;
+            if (legs[1]) legs[1].rotation.x = legSwing;
+            
+            // الأرجل الخلفية (معكوسة)
+            if (legs[2]) legs[2].rotation.x = -legSwing;
+            if (legs[3]) legs[3].rotation.x = -legSwing;
+            
+            // تحريك الذيل قليلاً
+            if (wolf.userData.tail) {
+                wolf.userData.tail.rotation.y = Math.sin(wolf.userData.walkCycle * 2) * 0.1;
+            }
+            
+            // تحريك الأذنين
+            if (wolf.userData.earL && wolf.userData.earR) {
+                const earMove = Math.sin(wolf.userData.walkCycle * 4) * 0.1;
+                wolf.userData.earL.rotation.z = -0.2 + earMove;
+                wolf.userData.earR.rotation.z = 0.2 - earMove;
+            }
+        }
+
+        // تعديل دالة createWolf لاستخدام الذئب المفصل
+        function createWolf(x, z, type) {
+            const wolfGroup = createDetailedWolf(x, z, type);
+            
+            let health, value;
+            const sizeFactor = 1 + (round - 1) * 0.5;
+            const healthFactor = 1 + (round - 1) * 0.8;
+
+            // تحديد خصائص الذئب بناءً على نوعه
+            switch(type) {
+                case 'giant':
+                    health = 500;
+                    value = 50;
+                    break;
+                case 'aggressive':
+                    health = 150 * healthFactor;
+                    value = 25;
+                    break;
+                case 'strong':
+                    health = 120;
+                    value = 15;
+                    break;
+                case 'fast':
+                    health = 80;
+                    value = 10;
+                    break;
+                case 'normal':
+                default:
+                    health = 30;
+                    value = 5;
+            }
+
+            // تحديد سرعة الذئب بناءً على نوعه
+            let baseSpeed;
+            switch(type) {
+                case 'aggressive':
+                    baseSpeed = 0.12;
+                    break;
+                case 'fast':
+                    baseSpeed = 0.08;
+                    break;
+                case 'normal':
+                    baseSpeed = 0.1; // سرعة متوسطة للذئب العادي
+                    break;
+                default:
+                    baseSpeed = 0.04;
+            }
+
+            // تحديد مدى الكشف بناءً على نوع الذئب
+            let detectionRange;
+            if (type === "aggressive") {
+                detectionRange = 30;
+            } else if (type === "normal") {
+                detectionRange = 1000;
+            } else {
+                detectionRange = 0;
+            }
+
+            // إضافة خصائص الذئب
+            wolfGroup.userData = {
+                ...wolfGroup.userData,
+                type,
+                health,
+                maxHealth: health,
+                speed: baseSpeed,
+                value,
+                isAggressive: type === "aggressive" || type === "normal",
+                isChasing: false,
+                detectionRange: detectionRange,
+                attackRange: (type === "aggressive" || type === "normal") ? 5 : 0,
+                attackDamage: (type === "aggressive" || type === "normal") ? 10 : 0,
+                lastAttackTime: 0,
+                collisionDamage: type === "normal" ? 8 : (type === "aggressive" ? 15 : 5),
+                lastCollisionTime: 0,
+                collisionCooldown: 1000,
+                isProtector: type === "aggressive",
+                protectedSheep: null,
+                guardRadius: 15,
+            };
+
+            scene.add(wolfGroup);
+            return wolfGroup;
+        }
+
         // إنشاء أغنام
         function createSheep(x, y, z) {
             const sheepGroup = new THREE.Group();
@@ -1669,219 +2012,6 @@
 
             scene.add(mountainGroup);
             return mountainGroup;
-        }
-
-        // إنشاء ذئاب شريرة
-        function createWolf(x, z, type) {
-            const wolfGroup = new THREE.Group();
-            let wolfGeometry, wolfMaterial;
-            let health, value;
-
-            const aggressiveColors = [
-                0x8b4513,
-                0x2f4f4f,
-                0x800000,
-                0x36454f,
-                0x654321,
-            ];
-
-            const sizeFactor = 1 + (round - 1) * 0.5;
-            const healthFactor = 1 + (round - 1) * 0.8;
-
-            if (type === "giant") {
-                wolfGeometry = new THREE.ConeGeometry(4, 6, 8);
-                wolfMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x990000,
-                    roughness: 0.6,
-                    metalness: 0.2,
-                });
-                health = 500;
-                value = 50;
-            } else if (type === "normal") {
-                // التعديل: جعل الذئاب العادية أصغر حجماً
-                wolfGeometry = new THREE.ConeGeometry(1.5, 2.5, 8); // تم تقليل الحجم من (2, 3) إلى (1.5, 2.5)
-                wolfMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x8b4513,
-                    roughness: 0.7,
-                });
-                // التعديل: الذئاب العادية أصبحت أضعف وأقل ضرراً
-                health = 30; // تم تقليل الصحة من 50 إلى 30
-                value = 5;
-            } else if (type === "fast") {
-                wolfGeometry = new THREE.ConeGeometry(1.5, 2.5, 8);
-                wolfMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x696969,
-                    roughness: 0.8,
-                });
-                health = 80;
-                value = 10;
-            } else if (type === "strong") {
-                wolfGeometry = new THREE.ConeGeometry(2.5, 4, 8);
-                wolfMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x2f4f4f,
-                    roughness: 0.8,
-                });
-                health = 120;
-                value = 15;
-            } else if (type === "aggressive") {
-                wolfGeometry = new THREE.ConeGeometry(2 * sizeFactor, 3 * sizeFactor, 8);
-                const randomColor = aggressiveColors[Math.floor(Math.random() * aggressiveColors.length)];
-                wolfMaterial = new THREE.MeshStandardMaterial({
-                    color: randomColor,
-                    roughness: 0.3,
-                    metalness: 0.7,
-                    emissive: randomColor,
-                    emissiveIntensity: 0.5,
-                });
-                health = 150 * healthFactor;
-                value = 25;
-            }
-
-            const wolf = new THREE.Mesh(wolfGeometry, wolfMaterial);
-            wolf.castShadow = true;
-            wolf.receiveShadow = true;
-            wolfGroup.add(wolf);
-
-            // عيون الذئب
-            const eyeGeometry = new THREE.SphereGeometry(0.3, 8, 8);
-            const eyeMaterial = new THREE.MeshStandardMaterial({
-                color: 0xffffff
-            });
-            const eyeScale = type === "giant" || type === "aggressive" ? 1.5 : 1;
-            const eyeOffset = type === "giant" || type === "aggressive" ? 1.5 : 0.8;
-
-            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            leftEye.scale.set(eyeScale, eyeScale, eyeScale);
-            leftEye.position.set(-eyeOffset, 0.5 * eyeScale, 1.2 * eyeScale);
-            wolfGroup.add(leftEye);
-
-            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            rightEye.scale.set(eyeScale, eyeScale, eyeScale);
-            rightEye.position.set(eyeOffset, 0.5 * eyeScale, 1.2 * eyeScale);
-            wolfGroup.add(rightEye);
-
-            // بؤبؤ العين
-            const pupilGeometry = new THREE.SphereGeometry(0.15, 8, 8);
-            const pupilMaterial = new THREE.MeshStandardMaterial({
-                color: 0x000000
-            });
-
-            const leftPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
-            leftPupil.scale.set(eyeScale, eyeScale, eyeScale);
-            leftPupil.position.set(-eyeOffset, 0.5 * eyeScale, 1.2 * eyeScale + 0.2);
-            wolfGroup.add(leftPupil);
-
-            const rightPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
-            rightPupil.scale.set(eyeScale, eyeScale, eyeScale);
-            rightPupil.position.set(eyeOffset, 0.5 * eyeScale, 1.2 * eyeScale + 0.2);
-            wolfGroup.add(rightPupil);
-
-            // أنف الذئب
-            const noseGeometry = new THREE.SphereGeometry(0.4, 8, 8);
-            const noseMaterial = new THREE.MeshStandardMaterial({
-                color: 0x000000
-            });
-            const nose = new THREE.Mesh(noseGeometry, noseMaterial);
-            nose.position.set(0, 0.2, 1.8);
-            wolfGroup.add(nose);
-
-            // أذن الذئب
-            const earGeometry = new THREE.ConeGeometry(0.4, 0.8, 8);
-            const earMaterial = new THREE.MeshStandardMaterial({
-                color: 0x8b4513
-            });
-
-            const leftEar = new THREE.Mesh(earGeometry, earMaterial);
-            leftEar.position.set(-1, 1.5, 0);
-            leftEar.rotation.z = -0.5;
-            wolfGroup.add(leftEar);
-
-            const rightEar = new THREE.Mesh(earGeometry, earMaterial);
-            rightEar.position.set(1, 1.5, 0);
-            rightEar.rotation.z = 0.5;
-            wolfGroup.add(rightEar);
-
-            // تأثير إضافي للذئاب العدوانية
-            if (type === "aggressive") {
-                const glowGeometry = new THREE.SphereGeometry(2.5, 16, 16);
-                const glowMaterial = new THREE.MeshBasicMaterial({
-                    color: wolfMaterial.color,
-                    transparent: true,
-                    opacity: 0.3,
-                });
-                const glow = new THREE.Mesh(glowGeometry, glowMaterial);
-                wolfGroup.add(glow);
-
-                const particleCount = 8;
-                for (let i = 0; i < particleCount; i++) {
-                    const particleGeometry = new THREE.SphereGeometry(0.3, 8, 8);
-                    const particleMaterial = new THREE.MeshBasicMaterial({
-                        color: aggressiveColors[
-                            Math.floor(Math.random() * aggressiveColors.length)
-                        ],
-                        transparent: true,
-                        opacity: 0.7,
-                    });
-                    const particle = new THREE.Mesh(particleGeometry, particleMaterial);
-                    const angle = (i / particleCount) * Math.PI * 2;
-                    const radius = 3;
-
-                    particle.position.set(
-                        Math.cos(angle) * radius,
-                        Math.sin(angle) * 0.5,
-                        Math.sin(angle) * radius
-                    );
-                    particle.userData = {
-                        angle: angle,
-                        speed: 0.05,
-                    };
-                    wolfGroup.add(particle);
-                }
-            }
-
-            wolfGroup.position.set(x, type === "giant" ? 4 : 2, z);
-
-            // التعديل: الذئاب العادية أصبحت أقل سرعة وأقل ضرراً
-            const isAggressive = type === "aggressive";
-            const isNormal = type === "normal";
-            
-            // التعديل: تقليل سرعة الذئاب العادية
-            const baseSpeed = isNormal ? 0.1 : (isAggressive ? 0.12 : Math.random() * 0.04 + 0.01);
-            
-            // تحديد مدى الكشف بناءً على نوع الذئب
-            let detectionRange;
-            if (type === "aggressive") {
-                detectionRange = 30;  // الذئاب الشرسة مدى كشفها 30
-            } else if (type === "normal") {
-                detectionRange = 1000; // الذئاب العادية مدى كشفها 1000
-            } else {
-                detectionRange = 0; // الأنواع الأخرى لا تتابع
-            }
-
-            wolfGroup.userData = {
-                type,
-                health,
-                maxHealth: health,
-                speed: baseSpeed,
-                value,
-                isAggressive: isAggressive || isNormal, // الذئاب العادية أصبحت عدوانية
-                isChasing: false,
-                detectionRange: detectionRange, // استخدام المدى المحدد
-                attackRange: (isAggressive || isNormal) ? 5 : 0,
-                attackDamage: (isAggressive || isNormal) ? 10 : 0,
-                lastAttackTime: 0,
-                // التعديل: تقليل ضرر التصادم للذئاب العادية من 15 إلى 8
-                collisionDamage: isNormal ? 8 : (isAggressive ? 15 : 5),
-                lastCollisionTime: 0,
-                collisionCooldown: 1000, // 1 ثانية بين كل ضرر
-                // إضافة خاصية جديدة للذئاب الشرسة
-                isProtector: type === "aggressive", // الذئاب الشرسة تحمي الخراف
-                protectedSheep: null, // سيتم تعيينها لاحقاً
-                guardRadius: 15, // نصف قطر الدفاع حول الخروف
-            };
-
-            scene.add(wolfGroup);
-            return wolfGroup;
         }
 
         // إنشاء عملة
@@ -2676,8 +2806,8 @@
 
         // إنشاء ذئاب للجولة الحالية - تم تعديلها لإنشاء ذئاب عادية (أصغر وأقل ضرراً)
         function spawnWavesForRound() {
-            // التعديل: زيادة عدد الذئاب العادية بشكل كبير
-            const currentWolfCount = 20 + (round - 1) * 10; // زاد عدد الذئاب بشكل كبير
+            // التعديل: تخفيض عدد الذئاب العادية
+            const currentWolfCount = 20 + (round - 1) * 10; // تم تخفيض عدد الذئاب
 
             for (let i = 0; i < currentWolfCount; i++) {
                 let type;
@@ -2888,7 +3018,7 @@
             }, 2000);
         }
 
-        function moveWolves() {
+        function moveWolves(deltaTime) {
             const playerPos = new THREE.Vector3();
             player.getWorldPosition(playerPos);
 
@@ -2897,20 +3027,8 @@
                 const wolfPos = new THREE.Vector3();
                 wolf.getWorldPosition(wolfPos);
 
-                if (wolfData.isAggressive) {
-                    wolf.children.forEach((child) => {
-                        if (child.userData && child.userData.angle !== undefined) {
-                            child.userData.angle += 0.05;
-                            const radius = 3;
-
-                            child.position.set(
-                                Math.cos(child.userData.angle) * radius,
-                                Math.sin(child.userData.angle) * 0.5,
-                                Math.sin(child.userData.angle) * radius
-                            );
-                        }
-                    });
-                }
+                // تحريك أرجل الذئب
+                animateWolfLegs(wolf, deltaTime);
 
                 const distanceToPlayer = wolfPos.distanceTo(playerPos);
 
@@ -2922,9 +3040,9 @@
                     const newPosition = wolfPos.clone().add(direction.multiplyScalar(wolfData.speed * 1.5));
 
                     let collisionDetected = false;
-                    const wolfBoundingSphere = new THREE.Sphere(newPosition, 2);
+                    const wolfBoundingSphere = new THREE.Sphere(newPosition, 2 * wolf.scale.x);
 
-                    // التحقق من التصادم مع الجبال بدلاً من البيوت
+                    // التحقق من التصادم مع الجبال
                     for (const mountain of mountains) {
                         mountain.children.forEach((child) => {
                             const childBox = new THREE.Box3().setFromObject(child);
@@ -2940,6 +3058,7 @@
                         wolf.position.z = newPosition.z;
                     }
 
+                    // توجيه الذئب نحو اللاعب
                     wolf.lookAt(
                         wolf.position.x + direction.x,
                         wolf.position.y,
@@ -2950,29 +3069,21 @@
                     if (distanceToPlayer < 3) {
                         const currentTime = Date.now();
                         if (currentTime - wolfData.lastCollisionTime > wolfData.collisionCooldown) {
-                            // تطبيق الضرر على اللاعب
                             playerHealth -= wolfData.collisionDamage;
                             wolfData.lastCollisionTime = currentTime;
-
-                            // عرض تأثير الضرر
                             showPlayerDamageEffect();
-
-                            // تشغيل صوت الضرر
                             playDamageSound();
-
                             updateUI();
                         }
                     }
                 }
-                // الذئاب الشرسة تبقى حول الخراف وتهاجم فقط إذا اقترب اللاعب من دائرتها
+                // الذئاب الشرسة تبقى حول الخراف
                 else if (wolfData.isProtector && wolfData.protectedSheep) {
                     const sheepPos = new THREE.Vector3();
                     wolfData.protectedSheep.getWorldPosition(sheepPos);
                     
-                    // حساب المسافة بين اللاعب والخروف المحمي
                     const distanceToSheep = playerPos.distanceTo(sheepPos);
                     
-                    // إذا كان اللاعب داخل دائرة الدفاع حول الخروف، يهاجم الذئب اللاعب
                     if (distanceToSheep < wolfData.guardRadius && distanceToPlayer < wolfData.detectionRange) {
                         wolfData.isChasing = true;
 
@@ -2980,9 +3091,8 @@
                         const newPosition = wolfPos.clone().add(direction.multiplyScalar(wolfData.speed * 1.5));
 
                         let collisionDetected = false;
-                        const wolfBoundingSphere = new THREE.Sphere(newPosition, 2);
+                        const wolfBoundingSphere = new THREE.Sphere(newPosition, 2 * wolf.scale.x);
 
-                        // التحقق من التصادم مع الجبال بدلاً من البيوت
                         for (const mountain of mountains) {
                             mountain.children.forEach((child) => {
                                 const childBox = new THREE.Box3().setFromObject(child);
@@ -3004,38 +3114,29 @@
                             wolf.position.z + direction.z
                         );
 
-                        // التحقق من التصادم مع اللاعب وتطبيق الضرر
                         if (distanceToPlayer < 3) {
                             const currentTime = Date.now();
                             if (currentTime - wolfData.lastCollisionTime > wolfData.collisionCooldown) {
-                                // تطبيق الضرر على اللاعب
                                 playerHealth -= wolfData.collisionDamage;
                                 wolfData.lastCollisionTime = currentTime;
-
-                                // عرض تأثير الضرر
                                 showPlayerDamageEffect();
-
-                                // تشغيل صوت الضرر
                                 playDamageSound();
-
                                 updateUI();
                             }
                         }
                     } else {
-                        // إذا كان اللاعب خارج دائرة الدفاع، يعود الذئب إلى موقعه حول الخروف
                         wolfData.isChasing = false;
                         
                         // العودة إلى موقع الحماية حول الخروف
                         const wolfToSheep = new THREE.Vector3().subVectors(wolfPos, sheepPos);
                         const distanceToSheepCenter = wolfToSheep.length();
                         
-                        // إذا ابتعد الذئب كثيراً عن الخروف، يعود إلى دائرة الحماية
                         if (distanceToSheepCenter > wolfData.guardRadius / 2) {
                             const returnDirection = new THREE.Vector3().subVectors(sheepPos, wolfPos).normalize();
                             const returnPosition = sheepPos.clone().add(returnDirection.multiplyScalar(wolfData.guardRadius / 3));
                             
                             let collisionDetected = false;
-                            const wolfBoundingSphere = new THREE.Sphere(returnPosition, 2);
+                            const wolfBoundingSphere = new THREE.Sphere(returnPosition, 2 * wolf.scale.x);
 
                             for (const mountain of mountains) {
                                 mountain.children.forEach((child) => {
@@ -3717,7 +3818,7 @@
             // تحديث موضع الكاميرا
             camera.position.copy(playerPos).add(cameraOffset);
 
-            // توجيه الكاميرا نحو اللاعب
+            // توجيه الكامرا نحو اللاعب
             camera.lookAt(playerPos);
         }
 
@@ -4416,7 +4517,7 @@
 
             if (gameStarted && !gameOver) {
                 movePlayer();
-                moveWolves();
+                moveWolves(deltaTime); // تمرير deltaTime
                 moveBees(); // تحريك النحل
                 moveBeeStings(); // تحريك لسعات النحل
                 updateWolfProjectiles();
