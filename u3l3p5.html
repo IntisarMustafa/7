@@ -1458,6 +1458,14 @@
             buffer: 30, // زيادة مسافة التحذير
         };
 
+        // تقسيم العالم إلى أربعة أرباع
+        const quarters = [
+            { minX: -450, maxX: 0, minZ: -450, maxZ: 0 }, // الربع الأول: الشمال الغربي
+            { minX: 0, maxX: 450, minZ: -450, maxZ: 0 },  // الربع الثاني: الشمال الشرقي
+            { minX: -450, maxX: 0, minZ: 0, maxZ: 450 },  // الربع الثالث: الجنوب الغربي
+            { minX: 0, maxX: 450, minZ: 0, maxZ: 450 }    // الربع الرابع: الجنوب الشرقي
+        ];
+
         // إنشاء حدود مرئية للعالم
         function createWorldBoundsVisual() {
             const boundsGeometry = new THREE.BoxGeometry(
@@ -1771,7 +1779,7 @@
         }
 
         // تعديل دالة createWolf لاستخدام الذئب المفصل
-        function createWolf(x, z, type) {
+        function createWolf(x, z, type, quarter) {
             const wolfGroup = createDetailedWolf(x, z, type);
             
             let health, value;
@@ -1823,7 +1831,7 @@
             if (type === "aggressive") {
                 detectionRange = 30;
             } else if (type === "normal") {
-                detectionRange = 1000;
+                detectionRange = 50; // تقليل مدى الكشف للذئاب العادية
             } else {
                 detectionRange = 0;
             }
@@ -1848,6 +1856,11 @@
                 isProtector: type === "aggressive",
                 protectedSheep: null,
                 guardRadius: 15,
+                // إضافة معلومات الربع الذي ينتمي إليه الذئب
+                quarter: quarter,
+                // إضافة هدف عشوائي للحركة داخل الربع
+                randomTarget: null,
+                targetTimer: 0
             };
 
             scene.add(wolfGroup);
@@ -2785,14 +2798,13 @@
                 const sheep = createSheep(sheepX, 2, sheepZ);
                 sheeps.push(sheep);
 
-                // إضافة 3 ذئاب حول كل خروف - التعديل المطلوب
+                // إضافة 3 ذئاب شرسة حول كل خروف
                 for (let j = 0; j < 3; j++) {
                     const angle = (j / 3) * Math.PI * 2;
                     const distance = 10; // مسافة الذئاب عن الخروف
                     const wolfX = sheepX + Math.cos(angle) * distance;
                     const wolfZ = sheepZ + Math.sin(angle) * distance;
 
-                    // تحديد نوع الذئب - الآن جميع الذئاب حول الخراف عدوانية
                     const wolfType = "aggressive";
                     const wolf = createWolf(wolfX, wolfZ, wolfType);
                     
@@ -2804,20 +2816,34 @@
             }
         }
 
-        // إنشاء ذئاب للجولة الحالية - تم تعديلها لإنشاء ذئاب عادية (أصغر وأقل ضرراً)
+        // إنشاء ذئاب عادية موزعة على الأرباع
+        function spawnNormalWolvesInQuarters() {
+            const wolvesPerQuarter = 5; // عدد الذئاب في كل ربع
+            
+            quarters.forEach((quarter, index) => {
+                for (let i = 0; i < wolvesPerQuarter; i++) {
+                    // وضع الذئب بشكل عشوائي داخل حدود الربع
+                    const wolfX = Math.random() * (quarter.maxX - quarter.minX) + quarter.minX;
+                    const wolfZ = Math.random() * (quarter.maxZ - quarter.minZ) + quarter.minZ;
+                    
+                    const wolf = createWolf(wolfX, wolfZ, "normal", quarter);
+                    
+                    // إضافة هدف عشوائي أولي للذئب
+                    wolf.userData.randomTarget = new THREE.Vector3(
+                        Math.random() * (quarter.maxX - quarter.minX) + quarter.minX,
+                        0,
+                        Math.random() * (quarter.maxZ - quarter.minZ) + quarter.minZ
+                    );
+                    
+                    wolves.push(wolf);
+                }
+            });
+        }
+
+        // إنشاء ذئاب للجولة الحالية - تم تعديلها لإنشاء ذئاب عادية موزعة على الأرباع
         function spawnWavesForRound() {
-            // التعديل: تخفيض عدد الذئاب العادية
-            const currentWolfCount = 20 + (round - 1) * 10; // تم تخفيض عدد الذئاب
-
-            for (let i = 0; i < currentWolfCount; i++) {
-                let type;
-                type = "normal"; // التعديل: الذئاب الأخرى غير قريبة من الخراف تكون عادية (أصغر وأقل ضرراً)
-
-                const wolfX = Math.random() * 900 - 450;
-                const wolfZ = Math.random() * 900 - 450;
-
-                wolves.push(createWolf(wolfX, wolfZ, type));
-            }
+            // إنشاء ذئاب عادية في الأرباع
+            spawnNormalWolvesInQuarters();
 
             // إضافة النحل من الجولة 3 فصاعداً
             if (round >= 3) {
@@ -3018,6 +3044,24 @@
             }, 2000);
         }
 
+        // دالة للتحقق مما إذا كان اللاعب داخل ربع معين
+        function isPlayerInQuarter(quarter) {
+            const playerPos = new THREE.Vector3();
+            player.getWorldPosition(playerPos);
+            
+            return playerPos.x >= quarter.minX && playerPos.x <= quarter.maxX &&
+                   playerPos.z >= quarter.minZ && playerPos.z <= quarter.maxZ;
+        }
+
+        // دالة لتوليد هدف عشوائي داخل الربع
+        function generateRandomTargetInQuarter(quarter) {
+            return new THREE.Vector3(
+                Math.random() * (quarter.maxX - quarter.minX) + quarter.minX,
+                0,
+                Math.random() * (quarter.maxZ - quarter.minZ) + quarter.minZ
+            );
+        }
+
         function moveWolves(deltaTime) {
             const playerPos = new THREE.Vector3();
             player.getWorldPosition(playerPos);
@@ -3032,49 +3076,104 @@
 
                 const distanceToPlayer = wolfPos.distanceTo(playerPos);
 
-                // الذئاب العادية تتابع اللاعب من أي مسافة
-                if (wolfData.type === "normal" && distanceToPlayer < wolfData.detectionRange) {
-                    wolfData.isChasing = true;
+                // التحكم في الذئاب العادية حسب الربع
+                if (wolfData.type === "normal") {
+                    const quarter = wolfData.quarter;
+                    
+                    // التحقق مما إذا كان اللاعب داخل الربع الخاص بالذئب
+                    if (isPlayerInQuarter(quarter)) {
+                        // اللاعب داخل الربع، لذلك يبدأ الذئب بمطاردته
+                        wolfData.isChasing = true;
 
-                    const direction = new THREE.Vector3().subVectors(playerPos, wolfPos).normalize();
-                    const newPosition = wolfPos.clone().add(direction.multiplyScalar(wolfData.speed * 1.5));
+                        const direction = new THREE.Vector3().subVectors(playerPos, wolfPos).normalize();
+                        const newPosition = wolfPos.clone().add(direction.multiplyScalar(wolfData.speed * 1.5));
 
-                    let collisionDetected = false;
-                    const wolfBoundingSphere = new THREE.Sphere(newPosition, 2 * wolf.scale.x);
+                        // التأكد من بقاء الذئب داخل حدود الربع
+                        newPosition.x = Math.max(quarter.minX, Math.min(quarter.maxX, newPosition.x));
+                        newPosition.z = Math.max(quarter.minZ, Math.min(quarter.maxZ, newPosition.z));
 
-                    // التحقق من التصادم مع الجبال
-                    for (const mountain of mountains) {
-                        mountain.children.forEach((child) => {
-                            const childBox = new THREE.Box3().setFromObject(child);
-                            if (childBox.intersectsSphere(wolfBoundingSphere)) {
-                                collisionDetected = true;
-                            }
-                        });
-                        if (collisionDetected) break;
-                    }
+                        let collisionDetected = false;
+                        const wolfBoundingSphere = new THREE.Sphere(newPosition, 2 * wolf.scale.x);
 
-                    if (!collisionDetected) {
-                        wolf.position.x = newPosition.x;
-                        wolf.position.z = newPosition.z;
-                    }
-
-                    // توجيه الذئب نحو اللاعب
-                    wolf.lookAt(
-                        wolf.position.x + direction.x,
-                        wolf.position.y,
-                        wolf.position.z + direction.z
-                    );
-
-                    // التحقق من التصادم مع اللاعب وتطبيق الضرر
-                    if (distanceToPlayer < 3) {
-                        const currentTime = Date.now();
-                        if (currentTime - wolfData.lastCollisionTime > wolfData.collisionCooldown) {
-                            playerHealth -= wolfData.collisionDamage;
-                            wolfData.lastCollisionTime = currentTime;
-                            showPlayerDamageEffect();
-                            playDamageSound();
-                            updateUI();
+                        // التحقق من التصادم مع الجبال
+                        for (const mountain of mountains) {
+                            mountain.children.forEach((child) => {
+                                const childBox = new THREE.Box3().setFromObject(child);
+                                if (childBox.intersectsSphere(wolfBoundingSphere)) {
+                                    collisionDetected = true;
+                                }
+                            });
+                            if (collisionDetected) break;
                         }
+
+                        if (!collisionDetected) {
+                            wolf.position.x = newPosition.x;
+                            wolf.position.z = newPosition.z;
+                        }
+
+                        // توجيه الذئب نحو اللاعب
+                        wolf.lookAt(
+                            wolf.position.x + direction.x,
+                            wolf.position.y,
+                            wolf.position.z + direction.z
+                        );
+
+                        // التحقق من التصادم مع اللاعب وتطبيق الضرر
+                        if (distanceToPlayer < 3) {
+                            const currentTime = Date.now();
+                            if (currentTime - wolfData.lastCollisionTime > wolfData.collisionCooldown) {
+                                playerHealth -= wolfData.collisionDamage;
+                                wolfData.lastCollisionTime = currentTime;
+                                showPlayerDamageEffect();
+                                playDamageSound();
+                                updateUI();
+                            }
+                        }
+                    } else {
+                        // اللاعب خارج الربع، الذئب يتحرك عشوائياً داخل الربع
+                        wolfData.isChasing = false;
+                        
+                        // تحديث المؤقت للهدف العشوائي
+                        wolfData.targetTimer += deltaTime * 1000; // تحويل إلى ميلي ثانية
+                        
+                        // إذا انتهى الوقت أو وصل الذئب إلى الهدف، توليد هدف جديد
+                        if (!wolfData.randomTarget || wolfPos.distanceTo(wolfData.randomTarget) < 2 || wolfData.targetTimer > 5000) {
+                            wolfData.randomTarget = generateRandomTargetInQuarter(quarter);
+                            wolfData.targetTimer = 0;
+                        }
+                        
+                        // التحرك نحو الهدف العشوائي
+                        const direction = new THREE.Vector3().subVectors(wolfData.randomTarget, wolfPos).normalize();
+                        const newPosition = wolfPos.clone().add(direction.multiplyScalar(wolfData.speed * 0.5));
+
+                        // التأكد من بقاء الذئب داخل حدود الربع
+                        newPosition.x = Math.max(quarter.minX, Math.min(quarter.maxX, newPosition.x));
+                        newPosition.z = Math.max(quarter.minZ, Math.min(quarter.maxZ, newPosition.z));
+
+                        let collisionDetected = false;
+                        const wolfBoundingSphere = new THREE.Sphere(newPosition, 2 * wolf.scale.x);
+
+                        for (const mountain of mountains) {
+                            mountain.children.forEach((child) => {
+                                const childBox = new THREE.Box3().setFromObject(child);
+                                if (childBox.intersectsSphere(wolfBoundingSphere)) {
+                                    collisionDetected = true;
+                                }
+                            });
+                            if (collisionDetected) break;
+                        }
+
+                        if (!collisionDetected) {
+                            wolf.position.x = newPosition.x;
+                            wolf.position.z = newPosition.z;
+                        }
+
+                        // توجيه الذئب نحو الهدف العشوائي
+                        wolf.lookAt(
+                            wolf.position.x + direction.x,
+                            wolf.position.y,
+                            wolf.position.z + direction.z
+                        );
                     }
                 }
                 // الذئاب الشرسة تبقى حول الخراف
