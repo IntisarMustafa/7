@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
+        /* جميع أنماط CSS تبقى كما هي */
         * {
             margin: 0;
             padding: 0;
@@ -199,7 +200,7 @@
         }
         .charge-btn {
             background: linear-gradient(to bottom, #ff5722, #ff9800);
-            box-shadow: 0 4-px 10px rgba(255, 87, 34, 0.5);
+            box-shadow: 0 4px 10px rgba(255, 87, 34, 0.5);
             transition: transform 0.1s ease, box-shadow 0.3s ease;
         }
         .ui-button:active {
@@ -811,6 +812,91 @@
             transform: scale(1.05);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
+        /* زر شراء الصحة الجديد */
+        .buy-health-btn {
+            position: absolute;
+            bottom: 290px;
+            right: 20px;
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: none;
+        }
+        .buy-health-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        .buy-health-btn.disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+        /* رسالة شراء الصحة */
+        .health-purchase-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 300;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: popIn 0.5s ease-out;
+            border: 3px solid #fff;
+        }
+        .health-purchase-message.error {
+            background: linear-gradient(45deg, #f44336, #ff9800);
+        }
+        /* تأثير صحة الذئاب */
+        .wolf-health-effect {
+            position: absolute;
+            font-size: 20px;
+            color: #ff4444;
+            font-weight: bold;
+            animation: healthFloat 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 90;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        @keyframes healthFloat {
+            0% { opacity: 1; transform: translate(0, 0); }
+            100% { opacity: 0; transform: translate(0, -50px); }
+        }
+        /* تأثير ضرر التمساح - حجم أكبر */
+        .crocodile-damage-effect {
+            position: absolute;
+            font-size: 28px;
+            color: #ff0000;
+            font-weight: bold;
+            animation: healthFloat 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 90;
+            text-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+        }
+        /* عرض عدد التماسيح */
+        .crocodiles-display {
+            position: absolute;
+            top: 220px;
+            right: 20px;
+            font-size: 20px;
+            color: #00cc66;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -855,6 +941,10 @@
                     <div class="stat-value" id="beesCount">0</div>
                     <div class="stat-label">النحل</div>
                 </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="crocodilesCount">0</div>
+                    <div class="stat-label">التماسيح</div>
+                </div>
             </div>
         </div>
         <div class="scene-container">
@@ -863,9 +953,12 @@
             <div class="coins-display" id="coinsDisplay">العملات: 0</div>
             <div class="sheep-display" id="sheepDisplay">الخراف: 0/5</div>
             <div class="bombs-display" id="bombsDisplay">القنابل: 0</div>
+            <div class="crocodiles-display" id="crocodilesDisplay">التماسيح: 0</div>
             <div class="health-indicator" id="healthIndicator">
                 <div class="health-bar" id="healthBar"></div>
             </div>
+            <!-- التعديل: تغيير سعر شراء الصحة إلى 100 عملة -->
+            <button class="buy-health-btn" id="buyHealthBtn">شراء صحة (100 عملة)</button>
             <div class="round-indicator" id="roundIndicator">الجولة: 1</div>
             <button class="next-round-btn" id="nextRoundBtn">الجولة التالية</button>
             <!-- شريط شحن القنبلة الجديد -->
@@ -896,17 +989,7 @@
     <div class="question-panel" id="questionPanel">
         <h2>سؤال رياضي!</h2>
         <p id="questionText">ما الحد التالي في المتتالية الآتية؟</p>
-        <div id="sequenceContainer" class="sequence-container">
-            <span class="sequence-item">2</span>
-            <span class="sequence-item">، </span>
-            <span class="sequence-item">4</span>
-            <span class="sequence-item">، </span>
-            <span class="sequence-item">8</span>
-            <span class="sequence-item">، </span>
-            <span class="sequence-item">16</span>
-            <span class="sequence-item">، </span>
-            <span class="sequence-item">...</span>
-        </div>
+        <div id="sequenceContainer" class="sequence-container"></div>
         <div class="options-container" id="optionsContainer"></div>
     </div>
     <script>
@@ -1129,6 +1212,42 @@
 
             rumbleOscillator.start(audioContext.currentTime);
             rumbleOscillator.stop(audioContext.currentTime + 1.0);
+        }
+
+        // دالة لتشغيل صوت هجوم التمساح
+        function playCrocodileAttackSound() {
+            const now = audioContext.currentTime;
+            const duration = 0.4;
+            
+            // صوت منخفض وزئير
+            const lowOscillator = audioContext.createOscillator();
+            const lowGain = audioContext.createGain();
+            lowOscillator.connect(lowGain);
+            lowGain.connect(audioContext.destination);
+            
+            lowOscillator.type = "sawtooth";
+            lowOscillator.frequency.setValueAtTime(60, now);
+            lowOscillator.frequency.exponentialRampToValueAtTime(40, now + duration);
+            lowGain.gain.setValueAtTime(0.6, now);
+            lowGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+            
+            lowOscillator.start(now);
+            lowOscillator.stop(now + duration);
+            
+            // صوت أسنان تتصادم
+            const biteOscillator = audioContext.createOscillator();
+            const biteGain = audioContext.createGain();
+            biteOscillator.connect(biteGain);
+            biteGain.connect(audioContext.destination);
+            
+            biteOscillator.type = "square";
+            biteOscillator.frequency.setValueAtTime(800, now);
+            biteOscillator.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+            biteGain.gain.setValueAtTime(0.3, now);
+            biteGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+            
+            biteOscillator.start(now);
+            biteOscillator.stop(now + 0.1);
         }
 
         // دالة إنشاء نموذج اللاعب مع العصا والأذرع والأرجل المتحركة
@@ -1387,6 +1506,603 @@
             }
         }
 
+        // ========== إضافة نموذج التمساح الشرس ==========
+        function createCrocodileAtOasis(x, z) {
+            const crocGroup = new THREE.Group();
+            
+            // ألوان التمساح
+            const COLORS = {
+                SKIN: 0x387042, // أخضر زيتوني داكن
+                BELLY: 0x939d89, // لون أفتح للبطن
+                TEETH: 0xffffff,
+                EYES: 0xffc400, // لون أصفر ذهبي للقزحية
+            };
+            
+            // الأبعاد
+            const HEAD_WIDTH = 1.8;
+            const HEAD_LENGTH = 4.5;
+            const HEAD_HEIGHT = 1.2;
+            const LOWER_JAW_HEIGHT = 0.6;
+            const BODY_LENGTH = 7;
+            const PIVOT_X = BODY_LENGTH / 2;
+            const HEAD_PROTRUSION_OFFSET = 0.5;
+            const UPPER_JAW_PROTRUSION_OFFSET = 0.3;
+
+            const skinMaterial = new THREE.MeshPhongMaterial({ color: COLORS.SKIN, flatShading: true });
+            const bellyMaterial = new THREE.MeshPhongMaterial({ color: COLORS.BELLY, flatShading: true });
+            const teethMaterial = new THREE.MeshPhongMaterial({ color: COLORS.TEETH, flatShading: true });
+            const eyeMaterial = new THREE.MeshPhongMaterial({ color: COLORS.EYES, flatShading: true });
+
+            // --- 1. الجسم (Body) ---
+            const bodyGeometry = new THREE.BoxGeometry(BODY_LENGTH, 1.5, 3);
+            const body = new THREE.Mesh(bodyGeometry, skinMaterial);
+            body.position.y = 1.5;
+            body.castShadow = true;
+            crocGroup.add(body);
+
+            // البطن
+            const bellyGeometry = new THREE.BoxGeometry(BODY_LENGTH + 0.1, 0.2, 3.1);
+            const belly = new THREE.Mesh(bellyGeometry, bellyMaterial);
+            belly.position.y = 0.75;
+            crocGroup.add(belly);
+
+            // --- 2. مجموعة الرأس (Head Group) ---
+            const headGroup = new THREE.Group();
+            headGroup.position.set(PIVOT_X + HEAD_PROTRUSION_OFFSET, 0, 0);
+            crocGroup.add(headGroup);
+            
+            // --- 2.1 الفك العلوي (Upper Snout - المتحرك) ---
+            const movingJawGroup = new THREE.Group();
+            movingJawGroup.position.set(0, 0, 0);
+            headGroup.add(movingJawGroup);
+
+            // شكل الفك العلوي
+            const upperSnoutGeometry = new THREE.BoxGeometry(HEAD_LENGTH, HEAD_HEIGHT, HEAD_WIDTH);
+            const upperSnout = new THREE.Mesh(upperSnoutGeometry, skinMaterial);
+            upperSnout.position.set(HEAD_LENGTH / 2 + UPPER_JAW_PROTRUSION_OFFSET, 1.5 + HEAD_HEIGHT/2, 0);
+            upperSnout.castShadow = true;
+            movingJawGroup.add(upperSnout);
+
+            // --- 2.2 الفك السفلي (Lower Jaw Group - الثابت) ---
+            const fixedLowerJawGroup = new THREE.Group();
+            headGroup.add(fixedLowerJawGroup);
+
+            // شكل الفك السفلي
+            const jawGeometry = new THREE.BoxGeometry(HEAD_LENGTH, LOWER_JAW_HEIGHT, HEAD_WIDTH);
+            const jaw = new THREE.Mesh(jawGeometry, skinMaterial);
+            jaw.position.set(HEAD_LENGTH / 2, 1.1 + LOWER_JAW_HEIGHT/2, 0);
+            jaw.castShadow = true;
+            fixedLowerJawGroup.add(jaw);
+
+            // --- إضافة الأسنان ---
+            function createTooth(isLower = false) {
+                const toothGeometry = new THREE.ConeGeometry(0.1, 0.4, 8);
+                const tooth = new THREE.Mesh(toothGeometry, teethMaterial);
+                tooth.castShadow = true;
+                
+                if (!isLower) {
+                    tooth.rotation.x = Math.PI;
+                }
+                return tooth;
+            }
+            
+            const toothCount = 8;
+            for (let i = 0; i < toothCount; i++) {
+                const x = HEAD_LENGTH * (0.05 + i * 0.12);
+                const zOffset = HEAD_WIDTH / 2 - 0.05;
+                
+                // أسنان الفك العلوي
+                const upperToothY = 1.5;
+                const rightUpperTooth = createTooth(false);
+                rightUpperTooth.position.set(x + UPPER_JAW_PROTRUSION_OFFSET, upperToothY, zOffset);
+                movingJawGroup.add(rightUpperTooth);
+
+                const leftUpperTooth = createTooth(false);
+                leftUpperTooth.position.set(x + UPPER_JAW_PROTRUSION_OFFSET, upperToothY, -zOffset);
+                movingJawGroup.add(leftUpperTooth);
+                
+                // أسنان الفك السفلي
+                const lowerToothY = 1.1 + LOWER_JAW_HEIGHT;
+                const rightLowerTooth = createTooth(true);
+                rightLowerTooth.position.set(x, lowerToothY, zOffset);
+                fixedLowerJawGroup.add(rightLowerTooth);
+
+                const leftLowerTooth = createTooth(true);
+                leftLowerTooth.position.set(x, lowerToothY, -zOffset);
+                fixedLowerJawGroup.add(leftLowerTooth);
+            }
+            
+            // --- 3. نتوءات العيون والعيون ---
+            const socketLengthX = 1.5;
+            const socketHeightY = 0.8;
+            const socketWidthZ = HEAD_WIDTH + 1.2;
+            
+            const eyeSocketGeometry = new THREE.BoxGeometry(socketLengthX, socketHeightY, socketWidthZ);
+            const eyeSocket = new THREE.Mesh(eyeSocketGeometry, skinMaterial);
+            
+            const eyeSocketYCenter = 1.5 + socketHeightY / 2;
+            eyeSocket.position.set(-0.3, eyeSocketYCenter, 0);
+            eyeSocket.castShadow = true;
+            headGroup.add(eyeSocket);
+
+            // العيون
+            const eyeY = eyeSocketYCenter + socketHeightY / 2 + 0.3;
+            const eyeZOffset = socketWidthZ / 2 - 0.3;
+            const eyeX = eyeSocket.position.x + 0.3;
+            
+            // عين يمنى
+            const rightEyeGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+            const rightEye = new THREE.Mesh(rightEyeGeometry, eyeMaterial);
+            rightEye.position.set(eyeX, eyeY, eyeZOffset);
+            headGroup.add(rightEye);
+            
+            // بؤبؤ العين اليمنى
+            const rightPupilGeometry = new THREE.BoxGeometry(0.05, 0.4, 0.05);
+            const rightPupilMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            const rightPupil = new THREE.Mesh(rightPupilGeometry, rightPupilMaterial);
+            rightPupil.position.set(eyeX + 0.28, eyeY, eyeZOffset);
+            headGroup.add(rightPupil);
+            
+            // عين يسرى
+            const leftEyeGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+            const leftEye = new THREE.Mesh(leftEyeGeometry, eyeMaterial);
+            leftEye.position.set(eyeX, eyeY, -eyeZOffset);
+            headGroup.add(leftEye);
+            
+            // بؤبؤ العين اليسرى
+            const leftPupil = new THREE.Mesh(rightPupilGeometry, rightPupilMaterial);
+            leftPupil.position.set(eyeX + 0.28, eyeY, -eyeZOffset);
+            headGroup.add(leftPupil);
+            
+            // --- 4. الذيل ---
+            function createScute() {
+                const scuteGeometry = new THREE.BoxGeometry(0.3, 0.5, 0.8);
+                const scute = new THREE.Mesh(scuteGeometry, skinMaterial);
+                scute.castShadow = true;
+                scute.rotation.x = -Math.PI / 16;
+                return scute;
+            }
+            
+            const scuteHeight = 0.5;
+            const tailSegments = 6;
+            let currentTailPos = -(BODY_LENGTH / 2) + 0.1;
+            let currentWidth = 3;
+            const segmentLength = 1.5;
+
+            for (let i = 0; i < tailSegments; i++) {
+                const segmentHeight = 1.5 * (1 - i * 0.1);
+                
+                const tailGeometry = new THREE.BoxGeometry(segmentLength, segmentHeight, currentWidth);
+                const tailSegment = new THREE.Mesh(tailGeometry, skinMaterial);
+
+                const segmentCenterY = segmentHeight / 2;
+                const segmentCenterX = currentTailPos - segmentLength / 2;
+                
+                tailSegment.position.set(segmentCenterX, segmentCenterY, 0);
+                tailSegment.castShadow = true;
+                crocGroup.add(tailSegment);
+                
+                const scute = createScute();
+                const scuteY = segmentCenterY + segmentHeight / 2 + scuteHeight / 2;
+                scute.position.set(segmentCenterX, scuteY, 0);
+                crocGroup.add(scute);
+
+                currentTailPos -= segmentLength;
+                currentWidth *= 0.8;
+            }
+
+            // --- 5. الحراشف الظهرية على الجسم ---
+            const bodyScuteCount = 3;
+            const bodyTopY = 1.5 + 1.5 / 2;
+            const bodyScuteY = bodyTopY + scuteHeight / 2;
+            
+            const scuteStartPos = PIVOT_X - 1.5;
+            const scuteEndPos = -(BODY_LENGTH / 2) + 0.5;
+            const scuteRange = scuteStartPos - scuteEndPos;
+            const bodyScuteStep = scuteRange / (bodyScuteCount + 1);
+
+            for (let i = 0; i < bodyScuteCount; i++) {
+                const scute = createScute();
+                const scuteX = scuteStartPos - (i + 1) * bodyScuteStep;
+                scute.position.set(scuteX, bodyScuteY, 0);
+                crocGroup.add(scute);
+            }
+
+            // --- 6. الأرجل ---
+            const legGeometry = new THREE.BoxGeometry(0.6, 1.0, 0.6);
+            const legMaterial = new THREE.MeshPhongMaterial({ color: COLORS.SKIN * 0.8 });
+            const legSeparationX = BODY_LENGTH * 0.3;
+
+            const addLeg = (x, z, rotationZ) => {
+                const leg = new THREE.Mesh(legGeometry, legMaterial);
+                leg.position.set(x, 0.5, z);
+                leg.rotation.z = rotationZ;
+                leg.castShadow = true;
+                crocGroup.add(leg);
+            };
+
+            addLeg(legSeparationX, 1.5, Math.PI / 16);
+            addLeg(legSeparationX, -1.5, -Math.PI / 16);
+            addLeg(-legSeparationX, 1.5, Math.PI / 16);
+            addLeg(-legSeparationX, -1.5, -Math.PI / 16);
+
+            // --- وضع التمساح في المشهد ---
+            crocGroup.position.set(x, 0, z);
+            crocGroup.rotation.y = Math.PI; // يجعل التمساح يواجه داخل البحيرة
+            
+            // تخزين مراجع للتحريك
+            crocGroup.userData = {
+                movingJaw: movingJawGroup,
+                mouthSpeed: 0.04,
+                mouthDirection: 1,
+                maxRotation: Math.PI / 4,
+                type: 'crocodile',
+                health: 100,
+                damage: 20,
+                detectionRange: 40,
+                attackRange: 5,
+                isAggressive: true,
+                isChasing: false,
+                speed: 0.4, // تم تخفيض السرعة من 0.8 إلى 0.4
+                lastAttackTime: 0,
+                attackCooldown: 2000,
+                collisionDamage: 25,
+                lastCollisionTime: 0,
+                collisionCooldown: 1500,
+                walkCycle: 0,
+                rotationSpeed: 0.08, // تم تخفيض سرعة الدوران من 0.2 إلى 0.08
+                // إضافة خصائص منطقة البحيرة
+                oasisCenterX: 100,
+                oasisCenterZ: 100,
+                oasisRadius: 80,
+                // إضافة خصائص جديدة لتحسين الحركة
+                moveTimer: 0,
+                currentDirection: new THREE.Vector3(0, 0, 1),
+                changeDirectionTime: 0
+            };
+
+            scene.add(crocGroup);
+            return crocGroup;
+        }
+
+        // دالة لتحريك فم التمساح
+        function animateCrocodileJaw(crocodile, deltaTime) {
+            if (!crocodile.userData.movingJaw) return;
+            
+            const { movingJaw, mouthSpeed, mouthDirection, maxRotation } = crocodile.userData;
+            
+            movingJaw.rotation.z += mouthSpeed * mouthDirection;
+            
+            if (movingJaw.rotation.z > maxRotation) {
+                crocodile.userData.mouthDirection = -1;
+            } else if (movingJaw.rotation.z < 0) {
+                movingJaw.rotation.z = 0;
+                crocodile.userData.mouthDirection = 1;
+            }
+        }
+
+        // دالة لتحريك أرجل التمساح
+        function animateCrocodileLegs(crocodile, deltaTime) {
+            if (crocodile.userData.isChasing) {
+                crocodile.userData.walkCycle += deltaTime * 8; // تخفيض سرعة حركة الأرجل
+                const legSwing = Math.sin(crocodile.userData.walkCycle) * 0.3; // تخفيض سعة الحركة
+                
+                // تحريك الأرجل (الأرجل موجودة في المواضع: 0,1,2,3 من children)
+                for (let i = 2; i < 6; i++) {
+                    if (crocodile.children[i]) {
+                        // الأرجل الأمامية والخلفية تتحرك بشكل معاكس
+                        if (i % 2 === 0) {
+                            crocodile.children[i].rotation.x = legSwing;
+                        } else {
+                            crocodile.children[i].rotation.x = -legSwing;
+                        }
+                    }
+                }
+            }
+        }
+
+        // دالة لعرض تأثير ضرر التمساح
+        function showCrocodileDamageEffect(x, y, z, damage) {
+            const damageDiv = document.createElement("div");
+            damageDiv.className = "crocodile-damage-effect";
+            damageDiv.textContent = `-${damage}`;
+            damageDiv.style.color = "#ff0000";
+
+            const vector = new THREE.Vector3(x, y, z);
+            vector.project(camera);
+
+            damageDiv.style.left = `${(vector.x * 0.5 + 0.5) * window.innerWidth}px`;
+            damageDiv.style.top = `${(-(vector.y * 0.5) + 0.5) * window.innerHeight}px`;
+            document.querySelector(".scene-container").appendChild(damageDiv);
+
+            setTimeout(() => {
+                damageDiv.remove();
+            }, 1000);
+        }
+
+        // دالة للتحقق من إصابة التماسيح بالعصا
+        function checkCrocodileDamageFromStick() {
+            const playerPos = new THREE.Vector3();
+            player.getWorldPosition(playerPos);
+            
+            const attackRadius = 6;
+            const damage = 50;
+            
+            const crocsToDamage = [];
+            
+            for (let i = crocodiles.length - 1; i >= 0; i--) {
+                const croc = crocodiles[i];
+                const crocPos = new THREE.Vector3();
+                croc.getWorldPosition(crocPos);
+                const distance = crocPos.distanceTo(playerPos);
+                
+                if (distance < attackRadius) {
+                    crocsToDamage.push(croc);
+                }
+            }
+            
+            for (const croc of crocsToDamage) {
+                croc.userData.health -= damage;
+                
+                if (croc.userData.health <= 0) {
+                    scene.remove(croc);
+                    const index = crocodiles.indexOf(croc);
+                    if (index > -1) {
+                        crocodiles.splice(index, 1);
+                    }
+                    coins.push(createCoin(croc.position.x, croc.position.z, 30));
+                    score += 30;
+                    playMonsterExplosionSound();
+                    
+                    // فرصة للحصول على صحة إضافية
+                    if (Math.random() < 0.4) {
+                        playerHealth = Math.min(maxPlayerHealth, playerHealth + 20);
+                        showHealthGainEffect(croc.position.x, croc.position.y + 2, croc.position.z, 20);
+                    }
+                }
+            }
+            
+            if (crocsToDamage.length > 0) {
+                effects.push({
+                    particles: createStickSwingEffect(playerPos),
+                    createdAt: Date.now(),
+                });
+                updateUI();
+            }
+        }
+
+        // دالة للتحقق من إصابة التماسيح بالقنبلة
+        function checkCrocodileDamageFromBomb(explosionRadius, damage) {
+            const playerPos = new THREE.Vector3();
+            player.getWorldPosition(playerPos);
+            
+            const crocsToDamage = [];
+            
+            for (let i = crocodiles.length - 1; i >= 0; i--) {
+                const croc = crocodiles[i];
+                const crocPos = new THREE.Vector3();
+                croc.getWorldPosition(crocPos);
+                const distance = crocPos.distanceTo(playerPos);
+                
+                if (distance < explosionRadius) {
+                    crocsToDamage.push(croc);
+                }
+            }
+            
+            for (const croc of crocsToDamage) {
+                croc.userData.health -= damage;
+                
+                if (croc.userData.health <= 0) {
+                    scene.remove(croc);
+                    const index = crocodiles.indexOf(croc);
+                    if (index > -1) {
+                        crocodiles.splice(index, 1);
+                    }
+                    coins.push(createCoin(croc.position.x, croc.position.z, 30));
+                    score += 30;
+                    playMonsterExplosionSound();
+                    
+                    // فرصة أكبر للحصول على صحة إضافية
+                    if (Math.random() < 0.5) {
+                        playerHealth = Math.min(maxPlayerHealth, playerHealth + 25);
+                        showHealthGainEffect(croc.position.x, croc.position.y + 2, croc.position.z, 25);
+                    }
+                }
+            }
+        }
+
+        // دالة لإضافة التماسيح عند الواحة
+        function addCrocodilesToOasis() {
+            // إحداثيات الواحة (x=100, z=100 كما في اللعبة)
+            const oasisX = 100;
+            const oasisZ = 100;
+            
+            // إضافة 3-5 تماسيح حول الواحة
+            const crocodileCount = 3 + Math.floor(Math.random() * 3);
+            
+            for (let i = 0; i < crocodileCount; i++) {
+                // توزيع التماسيح حول حافة البحيرة (نصف قطر 60)
+                const angle = (i / crocodileCount) * Math.PI * 2 + Math.random() * 0.5;
+                const distance = 60 + Math.random() * 10;
+                
+                const crocX = oasisX + Math.cos(angle) * distance;
+                const crocZ = oasisZ + Math.sin(angle) * distance;
+                
+                const crocodile = createCrocodileAtOasis(crocX, crocZ);
+                crocodiles.push(crocodile);
+            }
+            
+            // التعديل: إضافة خروف في منطقة التماسيح
+            const sheep = createSheep(oasisX, 2, oasisZ);
+            sheeps.push(sheep);
+            totalSheeps++; // زيادة العدد الإجمالي للخراف
+            
+            console.log(`تم إضافة ${crocodileCount} تمساح عند الواحة وخروف واحد`);
+        }
+
+        // ========== دالة محسنة لتحريك التماسيح ==========
+        function moveCrocodiles() {
+            const playerPos = new THREE.Vector3();
+            player.getWorldPosition(playerPos);
+            
+            const now = Date.now();
+            
+            crocodiles.forEach((croc) => {
+                const crocData = croc.userData;
+                const crocPos = new THREE.Vector3();
+                croc.getWorldPosition(crocPos);
+                
+                const distanceToPlayer = crocPos.distanceTo(playerPos);
+                // حساب مسافة اللاعب من مركز البحيرة
+                const distanceToOasisCenter = Math.sqrt(
+                    Math.pow(playerPos.x - crocData.oasisCenterX, 2) + 
+                    Math.pow(playerPos.z - crocData.oasisCenterZ, 2)
+                );
+                
+                // إذا كان اللاعب داخل منطقة البحيرة وكان ضمن مدى كشف التمساح
+                if (distanceToOasisCenter < crocData.oasisRadius && distanceToPlayer < crocData.detectionRange) {
+                    crocData.isChasing = true;
+                    
+                    // حساب اتجاه نحو اللاعب
+                    const directionToPlayer = new THREE.Vector3().subVectors(playerPos, crocPos);
+                    directionToPlayer.y = 0;
+                    directionToPlayer.normalize();
+                    
+                    // حساب الزاوية المستهدفة للدوران نحو اللاعب
+                    const targetAngle = Math.atan2(directionToPlayer.x, directionToPlayer.z);
+                    
+                    // الحصول على الزاوية الحالية للتمساح
+                    const currentAngle = croc.rotation.y;
+                    
+                    // حساب الفرق بين الزاويتين مع ضبطه بين -π و π
+                    let angleDiff = targetAngle - currentAngle;
+                    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+                    
+                    // التدريج في الدوران نحو الزاوية المستهدفة بسرعة أبطأ
+                    croc.rotation.y += angleDiff * crocData.rotationSpeed;
+                    
+                    // التحرك للأمام في اتجاه التمساح الحالي
+                    const forwardDirection = new THREE.Vector3(
+                        Math.sin(croc.rotation.y),
+                        0,
+                        Math.cos(croc.rotation.y)
+                    );
+                    
+                    // حساب الموضع الجديد بسرعة أقل
+                    const newPosition = crocPos.clone().add(forwardDirection.multiplyScalar(crocData.speed));
+                    
+                    // التحقق من أن الموضع الجديد داخل منطقة البحيرة
+                    const newDistanceToOasisCenter = Math.sqrt(
+                        Math.pow(newPosition.x - crocData.oasisCenterX, 2) + 
+                        Math.pow(newPosition.z - crocData.oasisCenterZ, 2)
+                    );
+                    
+                    if (newDistanceToOasisCenter < crocData.oasisRadius) {
+                        // تجنب الاصطدام بالجبال
+                        let collisionDetected = false;
+                        const crocBoundingSphere = new THREE.Sphere(newPosition, 3);
+                        
+                        for (const mountain of mountains) {
+                            mountain.children.forEach((child) => {
+                                const childBox = new THREE.Box3().setFromObject(child);
+                                if (childBox.intersectsSphere(crocBoundingSphere)) {
+                                    collisionDetected = true;
+                                }
+                            });
+                            if (collisionDetected) break;
+                        }
+                        
+                        if (!collisionDetected) {
+                            croc.position.x = newPosition.x;
+                            croc.position.z = newPosition.z;
+                        }
+                    }
+                    
+                    // الهجوم على اللاعب إذا كان قريبًا
+                    if (distanceToPlayer < crocData.attackRange) {
+                        if (now - crocData.lastAttackTime > crocData.attackCooldown) {
+                            playCrocodileAttackSound();
+                            crocData.lastAttackTime = now;
+                        }
+                    }
+                    
+                    // ضرر التصادم
+                    if (distanceToPlayer < 3) {
+                        if (now - crocData.lastCollisionTime > crocData.collisionCooldown) {
+                            playerHealth -= crocData.collisionDamage;
+                            crocData.lastCollisionTime = now;
+                            showPlayerDamageEffect();
+                            playDamageSound();
+                            updateUI();
+                            
+                            showCrocodileDamageEffect(crocPos.x, crocPos.y + 3, crocPos.z, crocData.collisionDamage);
+                        }
+                    }
+                } else {
+                    crocData.isChasing = false;
+                    
+                    // حركة عشوائية منظمة عندما يكون اللاعب خارج منطقة البحيرة
+                    if (now - crocData.changeDirectionTime > 3000) {
+                        // تغيير الاتجاه كل 3 ثوان
+                        const randomAngle = Math.random() * Math.PI * 2;
+                        crocData.currentDirection.set(
+                            Math.sin(randomAngle),
+                            0,
+                            Math.cos(randomAngle)
+                        );
+                        crocData.changeDirectionTime = now;
+                    }
+                    
+                    // تدوير التمساح نحو الاتجاه الحالي تدريجياً
+                    const targetAngle = Math.atan2(crocData.currentDirection.x, crocData.currentDirection.z);
+                    const currentAngle = croc.rotation.y;
+                    
+                    let angleDiff = targetAngle - currentAngle;
+                    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+                    
+                    croc.rotation.y += angleDiff * 0.02;
+                    
+                    // التحرك للأمام في اتجاه التمساح الحالي بسرعة أقل
+                    const forwardDirection = new THREE.Vector3(
+                        Math.sin(croc.rotation.y),
+                        0,
+                        Math.cos(croc.rotation.y)
+                    );
+                    
+                    const newPosition = crocPos.clone().add(forwardDirection.multiplyScalar(crocData.speed * 0.3));
+                    
+                    // التحقق من أن الموضع الجديد داخل منطقة البحيرة
+                    const newDistanceToOasisCenter = Math.sqrt(
+                        Math.pow(newPosition.x - crocData.oasisCenterX, 2) + 
+                        Math.pow(newPosition.z - crocData.oasisCenterZ, 2)
+                    );
+                    
+                    if (newDistanceToOasisCenter < crocData.oasisRadius) {
+                        // تجنب الاصطدام بالجبال
+                        let collisionDetected = false;
+                        const crocBoundingSphere = new THREE.Sphere(newPosition, 3);
+                        
+                        for (const mountain of mountains) {
+                            mountain.children.forEach((child) => {
+                                const childBox = new THREE.Box3().setFromObject(child);
+                                if (childBox.intersectsSphere(crocBoundingSphere)) {
+                                    collisionDetected = true;
+                                }
+                            });
+                            if (collisionDetected) break;
+                        }
+                        
+                        if (!collisionDetected) {
+                            croc.position.x = newPosition.x;
+                            croc.position.z = newPosition.z;
+                        }
+                    }
+                }
+            });
+        }
+
         // تهيئة مشهد Three.js
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x87CEEB);
@@ -1470,9 +2186,53 @@
             }
         }
 
+        // ========== إضافة واحة الماء المعدلة ==========
+        function createOasis() {
+            // إضافة بحيرة (سطح ماء) - تم تكبير الحجم من 30 إلى 60
+            const waterGeometry = new THREE.CircleGeometry(60, 32); // تغيير نصف القطر من 30 إلى 60
+            const waterMaterial = new THREE.MeshStandardMaterial({
+                color: 0x1e90ff,
+                transparent: true,
+                opacity: 0.8,
+                roughness: 0.1,
+                metalness: 0.8
+            });
+            const water = new THREE.Mesh(waterGeometry, waterMaterial);
+            water.rotation.x = -Math.PI / 2;
+            water.position.set(100, -0.3, 100); // وضع الواحة في مكان محدد
+            water.receiveShadow = true;
+            scene.add(water);
+
+            // إضافة نباتات مائية حول البحيرة - تم زيادة العدد ليتناسب مع الحجم الجديد
+            const waterPlantMat = new THREE.MeshStandardMaterial({ 
+                color: 0x228b22,
+                flatShading: true 
+            });
+            
+            // نباتات مائية صغيرة حول البحيرة - تم زيادة العدد
+            for (let i = 0; i < 40; i++) { // زيادة من 20 إلى 40
+                const angle = Math.random() * Math.PI * 2;
+                const radius = 60 + Math.random() * 10; // زيادة نصف القطر ليتناسب مع البحيرة الكبيرة
+                const x = Math.cos(angle) * radius + 100;
+                const z = Math.sin(angle) * radius + 100;
+                
+                // نبات مائي صغير
+                const plantHeight = 0.3 + Math.random() * 0.5;
+                const plantGeometry = new THREE.ConeGeometry(0.2, plantHeight, 4);
+                const plant = new THREE.Mesh(plantGeometry, waterPlantMat);
+                plant.position.set(x, plantHeight/2, z);
+                plant.castShadow = true;
+                scene.add(plant);
+            }
+
+            return water;
+        }
+
         // إنشاء الأرضية والأشجار
         createTerrain();
         createNature();
+        // إضافة واحة الماء المعدلة
+        createOasis();
 
         // إنشاء مجموعة للاعب (تحتوي على النموذج والكاميرا)
         const player = new THREE.Group();
@@ -2307,7 +3067,7 @@
             return particles;
         }
 
-        // إنشاء نحلة - دالة جديدة
+        // إنشاء نحلة - دالة جديدة (تم تعديلها لجعل النحلات تنخفض للهجوم)
         function createBee(x, z) {
             const beeGroup = new THREE.Group();
 
@@ -2395,31 +3155,38 @@
             // إبرة النحلة
             const stingerGeometry = new THREE.ConeGeometry(0.1, 0.5, 8);
             const stingerMaterial = new THREE.MeshStandardMaterial({
-                color: 0x000000
+                color: 0xff0000 // تغيير لون الإبرة إلى الأحمر لجعلها تبدو أكثر خطورة
             });
             const stinger = new THREE.Mesh(stingerGeometry, stingerMaterial);
             stinger.position.set(0, -0.8, 0);
             stinger.rotation.x = Math.PI;
             beeGroup.add(stinger);
 
-            beeGroup.position.set(x, 5, z); // النحل يطير في الهواء
+            // التعديل: تخفيض ارتفاع النحلة من 5 إلى 3
+            beeGroup.position.set(x, 3, z); // النحل يطير في الهواء على ارتفاع أقل
 
-            // خصائص النحلة
+            // خصائص النحلة - تم تعديلها لجعل النحلات تنخفض للهجوم
             beeGroup.userData = {
                 type: 'bee',
-                health: 40,
-                speed: 0.08,
-                damage: 8,
+                health: 50,
+                speed: 0.12,
+                damage: 12,
                 isChasing: false,
-                detectionRange: 25,
-                attackRange: 2,
+                detectionRange: 40,
+                attackRange: 3,
                 lastAttackTime: 0,
-                attackCooldown: 1500,
-                collisionDamage: 12,
+                attackCooldown: 1000,
+                collisionDamage: 15,
                 lastCollisionTime: 0,
-                collisionCooldown: 1000,
-                wingFlapSpeed: 15,
-                wingFlapAngle: 0
+                collisionCooldown: 800,
+                wingFlapSpeed: 20,
+                wingFlapAngle: 0,
+                lastDetectedTime: 0,
+                // إضافة خصائص جديدة للتحكم في الارتفاع
+                targetHeight: 3, // الارتفاع المستهدف أثناء عدم المطاردة
+                minAttackHeight: 1, // الحد الأدنى للارتفاع أثناء الهجوم
+                maxHeight: 5, // الحد الأقصى للارتفاع
+                heightChangeSpeed: 0.05 // سرعة تغيير الارتفاع
             };
 
             scene.add(beeGroup);
@@ -2433,7 +3200,7 @@
             // إنشاء اللسعة
             const stingGeometry = new THREE.CylinderGeometry(0.05, 0.02, 1, 8);
             const stingMaterial = new THREE.MeshBasicMaterial({
-                color: 0x000000
+                color: 0xff0000
             });
             const sting = new THREE.Mesh(stingGeometry, stingMaterial);
             sting.rotation.x = Math.PI / 2;
@@ -2451,10 +3218,10 @@
             stingGroup.userData = {
                 type: 'beeSting',
                 direction: direction,
-                speed: 0.3,
-                damage: 8,
+                speed: 0.4,
+                damage: 12,
                 distanceTraveled: 0,
-                maxDistance: 20
+                maxDistance: 25
             };
             
             beeStings.push(stingGroup);
@@ -2474,6 +3241,7 @@
         const bombBoxes = [];
         const bees = []; // إضافة مصفوفة النحل
         const beeStings = []; // إضافة مصفوفة لسعات النحل
+        const crocodiles = []; // إضافة مصفوفة التماسيح
 
         let score = 0;
         let coinsCollected = 0;
@@ -2560,11 +3328,13 @@
         const coinsDisplay = document.getElementById("coinsDisplay");
         const sheepDisplay = document.getElementById("sheepDisplay"); // إضافة عرض الخراف
         const bombsDisplay = document.getElementById("bombsDisplay"); // إضافة عرض القنابل
+        const crocodilesDisplay = document.getElementById("crocodilesDisplay"); // إضافة عرض التماسيح
         const levelDisplay = document.getElementById("levelDisplay");
         const wasteCount = document.getElementById("wasteCount");
         const coinsCount = document.getElementById("coinsCount");
         const aggressiveCount = document.getElementById("aggressiveCount");
         const beesCount = document.getElementById("beesCount");
+        const crocodilesCount = document.getElementById("crocodilesCount");
         const gameOverPanel = document.getElementById("gameOverPanel");
         const finalScore = document.getElementById("finalScore");
         finalScore.textContent = "0";
@@ -2574,6 +3344,7 @@
         const attackBtn = document.getElementById("attackBtn");
         const jumpBtn = document.getElementById("jumpBtn");
         const bombBtn = document.getElementById("bombBtn"); // زر القنبلة الجديد
+        const buyHealthBtn = document.getElementById("buyHealthBtn"); // زر شراء الصحة الجديد
         const laserSight = document.getElementById("laserSight");
         const movementControls = document.getElementById("movementControls");
         const roundIndicator = document.getElementById("roundIndicator");
@@ -2906,9 +3677,9 @@
             // إنشاء ذئاب عادية في الأرباع
             spawnNormalWolvesInQuarters();
 
-            // إضافة النحل من الجولة 3 فصاعداً
-            if (round >= 3) {
-                const beeCount = 3 + (round - 3) * 2; // عدد النحل يزداد مع الجولات
+            // إضافة النحل من الجولة 2 فصاعداً (تم التعديل من 3 إلى 2)
+            if (round >= 2) {
+                const beeCount = 3 + (round - 2) * 2; // عدد النحل يزداد مع الجولات
                 for (let i = 0; i < beeCount; i++) {
                     const beeX = Math.random() * 900 - 450;
                     const beeZ = Math.random() * 900 - 450;
@@ -3004,10 +3775,12 @@
             coinsDisplay.textContent = `العملات: ${coinsCollected}`;
             sheepDisplay.textContent = `الخراف: ${sheepCollected}/5`; // تحديث عرض الخراف المجموعة
             bombsDisplay.textContent = `القنابل: ${bombs}`; // تحديث عرض القنابل
+            crocodilesDisplay.textContent = `التماسيح: ${crocodiles.length}`; // تحديث عرض التماسيح
             levelDisplay.textContent = level;
             wasteCount.textContent = wolves.length;
             coinsCount.textContent = coinsCollected;
             beesCount.textContent = bees.length; // تحديث عدد النحل
+            crocodilesCount.textContent = crocodiles.length; // تحديث عدد التماسيح
 
             const aggressiveWolves = wolves.filter(
                 (w) => w.userData.isAggressive
@@ -3033,6 +3806,13 @@
             } else {
                 bombBtn.classList.remove("disabled");
             }
+
+            // التعديل: تحديث زر شراء الصحة ليكون 100 عملة بدلاً من 10
+            if (coinsCollected >= 100 && playerHealth < maxPlayerHealth) {
+                buyHealthBtn.classList.remove("disabled");
+            } else {
+                buyHealthBtn.classList.add("disabled");
+            }
         }
 
         // دالة جديدة لعرض رسالة النجاح
@@ -3045,6 +3825,25 @@
             setTimeout(() => {
                 successDiv.remove();
             }, 3000);
+        }
+
+        // دالة جديدة لعرض تأثير زيادة الصحة
+        function showHealthGainEffect(x, y, z, amount) {
+            const healthDiv = document.createElement("div");
+            healthDiv.className = "wolf-health-effect";
+            healthDiv.textContent = `+${amount} صحة`;
+            healthDiv.style.color = "#4caf50";
+
+            const vector = new THREE.Vector3(x, y, z);
+            vector.project(camera);
+
+            healthDiv.style.left = `${(vector.x * 0.5 + 0.5) * window.innerWidth}px`;
+            healthDiv.style.top = `${(-(vector.y * 0.5) + 0.5) * window.innerHeight}px`;
+            document.querySelector(".scene-container").appendChild(healthDiv);
+
+            setTimeout(() => {
+                healthDiv.remove();
+            }, 1000);
         }
 
         function nextRound() {
@@ -3095,9 +3894,16 @@
                 beeStings.forEach((sting) => scene.remove(sting));
                 beeStings.length = 0;
 
+                // إزالة التماسيح
+                crocodiles.forEach((croc) => scene.remove(croc));
+                crocodiles.length = 0;
+
                 spawnPlatforms();
                 spawnNewSheeps();
                 spawnWavesForRound();
+                
+                // إضافة تماسيح جديدة عند الواحة
+                addCrocodilesToOasis();
 
                 roundTransition.classList.remove("active");
                 isRoundTransition = false;
@@ -3320,7 +4126,7 @@
             });
         }
 
-        // دالة جديدة لتحريك النحل
+        // دالة جديدة لتحريك النحل (تم تعديلها لجعل النحلات تنخفض للهجوم)
         function moveBees() {
             const playerPos = new THREE.Vector3();
             player.getWorldPosition(playerPos);
@@ -3343,14 +4149,48 @@
                 // متابعة اللاعب
                 const distanceToPlayer = beePos.distanceTo(playerPos);
                 
+                // إذا كان اللاعب ضمن مدى الكشف، ابدأ المطاردة
                 if (distanceToPlayer < beeData.detectionRange) {
                     beeData.isChasing = true;
-                    
+                    beeData.lastDetectedTime = Date.now(); // تخزين وقت آخر كشف
+                }
+
+                // إذا كان النحل يطارد، استمر في المطاردة حتى لو ابتعد اللاعب قليلاً
+                if (beeData.isChasing) {
+                    // إذا مر أكثر من 5 ثوانٍ منذ آخر كشف، توقف عن المطاردة
+                    if (Date.now() - beeData.lastDetectedTime > 5000) {
+                        beeData.isChasing = false;
+                    } else {
+                        // حتى إذا ابتعد اللاعب، استمر في المطاردة إذا لم يتجاوز ضعف مدى الكشف
+                        if (distanceToPlayer < beeData.detectionRange * 2) {
+                            beeData.lastDetectedTime = Date.now(); // تجديد وقت الكشف
+                        }
+                    }
+                }
+
+                // الآن، إذا كان النحل يطارد، تحرك نحو اللاعب
+                if (beeData.isChasing) {
                     const direction = new THREE.Vector3().subVectors(playerPos, beePos).normalize();
                     const newPosition = beePos.clone().add(direction.multiplyScalar(beeData.speed));
                     
-                    // النحل يطير في الهواء
-                    newPosition.y = 5 + Math.sin(Date.now() * 0.005) * 0.5; // حركة تموجية
+                    // التعديل: النحل ينخفض للهجوم
+                    // إذا كان النحل قريبًا من اللاعب (أقل من 10 وحدات)، ينخفض للهجوم
+                    if (distanceToPlayer < 10) {
+                        // خفض الارتفاع تدريجيًا إلى الحد الأدنى للهجوم
+                        beeData.targetHeight = Math.max(
+                            beeData.minAttackHeight,
+                            beeData.targetHeight - beeData.heightChangeSpeed
+                        );
+                    } else {
+                        // العودة إلى الارتفاع الطبيعي عندما يكون بعيدًا
+                        beeData.targetHeight = Math.min(
+                            beeData.maxHeight,
+                            beeData.targetHeight + beeData.heightChangeSpeed
+                        );
+                    }
+                    
+                    // تطبيق الارتفاع المستهدف مع حركة تموجية خفيفة
+                    newPosition.y = beeData.targetHeight + Math.sin(Date.now() * 0.005) * 0.2;
                     
                     // تجنب الاصطدام بالجبال
                     let collisionDetected = false;
@@ -3378,8 +4218,9 @@
                         bee.position.z + direction.z
                     );
                     
-                    // الهجوم على اللاعب
-                    if (distanceToPlayer < beeData.attackRange) {
+                    // الهجوم على اللاعب - التعديل: تقليل مسافة الهجوم للنحلات المنخفضة
+                    const effectiveAttackRange = beeData.attackRange + (beeData.maxHeight - bee.position.y) * 0.5;
+                    if (distanceToPlayer < effectiveAttackRange) {
                         const currentTime = Date.now();
                         if (currentTime - beeData.lastAttackTime > beeData.attackCooldown) {
                             // إطلاق لسعة
@@ -3388,8 +4229,9 @@
                         }
                     }
                     
-                    // ضرر التصادم
-                    if (distanceToPlayer < 1.5) {
+                    // ضرر التصادم - التعديل: زيادة فرصة التصادم عندما تكون النحلة منخفضة
+                    const effectiveCollisionRange = 1.5 + (beeData.maxHeight - bee.position.y) * 0.3;
+                    if (distanceToPlayer < effectiveCollisionRange) {
                         const currentTime = Date.now();
                         if (currentTime - beeData.lastCollisionTime > beeData.collisionCooldown) {
                             playerHealth -= beeData.collisionDamage;
@@ -3405,7 +4247,7 @@
                     // حركة عشوائية عندما لا تطارد اللاعب
                     bee.position.x += (Math.random() - 0.5) * 0.05;
                     bee.position.z += (Math.random() - 0.5) * 0.05;
-                    bee.position.y = 5 + Math.sin(Date.now() * 0.003) * 0.3;
+                    bee.position.y = beeData.targetHeight + Math.sin(Date.now() * 0.003) * 0.3;
                 }
             });
         }
@@ -3536,18 +4378,37 @@
                     );
                     score += wolf.userData.isAggressive ? 25 : 10;
                     playMonsterExplosionSound();
+                    
+                    // إضافة صحة عند قتل الذئاب الشرسة
+                    if (wolf.userData.type === 'aggressive') {
+                        // 30% فرصة للحصول على صحة إضافية
+                        if (Math.random() < 0.3) {
+                            playerHealth = Math.min(maxPlayerHealth, playerHealth + 15);
+                            showHealthGainEffect(wolf.position.x, wolf.position.y + 2, wolf.position.z, 15);
+                        }
+                    }
                 }
             }
 
-            // إضافة تأثير على النحل
+            // التعديل: إضافة تأثير على النحل مع مراعاة الارتفاع
             const beesToDamage = [];
-            for (let i = bees.length - 1; i >= 0; i++) {
+            for (let i = bees.length - 1; i >= 0; i--) {
                 const bee = bees[i];
                 const beePos = new THREE.Vector3();
                 bee.getWorldPosition(beePos);
-                const distance = beePos.distanceTo(playerPos);
-
-                if (distance < attackRadius) {
+                
+                // حساب المسافة مع مراعاة الفرق في الارتفاع
+                const horizontalDistance = Math.sqrt(
+                    Math.pow(beePos.x - playerPos.x, 2) + 
+                    Math.pow(beePos.z - playerPos.z, 2)
+                );
+                
+                // التعديل: السماح للعصا بإصابة النحلات في نطاق أوسع من الارتفاع
+                const verticalDistance = Math.abs(beePos.y - playerPos.y);
+                const effectiveAttackRadius = attackRadius + 2; // زيادة نصف قطر الهجوم للنحل
+                
+                // النحلة تصاب إذا كانت ضمن النطاق الأفقي وضمن نطاق معين عموديًا
+                if (horizontalDistance < effectiveAttackRadius && verticalDistance < 5) {
                     beesToDamage.push(bee);
                 }
             }
@@ -3566,6 +4427,9 @@
                     playMonsterExplosionSound();
                 }
             }
+
+            // إضافة تأثير على التماسيح
+            checkCrocodileDamageFromStick();
 
             if (wolvesToDamage.length > 0 || beesToDamage.length > 0) {
                 effects.push({
@@ -3632,6 +4496,15 @@
                     );
                     score += wolf.userData.isAggressive ? 25 : 10;
                     playMonsterExplosionSound();
+                    
+                    // إضافة صحة عند قتل الذئاب الشرسة بالقنبلة
+                    if (wolf.userData.type === 'aggressive') {
+                        // 30% فرصة للحصول على صحة إضافية
+                        if (Math.random() < 0.3) {
+                            playerHealth = Math.min(maxPlayerHealth, playerHealth + 15);
+                            showHealthGainEffect(wolf.position.x, wolf.position.y + 2, wolf.position.z, 15);
+                        }
+                    }
                 }
             }
 
@@ -3663,6 +4536,9 @@
                     playMonsterExplosionSound();
                 }
             }
+
+            // إضافة تأثير على التماسيح
+            checkCrocodileDamageFromBomb(explosionRadius, damage);
 
             // إعادة تعيين الشحن
             bombCharge = 0;
@@ -4116,6 +4992,42 @@
             }, 1500);
         }
 
+        // التعديل: دالة جديدة لشراء الصحة - تغيير السعر إلى 100 عملة
+        function buyHealth() {
+            if (coinsCollected >= 100 && playerHealth < maxPlayerHealth) {
+                coinsCollected -= 100; // خصم 100 عملة بدلاً من 10
+                playerHealth = Math.min(maxPlayerHealth, playerHealth + 30); // استعادة 30 صحة
+                
+                // عرض رسالة نجاح الشراء
+                showHealthPurchaseMessage(true, "تم شراء 30 صحة بنجاح!");
+                
+                updateUI();
+                playGiftSound();
+            } else {
+                if (coinsCollected < 100) {
+                    // تحديث رسالة الخطأ لتعكس السعر الجديد
+                    showHealthPurchaseMessage(false, "ليس لديك عملات كافية! تحتاج 100 عملات");
+                } else if (playerHealth >= maxPlayerHealth) {
+                    showHealthPurchaseMessage(false, "صحتك ممتلئة بالفعل!");
+                }
+            }
+        }
+
+        // دالة لعرض رسالة شراء الصحة
+        function showHealthPurchaseMessage(success, message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = "health-purchase-message";
+            if (!success) {
+                messageDiv.classList.add("error");
+            }
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 2000);
+        }
+
         function increaseDifficulty() {
             if (score >= level * 100) {
                 level++;
@@ -4188,6 +5100,10 @@
             beeStings.forEach((sting) => scene.remove(sting));
             beeStings.length = 0;
 
+            // إزالة التماسيح
+            crocodiles.forEach((croc) => scene.remove(croc));
+            crocodiles.length = 0;
+
             score = 0;
             coinsCollected = 0;
             sheepCollected = 0; // إعادة تعيين الخراف المجموعة
@@ -4211,10 +5127,12 @@
             // إعادة إنشاء الأرضية والأشجار
             createTerrain();
             createNature();
+            createOasis(); // إعادة إنشاء واحة الماء المعدلة
             createWorldBoundsVisual();
             spawnPlatforms();
             spawnNewSheeps();
             spawnWavesForRound();
+            addCrocodilesToOasis(); // إضافة التماسيح عند الواحة
         }
 
         // دالة جديدة لتهيئة عجلة التحكم - معدلة ومحسنة
@@ -4369,6 +5287,10 @@
             return element.id === "bombBtn";
         }
 
+        function isBuyHealthButton(element) {
+            return element.id === "buyHealthBtn";
+        }
+
         function setupMultiTouchControls() {
             window.addEventListener(
                 "touchstart",
@@ -4388,6 +5310,9 @@
                             buttonTouchIds.set(touch.identifier, targetElement);
                             // بدء شحن القنبلة بدلاً من تفجيرها مباشرة
                             startBombCharge();
+                        } else if (isBuyHealthButton(targetElement)) {
+                            buttonTouchIds.set(touch.identifier, targetElement);
+                            buyHealth();
                         } else if (!cameraTouchId) {
                             cameraTouchId = touch.identifier;
                             previousTouchX = touch.clientX;
@@ -4411,9 +5336,10 @@
 
                             // تدوير الكاميرا حول اللاعب
                             cameraAngle -= deltaX * touchSensitivity;
+                            // التعديل: عكس حركة الكاميرا الرأسية
                             cameraHeight = Math.max(
                                 1,
-                                Math.min(10, cameraHeight - deltaY * 0.01)
+                                Math.min(10, cameraHeight + deltaY * 0.01) // تغيير - إلى +
                             );
 
                             previousTouchX = touch.clientX;
@@ -4464,7 +5390,8 @@
 
                 // تدوير الكاميرا حول اللاعب
                 cameraAngle -= deltaX * mouseSensitivity;
-                cameraHeight = Math.max(1, Math.min(10, cameraHeight - deltaY * 0.01));
+                // التعديل: عكس حركة الكاميرا الرأسية
+                cameraHeight = Math.max(1, Math.min(10, cameraHeight + deltaY * 0.01)); // تغيير - إلى +
 
                 previousMouseX = e.clientX;
                 previousMouseY = e.clientY;
@@ -4493,6 +5420,9 @@
                     case "b": // مفتاح B لتفجير القنبلة
                         if (e.repeat) return; // منع التكرار التلقائي
                         startBombCharge();
+                        break;
+                    case "h": // مفتاح H لشراء الصحة
+                        buyHealth();
                         break;
                 }
             });
@@ -4528,6 +5458,7 @@
 
         attackBtn.addEventListener("mousedown", stickAttack);
         jumpBtn.addEventListener("mousedown", jump);
+        buyHealthBtn.addEventListener("mousedown", buyHealth);
 
         restartBtn.addEventListener("click", restartGame);
         nextRoundBtn.addEventListener("click", nextRound);
@@ -4539,15 +5470,18 @@
             coinsDisplay.style.display = "block";
             sheepDisplay.style.display = "block"; // إظهار عرض الخراف
             bombsDisplay.style.display = "block"; // إظهار عرض القنابل
+            crocodilesDisplay.style.display = "block"; // إظهار عرض التماسيح
             healthIndicator.style.display = "block";
             roundIndicator.style.display = "block";
             laserSight.style.display = "block";
+            buyHealthBtn.style.display = "block"; // إظهار زر شراء الصحة
 
             gameStarted = true;
             createWorldBoundsVisual();
             spawnPlatforms();
             spawnNewSheeps();
             spawnWavesForRound();
+            addCrocodilesToOasis(); // إضافة التماسيح عند الواحة
             updateUI();
 
             setupMouseControls();
@@ -4681,6 +5615,7 @@
                 moveWolves(deltaTime); // تمرير deltaTime
                 moveBees(); // تحريك النحل
                 moveBeeStings(); // تحريك لسعات النحل
+                moveCrocodiles(); // تحريك التماسيح
                 updateWolfProjectiles();
                 rotateCoins();
                 collectCoins();
@@ -4694,6 +5629,12 @@
                 if (isChargingBomb) {
                     updateBombCharge();
                 }
+
+                // تحريك فم وأرجل التماسيح
+                crocodiles.forEach((croc) => {
+                    animateCrocodileJaw(croc, deltaTime);
+                    animateCrocodileLegs(croc, deltaTime);
+                });
 
                 increaseDifficulty();
                 checkGameState();
