@@ -3116,33 +3116,269 @@
                         updateUI();
                     }
                     
-                    scene.remove(eagle);
-                    const index = snatchingEagles.indexOf(eagle);
-                    if (index > -1) snatchingEagles.splice(index, 1);
-                    coins.push(createCoin(eagle.position.x, eagle.position.z, eagleData.value));
-                    score += eagleData.value;
-                    playMonsterExplosionSound();
-                    
-                    if (Math.random() < 0.5) {
-                        playerHealth = Math.min(maxPlayerHealth, playerHealth + 20);
-                        showHealthGainEffect(eagle.position.x, eagle.position.y + 2, eagle.position.z, 20);
-                    }
-                } else if (eagleData.hasSheep) {
-                    // إسقاط الخروف عند الإصابة
-                    eagleData.isSnatching = false;
-                    eagleData.hasSheep = false;
-                    eagleData.escapeTimer = 0;
-                    
-                    // إسقاط الخروف في الموقع الحالي
-                    const droppedSheep = createSheep(eagle.position.x, 0, eagle.position.z);
-                    sheeps.push(droppedSheep);
-                    totalSheeps++;
-                    
-                    // إظهار رسالة
-                    showReturnSheepMessage(eagle.position.x, eagle.position.y + 3, eagle.position.z, "أسقط الخروف!");
-                }
+// الكود المعدل لجعل النسور أكثر خطورة وإضافة تأثير سقوط الخروف على اللاعب
+scene.remove(eagle);
+const index = snatchingEagles.indexOf(eagle);
+if (index > -1) snatchingEagles.splice(index, 1);
+coins.push(createCoin(eagle.position.x, eagle.position.z, eagleData.value));
+score += eagleData.value;
+playMonsterExplosionSound();
+
+// تأثير الصدمة عند قتل النسر الخاطف
+if (Math.random() < 0.5) {
+    playerHealth = Math.min(maxPlayerHealth, playerHealth + 20);
+    showHealthGainEffect(eagle.position.x, eagle.position.y + 2, eagle.position.z, 20);
+}
+
+// إذا كان النسر يخطف خروفاً
+if (eagleData.hasSheep) {
+    // إسقاط الخروف عند الإصابة
+    eagleData.isSnatching = false;
+    eagleData.hasSheep = false;
+    eagleData.escapeTimer = 0;
+    
+    // إسقاط الخروف في الموقع الحالي
+    const droppedSheep = createSheep(eagle.position.x, eagle.position.y, eagle.position.z);
+    sheeps.push(droppedSheep);
+    totalSheeps++;
+    
+    // زيادة خطورة النسور - إضافة صدمة للنسور القريبة
+    snatchingEagles.forEach(otherEagle => {
+        const distance = eagle.position.distanceTo(otherEagle.position);
+        if (distance < 30 && otherEagle !== eagle) {
+            // زيادة سرعة النسر القريب لجعله أكثر عدوانية
+            otherEagle.userData.speed *= 1.3;
+            otherEagle.userData.attackCooldown = 0; // يهجم فوراً
+            
+            // تأثير مرئي للغضب
+            showAngerEffect(otherEagle.position.x, otherEagle.position.y + 2, otherEagle.position.z);
+        }
+    });
+    
+    // التحقق إذا كان الخروف سيسقط على اللاعب
+    const playerPosition = player.position;
+    const sheepDropPosition = eagle.position;
+    const distanceToPlayer = playerPosition.distanceTo(sheepDropPosition);
+    
+    // إذا كان اللاعب قريباً من موقع سقوط الخروف
+    if (distanceToPlayer < 5) {
+        // ضرر للاعب من سقوط الخروف عليه
+        const damage = 15 + Math.floor(Math.random() * 10);
+        playerHealth = Math.max(0, playerHealth - damage);
+        
+        // تأثير سقوط الخروف على اللاعب
+        showSheepDropEffect(playerPosition.x, playerPosition.y + 2, playerPosition.z, damage);
+        
+        // اهتزاز الكاميرا لتأثير السقوط
+        cameraShakeIntensity = 0.8;
+        cameraShakeDuration = 0.5;
+        
+        // صوت سقوط الخروف
+        playSheepDropSound();
+        
+        // رسالة تحذيرية
+        showReturnSheepMessage(eagle.position.x, eagle.position.y + 3, eagle.position.z, "الخروف سقط عليك! -" + damage + " HP");
+        
+        // دفع اللاعب للخلف
+        const pushDirection = new THREE.Vector3()
+            .subVectors(playerPosition, sheepDropPosition)
+            .normalize();
+        playerVelocity.x += pushDirection.x * 2;
+        playerVelocity.z += pushDirection.z * 2;
+    } else {
+        // الرسالة العادية إذا لم يسقط على اللاعب
+        showReturnSheepMessage(eagle.position.x, eagle.position.y + 3, eagle.position.z, "أسقط الخروف!");
+    }
+    
+    // زيادة عدوانية النسور المتبقية
+    if (snatchingEagles.length > 0) {
+        // زيادة سرعة جميع النسور المتبقية
+        snatchingEagles.forEach(e => {
+            e.userData.speed *= 1.15;
+            e.userData.attackRange = 25; // زيادة مدى الهجوم
+        });
+        
+        // عرض تحذير عن زيادة خطورة النسور
+        setTimeout(() => {
+            showWarningMessage("النسور أصبحت أكثر عدوانية!");
+        }, 1000);
+    }
+}
+
+// دالات المساعدة الجديدة المطلوبة
+
+function showAngerEffect(x, y, z) {
+    // تأثير الغضب للنسور
+    const angerGeometry = new THREE.SphereGeometry(0.5, 8, 8);
+    const angerMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0xFF0000, 
+        transparent: true, 
+        opacity: 0.7 
+    });
+    const angerEffect = new THREE.Mesh(angerGeometry, angerMaterial);
+    angerEffect.position.set(x, y, z);
+    scene.add(angerEffect);
+    
+    // تحريك التأثير
+    const scaleUp = new TWEEN.Tween(angerEffect.scale)
+        .to({ x: 2, y: 2, z: 2 }, 300)
+        .easing(TWEEN.Easing.Exponential.Out);
+    
+    const fadeOut = new TWEEN.Tween(angerEffect.material)
+        .to({ opacity: 0 }, 400)
+        .easing(TWEEN.Easing.Quadratic.In);
+    
+    scaleUp.chain(fadeOut);
+    scaleUp.start();
+    
+    // إزالة التأثير بعد الانتهاء
+    fadeOut.onComplete(() => {
+        scene.remove(angerEffect);
+        angerGeometry.dispose();
+        angerMaterial.dispose();
+    });
+}
+
+function showSheepDropEffect(x, y, z, damage) {
+    // تأثير سقوط الخروف على اللاعب
+    const dropGeometry = new THREE.CircleGeometry(1.5, 16);
+    const dropMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0xFF3300, 
+        transparent: true, 
+        opacity: 0.6,
+        side: THREE.DoubleSide
+    });
+    const dropEffect = new THREE.Mesh(dropGeometry, dropMaterial);
+    dropEffect.rotation.x = -Math.PI / 2;
+    dropEffect.position.set(x, y + 0.1, z);
+    scene.add(dropEffect);
+    
+    // نص الضرر
+    const damageText = createFloatingText(x, y + 2, z, "-" + damage + " HP", "#FF3300");
+    
+    // حركة التأثير
+    const rise = new TWEEN.Tween(dropEffect.scale)
+        .to({ x: 3, y: 3, z: 3 }, 500)
+        .easing(TWEEN.Easing.Exponential.Out);
+    
+    const fade = new TWEEN.Tween(dropEffect.material)
+        .to({ opacity: 0 }, 600)
+        .easing(TWEEN.Easing.Quadratic.In);
+    
+    rise.chain(fade);
+    rise.start();
+    
+    // إزالة التأثير بعد الانتهاء
+    fade.onComplete(() => {
+        scene.remove(dropEffect);
+        scene.remove(damageText);
+        dropGeometry.dispose();
+        dropMaterial.dispose();
+    });
+}
+
+function playSheepDropSound() {
+    // صوت سقوط الخروف
+    try {
+        const audio = new Audio('sounds/sheep_drop.mp3');
+        audio.volume = 0.5;
+        audio.play().catch(e => console.log("لا يمكن تشغيل صوت سقوط الخروف"));
+    } catch (e) {
+        console.log("خطأ في تشغيل صوت سقوط الخروف");
+    }
+}
+
+function showWarningMessage(message) {
+    // عرض رسالة تحذيرية على الشاشة
+    const warningDiv = document.createElement('div');
+    warningDiv.style.cssText = `
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(255, 100, 0, 0.9);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        z-index: 1000;
+        animation: warningPulse 0.5s infinite alternate;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        border: 3px solid #FF3300;
+    `;
+    
+    // إضافة أنيميشن CSS
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes warningPulse {
+            from { box-shadow: 0 0 20px rgba(255, 100, 0, 0.7); }
+            to { box-shadow: 0 0 40px rgba(255, 100, 0, 1); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    warningDiv.textContent = message;
+    document.body.appendChild(warningDiv);
+    
+    // إزالة الرسالة بعد 3 ثواني
+    setTimeout(() => {
+        warningDiv.style.opacity = '0';
+        warningDiv.style.transition = 'opacity 0.5s';
+        setTimeout(() => {
+            document.body.removeChild(warningDiv);
+            document.head.removeChild(style);
+        }, 500);
+    }, 3000);
+}
+
+// تحديث دالة إنشاء النسر لجعله أكثر خطورة
+function createSnatchingEagle(x, y, z) {
+    // ... الكود الأصلي لإنشاء النسر ...
+    
+    // إضافة خصائص عدوانية
+    eagle.userData.attackCooldown = 0;
+    eagle.userData.attackRange = 20;
+    eagle.userData.chargeSpeed = 0.15; // سرعة الشحن نحو اللاعب
+    eagle.userData.isCharging = false;
+    
+    return eagle;
+}
+
+// في دالة تحديث النسور، أضف هذا السلوك العدواني
+function updateEagles() {
+    snatchingEagles.forEach((eagle, index) => {
+        const eagleData = eagle.userData;
+        
+        // إذا كان النسر يخطف خروفاً
+        if (eagleData.hasSheep) {
+            // البحث عن أقرب لاعب للهجوم عليه
+            const distanceToPlayer = eagle.position.distanceTo(player.position);
+            
+            // إذا كان اللاعب في مدى الهجوم، اشحن نحوه!
+            if (distanceToPlayer < eagleData.attackRange) {
+                eagleData.isCharging = true;
+                
+                // حساب اتجاه الشحن نحو اللاعب
+                const direction = new THREE.Vector3()
+                    .subVectors(player.position, eagle.position)
+                    .normalize();
+                
+                // تطبيق سرعة الشحن
+                eagle.position.x += direction.x * eagleData.chargeSpeed;
+                eagle.position.z += direction.z * eagleData.chargeSpeed;
+                
+                // دوران النسر نحو اللاعب
+                eagle.lookAt(player.position.x, eagle.position.y, player.position.z);
             }
         }
+        
+        // تحديث مؤقت الهجوم
+        if (eagleData.attackCooldown > 0) {
+            eagleData.attackCooldown -= deltaTime;
+        }
+    });
+}
 
         // ===== دوال العرض للرسائل =====
         function showSnatchMessage(x, y, z, message) {
