@@ -2632,7 +2632,7 @@
                     // الاصطدام باللاعب
                     if (distanceToPlayer < 4) {
                         if (now - eagleData.lastCollisionTime > eagleData.collisionCooldown) {
-                            playerHealth -= eagleData.collisionDamage;
+                            // playerHealth -= eagleData.collisionDamage; // Damage removed as requested
                             eagleData.lastCollisionTime = now;
                             showPlayerDamageEffect();
                             playBeeAttackSound();
@@ -2894,7 +2894,7 @@
                     if (eagleData.isSwooping) {
                         const distanceToPlayer = eaglePos.distanceTo(playerPos);
                         if (distanceToPlayer < 2) { // Collision check
-                            playerHealth -= eagleData.collisionDamage;
+                            // playerHealth -= eagleData.collisionDamage; // Damage removed as requested
                             eagleData.isSwooping = false; // Stop swooping after hitting
 
                             // Show damage effect
@@ -6632,11 +6632,29 @@
                     bombBtn.style.pointerEvents = 'auto';
                     
                     // إزالة الصندوق لتجنب التكرار
+                    // Removed Three.js disposal logic to fix immediate freeze bug.
+                    // This was likel// إزالة الصندوق لتجنب التكرار
                     scene.remove(box);
                     const boxIndex = treasureBoxes.indexOf(box);
                     if (boxIndex > -1) {
                         treasureBoxes.splice(boxIndex, 1);
                     }
+                    
+                    // Dispose of Three.js resources to prevent memory leak (Delayed for safety)
+                    setTimeout(() => {
+                        if (box.children.length > 0) {
+                            box.children.forEach(child => {
+                                if (child.geometry) child.geometry.dispose();
+                                if (child.material) {
+                                    if (Array.isArray(child.material)) {
+                                        child.material.forEach(material => material.dispose());
+                                    } else {
+                                        child.material.dispose();
+                                    }
+                                }
+                            });
+                        }
+                    }, 1000); // 1 second delay
                     
                     unfreezeGame();
                 });
@@ -6683,6 +6701,22 @@
             setTimeout(() => {
                 scene.remove(box);
                 const boxIndex = treasureBoxes.indexOf(box);
+                
+                // Dispose of Three.js resources to prevent memory leak (Delayed for safety)
+                setTimeout(() => {
+                    if (box.children.length > 0) {
+                        box.children.forEach(child => {
+                            if (child.geometry) child.geometry.dispose();
+                            if (child.material) {
+                                if (Array.isArray(child.material)) {
+                                    child.material.forEach(material => material.dispose());
+                                } else {
+                                    child.material.dispose();
+                                }
+                            }
+                        });
+                    }
+                }, 1000); // 1 second delay
                 if (boxIndex > -1) {
                     treasureBoxes.splice(boxIndex, 1);
                 }
@@ -6698,6 +6732,7 @@
                 // إزالة زر الطوارئ إذا كان موجوداً
                 const emergencyBtn = document.getElementById('emergencyCloseBtn');
                 if (emergencyBtn) {
+                    // Note: The original code does not store the click handler for removal, so we'll rely on the element removal for now, but it's a good practice to remove listeners.
                     emergencyBtn.remove();
                 }
                 
