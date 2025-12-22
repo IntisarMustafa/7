@@ -1419,7 +1419,8 @@
                 if (collisionDetected) break;
             }
             
-            // إعادة تعيين حالة السطح
+            // إعادة تعيين حالة السطح في بداية كل إطار
+            const wasOnSurface = isOnAnySurface || isOnGround;
             isOnAnySurface = false;
             isOnGround = false;
             isOnHill = false;
@@ -1461,9 +1462,10 @@
                     
                     // التحقق إذا كان اللاعب على التلة أو فوقها
                     const playerBottomY = newPosition.y;
-                    const hillTopY = currentHillHeightVal + 0.5;
+                    const hillTopY = currentHillHeightVal + 1;
                     
-                    if (playerBottomY <= hillTopY + 0.5) {
+                    // فقط اعتبار اللاعب على التلة إذا كان قريباً من سطحها
+                    if (playerBottomY <= hillTopY + 1) {
                         hillCollision = {
                             hill: hill,
                             hillHeight: currentHillHeightVal,
@@ -1516,11 +1518,9 @@
                         }
                     }
                 } else {
-                    // اللاعب فوق التلة - قد يكون في منتصف القفز
-                    if (!isJumping && jumpVelocity <= 0) {
-                        // هابط ولكن ليس على التلة مباشرة
-                        isOnGround = false;
-                    }
+                    // اللاعب فوق التلة - يجب أن يسقط
+                    isOnGround = false;
+                    isOnAnySurface = false;
                 }
             }
             
@@ -1560,6 +1560,12 @@
                 player.position.y += jumpVelocity;
                 jumpVelocity -= gravity;
                 
+                // إذا أصبح اللاعب يهبط، تحقق من أنه لم يعد على سطح
+                if (jumpVelocity < 0) {
+                    isOnGround = false;
+                    isOnAnySurface = false;
+                }
+                
                 // التحقق من الاصطدام بالتلال أثناء القفز
                 if (jumpVelocity <= 0) { // فقط عند الهبوط
                     for (const hill of hills) {
@@ -1596,6 +1602,11 @@
                 }
             } else if (!isOnGround && !isOnAnySurface) {
                 // تطبيق الجاذبية فقط عندما لا يكون على سطح
+                // بدء السقوط بسرعة متزايدة
+                if (!isJumping) {
+                    isJumping = true;
+                    jumpVelocity = 0; // البدء بسرعة صفر للسقوط
+                }
                 player.position.y -= gravity * 1.5;
                 
                 // التحقق من الهبوط على تلة أثناء السقوط
@@ -2925,6 +2936,12 @@
                         eagleData.hasSheep = false;
                         eagleData.escapeTimer = 0;
                         
+                        // إزالة الخروف المرئي من النسر
+                        if (eagleData.stolenSheep) {
+                            eagle.remove(eagleData.stolenSheep);
+                            eagleData.stolenSheep = null;
+                        }
+                        
                         // إسقاط الخروف في الموقع الحالي
                         const droppedSheep = createSheep(eaglePos.x, 0, eaglePos.z);
                         sheeps.push(droppedSheep);
@@ -2995,6 +3012,13 @@
                         eagleData.isSnatching = true;
                         eagleData.hasSheep = true;
                         eagleData.snatchCooldown = now;
+                        
+                        // إنشاء خروف مرئي وإضافته للنسر
+                        const stolenSheep = createSheep(0, 0, 0);
+                        stolenSheep.scale.set(0.3, 0.3, 0.3); // تصغير حجم الخروف
+                        stolenSheep.position.set(0, -2, 0); // وضعه تحت النسر
+                        eagle.add(stolenSheep);
+                        eagleData.stolenSheep = stolenSheep;
                         
                         // تحديد اتجاه الهروب عشوائياً
                         const escapeAngle = Math.random() * Math.PI * 2;
@@ -3107,6 +3131,12 @@
                         score += eagleData.returnSheepValue;
                         showReturnSheepMessage(eagle.position.x, eagle.position.y + 3, eagle.position.z, "تم استعادة الخروف!");
                         updateUI();
+                        
+                        // إزالة الخروف المرئي من النسر
+                        if (eagleData.stolenSheep) {
+                            eagle.remove(eagleData.stolenSheep);
+                            eagleData.stolenSheep = null;
+                        }
                     }
                     
                     scene.remove(eagle);
@@ -3153,6 +3183,12 @@
                         eagleData.hasSheep = false;
                         eagleData.escapeTimer = 0;
                         
+                        // إزالة الخروف المرئي من النسر
+                        if (eagleData.stolenSheep) {
+                            eagle.remove(eagleData.stolenSheep);
+                            eagleData.stolenSheep = null;
+                        }
+                        
                         // إسقاط الخروف في الموقع الحالي
                         const droppedSheep = createSheep(eagle.position.x, 0, eagle.position.z);
                         sheeps.push(droppedSheep);
@@ -3196,6 +3232,12 @@
                         score += eagleData.returnSheepValue;
                         showReturnSheepMessage(eagle.position.x, eagle.position.y + 3, eagle.position.z, "تم استعادة الخروف!");
                         updateUI();
+                        
+                        // إزالة الخروف المرئي من النسر
+                        if (eagleData.stolenSheep) {
+                            eagle.remove(eagleData.stolenSheep);
+                            eagleData.stolenSheep = null;
+                        }
                     }
                     
                     scene.remove(eagle);
@@ -3215,6 +3257,12 @@
                     eagleData.isSwooping = false;
                     eagleData.hasSheep = false;
                     eagleData.escapeTimer = 0;
+                    
+                    // إزالة الخروف المرئي من النسر
+                    if (eagleData.stolenSheep) {
+                        eagle.remove(eagleData.stolenSheep);
+                        eagleData.stolenSheep = null;
+                    }
                     
                     // إسقاط الخروف في الموقع الحالي
                     const droppedSheep = createSheep(eagle.position.x, 0, eagle.position.z);
