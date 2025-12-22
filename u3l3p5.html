@@ -1121,8 +1121,8 @@
         }
 
         function playDamageSound() {
-            playSound(150, "sawtooth", 0.3, 0.5);
-            setTimeout(() => playSound(100, "sawtooth", 0.2, 0.4), 100);
+            playSound(200, "sine", 0.1, 0.3); // A softer, less aggressive sound
+            setTimeout(() => playSound(150, "sine", 0.1, 0.2), 50);
         }
 
         function playBombSound() {
@@ -1911,7 +1911,7 @@
                 type: 'crocodile',
                 health: 100,
                 damage: 20,
-                detectionRange: 40,
+                detectionRange: 80, // Increased pursuit range as requested
                 attackRange: 5,
                 isAggressive: true,
                 isChasing: false,
@@ -2142,7 +2142,7 @@
                             playerHealth -= crocData.collisionDamage;
                             crocData.lastCollisionTime = now;
                             showPlayerDamageEffect();
-                            playDamageSound();
+                            playBeeAttackSound();
                             updateUI();
                             showCrocodileDamageEffect(crocPos.x, crocPos.y + 3, crocPos.z, crocData.collisionDamage);
                         }
@@ -2363,7 +2363,7 @@
                 type: 'eagle',
                 health: 240,
                 maxHealth: 240,
-                damage: 25,
+                damage: 8,
                 speed: 0.15,
                 isAttacking: false,
                 isFlying: true,
@@ -2373,7 +2373,7 @@
                 target: null,
                 lastAttackTime: 0,
                 attackCooldown: 3000,
-                collisionDamage: 30,
+                collisionDamage: 10,
                 lastCollisionTime: 0,
                 collisionCooldown: 2000,
                 value: 40,
@@ -2381,7 +2381,7 @@
                 rightWing: rightWing,
                 wingFlapSpeed: 0.02,
                 wingFlapAngle: 0,
-                detectionRange: 50,
+                detectionRange: 120, // Increased pursuit range for all eagles as requested
                 attackRange: 8,
                 isAggressive: true,
                 isChasing: false,
@@ -2498,29 +2498,53 @@
                     const directionToPlayer = new THREE.Vector3().subVectors(playerPos, eaglePos);
                     directionToPlayer.normalize();
                     
-                    // تطبيق نمط الهجوم
+                    // تطبيق نمط الهجوم - تحسين لجعل النسور تنخفض لمستوى اللاعب
                     switch(attackBehavior) {
                         case 'direct':
-                            targetPosition.copy(playerPos);
-                            targetPosition.y = playerPos.y + 5;
+                            // الهجوم المباشر - الانخفاض تدريجياً لمستوى اللاعب
+                            if (distanceToPlayer < 20) {
+                                targetPosition.copy(playerPos);
+                                targetPosition.y = playerPos.y + 2; // انخفاض لمستوى قريب من اللاعب
+                            } else {
+                                targetPosition.copy(playerPos);
+                                targetPosition.y = playerPos.y + 5;
+                            }
                             break;
                             
                         case 'circular':
                             const circularAngle = now * 0.001 + eagleData.swarmId * Math.PI * 0.66;
                             const circularRadius = 10;
-                            targetPosition.set(
-                                playerPos.x + Math.cos(circularAngle) * circularRadius,
-                                playerPos.y + 8 + Math.sin(now * 0.002) * 3,
-                                playerPos.z + Math.sin(circularAngle) * circularRadius
-                            );
+                            // الدوران حول اللاعب مع الانخفاض التدريجي
+                            if (distanceToPlayer < 15) {
+                                targetPosition.set(
+                                    playerPos.x + Math.cos(circularAngle) * circularRadius,
+                                    playerPos.y + 2 + Math.sin(now * 0.002) * 1,
+                                    playerPos.z + Math.sin(circularAngle) * circularRadius
+                                );
+                            } else {
+                                targetPosition.set(
+                                    playerPos.x + Math.cos(circularAngle) * circularRadius,
+                                    playerPos.y + 8 + Math.sin(now * 0.002) * 3,
+                                    playerPos.z + Math.sin(circularAngle) * circularRadius
+                                );
+                            }
                             break;
                             
                         case 'dive':
-                            targetPosition.set(
-                                playerPos.x,
-                                playerPos.y + 15,
-                                playerPos.z
-                            );
+                            // الانقضاض - يبدأ من الأعلى وينخفض بسرعة
+                            if (distanceToPlayer < 15) {
+                                targetPosition.set(
+                                    playerPos.x,
+                                    playerPos.y + 1, // انخفاض شديد لمستوى اللاعب
+                                    playerPos.z
+                                );
+                            } else {
+                                targetPosition.set(
+                                    playerPos.x,
+                                    playerPos.y + 15,
+                                    playerPos.z
+                                );
+                            }
                             break;
                     }
                     
@@ -2545,8 +2569,11 @@
                     );
                     
                     let speedMultiplier = 1.0;
+                    // زيادة السرعة عند الهجوم
                     if (attackBehavior === 'dive' && distanceToPlayer < 20) {
-                        speedMultiplier = 2.0;
+                        speedMultiplier = 2.5; // سرعة أكبر للانقضاض
+                    } else if (distanceToPlayer < 15) {
+                        speedMultiplier = 1.8; // سرعة متوسطة عند الاقتراب
                     }
                     
                     const newPosition = eaglePos.clone().add(forwardDirection.multiplyScalar(eagleData.speed * speedMultiplier));
@@ -2556,9 +2583,13 @@
                         newPosition.y = Math.max(newPosition.y, eagleData.homeY + 10);
                     }
                     
-                    // الحفاظ على ارتفاع مناسب حسب نمط الهجوم
+                    // الحفاظ على ارتفاع مناسب حسب نمط الهجوم - تحسين الانخفاض
                     if (attackBehavior === 'dive' && distanceToPlayer < 15) {
-                        newPosition.y = playerPos.y + 3;
+                        // انقضاض سريع لمستوى اللاعب
+                        newPosition.y = playerPos.y + 1.5;
+                    } else if (distanceToPlayer < 10) {
+                        // عند الاقتراب الشديد، الانخفاض لمستوى اللاعب
+                        newPosition.y = playerPos.y + 2;
                     } else {
                         newPosition.y = targetPosition.y + Math.sin(now * 0.002 + eagleData.swarmId) * 2;
                     }
@@ -2567,16 +2598,24 @@
                     eagle.position.y = newPosition.y;
                     eagle.position.z = newPosition.z;
                     
-                    // الهجوم على اللاعب
+                    // الهجوم على اللاعب - تحسين لإضافة ضرر فعلي
                     if (distanceToPlayer < eagleData.attackRange) {
                         if (now - eagleData.lastAttackTime > eagleData.attackCooldown) {
                             eagleData.lastAttackTime = now;
                             playEagleSound();
                             
+                            // إلحاق الضرر باللاعب
+                            playerHealth -= eagleData.damage;
+                            showPlayerDamageEffect();
+                            playBeeAttackSound();
+                            updateUI();
+                            
                             const attackEffect = document.createElement("div");
                             attackEffect.className = "crocodile-damage-effect";
-                            attackEffect.textContent = "هجوم النسر!";
-                            attackEffect.style.color = "#ff9900";
+                            attackEffect.textContent = `هجوم النسر! -${eagleData.damage}`;
+                            attackEffect.style.color = "#ff3300";
+                            attackEffect.style.fontSize = "22px";
+                            attackEffect.style.fontWeight = "bold";
                             
                             const vector = new THREE.Vector3(eaglePos.x, eaglePos.y + 2, eaglePos.z);
                             vector.project(camera);
@@ -2586,7 +2625,7 @@
                             
                             setTimeout(() => {
                                 attackEffect.remove();
-                            }, 1000);
+                            }, 1500);
                         }
                     }
                     
@@ -2596,7 +2635,7 @@
                             playerHealth -= eagleData.collisionDamage;
                             eagleData.lastCollisionTime = now;
                             showPlayerDamageEffect();
-                            playDamageSound();
+                            playBeeAttackSound();
                             updateUI();
                             
                             const damageEffect = document.createElement("div");
@@ -2775,13 +2814,15 @@
                 hasSheep: false,
                 stolenSheep: null,
                 snatchRange: 10,
+                collisionDamage: 5, // Minor damage on collision with player
+                swoopHeight: 1.5, // New property for swoop height (player level)
                 snatchCooldown: 0,
                 escapeSpeed: 0.25,
                 escapeDirection: new THREE.Vector3(),
                 escapeTimer: 0,
                 maxEscapeTime: 10000, // 10 ثواني للهروب
                 returnSheepValue: 20, // نقاط عند استعادة الخروف
-                flyHeight: 8, // ارتفاع منخفض للطيران
+                flyHeight: 4, // ارتفاع منخفض جداً للطيران كما طلب المستخدم
                 minFlyHeight: 5,
                 maxFlyHeight: 12,
                 homeX: x,
@@ -2849,12 +2890,38 @@
                 const distanceToPlayer = eaglePos.distanceTo(playerPos);
                 
                 if (eagleData.isSnatching && eagleData.hasSheep) {
+                    // If the eagle is swooping, check for collision with the player
+                    if (eagleData.isSwooping) {
+                        const distanceToPlayer = eaglePos.distanceTo(playerPos);
+                        if (distanceToPlayer < 2) { // Collision check
+                            playerHealth -= eagleData.collisionDamage;
+                            eagleData.isSwooping = false; // Stop swooping after hitting
+
+                            // Show damage effect
+                            const damageEffect = document.createElement('div');
+                            damageEffect.className = 'damage-effect';
+                            damageEffect.textContent = `-${eagleData.collisionDamage}`;
+                            document.body.appendChild(damageEffect);
+                            
+                            const vector = new THREE.Vector3(playerPos.x, playerPos.y + 2, playerPos.z);
+                            vector.project(camera);
+                            vector.x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+                            vector.y = (vector.y * -0.5 + 0.5) * window.innerHeight;
+                            damageEffect.style.left = `${vector.x}px`;
+                            damageEffect.style.top = `${vector.y}px`;
+
+                            setTimeout(() => {
+                                damageEffect.remove();
+                            }, 1000);
+                        }
+                    }
                     // حالة الهروب بالخروف
                     eagleData.escapeTimer += 16; // تقريباً كل إطار
                     
                     if (eagleData.escapeTimer >= eagleData.maxEscapeTime) {
                         // بعد وقت الهروب، إسقاط الخروف والعودة
                         eagleData.isSnatching = false;
+                    eagleData.isSwooping = false;
                         eagleData.hasSheep = false;
                         eagleData.escapeTimer = 0;
                         
@@ -2873,7 +2940,11 @@
                         
                         // تحريك النسر
                         eagle.position.x = newPosition.x;
-                        eagle.position.y = eagleData.flyHeight + Math.sin(now * 0.002) * 2;
+                        let targetY = eagleData.flyHeight + Math.sin(now * 0.002) * 2;
+                    if (eagleData.isSwooping) {
+                        targetY = playerPos.y + 1; // Swoop down to player's height
+                    }
+                    eagle.position.y += (targetY - eagle.position.y) * 0.1; // Smooth transition
                         eagle.position.z = newPosition.z;
                         
                         // توجيه النسر في اتجاه الهروب
@@ -2907,7 +2978,11 @@
                     const newPosition = eaglePos.clone().add(forwardDirection.multiplyScalar(eagleData.speed));
                     
                     // الحفاظ على ارتفاع منخفض
-                    newPosition.y = eagleData.flyHeight + Math.sin(now * 0.002 + index) * 1.5;
+                    let targetY = eagleData.flyHeight + Math.sin(now * 0.002 + index) * 1.5;
+                    if (eagleData.isSwooping) {
+                        targetY = playerPos.y + 1; // Swoop down to player's height
+                    }
+                    newPosition.y = eagle.position.y + (targetY - eagle.position.y) * 0.1; // Smooth transition
                     
                     eagle.position.x = newPosition.x;
                     eagle.position.y = newPosition.y;
@@ -2936,7 +3011,10 @@
                         updateUI();
                         
                         // إظهار رسالة الخطف
-                        showSnatchMessage(eaglePos.x, eaglePos.y + 3, eaglePos.z, "خطف الخروف!");
+                        showSnatchMessage(eaglePos.x, eaglePos.y + 3, eaglePos.z, "تم خطف خروف!"); // Updated message as requested and confirmed
+
+                    // After snatching, the eagle will swoop down and try to hit the player
+                    eagleData.isSwooping = true;
                         playEagleSound();
                         
                         // تأثير بصري
@@ -2963,8 +3041,11 @@
                     
                     const targetX = eagleData.homeX + Math.cos(eagleData.flyAngle) * flyRadius;
                     const targetZ = eagleData.homeZ + Math.sin(eagleData.flyAngle) * flyRadius;
-                    const targetY = eagleData.flyHeight + Math.sin(now * 0.001 + eagleData.flyAngle) * 2;
-                    
+                    let targetY = eagleData.flyHeight + Math.sin(now * 0.001 + eagleData.flyAngle) * 2;
+                    if (eagleData.isSwooping) {
+                        targetY = playerPos.y + 1; // Swoop down to player's height
+                    }
+                    eagle.position.y += (targetY - eagle.position.y) * 0.05;                 
                     // التحرك نحو موضع التحليق
                     eagle.position.x += (targetX - eagle.position.x) * 0.02;
                     eagle.position.y += (targetY - eagle.position.y) * 0.02;
@@ -3068,6 +3149,7 @@
                     // إذا كان يحمل خروفاً، إسقاطه عند الإصابة
                     if (eagleData.hasSheep) {
                         eagleData.isSnatching = false;
+                    eagleData.isSwooping = false;
                         eagleData.hasSheep = false;
                         eagleData.escapeTimer = 0;
                         
@@ -3130,6 +3212,7 @@
                 } else if (eagleData.hasSheep) {
                     // إسقاط الخروف عند الإصابة
                     eagleData.isSnatching = false;
+                    eagleData.isSwooping = false;
                     eagleData.hasSheep = false;
                     eagleData.escapeTimer = 0;
                     
@@ -5600,7 +5683,7 @@
                                 playerHealth -= wolfData.collisionDamage;
                                 wolfData.lastCollisionTime = currentTime;
                                 showPlayerDamageEffect();
-                                playDamageSound();
+                                playBeeAttackSound(); // Changed to a more distinct sound as requested
                                 updateUI();
                             }
                         }
@@ -5709,7 +5792,7 @@
                                 playerHealth -= wolfData.collisionDamage;
                                 wolfData.lastCollisionTime = currentTime;
                                 showPlayerDamageEffect();
-                                playDamageSound();
+                                playBeeAttackSound(); // Changed to a more distinct sound as requested
                                 updateUI();
                             }
                         }
@@ -5852,7 +5935,7 @@
                             playerHealth -= beeData.collisionDamage;
                             beeData.lastCollisionTime = currentTime;
                             showPlayerDamageEffect();
-                            playDamageSound();
+                            playBeeAttackSound();
                             updateUI();
                             showBeeDamageEffect(beePos.x, beePos.y + 2, beePos.z, beeData.collisionDamage);
                         }
@@ -5893,7 +5976,7 @@
                     scene.remove(sting);
                     beeStings.splice(i, 1);
                     showPlayerDamageEffect();
-                    playDamageSound();
+                    playBeeAttackSound();
                     updateUI();
                 }
             }
